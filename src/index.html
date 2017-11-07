@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<!--
+    Copyright (c) 2012-2016 Adobe Systems Incorporated. All rights reserved.
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+     KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+-->
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="msapplication-tap-highlight" content="no" />
+    <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width" />
+    <!-- This is a wide open CSP declaration. To lock this down for production, see below. -->
+    <meta http-equiv="Content-Security-Policy" content="default-src * 'unsafe-inline' gap:; style-src 'self' 'unsafe-inline'; media-src *" />
+    <!-- Good default declaration:
+    * gap: is required only on iOS (when using UIWebView) and is needed for JS->native communication
+    * https://ssl.gstatic.com is required only on Android and is needed for TalkBack to function properly
+    * Disables use of eval() and inline scripts in order to mitigate risk of XSS vulnerabilities. To change this:
+        * Enable inline JS: add 'unsafe-inline' to default-src
+        * Enable eval(): add 'unsafe-eval' to default-src
+    * Create your own at http://cspisawesome.com
+    -->
+    <!-- <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: 'unsafe-inline' https://ssl.gstatic.com; style-src 'self' 'unsafe-inline'; media-src *" /> -->
+    <meta name="theme-color" content="#317EFB"/>
+    <link rel="stylesheet" type="text/css" href="../node_modules/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="./assets/css/default.css"/>
+    <link rel="preload" type="text/css"  href="assets/css/docker.css" as="style" onload="this.rel='stylesheet'"/>
+    <link rel="preload" type="text/css"  href="assets/css/spinner.css" as="style" onload="this.rel='stylesheet'" />
+    <title>BMS</title>
+</head>
+
+<body>
+    <article class="container-fluid">
+        <!--header-->
+        <header>
+            <nav class="navbar navbar-dark navbar-top fixed-top">
+              <span class="navbar-brand mb-0 h1"><i class="material-icons">menu</i></span>
+            </nav>
+        </header>
+        <!--/header-->
+
+        <!--sidebar-->
+        <aside class="col col-lg-2 col-md-3 col-xs-12 docker docker-sm-fixed docker-md-fixed docker-sm-hidden docker-xs-hidden docker-md-hidden hidden-md docker-lg-visible docker-lg-fixed docker-lg-block row" id="docker-sidebar" data-role="none" data-enhance="false" style="background:rgba(0,0,0,0.7);min-width:100px;">
+            <div class="content container-fluid" style="height: 1080px;background: none;">
+                <menu class="col col-md-12">
+
+                    <ul class="list-unstyled main-menu main-menu-list">
+                         <li data-status="home" 
+                            class="main-menu-list-item suppliers_main_menu" 
+                            id="suppliers_main_menu" 
+                            data-menu="main-menu-list-item" 
+                            onclick="window.location.hash='#/home/'">
+
+                                <i class="material-icons md-24" style="width: 24px;">home</i> 
+                                <br/>Home
+                        </li>
+                        <li data-status="supplies" 
+                            class="main-menu-list-item suppliers_main_menu" 
+                            id="suppliers_main_menu" 
+                            data-menu="main-menu-list-item" 
+                            onclick="window.location.hash='#/suppliers/'">
+
+                                <i class="material-icons md-24" style="width: 24px;">local_mall</i> 
+                                <br/>Suppliers
+                        </li>
+
+                        <li data-status="invitations" 
+                            class="main-menu-list-item deactivated suppliers_main_menu2" 
+                            data-menu="main-menu-list-item" 
+                            data-role="none">
+                                <i class="material-icons md-24" style="width: 24px;">insert_invitation</i> 
+                                <br/>Invitations 
+                        </li>
+
+                        <li data-status="open" 
+                            class="main-menu-list-item deactivated">
+                                <i class="material-icons md-24" style="width: 24px;">drafts</i>
+                                <br/>Proposals 
+                        </li>
+
+                        <li data-status="closed" 
+                            class="main-menu-list-item deactivated">
+                                <i class="material-icons md-24">account_circle</i>
+                                <br/>Account Settings 
+                        </li>
+                    </ul>
+
+
+                    <ul class="list-unstyled main-menu main-menu-list">
+                        <li id="new" class="deactivated">New <i class="material-icons">add</i></li>
+                    </ul>
+
+                </menu>
+
+                <menu class="col col-md-12">
+                    <ul class="list-unstyled main-menu">
+                        <li data-role="none">
+                            <a href="pages/authentication/" 
+                                style="color:rgb(255,184,12);" 
+                                data-ajax="false" 
+                                onclick="signout();" 
+                                class="ui-link">Sign-out <i class="material-icons" style="width: 24px;">keyboard_backspace</i> 
+                            </a>
+                        </li>
+                    </ul>
+                </menu>
+
+            </div>   
+         </aside>
+        <!--/docker-->
+
+        <router>
+            <route class="default-spinner"></route>
+            <route name="/home" page="pages/welcome.html" class="col col-lg-9 col-sm-12 col-xs-12"></route>
+            <route name="/suppliers" class="col col-lg-9 col-sm-12 col-xs-12"></route>
+        </router>
+    </article>
+    <script src="assets/js/exports.js"></script>
+    <script>
+        window.bms.default.spinner=new window.bms.exports.Spinner({
+                target:'.default-spinner',
+                class:'spinner'
+            })
+        window.bms.default.spinner.show()
+    </script>
+
+    <!--<script type="text/javascript" src="cordova.js"></script>-->
+
+</body>
+
+</html>
+<script type="module" src="./assets/js/shell.js"></script>
