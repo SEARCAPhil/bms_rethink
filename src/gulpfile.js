@@ -37,6 +37,48 @@ gulp.task('copying images',()=>{
 	.pipe(gulp.dest('../www/assets/img'))
 })
 
+gulp.task('copying manifest',()=>{
+	gulp.src(['./manifest.json'])
+	.pipe(gulp.dest('../www'))
+})
+
+gulp.task('copying js to js_native folder',()=>{
+	glob('./assets/js/**/*.js',function(err,file){
+		if(err) done(err)
+
+		var file=file.map((entry)=>{
+			return browserify({
+		        entries: [entry],
+		    })
+			.transform(babelify.configure({
+		        presets : ["env"]
+		    }))
+		    .bundle()
+		    .pipe(source(entry))
+		    .pipe(buffer())
+		    .pipe(uglify())
+			.pipe(gulp.dest('../www/assets/js_native'))
+		})
+
+	})
+})
+
+gulp.task('minifying modules and saving to js_es',()=>{
+	gulp.src(['./assets/js/**/*.js'])
+	.pipe(uglifyes({
+		warnings:true,
+		mangle:false,
+		ecma:8
+	}))
+	.pipe(gulp.dest('../www/assets/js_es'))
+})
+
+
+gulp.task('copying other js files',()=>{
+	gulp.src(['./assets/js/default.js'])
+	.pipe(gulp.dest('../www/assets/js'))
+})
+
 
 gulp.task('creating export classes',()=>{
 	glob('./assets/js/exports.js',function(err,file){
@@ -59,6 +101,8 @@ gulp.task('creating export classes',()=>{
 	})
 	
 })
+
+
 
 
 gulp.task('generating app shell',()=>{
@@ -89,6 +133,6 @@ gulp.task('generating app shell',()=>{
 
 
 gulp.task('default',(cb)=>{
-	runSequence('minifying html','minifying css','copying fonts','copying images','creating export classes','generating app shell')
+	runSequence('minifying html','minifying css','copying fonts','copying images','creating export classes','generating app shell','copying manifest','copying js to js_native folder','minifying modules and saving to js_es','copying other js files')
 });
 

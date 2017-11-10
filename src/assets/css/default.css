@@ -1,6 +1,13 @@
 body{
     background: #EEE;
 }
+h1,h2,h3,h4,h5,h6{
+  font-family: Roboto,Helvetica,Arial,sans-serif;
+  font-weight: 300;
+}
+a,a:focus,a:hover{
+  color: #009688;
+}
 .navbar-top{
     background: rgb(60,60,60) !important;
     margin-bottom: 0;
@@ -82,6 +89,6 @@ body{
 .material-icons.md-light { color: rgba(255, 255, 255, 1); }
 .material-icons.md-light.md-inactive { color: rgba(255, 255, 255, 0.3); }
 
-#docker-sidebar{
+/*#docker-sidebar{
   margin-top: 50px;
-}
+}*/

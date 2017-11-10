@@ -1,23 +1,27 @@
 export default class{
 	request(props){
 		this.props=props||{};
+		this.xhr=new XMLHttpRequest();
 		//xhr promise
 		return new Promise((resolve,reject)=>{
-			let xhr=new XMLHttpRequest();
-			xhr.open(this.props.method||'GET',this.props.url);
-			xhr.onload=()=>{
-				if(xhr.status==200&&xhr.readyState==4){
-					resolve(xhr.response)
+			this.xhr.open(this.props.method||'GET',this.props.url);
+			this.xhr.onload=()=>{
+				if(this.xhr.status==200&&this.xhr.readyState==4){
+					resolve(this.xhr.response)
 				}else{
-					reject(xhr.statusText)
+					reject(this.xhr.statusText)
 				}
 			}
 
-			xhr.onerror=()=>{
-				reject(xhr.statusText)
+			this.xhr.onerror=()=>{
+				reject(this.xhr.statusText)
 			}
 
-			xhr.send(this.props.body||null)
+			this.abort=()=>{
+				this.xhr.abort()
+			}
+
+			this.xhr.send(this.props.body||null)
 
 		})
 	}

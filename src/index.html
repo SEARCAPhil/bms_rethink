@@ -39,9 +39,10 @@
     <!-- <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: 'unsafe-inline' https://ssl.gstatic.com; style-src 'self' 'unsafe-inline'; media-src *" /> -->
     <meta name="theme-color" content="#317EFB"/>
     <link rel="stylesheet" type="text/css" href="../node_modules/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" type="text/css" href="./assets/css/default.css"/>
+    <link rel="preload" href="./assets/css/default.css" as="style" onload="this.rel='stylesheet'"/>
     <link rel="preload" type="text/css"  href="assets/css/docker.css" as="style" onload="this.rel='stylesheet'"/>
     <link rel="preload" type="text/css"  href="assets/css/spinner.css" as="style" onload="this.rel='stylesheet'" />
+    <link rel="manifest" href="manifest.json">
     <title>BMS</title>
 </head>
 
@@ -50,13 +51,19 @@
         <!--header-->
         <header>
             <nav class="navbar navbar-dark navbar-top fixed-top">
-              <span class="navbar-brand mb-0 h1"><i class="material-icons">menu</i></span>
+
+                <span class="navbar-brand mb-0 h1 docker-menu d-lg-none" href="javascript:void(0)" data-target=".docker">
+                 <i class="material-icons header_menu">menu</i>
+                </span>
+
+                <span class="navbar-brand mb-0 h1 d-none d-lg-block"><i class="material-icons">menu</i></span>
             </nav>
         </header>
         <!--/header-->
+        <section class="row online-status offline"></section>
 
         <!--sidebar-->
-        <aside class="col col-lg-2 col-md-3 col-xs-12 docker docker-sm-fixed docker-md-fixed docker-sm-hidden docker-xs-hidden docker-md-hidden hidden-md docker-lg-visible docker-lg-fixed docker-lg-block row" id="docker-sidebar" data-role="none" data-enhance="false" style="background:rgba(0,0,0,0.7);min-width:100px;">
+        <aside class="col col-lg-2 col-md-3 col-xs-12 docker docker-sm-fixed docker-md-fixed docker-sm-hidden docker-xs-hidden docker-md-hidden d-md-none d-lg-block docker-lg-visible docker-lg-fixed docker-lg-block row" id="docker-sidebar" data-role="none" data-enhance="false" style="background:rgba(0,0,0,0.7);min-width:100px;">
             <div class="content container-fluid" style="height: 1080px;background: none;">
                 <menu class="col col-md-12">
 
@@ -124,14 +131,16 @@
             </div>   
          </aside>
         <!--/docker-->
-
+        <section class="online-status online"></section>
         <router>
             <route class="default-spinner"></route>
             <route name="/home" page="pages/welcome.html" class="col col-lg-9 col-sm-12 col-xs-12"></route>
-            <route name="/suppliers" class="col col-lg-9 col-sm-12 col-xs-12"></route>
+            <route name="/suppliers" page="pages/suppliers/list/list.html" class="col col-lg-9 col-sm-12 col-xs-12"></route>
         </router>
     </article>
+    <link rel="preload" href="assets/css/custom.css" as="style" onload="this.rel='stylesheet'"/>
     <script src="assets/js/exports.js"></script>
+    <script async src="assets/js/default.js"></script>
     <script>
         window.bms.default.spinner=new window.bms.exports.Spinner({
                 target:'.default-spinner',
