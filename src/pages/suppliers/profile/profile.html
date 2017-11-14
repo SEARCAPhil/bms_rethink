@@ -19,10 +19,11 @@
 			<nav>
 				<ul class="list-inline submenu">
 					<li class="list-inline-item disabled" data-role="none"></li>
-					<li class="list-inline-item profile-tab-navigation active"><a href="#/suppliers/1/about">About</a></li>
-					<li class="list-inline-item products-tab-navigation"><a href="#/suppliers/1/products">Products</a></li>
-					<li class="list-inline-item accounts-tab-navigation"><a href="#/suppliers/1/accounts">Accounts</a></li>
-					<li class="list-inline-item logs-tab-navigation"><a href="#/suppliers/1/logs">Logs</a></li>
+					<li class="list-inline-item profile-tab-navigation tab-navigation" id="about-tab"><a href="#/suppliers/1/about">About</a></li>
+					<li class="list-inline-item products-tab-navigation tab-navigation" id="products-tab"><a href="#/suppliers/1/products">Products</a></li>
+					<li class="list-inline-item accounts-tab-navigation tab-navigation" id="accounts-tab"><a href="#/suppliers/1/accounts">Accounts</a></li>
+					<li class="list-inline-item logs-tab-navigation tab-navigation" id="logs-tab"><a href="#/suppliers/1/logs">Logs</a></li>
+					<li class="list-inline-item settings-tab-navigation tab-navigation" id="settings-tab"><a href="#/suppliers/1/settings">Settings</a></li>
 				</ul>	
 			</nav>
 	</article>
@@ -34,7 +35,8 @@
 			<route name="/suppliers/about" page="pages/suppliers/profile/about.html"></route>
 			<route name="/suppliers/products" page="pages/suppliers/products/products.html"></route>
 			<route name="/suppliers/accounts" page="pages/suppliers/accounts/accounts.html"></route>
-			<route name="/suppliers/logs"></route>
+			<route name="/suppliers/logs" page="pages/suppliers/logs/logs.html"></route>
+			<route name="/suppliers/settings" page="pages/suppliers/settings/settings.html"></route>
 		</router>
 	</article>
 	</div>
