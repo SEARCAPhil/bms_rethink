@@ -36,7 +36,7 @@ appRoute.Navigo.on({
 		loadHome()
 	},
 	'/suppliers/*':()=>{
-			window.bms.default.lazyLoad(['./assets/js_native/assets/js/routers/suppliers/suppliers.js'],{once:true})
+		window.bms.default.lazyLoad(['./assets/js_native/assets/js/routers/suppliers/suppliers.js'],{once:true})
 	}
 }).resolve()
 

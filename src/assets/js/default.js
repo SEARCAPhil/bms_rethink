@@ -65,6 +65,7 @@
 			opt.async=opts.async||false
 			opt.once=opts.once||false
 
+
 			for(let file of src){
 				//stop if already loaded
 				if(opt.once&&(window.bms.default.loadedScript.indexOf(file)!=-1)){
@@ -77,6 +78,7 @@
 					//attributes
 					if(opt.async) sc.setAttribute('async','')
 					//mark as loaded by lazy loader func
+					if(opt.module) sc.setAttribute('type','module')
 					sc.setAttribute('lazy-loaded','')
 					document.body.appendChild(sc)
 					//add to list

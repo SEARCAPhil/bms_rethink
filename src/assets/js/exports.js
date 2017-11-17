@@ -8,7 +8,10 @@ window.bms=window.bms||{
 	deviceInstance:'mobile',
 	suppliers:{selected:{}},
 	default:{
-		routed:[] // executed routers in window
+		routed:[], // executed routers in window
+		state:{
+			supplier:{}
+		}
 	}, //global functions
 	exports:{
 		Router,
@@ -16,5 +19,6 @@ window.bms=window.bms||{
 		XHR,
 		Spinner,
 		Sidebar
-	}
+	},
+	func:{}
 }

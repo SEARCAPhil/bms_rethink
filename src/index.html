@@ -38,12 +38,89 @@
     -->
     <!-- <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: 'unsafe-inline' https://ssl.gstatic.com; style-src 'self' 'unsafe-inline'; media-src *" /> -->
     <meta name="theme-color" content="#317EFB"/>
-    <link rel="stylesheet" type="text/css" href="../node_modules/bootstrap/dist/css/bootstrap.min.css" />
+    <!--bootstrap style : this is to show a loading status on first load-->
+    <style type="text/css">
+    body{
+        margin:0;
+        padding: 0;
+    }
+    .material-icons{ display: none; }
+    .material-icons:after{ display: block; }
+    .navbar{
+        width: 100%;
+        min-height: 50px;
+
+    }
+    .navbar-fixed-top{
+        position: fixed;
+        right: 0;
+        left: 0;
+        z-index: 1030;
+    }
+    .navbar-dark{
+        background: #3c3c3c!important;
+        color: rgba(255,255,255,.84);
+    }
+
+    .docker{
+        display: none;
+    }
+    .hamburger{
+        float: left;
+        margin-top: 12px;
+    }
+    .hamburger .burger{
+        float: left;
+        display: inherit;
+        width: 18px;
+        height: 2px;
+        background: #fff;
+        margin: 2px 98% 1px 15px;
+    }
+
+    initial-page{
+        font-family: "Arial Rounded MT Bold", "Helvetica Rounded", Arial, sans-serif;
+        font-style: normal;
+        font-variant: normal;
+        font-weight: 400;
+    }
+
+    /*spinner*/
+    /*https://codepen.io/ruigewaard/pen/CtnsJ*/
+    .spinner{
+      left:calc(50% - 50px);
+      top: 200px;
+        position:fixed;
+        z-index:2046;
+    }
+    .block {
+      position: relative;
+      box-sizing: border-box;
+      float: left;
+      margin: 0 10px 10px 0;
+      width: 12px;
+      height: 12px;
+      border-radius: 3px;
+      background:rgb(200,200,200);
+    }
+
+    .block:nth-child(4n+1) { animation: wave 1.2s ease .0s infinite; }
+    .block:nth-child(4n+2) { animation: wave 1.2s ease .2s infinite; }
+    .block:nth-child(4n+3) { animation: wave 1.2s ease .4s infinite; }
+    .block:nth-child(4n+4) { animation: wave 1.2s ease .6s infinite; margin-right: 0; }
+
+    @keyframes wave {
+      0%   { top: 0;     opacity: 1; }
+      50%  { top: 30px;  opacity: .2; }
+      100% { top: 0;     opacity: 1; }
+    }
+    </style>
+    <link rel="preload" type="text/css" href="../node_modules/bootstrap/dist/css/bootstrap.min.css"  as="style" onload="this.rel='stylesheet'" />
     <link rel="preload" href="./assets/css/default.css" as="style" onload="this.rel='stylesheet'"/>
     <link rel="preload" type="text/css"  href="assets/css/docker.css" as="style" onload="this.rel='stylesheet'"/>
-    <link rel="preload" type="text/css"  href="assets/css/spinner.css" as="style" onload="this.rel='stylesheet'" />
     <link rel="manifest" href="manifest.json">
     <title>BMS</title>
+
 </head>
 
 <body>
@@ -57,10 +134,33 @@
                 </span>
 
                 <span class="navbar-brand mb-0 h1 d-none d-lg-block"><i class="material-icons">menu</i></span>
+                <!--bootstrap menu-->
+                <span class="navbar-brand hamburger">
+                    <span class="burger"></span>
+                    <span class="burger"></span>
+                    <span class="burger"></span>
+                </span>
             </nav>
         </header>
         <!--/header-->
         <section class="row online-status offline"></section>
+
+        <!--bootstrap page-->
+        <initial-page>
+            <center>
+               <div style="margin-top: 100px;">
+                    <h4 style="color: rgb(180,180,180);">Initializing Application</h4>
+                </div> 
+               <div class="spinner">
+                   <div class="block"></div>
+                    <div class="block"></div>
+                    <div class="block"></div>
+                    <div class="block"></div>
+                    <div class="block"></div>
+                    <div class="block"></div>
+               </div>
+            </center>
+        </initial-page>
 
         <!--sidebar-->
         <aside class="col col-lg-2 col-md-3 col-xs-12 docker docker-sm-fixed docker-md-fixed docker-sm-hidden docker-xs-hidden docker-md-hidden d-md-none d-lg-block docker-lg-visible docker-lg-fixed docker-lg-block row" id="docker-sidebar" data-role="none" data-enhance="false" style="background:rgba(0,0,0,0.7);min-width:100px;">
@@ -138,15 +238,22 @@
             <route name="/suppliers" page="pages/suppliers/list/list.html" class="col col-lg-9 col-sm-12 col-xs-12"></route>
         </router>
     </article>
-    <link rel="preload" href="assets/css/custom.css" as="style" onload="this.rel='stylesheet'"/>
     <script src="assets/js/exports.js"></script>
-    <script async src="assets/js/default.js"></script>
+    <script src="assets/js_es/default.js"></script>
     <script>
         window.bms.default.spinner=new window.bms.exports.Spinner({
                 target:'.default-spinner',
                 class:'spinner'
             })
         window.bms.default.spinner.show()
+       
+          // Define a new FontFace
+          const notoSansRegular = new FontFace('Material Icons', 'url(./assets/fonts/MaterialIcons-Regular.woff2)');
+          //console.log(notoSansRegular);
+
+          // Add the FontFace to the FontFaceSet
+          document.fonts.add(notoSansRegular);
+        
     </script>
 
     <!--<script type="text/javascript" src="cordova.js"></script>-->
@@ -155,3 +262,4 @@
 
 </html>
 <script type="module" src="./assets/js/shell.js"></script>
+<!--<link rel="preload" href="assets/css/custom.css" as="style" onload="this.rel='stylesheet'"/>-->

@@ -36,14 +36,14 @@ a,a:focus,a:hover{
 }
 /*material icon font*/
 @font-face {
-  font-family: 'Material Icons';
+  /*font-family: 'Material Icons';*/
   font-style: normal;
   font-weight: 400;
-  src: local('Material Icons'),
+ /* src: local('Material Icons'),
     local('MaterialIcons-Regular'),
     url(../fonts/MaterialIcons-Regular.woff2) format('woff2'),
     url(../fonts/MaterialIcons-Regular.woff) format('woff'),
-    url(../fonts/MaterialIcons-Regular.ttf) format('truetype');
+    url(../fonts/MaterialIcons-Regular.ttf) format('truetype');*/
 }
 /*hide material icons by default*/
 .material-icons:before{
@@ -88,6 +88,13 @@ a,a:focus,a:hover{
 /* Rules for using icons as white on a dark background. */
 .material-icons.md-light { color: rgba(255, 255, 255, 1); }
 .material-icons.md-light.md-inactive { color: rgba(255, 255, 255, 0.3); }
+
+initial-page{
+  display: none;
+}
+.hamburger{
+  display: none;
+}
 
 /*#docker-sidebar{
   margin-top: 50px;

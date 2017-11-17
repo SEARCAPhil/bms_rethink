@@ -99,5 +99,9 @@ export default class{
 		this._display('hide',name)
 	}
 
+	isLoaded(name){
+		return this.routed.indexOf(name)<0?false:true
+	}
+
 }
 

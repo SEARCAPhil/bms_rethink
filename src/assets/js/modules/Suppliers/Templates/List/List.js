@@ -16,7 +16,7 @@ export default class{
 		this.element.setAttribute('class',`${this.properties.class}`+` ${this.properties.status}`)
 		this.element.setAttribute('data-list',`${this.properties.id}`)
 		this.element.innerHTML=`
-			<a href="#/suppliers/${this.properties.id}/profile">
+			<a href="#/suppliers/${this.properties.id}/about">
 				<h6>${this.properties.name}</h6>
 	            <small class="established_date" onload="${this.properties.established||'element.remove();'}">
 	           		<p>${this.properties.tagline}</p>
