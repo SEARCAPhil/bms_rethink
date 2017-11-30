@@ -17,10 +17,10 @@ export default class{
 		this.element.setAttribute('data-list',`${this.properties.id}`)
 		this.element.innerHTML=`
 			<a href="#/suppliers/${this.properties.id}/about">
-				<h6>${this.properties.name}</h6>
+				<h6 class="suppliers-list-item-header">${this.properties.name}</h6>
 	            <small class="established_date" onload="${this.properties.established||'element.remove();'}">
 	           		<p>${this.properties.tagline}</p>
-	            	<p><i class="material-icons md-18">date_range</i>${this.properties.established||'N/A'}</p>
+	            	<!--<p><i class="material-icons md-18">date_range</i>${this.properties.established||'N/A'}</p>-->
 	            </small>
 	        </a>`
 

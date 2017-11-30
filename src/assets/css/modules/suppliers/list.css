@@ -24,7 +24,7 @@
 .list{
 	padding-top: 10px;
 	background:#fff;
-	margin-bottom:5px;
+	padding-bottom:5px;
 	cursor:pointer;
 	height:auto;
 	overflow:auto;
@@ -35,6 +35,16 @@
 }
 .list > a:hover{
 	text-decoration-line: none;
+}
+
+.list.active{
+  border:1px dashed #ccc;
+  background: rgba(200,200,200,0.3);
+}
+
+
+.suppliers-list-item-header{
+	color: rgb(40,40,40);
 } 
 
 /*PROFILE*/

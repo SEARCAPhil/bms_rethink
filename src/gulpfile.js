@@ -51,7 +51,7 @@ gulp.task('copying js to js_native folder',()=>{
 		        entries: [entry],
 		    })
 			.transform(babelify.configure({
-		        presets : ["env"]
+		        presets : ["es2015"]
 		    }))
 		    .bundle()
 		    .pipe(source(entry))
@@ -89,7 +89,7 @@ gulp.task('creating export classes',()=>{
 		        entries: [entry],
 		    })
 			.transform(babelify.configure({
-		        presets : ["env"]
+		        presets : ["es2015"]
 		    }))
 		    .bundle()
 		    .pipe(source(entry))

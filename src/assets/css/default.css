@@ -1,5 +1,5 @@
 body{
-    background: #EEE;
+  overflow-y: hidden;
 }
 h1,h2,h3,h4,h5,h6{
   font-family: Roboto,Helvetica,Arial,sans-serif;
@@ -25,7 +25,7 @@ a,a:focus,a:hover{
     font-size: 12px;
 }
 .main-menu li.active{
-    background: rgb(160,160,160);
+    background: #009688;
 }
 
 .main-menu li.deactivated{
@@ -34,6 +34,7 @@ a,a:focus,a:hover{
 .main-menu-list{
     color: rgb(240,240,240);
 }
+
 /*material icon font*/
 @font-face {
   /*font-family: 'Material Icons';*/
@@ -88,13 +89,6 @@ a,a:focus,a:hover{
 /* Rules for using icons as white on a dark background. */
 .material-icons.md-light { color: rgba(255, 255, 255, 1); }
 .material-icons.md-light.md-inactive { color: rgba(255, 255, 255, 0.3); }
-
-initial-page{
-  display: none;
-}
-.hamburger{
-  display: none;
-}
 
 /*#docker-sidebar{
   margin-top: 50px;

@@ -1,11 +1,11 @@
 <div class="row">
-	<article class=" col col-xs-12 col-md-12 col-lg-10 offset-lg-1 col-xs-12" style="margin-top: 45px;">
-		<section class="col col-lg-3 col-md-3 col-sm-4 col-xs-4">
-			<img src="assets/img/searca-logo.png" width="100%" style="max-width: 80px;">
+	<article class="col-xs-12 col-md-12 col-lg-10 offset-lg-1 col-xs-12" style="margin-top: 45px;">
+		<section class="col-lg-3 col-md-3 col-sm-12 col-xs-12 logo-section" style="margin-top: 35px;">
+			
 		</section>
-		<section class="col col-lg-12 col-md-12 col-sm-8 col-xs-12">
-			<h3><a href="#" class="text-muted"><i class="material-icons md-18">link</i></a> <span class="company-alias"></span></h3>
-			<h6 class="company-name text-muted"></h4>
+		<section class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+			<h3><a href="#" class="text-muted"><i class="material-icons md-18" style="position: absolute;margin-left: -20px;">link</i></a> <span class="company-alias"></span></h3>
+			<h6 class="company-name text-muted"></h6>
 			<p>
 				<small>
 					Location : Los Banos Laguna
@@ -15,10 +15,9 @@
 
 	</article>
 
-	<article class="col col-xs-12 col-lg-10 offset-lg-1 text-muted" style="margin-top: 0px;">
+	<article class="col-xs-12 col-lg-10 offset-lg-1 text-muted" style="margin-top: 0px;">
 			<nav>
 				<ul class="list-inline submenu">
-					<li class="list-inline-item disabled" data-role="none"></li>
 					<li class="list-inline-item tab-navigation" id="about-tab" target="profile-tab-navigation"><a href="#/suppliers/1/about">About</a></li>
 					<li class="list-inline-item tab-navigation" id="products-tab" target="products-tab-navigation"><a href="#/suppliers/1/products">Products</a></li>
 					<li class="list-inline-item tab-navigation" id="accounts-tab" target="accounts-tab-navigation"><a href="#/suppliers/1/accounts">Accounts</a></li>
@@ -30,7 +29,7 @@
 
 	<article class="hidden-xs col col-lg-8 offset-lg-1 text-muted" style="margin-top: 20px;"></article>
 
-	<article class=" col col-md-12 col-lg-8 offset-lg-1 col-xs-12 profile-tabs-section" style="margin-top: 0px;">
+	<article class="col-md-12 col-lg-8 offset-lg-1 col-xs-12 profile-tabs-section" style="margin-top: 0px;">
 		<router>
 			<route name="/suppliers/about" page="pages/suppliers/profile/about.html" class="tab-panel" id="profile-tab-navigation"></route>
 			<route name="/suppliers/products" page="pages/suppliers/products/products.html" class="tab-panel" id="products-tab-navigation"></route>
@@ -39,4 +38,20 @@
 			<route name="/suppliers/settings" page="pages/suppliers/settings/settings.html" class="tab-panel" id="settings-tab"></route>
 		</router>
 	</article>
-	</div>
+</div>
+<script async src="./assets/js_native/assets/js/routers/suppliers/profile.js"></script>
+<link rel="preload" as="style" href="../node_modules/popup-es/dist/src/css/popup-es.min.css" onload="this.rel='stylesheet'">
+<style>
+.submenu li {
+	padding: 8px;
+}
+.submenu li.active{
+  background: #ffb80c;
+  padding: 4px;
+  border-radius: 2px;
+}
+
+.submenu li.active a{
+    color:rgb(255,255,255);
+}
+</style>

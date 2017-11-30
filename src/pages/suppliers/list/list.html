@@ -1,7 +1,7 @@
 <article class="row list-container">
 	<!--list-->
-    <section class="col-md-12 col-lg-3 offset-lg-2 float-left list-sidebar" style="background:#fff;box-shadow:0 0 5px rgba(200,200,200,.7);min-height: 940px;">     
-		<section style="margin-top:35px;">
+    <section class="col-md-12 col-lg-12 float-left list-sidebar" style="background:#fff;box-shadow:0 0 5px rgba(200,200,200,.7);min-height: 100vh">     
+		<section style="margin-top:55px;">
 			<div class="row">
 				<input class="form-control" type="text" style="padding:4px;border:none;background:#fcfcfc;" placeholder="Search">
 			</div>
@@ -10,7 +10,7 @@
 			<div class="col col-md-12" data-role="none" style="margin-bottom: 5px;">
                 <span class="menuList allNav active">All</span>&emsp;
                 <span class="menuList blockedNav"><a href="#/suppliers/blocked/">Blocked</a></span>&emsp;
-                <span class="menuList suppliers_new_button"><a href="#/suppliers/forms/registration/">NEW<i class="material-icons md-18">add</i></a></span>
+                <span class="menuList suppliers_new_button"><a href="#/suppliers/forms/registration/">New<i class="material-icons md-18">add</i></a></span>
                 <br> 
            	</div>
 		</section>	
@@ -20,12 +20,6 @@
 		</section>	
     </section>
     <!--/list-->
-    <!--profile-->
-    <router class="float-left col-lg-7">
-    	<route name="/suppliers/empty"></route>
-    	<route name="/suppliers/profile" page="pages/suppliers/profile/profile.html"></route>
-    </router>
-    <!--/profile-->
-	<link href="assets/css/modules/suppliers/list.css" type="text/css">    
+	<link rel="preload" href="./assets/css/modules/suppliers/list.css" as="style" onload="this.rel='stylesheet'">    
 </article>
-<script async src="assets/js_native/assets/js/modules/Suppliers/Suppliers.js"></script>
+<script async src="./assets/js_native/assets/js/routers/suppliers/list.js"></script>

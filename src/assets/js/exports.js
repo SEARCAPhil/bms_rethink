@@ -1,8 +1,7 @@
 import Router from 'Navigo'
 import XHR from './lib/XHR/XHR'
-import AppRoute from './lib/AppRoute/AppRoute'
-import Spinner from './components/Spinner/Spinner'
 import Sidebar from './components/Sidebar/Sidebar'
+import Spinner from './components/Spinner/Spinner'
 
 window.bms=window.bms||{
 	deviceInstance:'mobile',
@@ -15,10 +14,9 @@ window.bms=window.bms||{
 	}, //global functions
 	exports:{
 		Router,
-		AppRoute,
 		XHR,
-		Spinner,
-		Sidebar
+		Sidebar,
+		Spinner
 	},
 	func:{}
 }

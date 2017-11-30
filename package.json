@@ -8,7 +8,8 @@
   "license": "MIT",
   "dependencies": {
     "bootstrap": "4.0.0-beta.2",
-    "navigo": "^5.3.3"
+    "navigo": "^5.3.3",
+    "readable-stream": "^2.3.3"
   },
   "resolutions": {
     "minimist": "0.0.8",
@@ -44,6 +45,7 @@
   "devDependencies": {
     "babel-core": "^6.26.0",
     "babel-preset-env": "^1.6.1",
+    "babel-preset-es2015": "^6.24.1",
     "babelify": "^8.0.0",
     "browserify": "^14.5.0",
     "glob": "^7.1.2",
@@ -52,7 +54,8 @@
     "gulp-htmlmin": "^3.0.0",
     "gulp-uglify": "^3.0.0",
     "gulp-uglifyes": "^0.1.2",
-    "readable-stream": "^2.3.3",
+    "msal": "^0.1.3",
+    "popup-es": "0.2.1",
     "run-sequence": "^2.2.0",
     "vinyl-buffer": "^1.0.0",
     "vinyl-source-stream": "^1.1.0",

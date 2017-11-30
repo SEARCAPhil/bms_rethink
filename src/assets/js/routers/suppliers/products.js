@@ -1,15 +1,15 @@
-const appRoute=new window.bms.exports.AppRoute({root:'http://localhost/bms_rethink/www/'})
+const appRoute=new window.bms.exports.Router('http://localhost/bms_rethink/www/',true)
+//import PopupEs from '../../../../../node_modules/popup-es/src/js/popup-es.js'
 import Categories from '../../modules/Suppliers/Components/Products/Categories/Categories.js'
 import CatTemplate from '../../modules/Suppliers/Templates/Products/Categories/Categories.js'
 
+//window.bms.exports.PopupEs=PopupEs
 let Cat=new Categories()
-let loadOnce=0
 
 const loadProductSection=()=>{ 
 	return new Promise((resolve,reject)=>{
 		var html=`<section class="profile-tabs profile-tabs-about">
 			<div class="profile-section">
-				<h5><i class="material-icons md-18">shopping_basket</i> Products</h5>
 				<hr/>
 				<div class="product-container"></div>
 			</div>
@@ -26,39 +26,55 @@ const loadProductSection=()=>{
 }
 
 const loadProd=(id)=>{
-	loadProductSection().then(()=>{
-		Cat.categories(id).then((json)=>{
-			var parsedData=JSON.parse(json)
-			var data=parsedData.data
-			if(data){
-				var CatTemp=new CatTemplate()
-				var el=document.querySelector('.product-container')
-				for(let x of data){
-					el.append(CatTemp.render({name:x.name,description:x.description,buttons:[]}))
-				}
+	return new Promise((resolve,reject)=>{
+		loadProductSection().then(()=>{
+			Cat.categories(id).then((json)=>{
+				var parsedData=JSON.parse(json)
+				var data=parsedData.data
 
-			}
-			
-			
+				//empty
+				if(data.length<1) reject(this)
+
+				if(data){
+					var CatTemp=new CatTemplate()
+					var el=document.querySelector('.product-container')
+					for(let x of data){
+						el.append(CatTemp.render({name:x.name,description:x.description,buttons:[]}))
+						resolve(this)
+					}
+
+				}else{
+					reject(this)
+				}
+				
+				
+			})
 		})
 	})
 }
 
 
-appRoute.Navigo.on({
+appRoute.on({
  	'/*':()=>{
  		//required
  	},
 	'/suppliers/:id/products':(params)=>{ 
 
-		if(!loadOnce){
-			loadProd(params.id)
-			loadOnce=1
-		}
+		window.bms.default.changeDisplay(['route[name="/suppliers/about"]','route[name="/suppliers/settings"]'],'none')
+		window.bms.default.changeDisplay(['route[name="/suppliers/products"]'],'block')
 
-		if(window.bms.default.state.supplier.prev.id!=params.id){
-			loadProd(params.id)
-		}
+		loadProd(params.id).then(e=>{
+			window.bms.default.spinner.hide()
+		}).catch((e)=>{
+			window.bms.default.spinner.hide()
+			//empty product
+			document.querySelector('.product-container').innerHTML=`
+				<center style="margin-top:50px;">
+					<p><i class="material-icons md-48 text-muted">shopping_basket</i></p>
+					<h5>No Available Product</h5>
+				</center>
+			`
+		})
 	},
 }).resolve()
 
