@@ -37,6 +37,13 @@ appRoute.on({
  		//without this, link will stop working after a few clicks
  	},
 	'/suppliers/all':()=>{
+		if(window.bms.default.state.supplier.isLoaded){
+			window.bms.default.spinner.hide()			
+			return 0
+		}
+		//clear list
+		document.querySelector('.list-section').innerHTML=''
+		//fetch via AJAX
 		ListC.getList().then((data)=>{
 			var parsedData=JSON.parse(data)
 			var json=parsedData.data
@@ -49,6 +56,8 @@ appRoute.on({
 			//autoclick
 			if(json[0]){
 				document.querySelector('.list').children[0].click()
+				//set state as loaded
+				window.bms.default.state.supplier.isLoaded=1
 			}	
 		})
 	}

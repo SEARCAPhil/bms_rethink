@@ -108,7 +108,7 @@ appRoute.on({
 	activeMenu('home_menu')
 	loadHome().then(()=>{
 		hideInit()
-		changeDisplay(['div[name="/suppliers"]','div[name="/suppliers/profile"]'],'none')
+		changeDisplay(['div[name="/suppliers"]','div[name="/suppliers/profile"]','div[name="/suppliers/forms/registration"]'],'none')
 	})
 },
 '/suppliers/*':()=>{

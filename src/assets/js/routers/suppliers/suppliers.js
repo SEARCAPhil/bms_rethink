@@ -22,8 +22,6 @@ const loadSuppliers=()=>{
 		////this will serve as the middleware
 		if(window.bms.default.pages.indexOf('list.html')!=-1){
 			resolve({error:1,message:'page already loaded'})
-			//clear list
-			document.querySelector('.list-section').innerHTML=''
 			return 0;
 		}
 
