@@ -127,7 +127,7 @@ const loadRegistration=()=>{
 		loadSuppliers()
 	},
 	'/suppliers/forms/registration':()=>{
-		window.bms.default.changeDisplay(['div[name="/suppliers/profile"]','route[name="/suppliers/products"]','route[name="/suppliers/settings"]'],'none')
+		window.bms.default.changeDisplay(['div[name="/suppliers/profile"]','route[name="/suppliers/products"]','route[name="/suppliers/settings"]','route[name="/suppliers/logs"]'],'none')
 		loadRegistration()
 	},
 	'/suppliers/:id/*':(params)=>{
