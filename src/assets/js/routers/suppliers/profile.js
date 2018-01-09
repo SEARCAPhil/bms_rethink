@@ -43,7 +43,7 @@ const activateTabNavigation=(id)=>{
 		activateTabNavigation('about-tab')
 		spinner.show()
 		window.bms.default.changeDisplay(['route[name="/suppliers/about"]'],'block')
-		window.bms.default.changeDisplay(['route[name="/suppliers/products"]','route[name="/suppliers/settings"]'],'none')
+		window.bms.default.changeDisplay(['route[name="/suppliers/products"]','route[name="/suppliers/settings"]','route[name="/suppliers/accounts"]','route[name="/suppliers/logs"]'],'none')
 
 		const About=new AboutClass()
 		About.about(params.id).then(json=>{
@@ -60,6 +60,10 @@ const activateTabNavigation=(id)=>{
 	'/suppliers/:id/settings':(params)=>{
 		activateTabNavigation('settings-tab')
 		window.bms.default.lazyLoad(['./assets/js_native/assets/js/routers/suppliers/settings.js'],{once:true})
+	},
+	'/suppliers/:id/logs':(params)=>{
+		activateTabNavigation('logs-tab')
+		window.bms.default.lazyLoad(['./assets/js_native/assets/js/routers/suppliers/logs.js'],{once:true})
 	}
 }).resolve()
 

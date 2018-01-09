@@ -259,7 +259,7 @@ appRoute.on({
 		
 
 		window.bms.default.changeDisplay(['route[name="/suppliers/settings"]'],'block')
-		window.bms.default.changeDisplay(['route[name="/suppliers/products"]','route[name="/suppliers/about"]'],'none')
+		window.bms.default.changeDisplay(['route[name="/suppliers/products"]','route[name="/suppliers/about"]','route[name="/suppliers/accounts"]','route[name="/suppliers/logs"]'],'none')
 
 		loadSettingsSection().then(()=>{
 
