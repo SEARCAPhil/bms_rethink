@@ -1,8 +1,11 @@
-const appRoute=new window.bms.exports.Router('http://localhost/bms_rethink/www/',true)
 import Categories from '../../modules/Suppliers/Components/Products/Categories/Categories.js'
 import CatTemplate from '../../modules/Suppliers/Templates/Products/Categories/Categories.js'
 import ListComp from '../../modules/Suppliers/Components/List/List.js'
 import PopupES from '../../Components/PopupES/PopupES.js'
+
+const appRoute=new window.bms.exports.Router('http://localhost/bms_rethink/www/',true)
+const XHR=new window.bms.exports.XHR()
+
 
 let Cat=new Categories()
 let ListC=new ListComp()
@@ -38,13 +41,13 @@ const loadSettingsSection=()=>{
 	})
 }
 
-const loadUpdateSec=()=>{
+const loadUpdateSec=(id)=>{
 	let el=document.querySelector('.settings-update-section')
 	var htm=`
 		<div>
 			<h5>Update</h5>
 			<p class="text-secondary"><i class="material-icons md-18">update</i> Update company information</p>
-			<p><button type="button" class="btn btn-sm btn-secondary">UPDATE</button></p>
+			<p><a href="#/suppliers/${id}/registration"><button type="button" class="btn btn-sm btn-secondary">UPDATE</button></a></p>
 			<hr/>
 		</div>
 	`
@@ -251,6 +254,23 @@ const removeItemFromList=()=>{
 	document.querySelector(`.list-section > div[data-list="${id}"]`).remove()
 }
 
+const loadRegistrationUpdate=(id)=>{
+	return new Promise((resolve,reject)=>{
+		XHR.request({url:'./pages/suppliers/forms/registration/registration_update.html',method:'GET'}).then((data)=>{
+			var el=document.querySelector('div[name="/suppliers/forms/registration/update"]')
+			el.style.display="block"
+			el.innerHTML=data
+
+			setTimeout(()=>{
+				window.bms.default.scriptLoader(el)
+			},100)
+
+			resolve(data)
+		})
+	}) 
+	
+}
+
 appRoute.on({
  	'/*':()=>{
  		//required
@@ -265,7 +285,7 @@ appRoute.on({
 
 			let details=window.bms.default.state.supplier.cur
 			
-			loadUpdateSec()
+			loadUpdateSec(params.id)
 			loadDeleteSec()
 
 			setTimeout(()=>{
@@ -293,6 +313,11 @@ appRoute.on({
 
 
 		})
+	},
+	'/suppliers/:id/registration':(params)=>{
+		window.bms.default.changeDisplay(['div[name="/suppliers/forms/registration"]','div[name="/suppliers/profile"]','route[name="/suppliers/products"]','route[name="/suppliers/settings"]','route[name="/suppliers/logs"]'],'none')
+		window.bms.default.changeDisplay(['div[name="/suppliers/forms/registration/update"]'],'block')
+		loadRegistrationUpdate(params.id)
 	}
 }).resolve()
 

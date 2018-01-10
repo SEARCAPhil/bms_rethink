@@ -111,4 +111,4 @@ const addContactNumber=(e)=>{
 document.querySelector('.add-supplier-button').removeEventListener('click',saveProfile)
 document.querySelector('.add-supplier-button').addEventListener('click',saveProfile)
 
-document.querySelector('#add-number-field').addEventListener('click',addContactNumber)
+//document.querySelector('#add-number-field').addEventListener('click',addContactNumber)
