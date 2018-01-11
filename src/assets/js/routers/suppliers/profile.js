@@ -64,6 +64,10 @@ const activateTabNavigation=(id)=>{
 	'/suppliers/:id/logs':(params)=>{
 		activateTabNavigation('logs-tab')
 		window.bms.default.lazyLoad(['./assets/js_native/assets/js/routers/suppliers/logs.js'],{once:true})
+	},
+	'/suppliers/:id/accounts':(params)=>{
+		activateTabNavigation('accounts-tab')
+		window.bms.default.lazyLoad(['./assets/js_native/assets/js/routers/suppliers/accounts.js'],{once:true})
 	}
 }).resolve()
 
