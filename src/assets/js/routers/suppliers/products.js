@@ -60,7 +60,7 @@ appRoute.on({
  	},
 	'/suppliers/:id/products':(params)=>{ 
 
-		window.bms.default.changeDisplay(['route[name="/suppliers/about"]','route[name="/suppliers/settings"]'],'none')
+		window.bms.default.changeDisplay(['route[name="/suppliers/about"]','route[name="/suppliers/settings"]','route[name="/suppliers/logs"]','route[name="/suppliers/logs"]'],'none')
 		window.bms.default.changeDisplay(['route[name="/suppliers/products"]'],'block')
 
 		loadProd(params.id).then(e=>{

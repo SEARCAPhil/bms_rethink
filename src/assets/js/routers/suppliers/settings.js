@@ -288,7 +288,7 @@ appRoute.on({
 			loadUpdateSec(params.id)
 			loadDeleteSec()
 
-			setTimeout(()=>{
+			document.addEventListener('profilechange',function(){
 				if(details.data.status==0){
 					loadBlockSec()
 					let blockButtonDialog=document.querySelector('#block-suppliers-button-modal')
@@ -304,8 +304,10 @@ appRoute.on({
 				
 				//enable dynamic dialog
 				PopupInstance=new PopupES()
-			},2500)
+				
+			})
 
+		
 
 			//remove
 			let delButtonDialog=document.querySelector('#delete-suppliers-button-modal')

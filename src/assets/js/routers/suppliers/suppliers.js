@@ -81,8 +81,11 @@ const changeProfileInfo=(data)=>{
 	var details=(data.detail.data[0])
 	window.bms.default.state.supplier.cur.id=details.id
 	window.bms.default.state.supplier.cur.data=details
-	document.querySelector('.company-alias').innerHTML=details.alias
-	document.querySelector('.company-name').innerHTML=details.name
+	document.querySelector('.company-alias').innerHTML=details.alias||''
+	document.querySelector('.company-name').innerHTML=details.name||''
+
+	//set as currently selected
+	window.bms.default.state.supplier.cur.data=details
 
 	//logo
 	if(details.logo){
@@ -126,14 +129,19 @@ const loadRegistration=()=>{
 		window.bms.default.spinner.show()
 		loadSuppliers()
 	},
+	'/suppliers/blocked':()=>{
+		window.bms.default.spinner.show()
+		loadSuppliers()
+	},
 	'/suppliers/forms/registration':()=>{
 		window.bms.default.changeDisplay(['div[name="/suppliers/forms/registration/update"]','div[name="/suppliers/profile"]','route[name="/suppliers/products"]','route[name="/suppliers/settings"]','route[name="/suppliers/logs"]'],'none')
 		loadRegistration()
 	},
 	'/suppliers/:id/*':(params)=>{
+
 		window.bms.default.changeDisplay(['div[name="/suppliers/profile"]'],'block')
 
-		if(window.bms.default.state.supplier.cur.id==params.id) return 0;
+		//if(window.bms.default.state.supplier.cur.id==params.id) return 0;
 
 		//set active
 		document.querySelectorAll('.list').forEach((el,index)=>{
@@ -159,7 +167,11 @@ const loadRegistration=()=>{
 
 		}).catch(e=>{
 			console.log(e)
-		})	
+		})
+
+
+		
+			
 	}
 }).resolve()
 

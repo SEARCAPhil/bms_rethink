@@ -18,13 +18,13 @@ window.bms.default.spinner.show()
 	var location=document.querySelector('form[name="registration-update"] textarea#location')
 	var about=document.querySelector('form[name="registration-update"] textarea#about')
 	var number=document.querySelectorAll('.number')
-
-	name.value=data.name
-	alias.value=data.alias
-	tagline.value=data.tagline
-	location.value=data.location
-	about.value=data.about
-	industry.value=data.industry
+	
+	name.value=data.name||''
+	alias.value=data.alias||''
+	tagline.value=data.tagline||''
+	location.value=data.location||''
+	about.value=data.about||''
+	industry.value=data.industry||''
 }
 
 const updateProfile=function(e){	

@@ -1,12 +1,17 @@
-const appRoute=new window.bms.exports.Router('http://localhost/bms_rethink/www/',true)
 import AboutClass from '../../modules/Suppliers/Components/About/About.js'
+import ListUtilities from '../../modules/Suppliers/Util/List/List.js'
+
+const appRoute=new window.bms.exports.Router('http://localhost/bms_rethink/www/',true)
+const appRouteList=new window.bms.exports.Router('http://localhost/bms_rethink/www/',true)
+const ListUtil = new ListUtilities()
 
 var loadedOnce=0
 let spinner=window.bms.default.spinner
 let prev=window.bms.default.state.supplier.cur
 
+
 const loadData=(data)=>{
-	console.log(data)
+	
 	var industries=''
 	var ind=data.industry.split(',')
 
@@ -34,6 +39,26 @@ const activateTabNavigation=(id)=>{
 		}
 	})
 }
+ appRouteList.on({
+ 	'/*':()=>{
+ 		//required
+ 	},
+	'/suppliers/:id/*':(params)=>{
+
+		if(window.bms.default.pages.indexOf('list.html')==-1){
+			ListUtil.loadSuppliersSection().then(htm=>{
+				//lazyload additional script
+				window.bms.default.lazyLoad(['./assets/js_native/assets/js/routers/suppliers/list.js'],{once:true})
+				ListUtil.loadAllSuppliers().then(()=>{
+					//set as loaded
+					window.bms.default.pages.push('list.html')
+				})
+			})	
+		}
+		
+		
+	}
+}).resolve()
 
  appRoute.on({
  	'/*':()=>{
