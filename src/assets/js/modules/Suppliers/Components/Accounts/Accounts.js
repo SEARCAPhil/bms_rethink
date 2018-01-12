@@ -41,4 +41,13 @@ export default class{
 
 		return XHR.request({method:'POST',url:url,body:JSON.stringify(opt)})
 	}
+
+	changePass(opt={}){
+		var url=`http://localhost/bms_api/src/api/suppliers/accounts/`
+
+		//require exports.js
+		const XHR=new window.bms.exports.XHR()
+
+		return XHR.request({method:'POST',url:url,body:JSON.stringify(opt)})
+	}
 }

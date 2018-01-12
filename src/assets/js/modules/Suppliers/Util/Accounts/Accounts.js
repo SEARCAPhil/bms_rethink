@@ -101,6 +101,39 @@ export default class{
 	}
 
 
+	loadPassInputField(){
+		//save to state as currently selected account
+		if(!window.bms.default.state.account.cur) window.bms.default.state.account.cur={}
+		window.bms.default.state.account.cur.data=JSON.parse(this.props)
+
+		//mark button as loaded
+		this.button.classList.add('event-listening')
+
+		this.inputField = document.createElement('input')
+		this.inputField.name = "password"
+		this.inputField.type = "password"
+		this.inputField.classList.add("form-control","password-new-field")
+		this.inputField.placeholder = "Type new password"
+
+		//add listeners
+		this.inputField.addEventListener('keyup',this.changePass.bind(this))
+		this.inputField.addEventListener('blur',()=>{
+			if(this.inputField.value.length<1){
+				this.inputField.replaceWith(this.button)
+				//hide spinner
+				window.bms.default.spinner.hide()
+				//remove instruction
+				this.button.parentNode.children[0].innerHTML=''
+			}
+		})
+
+		this.button.replaceWith(this.inputField)
+		this.inputField.parentNode.children[0].innerHTML='<small><span class="text-danger">Press <span class="badge badge-sm badge-light">Enter</span> to save or <span class="badge badge-sm badge-light">Esc</span> to cancel </span></small>'
+		
+	
+	}
+
+
 	removeAccount(id){
 		let accountId = window.bms.default.state.account.cur.data.id
 		window.bms.default.spinner.show()
@@ -177,6 +210,50 @@ export default class{
 
 	}
 
+	changePass(e){
+		//on escape
+		if(e.keyCode==27) try{ this.inputField.replaceWith(this.button) }catch(e){ }
+
+		//save on enter
+		if(e.keyCode==13){
+			window.bms.default.spinner.show()
+
+			//save
+			let accountId = window.bms.default.state.account.cur.data.id
+			let status = window.bms.default.state.account.cur.data.status
+			let pass = this.inputField.value
+
+
+			AccC.changePass({id:accountId,action:'change_pass',password:pass}).then(json=>{
+					let parsedData=JSON.parse(json)
+					let data=parsedData.data
+
+
+					if(data!=1){
+						alert('Oops!Something went wrong. Please try again later.')
+						this.inputField.replaceWith(this.button)
+						this.button.parentNode.children[0].innerHTML='<i class="material-icons md-18 text-danger">clear</i>&emsp;'
+
+					}else{
+						//close modals
+						this.PopupInstance.closeAll()
+						//back to masked text
+						this.inputField.replaceWith(this.button)
+						//show success status
+						this.button.parentNode.children[0].innerHTML='<i class="material-icons md-18 text-success">check_circle</i>&emsp;'
+					}
+
+					window.bms.default.spinner.hide()
+
+					
+
+					
+
+			}).catch(err=>{ console.log(err);alert('Oops!Something went wrong. Please try again later.')})
+		}
+		
+	}
+
 
 	attachEventModalToDeleteButton(){
 		let target = document.querySelectorAll('.account-delete-button')
@@ -204,6 +281,21 @@ export default class{
 			a.button=el
 			el.removeEventListener('click',this.loadBlockAccountModal)
 			el.addEventListener('click',this.loadBlockAccountModal.bind(a))
+			
+		})
+	}
+
+	attachEventToChangePass(){
+		let target = document.querySelectorAll('.password-field')	
+		target.forEach((el,index)=>{
+			//mark as listening
+			el.classList.add('listening')
+			//clone class methods
+			let  a=Object.assign({ __proto__: this.__proto__ }, this)
+			a.props=el.getAttribute('data-prop')
+			a.button=el
+			el.removeEventListener('dblclick',this.loadPassInputField)
+			el.addEventListener('dblclick',this.loadPassInputField.bind(a))
 			
 		})
 	}

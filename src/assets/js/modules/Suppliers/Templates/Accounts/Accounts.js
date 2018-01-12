@@ -23,7 +23,7 @@ export default class{
 
 		this.element.innerHTML=`
 				<td>${this.properties.username}</td>
-				<td>*********</td>
+				<td><span class="password-field-status"></span><span class="password-field" data-item='${this.properties.id}'  data-prop='${data}'>*********</span></td>
 				<td>
 					<button class="btn btn-sm btn-dark account-delete-button" data-prop='${data}'  data-target="#account-settings-modal" data-popup-toggle="open">REMOVE</button>
 					${defaultBlockButton}
