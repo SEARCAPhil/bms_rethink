@@ -120,6 +120,7 @@ appRoute.on({
 					//enable deletion & bocking
 					AccUTil.attachEventModalToDeleteButton()
 					AccUTil.attachEventModalToBlockButton()
+					AccUTil.attachEventToChangePass()
 					
 				})
 		
