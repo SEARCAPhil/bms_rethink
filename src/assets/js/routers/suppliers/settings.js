@@ -47,7 +47,7 @@ const loadUpdateSec=(id)=>{
 		<div>
 			<h5>Update</h5>
 			<p class="text-secondary"><i class="material-icons md-18">update</i> Update company information</p>
-			<p><a href="#/suppliers/${id}/registration"><button type="button" class="btn btn-sm btn-secondary">UPDATE</button></a></p>
+			<p><a href="#/suppliers/${id}/forms/registration"><button type="button" class="btn btn-sm btn-secondary">UPDATE</button></a></p>
 			<hr/>
 		</div>
 	`
@@ -258,7 +258,6 @@ const loadRegistrationUpdate=(id)=>{
 	return new Promise((resolve,reject)=>{
 		XHR.request({url:'./pages/suppliers/forms/registration/registration_update.html',method:'GET'}).then((data)=>{
 			var el=document.querySelector('div[name="/suppliers/forms/registration/update"]')
-			el.style.display="block"
 			el.innerHTML=data
 
 			setTimeout(()=>{
@@ -316,10 +315,15 @@ appRoute.on({
 
 		})
 	},
-	'/suppliers/:id/registration':(params)=>{
-		window.bms.default.changeDisplay(['div[name="/suppliers/forms/registration"]','div[name="/suppliers/profile"]','route[name="/suppliers/products"]','route[name="/suppliers/settings"]','route[name="/suppliers/logs"]'],'none')
+	'/suppliers/:id/forms/registration':(params)=>{
+		//window.bms.default.changeDisplay(['div[name="/suppliers/forms/registration"]','div[name="/suppliers/profile"]','route[name="/suppliers/products"]','route[name="/suppliers/settings"]','route[name="/suppliers/logs"]'],'none')
+		//window.bms.default.changeDisplay(['div[name="/suppliers/forms/registration/update"]'],'block')
+		loadRegistrationUpdate(params.id).then(()=>{
+			document.querySelector('.back-to-profile-button').setAttribute('href',`#/suppliers/${params.id}/about`)
+		})
 		window.bms.default.changeDisplay(['div[name="/suppliers/forms/registration/update"]'],'block')
-		loadRegistrationUpdate(params.id)
+		window.bms.default.changeDisplay(['div[name="/suppliers/forms/registration"]','div[name="/suppliers/profile"]'],'none')
+		
 	}
 }).resolve()
 

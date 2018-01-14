@@ -93,6 +93,21 @@ const changeProfileInfo=(data)=>{
 	}else{
 		document.querySelector('.logo-section').innerHTML=''
 	} 
+
+	let lg = window.getComputedStyle(document.querySelector('.hidden-on-lg')).display
+
+	if(lg!='none'){
+		let listSidebar = document.querySelector('div[name="/suppliers"]')
+		listSidebar.classList.add('hide')
+
+		let profSection = document.querySelector('div[name="/suppliers/profile"]')
+		profSection.classList.add('show')
+	}
+
+
+	//back to list
+	document.querySelector('.back-to-list-button').addEventListener('click',backToList)
+	
 }
 
 const changeMenuLink=(id)=>{
@@ -107,7 +122,7 @@ const loadRegistration=()=>{
 	return new Promise((resolve,reject)=>{
 		XHR.request({url:'./pages/suppliers/forms/registration/registration.html',method:'GET'}).then((data)=>{
 			var el=document.querySelector('div[name="/suppliers/forms/registration"]')
-			el.style.display="block"
+
 			el.innerHTML=data
 
 			setTimeout(()=>{
@@ -118,6 +133,16 @@ const loadRegistration=()=>{
 		})
 	}) 
 	
+}
+
+const backToList=(e)=>{
+	e.preventDefault()
+	let profSection = document.querySelector('div[name="/suppliers/profile"]')
+	let listSidebar = document.querySelector('div[name="/suppliers"]')
+
+	//show list and hide profile
+	listSidebar.classList.remove('hide','show')
+	profSection.classList.remove('show')
 }
 
  appRoute.on({
@@ -134,12 +159,33 @@ const loadRegistration=()=>{
 		loadSuppliers()
 	},
 	'/suppliers/forms/registration':()=>{
+		window.bms.default.changeDisplay(['div[name="/suppliers/forms/registration"]'],'block')
 		window.bms.default.changeDisplay(['div[name="/suppliers/forms/registration/update"]','div[name="/suppliers/profile"]','route[name="/suppliers/products"]','route[name="/suppliers/settings"]','route[name="/suppliers/logs"]'],'none')
-		loadRegistration()
+		
+		
+
+		//toggle list sidebar for medium and small devices
+		let lg = window.getComputedStyle(document.querySelector('.hidden-on-lg')).display
+
+		if(lg=='block'){
+			window.bms.default.changeDisplay(['div[name="/suppliers"]'],'none')	
+		}
+
+	
+		if(window.bms.default.pages.indexOf('list.html')==-1){
+			loadSuppliers().then(()=>{
+
+				loadRegistration()
+			})
+		}else{
+			loadRegistration()
+		}
 	},
 	'/suppliers/:id/*':(params)=>{
 
 		window.bms.default.changeDisplay(['div[name="/suppliers/profile"]'],'block')
+		window.bms.default.changeDisplay(['div[name="/suppliers/forms/registration/update"]','div[name="/suppliers/forms/registration"]'],'none')
+		
 
 		//if(window.bms.default.state.supplier.cur.id==params.id) return 0;
 
@@ -157,6 +203,7 @@ const loadRegistration=()=>{
 			changeMenuLink(params.id)
 			document.removeEventListener('profilechange',changeProfileInfo)
 			document.addEventListener('profilechange',changeProfileInfo)
+
 		}).catch((e)=>{
 			
 		})

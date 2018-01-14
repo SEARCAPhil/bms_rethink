@@ -253,11 +253,15 @@
         <router class="row">
             <route class="default-spinner"></route>
             <div name="/home" page="pages/welcome.html" class="col col-lg-9 col-sm-12 col-xs-12 offset-lg-2 max-height-panel"></div>
-            <div name="/suppliers" page="pages/suppliers/list/list.html" class="col-md-12 col-lg-2 offset-lg-2 max-height-panel"></div>
-            <div name="/suppliers/profile" page="pages/suppliers/profile/profile.html" class="col col-lg-8 col-sm-12 col-xs-12 .d-sm-none max-height-panel"></div>
+            <div name="/suppliers" page="pages/suppliers/list/list.html" class="col-md-12 col-lg-2 offset-lg-2 max-height-panel" style="z-index: 1;box-shadow: 0px 0px 4px rgba(180,180,180,0.6);"></div>
+            <div name="/suppliers/profile" page="pages/suppliers/profile/profile.html" class="col col-lg-8 col-sm-12 col-xs-12 d-none d-lg-block max-height-panel" style="background: rgb(252,252,252);"></div>
             <div name="/suppliers/forms/registration" class="col-lg-8 col-sm-12 col-xs-12 max-height-panel"></div>
             <div name="/suppliers/forms/registration/update" class="col-lg-8 col-sm-12 col-xs-12 max-height-panel"></div>
         </router>
+        <div class="d-none d-sm-block hidden-on-xs"></div>
+        <div class="d-sm-none d-md-block hidden-on-sm"></div>
+        <div class="d-md-none d-lg-block hidden-on-md"></div>
+        <div class="d-lg-none hidden-on-lg"></div>
     </article>
 
 

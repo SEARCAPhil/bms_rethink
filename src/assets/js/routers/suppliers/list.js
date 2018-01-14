@@ -74,7 +74,7 @@ appRoute.on({
 
 		loadAllSuppliers().then(()=>{
 			//autoclick
-			try{ document.querySelector('.list').children[0].click() }catch(e){ }
+			//try{ document.querySelector('.list').children[0].click() }catch(e){ }
 		})
 
 	},
@@ -113,11 +113,14 @@ appRoute.on({
 
 			//autoclick
 			if(json[0]){
-				document.querySelector('.list').children[0].click()
+				//document.querySelector('.list').children[0].click()
 				//set state as loaded
 				window.bms.default.state.supplier.isLoaded=1
 			}	
 		})
+	},
+	'/suppliers/forms/registration':()=>{
+		loadAllSuppliers()			
 	}
 
 }).resolve()

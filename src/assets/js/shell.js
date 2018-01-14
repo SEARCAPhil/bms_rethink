@@ -39,7 +39,7 @@ window.bms.default.lazyLoad=(src=[],opts={})=>{
 //parse script and link from DOM
 //since XHR DOESn't execute js
 window.bms.default.scriptLoader=(scope)=>{
-	console.log(scope)
+	
 	scope.querySelectorAll(`script`).forEach((sc,index)=>{
 
 		let el=document.createElement('script')
@@ -61,8 +61,18 @@ window.bms.default.scriptLoader=(scope)=>{
 
 window.bms.default.changeDisplay=(selector=[],display="block")=>{
 	selector.forEach((val,index)=>{
+
 		var el=document.querySelector(val)
-		if(el) el.style.display=display
+		if(el){
+			console.log(el)
+			if(display=='block'){
+				el.classList.remove('hide')
+				el.classList.add('show')
+			}else{
+				el.classList.remove('show')
+				el.classList.add('hide')
+			}
+		} 
 	})
 }
 
@@ -109,6 +119,7 @@ appRoute.on({
 	loadHome().then(()=>{
 		hideInit()
 		changeDisplay(['div[name="/suppliers"]','div[name="/suppliers/profile"]','div[name="/suppliers/forms/registration"]','div[name="/suppliers/forms/registration/update"]'],'none')
+		changeDisplay(['div[name="/home"]'],'block')
 	})
 },
 '/suppliers/*':()=>{
@@ -127,6 +138,7 @@ var initH=(window.innerHeight)
 
 const changeHeight=(selector)=>{
 	document.querySelectorAll(selector).forEach((el,index)=>{
+		el.style.minHeight=`${window.innerHeight}px`
 		el.style.maxHeight=`${window.innerHeight}px`
 		el.style.overflowY='hidden'
 		el.style.overflow="auto"
@@ -151,3 +163,42 @@ if(newWorker){
 }).catch(err=>{
 console.log(err)
 })*/
+
+
+window.addEventListener('resize',e=>{
+	let xs = window.getComputedStyle(document.querySelector('.hidden-on-xs')).display
+	let sm = window.getComputedStyle(document.querySelector('.hidden-on-sm')).display
+	let md = window.getComputedStyle(document.querySelector('.hidden-on-md')).display
+	let lg = window.getComputedStyle(document.querySelector('.hidden-on-lg')).display
+
+	
+
+	if(lg=='none'){
+		let profSection = document.querySelector('div[name="/suppliers/profile"]')
+		profSection.classList.add('show')
+		profSection.classList.remove('hide')
+
+		let listSidebar = document.querySelector('div[name="/suppliers"]')
+
+		listSidebar.classList.remove('hide','show')
+
+		let dockerSidebar = document.querySelector('#docker-sidebar')
+
+		dockerSidebar.classList.remove('hide','show')
+
+	}
+
+	changeHeight('.max-height-panel')
+
+	//suppliers list
+	/*let listSidebar = document.querySelector('div[name="/suppliers"]')
+	let listSidebarStyle = listSidebar.classList.contains('hide')
+	
+	if(listSidebarStyle&&lg=='none') listSidebar.classList.replace('hide','show')
+
+	//profile
+	let profSection = document.querySelector('div[name="/suppliers/profile"]')
+
+	if(profSection.classList.contains('hide')) profSection.classList.replace('hide','show')*/
+	
+})
