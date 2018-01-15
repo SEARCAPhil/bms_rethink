@@ -1,0 +1,44 @@
+<style type="text/css">
+	#product-modal > .content:not([data-role=none]){
+		width: 40%;
+		left: calc(42% - 125px);
+	}
+	.register-account-modal-section{
+		padding: 20px;
+	}
+	[name="category-registration-form"] input,[name="account-registration-form"] textarea{
+		border:none;
+		border-bottom:2px solid rgba(200,200,200,0.4);
+		transition: border 0.2s ease-in-out;
+		border-radius: 0px;
+	}
+
+	[name="category-registration-form"] input:focus,[name="category-registration-form"] textarea:focus{
+		outline: none;
+		box-shadow: none;
+		border-bottom: 2px solid #009688;
+	}
+
+</style>
+<section class="register-account-modal-section">
+	<h3>Add new category</h3>
+	<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis</p>
+	<hr/>
+
+	<form class="form-horizontal" name="category-registration-form">
+		<div class="form-group">
+			<input type="text" name="name" id="name" class="form-control" placeholder="Category name" required autofocus="true">
+		</div>
+
+		<div class="form-group">
+			<textarea name="description" id="description" class="form-control" placeholder="Description" rows="7" required></textarea>
+		</div>
+
+		<div class="form-group float-right">
+			<button class="btn btn-danger" type="button" id="modal-dialog-add-category-button">YES</button> 
+			<button class="btn btn-secondary" type="button" id="modal-dialog-close-button">NO</button>
+		</div>
+	</form>
+
+</section>
+<script async src="./assets/js_native/assets/js/modules/Suppliers/Util/Forms/Products/Category.js"></script>
