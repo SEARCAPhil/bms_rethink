@@ -8,6 +8,20 @@ h1,h2,h3,h4,h5,h6{
 a,a:focus,a:hover{
   color: #009688;
 }
+input:not([data-role="none"]),textarea:not([data-role="none"]){
+  border:none !important;
+  border-bottom:2px solid rgba(180,180,180,0.4) !important;
+  transition: border 0.2s ease-in-out;
+  border-radius: 0px !important;
+  background: none !important;
+}
+
+input:focus:not([data-role="none"]),textarea:focus:not([data-role="none"]){
+  outline: none !important;
+  box-shadow: none !important;
+  border-bottom: 2px solid #009688 !important;
+}
+
 .navbar-top{
     background: rgb(60,60,60) !important;
     margin-bottom: 0;
@@ -90,6 +104,3 @@ a,a:focus,a:hover{
 .material-icons.md-light { color: rgba(255, 255, 255, 1); }
 .material-icons.md-light.md-inactive { color: rgba(255, 255, 255, 0.3); }
 
-/*#docker-sidebar{
-  margin-top: 50px;
-}*/

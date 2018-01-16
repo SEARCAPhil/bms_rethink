@@ -19,7 +19,7 @@ export default class{
 		this.element.setAttribute('data-list',this.properties.id)
 		this.element.setAttribute('data-json',JSON.stringify(this.properties))
 		let htmlContent=`
-					<p><b><a href="#">${this.properties.name}</a></b></p>
+					<p class="category-name category-name-${this.properties.id}"><b><a href="#/suppliers/${this.properties.cid}/products/category/${this.properties.id}">${this.properties.name}</a></b></p>
 					<p class="category-description-${this.properties.id}">${this.properties.description}</p>
 					<!--<ul class="breadcrumb">
 						<li class="active"><i class="material-icons md-12">arrow_forward</i> </li>
@@ -37,7 +37,7 @@ export default class{
 							}
 
 			htmlContent+=`</small>
-						<div class="row"><hr/></div>
+						<div class="row"></div>
 					</div>`
 
 

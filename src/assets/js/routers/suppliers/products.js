@@ -1,4 +1,5 @@
 import Categories from '../../modules/Suppliers/Components/Products/Categories/Categories.js'
+import Products from '../../modules/Suppliers/Components/Products/Products.js'
 import CatTemplate from '../../modules/Suppliers/Templates/Products/Categories/Categories.js'
 import ProdUtilities from '../../modules/Suppliers/Util/Forms/Products/Category.js'
 import PopupES from '../../Components/PopupES/PopupES.js'
@@ -6,10 +7,12 @@ import PopupES from '../../Components/PopupES/PopupES.js'
 //window.bms.exports.PopupEs=PopupEs
 const XHR=new window.bms.exports.XHR()
 const appRoute=new window.bms.exports.Router('http://localhost/bms_rethink/www/',true)
+const appRouteProd=new window.bms.exports.Router('http://localhost/bms_rethink/www/',true)
 const ProdUtil = new ProdUtilities()
 
 
 let Cat=new Categories()
+let Prod=new Products()
 let PopupInstance
 
 const loadProductSection=()=>{ 
@@ -28,6 +31,7 @@ const loadProductSection=()=>{
 				<div class="product-menu-section"></div>
 				<hr/>
 				<div class="product-container"></div>
+				<div class="category-profile-container"></div>
 			</div>
 		</section>`
 
@@ -53,7 +57,7 @@ const loadProd=(id)=>{
 					var CatTemp=new CatTemplate()
 					var el=document.querySelector('.product-container')
 					for(let x of data){
-						el.append(CatTemp.render({name:x.name,description:x.description,id:x.id,buttons:['update','remove']}))
+						el.append(CatTemp.render({name:x.name,description:x.description,id:x.id,cid:x.company_id,buttons:['update','remove']}))
 						resolve(this)
 					}
 
@@ -66,19 +70,48 @@ const loadProd=(id)=>{
 	})
 }
 
+const getProducts=(cid,page=1)=>{
+	Prod.lists({id:cid,page:page}).then((json)=>{
+		var parsedData=JSON.parse(json)
+		var data=parsedData.data
+
+		if(data.length>0&&page==1){
+			document.querySelector('.product-table-section').innerHTML=`
+				<table class="table product-table">
+							<thead>
+								<th>Product name</th>
+								<th>Description</th>
+								<th>Price</th>
+							</thead>
+							<tbody>
+								
+							</tbody>
+						</table>
+			`
+		}
+
+		setTimeout(function() {
+			let target = document.querySelector('.product-table tbody')
+
+			for(let x=0; x<data.length;x++){
+				target.innerHTML+=`
+					<tr>
+						<td><a href="#">${data[x].name}</a></td>
+						<td></td>
+						<td></td>
+					</tr>
+				`
+			}
+
+		}, 10);
+	})
+}
 
 
-
-
-
-appRoute.on({
- 	'/*':()=>{
- 		//required
- 	},
-	'/suppliers/:id/products':(params)=>{ 
-
+const prodInit=(params)=>{
+	window.bms.default.changeDisplay(['route[name="/suppliers/products"]'],'block')
 		window.bms.default.changeDisplay(['route[name="/suppliers/about"]','route[name="/suppliers/settings"]','route[name="/suppliers/logs"]','route[name="/suppliers/logs"]','route[name="/suppliers/accounts"]'],'none')
-		window.bms.default.changeDisplay(['route[name="/suppliers/products"]'],'block')
+		
 
 		loadProductSection().then(()=>{
 				//load menu
@@ -100,11 +133,53 @@ appRoute.on({
 					</center>
 				`
 
-
 			})
-		})
+	})	
+}
 
+
+appRoute.on({
+ 	'/*':()=>{
+ 		//required
+ 	},
+	'/suppliers/:id/products':(params)=>{ 
+		
+		prodInit(params);
 		
 	},
+	'/suppliers/:id/products/category/:cid':(params)=>{ 
+			prodInit(params);
+			window.bms.default.spinner.show()
+			window.bms.default.changeDisplay(['.product-container'],'none')
+			window.bms.default.changeDisplay(['.category-profile-container'],'block')
+			
+
+			let target = document.querySelector('.category-profile-container')
+
+
+
+			Cat.view(params.cid).then((json)=>{
+
+
+				var parsedData=JSON.parse(json)
+				var data=parsedData.data
+
+				if(data[0]){
+					data = data[0]
+					target.innerHTML=`
+						<h3>${data.name} <button class="btn btn-sm btn-secondary">add +</button></h3>
+						<p>${data.description}</p>
+
+						<div class="row product-table-section"></div>
+					`	
+				}
+				getProducts(params.cid)
+				window.bms.default.spinner.hide()
+
+			})
+
+			
+
+	}
 }).resolve()
 

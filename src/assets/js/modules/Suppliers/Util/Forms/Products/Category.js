@@ -32,6 +32,7 @@ export default class{
 			name:name.value,
 			description:description.value,
 			action:'create',
+			company_id:id,
 			id:id
 		}
 
@@ -40,6 +41,8 @@ export default class{
 			var parsedJson=JSON.parse(json)
 
 			if(parsedJson.data){
+				//update id in data to category's Primary Key
+				data.id=parsedJson.data
 				this.showSuccessNotif(data)
 			}else{
 				this.showErrorNotif(data)	
@@ -147,23 +150,43 @@ export default class{
 
 	loadUpdateInputField(e){
 		let a = Object.assign({ __proto__: this.__proto__ }, this)
+		const id=window.bms.default.state.supplier.cur.id
 		//parent
 		const categoryId = e.target.getAttribute('data-category-id')
 		const parentDiv = document.querySelector(`.category[data-list="${categoryId}"]`)
+		const json = parentDiv.getAttribute('data-json')
+	
 
 		const descriptionEl = document.querySelector(`.category-description-${categoryId}`)
 		const descriptionElValue = descriptionEl.innerText
 
 
+		//category name parent
+		let categoryNameParent = document.querySelector(`.category-name-${categoryId}`)
+
+
+		//category name
+		let categoryName = document.createElement('p')
+		categoryName.classList.add('category-name',`category-name-${categoryId}`)
+		categoryName.innerHTML=`
+			<b><a href="#/suppliers/${id}/products/category/${categoryId}">${categoryNameParent.innerText}</a></b>
+		`
+
+		//category field
+		let categoryField = document.createElement('input')
+		categoryField.type = "text"
+		categoryField.value = categoryNameParent.innerText
+		categoryField.classList.add('form-control','category-name-text-field',`category-name-text-field-${categoryId}`)
+
 		//textarea
 		let el = document.createElement('textarea')
-		el.classList.add("form-control")
+		el.classList.add("form-control",`category-description-textarea-${categoryId}`)
 		el.rows=6
 		el.textContent=descriptionElValue
-		el.setAttribute('data-json',parentDiv.getAttribute('data-json'))
+		el.setAttribute('data-json',json)
+		el.autofocus = 'autofocus'
 
-
-		//description
+		//description paragraph
 		let p = document.createElement('p')
 		p.classList.add(`category-description-${categoryId}`)
 		p.textContent = descriptionElValue
@@ -171,13 +194,14 @@ export default class{
 		//add button
 		let createButton = document.createElement('button')
 		createButton.classList.add('btn','btn-sm','btn-danger')
+		createButton.setAttribute('data-list',categoryId)
 		createButton.type = "button"
 		createButton.textContent = "enter"
 		createButton.addEventListener('click',this.updateCategory.bind(a))
 
 		//status
 		let status = document.createElement('span')
-		status.classList.add('category-field-status','text-danger')
+		status.classList.add('category-field-status','text-danger',`category-field-status-${categoryId}`)
 		status.innerHTML = `<br/><p><small>Click <span class="category-field-status-create-button-${categoryId}"></span> to save or press <span class="badge badge-sm badge-light">Esc</span> to cancel </small></p>`
 
 
@@ -194,14 +218,24 @@ export default class{
 
 		//on escape
 		el.addEventListener('keyup',(e)=>{
-			if(e.keyCode==27) try{ el.replaceWith(p);el.append(status)}catch(e){}
+			if(e.keyCode==27){
+				try{ 
+					categoryField.replaceWith(categoryName)
+					//revert description
+					el.replaceWith(p);el.append(status)
+				}catch(e){}
+			} 
 		})
 
 		
+		//DOM update
+		categoryNameParent.replaceWith(categoryField)
 		descriptionEl.replaceWith(el)
 		
+		//console.log(el.nextElementSibling.insertBefore(status))
+
 		//show status
-		el.parentNode.insertBefore(status,el)
+		el.parentNode.insertBefore(status,el.nextElementSibling)
 		document.querySelector(`.category-field-status-create-button-${categoryId}`).append(createButton)
 
 	}
@@ -218,10 +252,42 @@ export default class{
 
 	}
 
-	updateCategory(){
-		Cat.update(1).then((json)=>{
+	updateCategory(e){
+		let id = e.target.getAttribute('data-list')
+		let targetTextArea = document.querySelector(`.category-description-textarea-${id}`)
+		let targetNameTextField = document.querySelector(`.category-name-text-field-${id}`)
+
+		let data = {
+			id: id,
+			name: targetNameTextField.value,
+			description: targetTextArea.value,
+			action: 'update'
+		}
+		
+		Cat.update(data).then((json)=>{
 			var parsedData=JSON.parse(json)
 			var data=parsedData.data
+
+			if(!data){
+				alert('Oops!Something went wrong. Please tray again later.')
+				return 0;
+			}
+
+			//proceed
+			let p = document.createElement('p')
+			p.classList.add(`category-description-${id}`)
+			p.textContent = targetTextArea.value
+
+			targetTextArea.replaceWith(p)
+			document.querySelector(`.category-field-status-${id}`).remove()
+
+			//category name
+			let categoryName = document.createElement('p')
+			categoryName.classList.add('category-name',`category-name-${id}`)
+			categoryName.innerHTML=`
+				<b><a href="#/suppliers/${window.bms.default.state.supplier.cur.id}/products/category/${id}">${targetNameTextField.value}</a></b>
+			`
+			targetNameTextField.replaceWith(categoryName)
 		})
 	}
 
@@ -248,7 +314,9 @@ export default class{
 
 	showSuccessNotif(opt){
 		let listSection=document.querySelector('.product-container')
-		listSection.prepend(CatTemp.render({name:opt.name,description:opt.description,buttons:['update','remove']}))
+		listSection.prepend(CatTemp.render({name:opt.name,description:opt.description,id:opt.id,cid:opt.company_id,buttons:['update','remove']}))
+		this.bindDeleteModalButton()
+		this.bindUpdateModalButton()
 	}
 	showErrorNotif(){
 		document.querySelector('#reg-notif-area').innerHTML=`

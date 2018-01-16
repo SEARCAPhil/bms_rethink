@@ -10,6 +10,18 @@ export default class{
 		return XHR.request({method:'GET',url:url})
 
 	}
+
+	view(id){
+
+		var url=`http://localhost/bms_api/src/api/suppliers/products/categories/?id=${id}`
+
+		//require exports.js
+		const XHR=new window.bms.exports.XHR()
+
+		return XHR.request({method:'GET',url:url})
+
+	}
+
 	register(opt={}){
 
 		var url=`http://localhost/bms_api/src/api/suppliers/products/categories/`
@@ -20,7 +32,18 @@ export default class{
 		return XHR.request({method:'POST',url:url,body:JSON.stringify(opt)})
 	}
 
-		remove(opt={}){
+	remove(opt={}){
+
+		var url=`http://localhost/bms_api/src/api/suppliers/products/categories/`
+
+		//require exports.js
+		const XHR=new window.bms.exports.XHR()
+
+		return XHR.request({method:'POST',url:url,body:JSON.stringify(opt)})
+	}
+
+
+	update(opt={}){
 
 		var url=`http://localhost/bms_api/src/api/suppliers/products/categories/`
 
