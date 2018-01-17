@@ -235,6 +235,9 @@ const loadInit=(params)=>{
 	},
 	'/suppliers/:id/products/category/:cid':(params)=>{
 		loadInit(params)	
+	},
+	'/suppliers/:id/products/:pid':(params)=>{
+		loadInit(params)	
 	}
 }).resolve()
 

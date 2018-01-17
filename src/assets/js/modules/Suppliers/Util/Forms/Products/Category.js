@@ -63,7 +63,7 @@ export default class{
 
 
 	loadCategorySection(){ 
-		let el = document.querySelector('.product-menu-section')
+		let el = document.querySelector('.category-menu-section')
 		let btn = document.createElement('button')
 		let a = Object.assign({ __proto__: this.__proto__ }, this)
 

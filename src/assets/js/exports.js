@@ -10,7 +10,8 @@ window.bms=window.bms||{
 		routed:[], // executed routers in window
 		state:{
 			supplier:{},
-			account:{}
+			account:{},
+			product:{}
 		}
 	}, //global functions
 	exports:{

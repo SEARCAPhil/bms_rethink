@@ -98,6 +98,11 @@ const activateTabNavigation=(id)=>{
 		activateTabNavigation('products-tab')
 		spinner.show()
 		window.bms.default.lazyLoad(['./assets/js_native/assets/js/routers/suppliers/products.js'],{once:true})
+	},
+	'/suppliers/:id/products/:pid':(params)=>{
+		activateTabNavigation('products-tab')
+		spinner.show()
+		window.bms.default.lazyLoad(['./assets/js_native/assets/js/routers/suppliers/products.js'],{once:true})
 	}
 }).resolve()
 

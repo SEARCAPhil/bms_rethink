@@ -1,0 +1,33 @@
+<style type="text/css">
+	#product-modal > .content:not([data-role=none]){
+		width: 40%;
+		left: calc(42% - 125px);
+	}
+	.register-product-modal-section{
+		padding: 20px;
+	}
+
+
+</style>
+<section class="register-product-modal-section">
+	<h3>Product</h3>
+	<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis</p>
+	<hr/>
+
+	<form class="form-horizontal" name="product-registration-form">
+		<div class="form-group">
+			<input type="text" name="name" id="name" class="form-control" placeholder="Product name" required autofocus="true">
+		</div>
+
+		<div class="form-group">
+			<textarea name="description" id="description" class="form-control" placeholder="Description" rows="6" required></textarea>
+		</div>
+
+		<div class="form-group float-right">
+			<button class="btn btn-danger" type="button" id="modal-dialog-add-product-button">YES</button> 
+			<button class="btn btn-secondary" type="button" id="modal-dialog-close-button">NO</button>
+		</div>
+	</form>
+
+</section>
+<script async src="./assets/js_native/assets/js/modules/Suppliers/Util/Forms/Products/Products.js"></script>
