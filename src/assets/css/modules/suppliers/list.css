@@ -71,3 +71,9 @@
 .product-category-section:last-child{
 	margin-bottom: 50px;
 }
+
+.category{
+	border-bottom: 1px solid #ccc;
+	padding-bottom: 50px;
+	padding-top: 20px;
+}

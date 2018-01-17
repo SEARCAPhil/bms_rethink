@@ -1,4 +1,5 @@
 const appRoute=new window.bms.exports.Router('http://localhost/bms_rethink/www/',true)
+const appRouteProd=new window.bms.exports.Router('http://localhost/bms_rethink/www/',true)
 
 //stores the ID of previously fetched profile
 window.bms.default.state.supplier.cur={
@@ -145,6 +146,42 @@ const backToList=(e)=>{
 	profSection.classList.remove('show')
 }
 
+const loadInit=(params)=>{
+	window.bms.default.changeDisplay(['div[name="/suppliers/profile"]'],'block')
+	window.bms.default.changeDisplay(['div[name="/suppliers/forms/registration/update"]','div[name="/suppliers/forms/registration"]'],'none')
+	
+
+	//if(window.bms.default.state.supplier.cur.id==params.id) return 0;
+
+	//set active
+	document.querySelectorAll('.list').forEach((el,index)=>{
+		if(el.getAttribute('data-list')==params.id){
+			el.classList.add('active')
+		}else{
+			el.classList.remove('active')
+		}
+	})
+
+
+	loadProfilePage(1).then(e=>{
+		changeMenuLink(params.id)
+		document.removeEventListener('profilechange',changeProfileInfo)
+		document.addEventListener('profilechange',changeProfileInfo)
+
+	}).catch((e)=>{
+		
+	})
+
+	getSuppLiersInfo(params.id).then(data=>{
+		var e=new CustomEvent('profilechange',{detail:data})
+		document.dispatchEvent(e)
+
+	}).catch(e=>{
+		console.log(e)
+	})
+
+}
+
  appRoute.on({
  	'/*':()=>{
  		//this is required to always treat suppliers as separate route
@@ -181,44 +218,23 @@ const backToList=(e)=>{
 			loadRegistration()
 		}
 	},
-	'/suppliers/:id/*':(params)=>{
-
-		window.bms.default.changeDisplay(['div[name="/suppliers/profile"]'],'block')
-		window.bms.default.changeDisplay(['div[name="/suppliers/forms/registration/update"]','div[name="/suppliers/forms/registration"]'],'none')
-		
-
-		//if(window.bms.default.state.supplier.cur.id==params.id) return 0;
-
-		//set active
-		document.querySelectorAll('.list').forEach((el,index)=>{
-			if(el.getAttribute('data-list')==params.id){
-				el.classList.add('active')
-			}else{
-				el.classList.remove('active')
-			}
-		})
-
-
-		loadProfilePage(1).then(e=>{
-			changeMenuLink(params.id)
-			document.removeEventListener('profilechange',changeProfileInfo)
-			document.addEventListener('profilechange',changeProfileInfo)
-
-		}).catch((e)=>{
-			
-		})
-
-		getSuppLiersInfo(params.id).then(data=>{
-			var e=new CustomEvent('profilechange',{detail:data})
-			document.dispatchEvent(e)
-
-		}).catch(e=>{
-			console.log(e)
-		})
-
-
-		
-			
+	'/suppliers/:id/about':(params)=>{
+		loadInit(params)		
+	},
+	'/suppliers/:id/products':(params)=>{
+		loadInit(params)	
+	},
+	'/suppliers/:id/accounts':(params)=>{
+		loadInit(params)	
+	},
+	'/suppliers/:id/logs':(params)=>{
+		loadInit(params)	
+	},
+	'/suppliers/:id/settings':(params)=>{
+		loadInit(params)	
+	},
+	'/suppliers/:id/products/category/:cid':(params)=>{
+		loadInit(params)	
 	}
 }).resolve()
 
