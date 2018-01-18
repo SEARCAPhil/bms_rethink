@@ -28,9 +28,18 @@ const loadProductInit=(params)=>{
 			var parsedData=JSON.parse(json)
 			var data=parsedData.data
 
+			//create button
+			let prodCreateBtn = document.createElement('button')
 
-			if(data.length>0&&page==1){
-				document.querySelector('.product-table-section-main').innerHTML+=`
+			prodCreateBtn.classList.add('btn','btn-sm','btn-dark')
+			prodCreateBtn.setAttribute('data-target','#product-modal')
+			prodCreateBtn.setAttribute('data-popup-toggle','open')
+			prodCreateBtn.textContent = 'add +'
+
+			prodCreateBtn.addEventListener('click',ProdUtil.loadProductRegistrationModal)
+
+			//DOM Table
+			document.querySelector('.product-table-section-main').innerHTML+=`
 					<table class="table product-table">
 						<thead>
 							<th>Product name <span class="product-add-section"></span></th>
@@ -42,6 +51,9 @@ const loadProductInit=(params)=>{
 						</tbody>
 					</table>
 				`
+
+			if(data.length>0&&page==1){
+				
 				//DOM Insert
 				setTimeout(function() {
 					let target = document.querySelector('.product-table tbody')
@@ -58,7 +70,7 @@ const loadProductInit=(params)=>{
 						let htm=`
 							<tr>
 								<td colspan="2">
-									<details>
+									<details open>
 										<summary>
 											<a href="#/suppliers/${params.id}/products/${data[x].id}">${data[x].name}</a>
 										</summary>
@@ -76,15 +88,7 @@ const loadProductInit=(params)=>{
 
 				}, 10);
 
-				//create button
-				let prodCreateBtn = document.createElement('button')
 
-				prodCreateBtn.classList.add('btn','btn-sm','btn-dark')
-				prodCreateBtn.setAttribute('data-target','#product-modal')
-				prodCreateBtn.setAttribute('data-popup-toggle','open')
-				prodCreateBtn.textContent = 'add +'
-
-				prodCreateBtn.addEventListener('click',ProdUtil.loadProductRegistrationModal)
 
 				document.querySelector('.product-add-section').append(prodCreateBtn)
 
@@ -94,6 +98,19 @@ const loadProductInit=(params)=>{
 			}else{
 				window.bms.default.spinner.hide()
 				//empty product list
+				let target = document.querySelector('.product-table-section-main')
+
+				target.innerHTML+=`
+					<center style="margin-top:50px; product-table-main-empty">
+						<p><i class="material-icons md-48 text-muted">shopping_basket</i></p>
+						<h5>No Products</h5>
+						<p>Add an item now to easily track your supply</p>
+						<div class="product-add-section"></div>
+					</center>
+				`
+
+				document.querySelector('.product-add-section').append(prodCreateBtn)
+				PopupInstance = new PopupES()
 			}
 		})
 	})
@@ -134,9 +151,7 @@ appRoute.on({
 				//DOM insert
 				target.innerHTML=`
 					<h3>${data.name}</h3>
-					<span class="product-menu-section">
-						<button class="btn btn-sm btn-dark product-update-modal-button">Update</button>&nbsp; 
-					</span>
+					<span class="product-menu-section"></span>
 					
 					<div class="specs-section" style="margin-top:60px;"></div>
 				`

@@ -99,13 +99,16 @@ export default class{
 		btn.classList.add("btn","btn-dark","btn-sm","float-right")
 		btn.setAttribute('data-target','#product-modal')
 		btn.setAttribute('data-popup-toggle','open')
-		btn.textContent='category +'
+		btn.innerHTML+='<i class="material-icons md-18">insert_drive_file</i> add +'
 
 
 
 		btn.addEventListener('click',this.loadCategoryModal.bind(a))
 		
-		el.innerHTML+=`<h3 style="margin-top:20px;">Categories <span style="float:left;width:33px;height:33px;border-radius:50%;text-align:center;background:#009688;overflow:hidden;margin-left:10px;margin-right:10px;color:rgb(255,255,255);cursor:pointer;valign:bottom;padding:1px;"><i class="material-icons md-24">library_books</i></span><span class="category-add-button-section"></span></h3><hr/>`
+		el.innerHTML+=`<h3 style="margin-top:20px;">Categories 
+			<span style="float:left;width:33px;height:33px;border-radius:50%;text-align:center;background:#009688;overflow:hidden;margin-left:10px;margin-right:10px;color:rgb(255,255,255);cursor:pointer;valign:bottom;padding:1px;"><i class="material-icons md-36">library_books</i></span>
+			<span class="category-add-button-section"></span></h3><hr/>
+		`
 		//add button
 		let btnSection = document.querySelector('.category-add-button-section')
 		btnSection.append(btn)
