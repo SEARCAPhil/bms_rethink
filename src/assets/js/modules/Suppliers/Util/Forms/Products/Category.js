@@ -61,14 +61,42 @@ export default class{
 		})
 	}
 
+	loadCategories(id){
+		return new Promise((resolve,reject)=>{
+				Cat.categories(id).then((json)=>{
+					var parsedData=JSON.parse(json)
+					var data=parsedData.data
+
+					//empty
+					if(data.length<1) reject(this)
+
+					if(data){
+						var CatTemp=new CatTemplate()
+						var el=document.querySelector('.category-container')
+						for(let x of data){
+							el.append(CatTemp.render({name:x.name,description:x.description,id:x.id,cid:x.company_id,buttons:['update','remove']}))
+							resolve(this)
+						}
+
+					}else{
+						reject(this)
+					}
+					
+					
+				})
+		})
+	}
+
+
 
 	loadCategorySection(){ 
 		let el = document.querySelector('.category-menu-section')
+		
 		let btn = document.createElement('button')
 		let a = Object.assign({ __proto__: this.__proto__ }, this)
 
 		//buttons
-		btn.classList.add("btn","btn-dark","btn-sm")
+		btn.classList.add("btn","btn-dark","btn-sm","float-right")
 		btn.setAttribute('data-target','#product-modal')
 		btn.setAttribute('data-popup-toggle','open')
 		btn.textContent='category +'
@@ -77,7 +105,10 @@ export default class{
 
 		btn.addEventListener('click',this.loadCategoryModal.bind(a))
 		
-		el.append(btn)
+		el.innerHTML+=`<h3 style="margin-top:20px;">Categories <span style="float:left;width:33px;height:33px;border-radius:50%;text-align:center;background:#009688;overflow:hidden;margin-left:10px;margin-right:10px;color:rgb(255,255,255);cursor:pointer;valign:bottom;padding:1px;"><i class="material-icons md-24">library_books</i></span><span class="category-add-button-section"></span></h3><hr/>`
+		//add button
+		let btnSection = document.querySelector('.category-add-button-section')
+		btnSection.append(btn)
 
 		this.PopupInstance=new PopupES()
 	}

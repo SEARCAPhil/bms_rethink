@@ -97,12 +97,17 @@ const activateTabNavigation=(id)=>{
 	'/suppliers/:id/products/category/:cid':(params)=>{
 		activateTabNavigation('products-tab')
 		spinner.show()
-		window.bms.default.lazyLoad(['./assets/js_native/assets/js/routers/suppliers/products.js'],{once:true})
+		window.bms.default.lazyLoad(['./assets/js_native/assets/js/routers/suppliers/products/category.js'],{once:true})
 	},
 	'/suppliers/:id/products/:pid':(params)=>{
 		activateTabNavigation('products-tab')
 		spinner.show()
 		window.bms.default.lazyLoad(['./assets/js_native/assets/js/routers/suppliers/products.js'],{once:true})
+	},
+	'/suppliers/:id/products/tabs/categories':(params)=>{
+		activateTabNavigation('products-tab')
+		spinner.show()
+		window.bms.default.lazyLoad(['./assets/js_native/assets/js/routers/suppliers/products/category/category.js'],{once:true})
 	}
 }).resolve()
 

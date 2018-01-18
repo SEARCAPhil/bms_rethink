@@ -190,6 +190,17 @@ const loadInit=(params)=>{
 	'/suppliers/all':()=>{
 		window.bms.default.spinner.show()
 		loadSuppliers()
+		
+
+	let suppliersSection = document.querySelector('div[name="/suppliers"]')
+
+	//if(!suppliersSection.classList.contains('dom-loaded')){
+		window.bms.default.changeDisplay(['div[name="/suppliers"]','div[name="/suppliers/profile"]','div[name="/suppliers/forms/registration"]'],'block')	
+	//	suppliersSection.classList.add('dom-loaded')
+	//}
+
+
+
 	},
 	'/suppliers/blocked':()=>{
 		window.bms.default.spinner.show()
@@ -238,6 +249,9 @@ const loadInit=(params)=>{
 	},
 	'/suppliers/:id/products/:pid':(params)=>{
 		loadInit(params)	
+	},
+	'/suppliers/:id/products/tabs/categories':(params)=>{
+		loadInit(params)
 	}
 }).resolve()
 

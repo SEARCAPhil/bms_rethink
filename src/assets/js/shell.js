@@ -126,19 +126,12 @@ appRoute.on({
 	activeMenu('suppliers_main_menu')
 	hideInit()
 
-	let suppliersSection = document.querySelector('div[name="/suppliers"]')
-
-	if(!suppliersSection.classList.contains('dom-loaded')){
-		changeDisplay(['div[name="/suppliers"]','div[name="/suppliers/profile"]','div[name="/suppliers/forms/registration"]'],'block')	
-		suppliersSection.classList.add('dom-loaded')
-	}
-
 
 	
 	changeDisplay(['div[name="/home"]'],'none')
 	window.bms.default.lazyLoad(['./assets/js_native/assets/js/routers/suppliers/suppliers.js'],{once:true})
 
-},
+}
 
 }).resolve()
 
