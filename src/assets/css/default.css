@@ -22,6 +22,10 @@ input:focus:not([data-role="none"]),textarea:focus:not([data-role="none"]){
   border-bottom: 2px solid #009688 !important;
 }
 
+summary{
+  outline:none;
+}
+
 .navbar-top{
     background: rgb(60,60,60) !important;
     margin-bottom: 0;
@@ -48,6 +52,14 @@ input:focus:not([data-role="none"]),textarea:focus:not([data-role="none"]){
 .main-menu-list{
     color: rgb(240,240,240);
 }
+
+.btn-group-xs > .btn, .btn-xs {
+    padding  : .25rem .4rem;
+    font-size  : .875rem;
+    line-height  : .5;
+    border-radius : .2rem;
+}
+
 
 /*material icon font*/
 @font-face {

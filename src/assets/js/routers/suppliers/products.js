@@ -14,6 +14,49 @@ const appRoute=new window.bms.exports.Router('http://localhost/bms_rethink/www/'
 let PopupInstance
 
 
+const changeSpecsNameToTextField=(e)=>{
+
+	let target = e.target
+	let val = target.innerText
+	let pid = target.getAttribute('data-product-id')
+
+	target.innerHTML=`
+		<input type="text" class="specs-name-text-field form-control" value="${val}">
+	`
+	appendSaveBtn(pid)
+}
+
+const changeSpecsValueToTextArea=(e)=>{
+	console.log(e)
+	let target = e.target
+	let val = target.innerText
+
+	target.innerHTML=`
+		<textarea class="specs-value-textarea-field form-control" rows="5" >${val}</textarea>
+	`
+	
+
+}
+
+const appendSaveBtn=(pid)=>{
+
+	let targ = document.querySelector(`.product-table > tbody > tr > td[data-list="${pid}"]`)
+	
+	//save button
+	let specsSaveBtn = document.createElement('button')
+	specsSaveBtn.classList.add('btn','btn-sm','btn-light','float-right')
+	specsSaveBtn.innerHTML = `<i class="material-icons md-18 text-success">check</i> SAVE`
+
+	//save button
+	let specsSaveBtnCancel = document.createElement('button')
+	specsSaveBtnCancel.classList.add('btn','btn-sm','btn-light','float-right')
+	specsSaveBtnCancel.innerHTML = `<i class="material-icons md-18 text-danger">cancel</i> Cancel`
+
+	targ.append(specsSaveBtn)
+	targ.append(specsSaveBtnCancel)
+
+
+}
 
 
 const loadProductInit=(params)=>{
@@ -38,6 +81,18 @@ const loadProductInit=(params)=>{
 
 			prodCreateBtn.addEventListener('click',ProdUtil.loadProductRegistrationModal)
 
+			document.querySelector('.product-table-section-main').innerHTML+=`
+				<small class="row col" style="margin-bottom:15px;">
+					<b class="text-muted">&emsp;Options :&emsp;</b>
+					<span><input type="checkbox"> Select / Deselect All&emsp;</span>
+					<select>
+						<option>Delete</option>
+						<option>Move to category</option>
+					</select> &emsp;
+					<button class="btn btn-sm">Submit</button>
+					
+				</small>
+			`
 			//DOM Table
 			document.querySelector('.product-table-section-main').innerHTML+=`
 					<table class="table product-table">
@@ -60,29 +115,72 @@ const loadProductInit=(params)=>{
 					
 
 					for(let x=0; x<data.length;x++){
-						//specs
-						let specs = ''
-						for(let y =0; y < data[x].specs.length; y++){
-							specs+= `<p><b>${data[x].specs[y].name} :</b> ${data[x].specs[y].value}</p>`
+
+						let prices = ''
+						//Prices
+						for (let z = 0; z < data[x].prices.length; z++){
+							prices+=`<small><p class="text-danger"><b>${data[x].prices[z].currency} ${data[x].prices[z].amount}</b> </p></small>`
+
+							//only used the latest and previous price
+							if(z==1){
+								prices+=`<small><p class="text-muted"><strike>${data[x].prices[z].currency} ${data[x].prices[z].amount}</strike> </p></small>`	
+								return 0;
+							}
 						}
 						
-						//DOM
-						let htm=`
+						
+						let specsSection = document.createElement('small')
+						specsSection.classList.add(`.specs-section-${data[x].id}`)
+
+
+						//SPECIFICATIONS
+						for(let y =0; y < data[x].specs.length; y++){
+							//specs name
+							let specsNameSection = document.createElement('span')
+							specsNameSection.classList.add('specs-name-section')
+							specsNameSection.style.fontWeight = 'bold'
+							specsNameSection.innerHTML = `
+								${data[x].specs[y].name}
+							`
+							specsNameSection.setAttribute('data-list',data[x].specs[y].id)
+							specsNameSection.setAttribute('data-product-id',data[x].id)
+							specsNameSection.addEventListener('dblclick',changeSpecsNameToTextField)	
+
+							//specs description
+							let specsValueSection = document.createElement('span')
+							specsValueSection.classList.add('specs-value-section')
+							specsValueSection.innerHTML = `${data[x].specs[y].value}`
+
+							specsValueSection.addEventListener('dblclick',changeSpecsValueToTextArea)
+					
+
+							
+							specsSection.append(specsNameSection)
+							specsSection.append(specsValueSection)
+						}
+
+						let htm = document.createElement('tr')
+						htm.innerHTML = `
 							<tr>
-								<td colspan="2">
-									<details open>
+								<td colspan="2" data-list="${data[x].id}" style="position:relative;">
+									<details ${(x<2?'open':'')}>
 										<summary>
-											<a href="#/suppliers/${params.id}/products/${data[x].id}">${data[x].name}</a>
+											<input type="checkbox" name="products"> <a href="#/suppliers/${params.id}/products/${data[x].id}">${data[x].name}</a>
 										</summary>
 										<br/>
-										<small>${specs}</small>
+										<button class="btn btn-dark btn-xs"><i class="material-icons md-12" style="line-height:0;">mode_edit</i></button> <button class="btn btn-danger btn-xs">-</button>
+										<br/>
 									</details>
+
 								</td>
-								<td></td>
+								<td style="min-width:100px;">${prices}</td>
 							</tr>
 						`
+						htm.children[0].children[0].append(specsSection)
+						target.append(htm)
 
-						target.innerHTML+=htm
+
+
 						window.bms.default.spinner.hide()
 					}
 
@@ -148,9 +246,23 @@ appRoute.on({
 				delProdBtn.textContent = '- Delete'
 				delProdBtn.addEventListener('click',ProdUtil.loadRemoveProductModal.bind(ProdUtil))
 
+				//Prices
+				let prices = ''
+				//Prices
+				for (let z = 0; z < data.prices.length; z++){
+					prices+=`<p class="text-danger"><b>${data.prices[z].currency} ${data.prices[z].amount}</b> </p>`
+
+					//only used the latest and previous price
+					if(z==1){
+						prices+=`<small><p class="text-muted"><strike>${data.prices.currency} ${data.prices.amount}</strike> </p></small>`	
+						return 0;
+					}
+				}
+
 				//DOM insert
 				target.innerHTML=`
 					<h3>${data.name}</h3>
+					${prices}
 					<span class="product-menu-section"></span>
 					
 					<div class="specs-section" style="margin-top:60px;"></div>

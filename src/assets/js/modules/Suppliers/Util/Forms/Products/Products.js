@@ -123,7 +123,8 @@ export default class{
 			setTimeout(()=>{
 				//remove cancel
 				document.getElementById('modal-dialog-close-button').addEventListener('click',()=>{
-					this.PopupInstance.closeAll()
+					//this.PopupInstance.closeAll()
+					document.getElementById('product-modal').close()
 				})
 
 				//remove cont.
@@ -132,10 +133,16 @@ export default class{
 
 					let prodNameTextField = document.querySelector('form[name="product-registration-form"] input#name')
 					let prodDescTextField = document.querySelector('form[name="product-registration-form"] textarea#description')
+					let prodCurrencyTextField = document.querySelector('form[name="product-registration-form"] input#currency')
+					let prodPriceTextField = document.querySelector('form[name="product-registration-form"] input#price')
 
 					let data = {
 						name:prodNameTextField.value,
 						description:prodDescTextField.value,
+						price:{ 
+							currency: prodCurrencyTextField.value,
+							amount: prodPriceTextField.value
+						},
 						id:id
 					}
 
@@ -170,7 +177,8 @@ export default class{
 							target.innerHTML+=htm	
 						}
 						
-						this.PopupInstance.closeAll()
+						//this.PopupInstance.closeAll()
+						document.getElementById('product-modal').close()
 						//process XHR HERE
 						window.bms.default.spinner.hide()
 

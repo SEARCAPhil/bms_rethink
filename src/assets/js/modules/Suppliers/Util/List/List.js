@@ -14,14 +14,17 @@ export default class{
 				    <section class="col-md-12 col-lg-12 float-left list-sidebar" style="background:#fff;box-shadow:0 0 5px rgba(200,200,200,.7);min-height: 100vh">     
 						<section style="margin-top:55px;">
 							<div class="row">
-								<input class="form-control" type="text" style="padding:4px;border:none;background:#fcfcfc;" placeholder="Search">
+								<span class="search-list-section-icon col-lg-1"><i class="material-icons">search</i></span>
+								<span class="search-list-section col-lg-10"><input class="form-control" type="text" style="padding:4px;border:none;background:#fcfcfc;" placeholder="Search"></span>
 							</div>
+							<br/>
 						</section>
 						<section>
 							<div class="col col-md-12" data-role="none" style="margin-bottom: 5px;">
 				                <span class="menuList allNav"><a href="#/suppliers/all">All</a></span>&emsp;
 				                <span class="menuList blockedNav"><a href="#/suppliers/blocked">Blocked</a></span>&emsp;
 				                <span class="menuList suppliers_new_button"><a href="#/suppliers/forms/registration/">New<i class="material-icons md-18">add</i></a></span>
+
 				                <br> 
 				           	</div>
 						</section>	
