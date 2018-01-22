@@ -108,6 +108,11 @@ const activateTabNavigation=(id)=>{
 		activateTabNavigation('products-tab')
 		spinner.show()
 		window.bms.default.lazyLoad(['./assets/js_native/assets/js/routers/suppliers/products/category/category.js'],{once:true})
+	},
+	'/suppliers/:id/products/:pid/registration/update':(params)=>{
+		activateTabNavigation('products-tab')
+		spinner.show()
+		window.bms.default.lazyLoad(['./assets/js_native/assets/js/routers/suppliers/products/registration.js'],{once:true})
 	}
 }).resolve()
 

@@ -1,10 +1,12 @@
 import Categories from '../../modules/Suppliers/Components/Products/Categories/Categories.js'
 import Products from '../../modules/Suppliers/Components/Products/Products.js'
+import Prices from '../../modules/Suppliers/Components/Products/Price/Price.js'
 import ProdUtilities from '../../modules/Suppliers/Util/Forms/Products/Products.js'
 import PopupES from '../../Components/PopupES/PopupES.js'
 
 const Cat=new Categories()
 const Prod=new Products()
+const Price=new Prices()
 const ProdUtil=new ProdUtilities()
 
 //window.bms.exports.PopupEs=PopupEs
@@ -19,44 +21,57 @@ const changeSpecsNameToTextField=(e)=>{
 	let target = e.target
 	let val = target.innerText
 	let pid = target.getAttribute('data-product-id')
+	console.log(target)
 
-	target.innerHTML=`
-		<input type="text" class="specs-name-text-field form-control" value="${val}">
-	`
-	appendSaveBtn(pid)
-}
+	let targClone = target.cloneNode(true)
 
-const changeSpecsValueToTextArea=(e)=>{
-	console.log(e)
-	let target = e.target
-	let val = target.innerText
-
-	target.innerHTML=`
-		<textarea class="specs-value-textarea-field form-control" rows="5" >${val}</textarea>
-	`
+	let txtField = document.createElement('input')
+	txtField.classList.add('specs-name-text-field','form-control')
+	txtField.setAttribute('name',target.getAttribute('name'))
+	txtField.setAttribute('autofocus','')
+	txtField.setAttribute('data-product-id',pid)
+	txtField.value = val
 	
+	txtField.addEventListener('keyup',(e)=>{
+		//escape
+		if(e.keyCode==27){
+			txtField.replaceWith(targClone)
+		}
+		//enter
+		if(e.keyCode==13){
+			window.bms.default.spinner.show()
+			Price.update({id:e.target.getAttribute('data-product-id'),name:e.target.getAttribute('name'),value:e.target.value,action:'update'}).then(json=>{
+				
+				var parsedData=JSON.parse(json)
+				var data=parsedData.data
 
+				let oldValue = targClone.innerText
+
+				targClone.innerHTML = e.target.value
+				txtField.replaceWith(targClone)
+
+				//error
+				//revert 
+				if(data<1){
+					alert('Unable to process request. Please try again later')
+					targClone.innerText =	oldValue
+				}
+
+				if(data>1){
+					document.querySelectorAll('.product-price-span').forEach((el,index)=>{
+						el.setAttribute('data-product-id',data)	
+					})
+				}
+
+			}).then(()=>{
+				window.bms.default.spinner.hide()
+			})
+		}
+	})
+
+	if(val.length>0) target.replaceWith(txtField)
 }
 
-const appendSaveBtn=(pid)=>{
-
-	let targ = document.querySelector(`.product-table > tbody > tr > td[data-list="${pid}"]`)
-	
-	//save button
-	let specsSaveBtn = document.createElement('button')
-	specsSaveBtn.classList.add('btn','btn-sm','btn-light','float-right')
-	specsSaveBtn.innerHTML = `<i class="material-icons md-18 text-success">check</i> SAVE`
-
-	//save button
-	let specsSaveBtnCancel = document.createElement('button')
-	specsSaveBtnCancel.classList.add('btn','btn-sm','btn-light','float-right')
-	specsSaveBtnCancel.innerHTML = `<i class="material-icons md-18 text-danger">cancel</i> Cancel`
-
-	targ.append(specsSaveBtn)
-	targ.append(specsSaveBtnCancel)
-
-
-}
 
 
 const loadProductInit=(params)=>{
@@ -81,18 +96,39 @@ const loadProductInit=(params)=>{
 
 			prodCreateBtn.addEventListener('click',ProdUtil.loadProductRegistrationModal)
 
-			document.querySelector('.product-table-section-main').innerHTML+=`
-				<small class="row col" style="margin-bottom:15px;">
-					<b class="text-muted">&emsp;Options :&emsp;</b>
-					<span><input type="checkbox"> Select / Deselect All&emsp;</span>
-					<select>
-						<option>Delete</option>
-						<option>Move to category</option>
+			//checkbox selector
+			let optionsProductCheckBoxAll = document.createElement('input')
+			optionsProductCheckBoxAll.type = 'checkbox'
+			optionsProductCheckBoxAll.name = 'products'
+			optionsProductCheckBoxAll.addEventListener('change',ProdUtil.changeCheckBoxAll)
+
+			//submit button
+			let submitProductMenuOptions = document.createElement('button')
+			submitProductMenuOptions.classList.add('btn','btn-sm')
+			submitProductMenuOptions.textContent = 'PROCEED'
+			submitProductMenuOptions.setAttribute('data-target','#product-modal')
+			submitProductMenuOptions.setAttribute('data-popup-toggle','open')
+			submitProductMenuOptions.addEventListener('click',ProdUtil.prodSubmitMenu.bind(ProdUtil))
+
+			//menu option
+			let prodMenuOptions = document.createElement('small')
+			prodMenuOptions.classList.add('row','col')
+			prodMenuOptions.style.marginBottom = '15px'
+			prodMenuOptions.innerHTML=`
+				<b class="text-muted">&emsp;Options :&emsp;</b>
+					<span class="prod-menu-section"></span> Select / Deselect All&emsp;
+					<select class="prod-menu-action">
+						<option value="delete">Delete</option>
+						<option value="move">Move to category</option>
 					</select> &emsp;
-					<button class="btn btn-sm">Submit</button>
 					
-				</small>
+					
 			`
+			prodMenuOptions.append(submitProductMenuOptions)
+			//checkbox
+			prodMenuOptions.querySelector('.prod-menu-section').append(optionsProductCheckBoxAll)
+
+
 			//DOM Table
 			document.querySelector('.product-table-section-main').innerHTML+=`
 					<table class="table product-table">
@@ -106,6 +142,7 @@ const loadProductInit=(params)=>{
 						</tbody>
 					</table>
 				`
+			document.querySelector('.product-table').parentNode.insertBefore(prodMenuOptions,document.querySelector('.product-table'))
 
 			if(data.length>0&&page==1){
 				
@@ -116,16 +153,68 @@ const loadProductInit=(params)=>{
 
 					for(let x=0; x<data.length;x++){
 
-						let prices = ''
+						let prices = document.createElement('p')
 						//Prices
 						for (let z = 0; z < data[x].prices.length; z++){
-							prices+=`<small><p class="text-danger"><b>${data[x].prices[z].currency} ${data[x].prices[z].amount}</b> </p></small>`
+							//currency
+					
+							let curSec = document.createElement('span')
+							curSec.classList.add('text-danger','product-currency-section')
+							curSec.innerHTML = `<b class="product-price-span" data-product-id="${data[x].prices[z].id}" name="currency">${data[x].prices[z].currency}</b>`
+							curSec.setAttribute('name','currency')
+							curSec.setAttribute('data-product-id',data[x].prices[z].id)
+							
 
+							let amountSec = document.createElement('span')
+							amountSec.classList.add('text-danger','product-amount-section')
+							amountSec.innerHTML = `<span class="product-price-span" data-product-id="${data[x].prices[z].id}" name="amount">${data[x].prices[z].amount}</span>`
+							amountSec.setAttribute('name','amount')
+							amountSec.setAttribute('data-product-id',data[x].prices[z].id)
+
+
+							//set new price btn
+							let newPriceBtn = document.createElement('p')
+							newPriceBtn.classList.add('text-muted')
+							newPriceBtn.style.fontSize = "11px"
+							newPriceBtn.style.float = "left"
+							newPriceBtn.style.width = "100%"
+							newPriceBtn.textContent = 'old price'
+
+							//attach event listenser only for the latest price
+							if(z==0){
+								curSec.addEventListener('dblclick',changeSpecsNameToTextField)
+								amountSec.addEventListener('dblclick',changeSpecsNameToTextField)
+							}
 							//only used the latest and previous price
 							if(z==1){
-								prices+=`<small><p class="text-muted"><strike>${data[x].prices[z].currency} ${data[x].prices[z].amount}</strike> </p></small>`	
-								return 0;
+								//prices+=`<small><p class="text-muted product-amount-section"><strike>${data[x].prices[z].currency} ${data[x].prices[z].amount}</strike> </p></small>`	
+								//return 0;
+								curSec.style.textDecoration = 'line-through'
+								amountSec.style.textDecoration = 'line-through'
+
+								curSec.style.fontSize = '11px'
+								amountSec.style.fontSize = '11px'
+
+
+								let breaker = document.createElement('br')
+								prices.append(breaker)
+								
 							}
+
+							//only show the recent and previous price
+							if(z<2){
+								prices.append(curSec)
+								prices.append(amountSec)
+								
+							}
+							
+							//old price
+							if(z==1){
+								prices.append(newPriceBtn)
+							}
+
+
+							
 						}
 						
 						
@@ -144,40 +233,61 @@ const loadProductInit=(params)=>{
 							`
 							specsNameSection.setAttribute('data-list',data[x].specs[y].id)
 							specsNameSection.setAttribute('data-product-id',data[x].id)
-							specsNameSection.addEventListener('dblclick',changeSpecsNameToTextField)	
+								
 
 							//specs description
 							let specsValueSection = document.createElement('span')
 							specsValueSection.classList.add('specs-value-section')
 							specsValueSection.innerHTML = `${data[x].specs[y].value}`
-
-							specsValueSection.addEventListener('dblclick',changeSpecsValueToTextArea)
-					
-
 							
 							specsSection.append(specsNameSection)
 							specsSection.append(specsValueSection)
 						}
 
+						//buttons
+						let removeProductModalButton = document.createElement('button')
+						removeProductModalButton.textContent = '-'
+						removeProductModalButton.classList.add('btn', 'btn-danger', 'btn-xs')
+						removeProductModalButton.setAttribute('data-target',"#product-modal")
+						removeProductModalButton.setAttribute('data-popup-toggle',"open")
+						removeProductModalButton.currentId = data[x].id
+						removeProductModalButton.addEventListener('click',ProdUtil.loadRemoveProductModal.bind(ProdUtil))
+
+						//checkbox
+						let optionsProductCheckBox = document.createElement('input')
+						optionsProductCheckBox.type = 'checkbox'
+						optionsProductCheckBox.name = 'products'
+						optionsProductCheckBox.classList.add('product-checkbox')
+						optionsProductCheckBox.currentId = data[x].id
+						optionsProductCheckBox.addEventListener('change',ProdUtil.changeCheckBox)
+
 						let htm = document.createElement('tr')
+						htm.classList.add(`products`,`products-${data[x].id}`)
 						htm.innerHTML = `
 							<tr>
 								<td colspan="2" data-list="${data[x].id}" style="position:relative;">
 									<details ${(x<2?'open':'')}>
 										<summary>
-											<input type="checkbox" name="products"> <a href="#/suppliers/${params.id}/products/${data[x].id}">${data[x].name}</a>
+											<a href="#/suppliers/${params.id}/products/${data[x].id}">${data[x].name}</a>
+											<p><small><b>Category : </b> ${data[x].category?data[x].category:'N/A'}</small></p>
 										</summary>
 										<br/>
-										<button class="btn btn-dark btn-xs"><i class="material-icons md-12" style="line-height:0;">mode_edit</i></button> <button class="btn btn-danger btn-xs">-</button>
-										<br/>
+										<a href="#/suppliers/${params.id}/products/${data[x].id}/registration/update"><button class="btn btn-dark btn-xs"><i class="material-icons md-12" style="line-height:0;">mode_edit</i></button></a> 
+									
+										
 									</details>
 
 								</td>
-								<td style="min-width:100px;">${prices}</td>
+								<td style="min-width:100px;" class="price-section"></td>
 							</tr>
 						`
+						htm.querySelector('.price-section').append(prices)
+						htm.querySelector('details > summary').prepend(optionsProductCheckBox)
+
+						htm.children[0].children[0].append(removeProductModalButton)
 						htm.children[0].children[0].append(specsSection)
 						target.append(htm)
+						PopupInstance = new PopupES()
 
 
 

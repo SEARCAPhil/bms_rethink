@@ -27,39 +27,97 @@ export default class{
 	}
 
 
-	removeProduct(){
-		let id=window.bms.default.state.product.cur.data.id
-
+	removeProduct(e){
+		
 		window.bms.default.spinner.show()
-
-		let data = {id:id,action:'remove'}
-
-		//remove
-		Prod.remove(data).then((json)=>{
-			var parsedData=JSON.parse(json)
-			var data=parsedData.data
-
-			if(data==1){
-				document.querySelector(`.product-profile-container`).innerHTML=`
-					<center style="margin-top:100px;">
-						<i class="material-icons md-48">phonelink_erase</i>
-						<h4 class="text-danger">Access forbidden</h5>
-						<p>This product has been deleted</p>
-					</center>
-				`
-			}else{
-				alert('Oops!Something went wrong.Please try again later.')
+			//if both is not present, not item is selected or no button is clicked
+			if((!e.target.currentId)&&(!window.bms.default.state.product.cur)){
+				alert('Unable to remove this item.Please try again later')
+				window.bms.default.spinner.hide()
+				return 0
 			}
+			//currentId is not present for menu
+			if(!e.target.currentId){
+				this.currentId = window.bms.default.state.product.cur.selected	
+			}else{
+				//must always return an array
+				this.currentId = [e.target.currentId]
+			} 
+			let data = {id:this.currentId,action:'remove'}
 
-			//process XHR HERE
-			window.bms.default.spinner.hide()
-			document.getElementById('product-modal').close()
-			
+			//remove
+			Prod.remove(data).then((json)=>{
+				var parsedData=JSON.parse(json)
+				var res=parsedData.data
 
-		}).catch((err)=>{
-			alert('Oops something went wrong!Please try again later.')
+				if(res==1){
+
+					for(let x=0;x<data.id.length;x++){
+						this.removeFromList(data.id[x])	
+					}
+					
+				
+				}else{
+					alert('Oops!Something went wrong.Please try again later.')
+				}
+
+
+				//process XHR HERE
+				window.bms.default.spinner.hide()
+				document.getElementById('product-modal').close()
+				
+
+			}).catch((err)=>{
+				alert('Oops something went wrong!Please try again later.')
+			})
+	}
+
+
+
+	changeCheckBox(){
+		
+		let id = this.currentId
+
+		if(!window.bms.default.state.product.cur) window.bms.default.state.product.cur={}
+		if(!window.bms.default.state.product.cur.selected) window.bms.default.state.product.cur.selected=[]
+
+		if(this.checked){
+			window.bms.default.state.product.cur.selected.push(id)
+		}else{
+			window.bms.default.state.product.cur.selected.splice(window.bms.default.state.product.cur.selected.indexOf(id),1)	
+		}
+
+		
+		
+	}
+
+	changeCheckBoxAll(){
+		let checkboxes = document.querySelectorAll('.product-checkbox')
+		checkboxes.forEach((el,index)=>{
+			if(this.checked){
+				if(!el.checked) el.click()
+			}else{
+				if(el.checked) el.click()
+			}
+		})
+		//console.log(window.bms.default.state.product.cur.selected)
+	}
+	prodSubmitMenu(){
+		let action = document.querySelector('.prod-menu-action')
+		if(action.value=='delete'){
+
+			this.loadRemoveProductModal()	
+		}
+	}
+
+	removeFromList(id){
+		//remove in list
+		let targ = document.querySelectorAll(`.products-${id}`)
+		targ.forEach((el,index)=>{
+			el.remove()
 		})
 	}
+
 
 	loadProductSection(params={}){  
 		return new Promise((resolve,reject)=>{
@@ -102,6 +160,7 @@ export default class{
 					</div>
 					<div class="category-profile-container" style="padding-top:20px;"></div>
 					<div class="product-profile-container"  style="padding-top:20px;"></div>
+					<div class="product-registration-container"  style="padding-top:20px;"></div>
 				</div>
 			</section>`
 
@@ -193,8 +252,7 @@ export default class{
 		}).catch(e=>{})
 	}
 
-
-	loadRemoveProductModal(){
+	loadRemoveProductModal(e){
 			const URL='pages/suppliers/modal/remove.html'
 			const id=window.bms.default.state.supplier.cur.id
 
@@ -210,12 +268,20 @@ export default class{
 					//remove cancel
 					document.getElementById('modal-dialog-close-button').addEventListener('click',()=>{
 						
-						this.PopupInstance.closeAll()
+						//PopupInstance.closeAll()
+						document.getElementById('product-modal').close()
 					})
 
-					//copy methods
+
+
+
+					let remBtn = document.getElementById('modal-dialog-remove-button')
+
+					//this is present only if function was attached via addEventListener
+					if(e) if(e.target.currentId) remBtn.currentId = e.target.currentId
+
 					let a = Object.assign({ __proto__: this.__proto__ }, this)
-					document.getElementById('modal-dialog-remove-button').addEventListener('click',this.removeProduct.bind(a))
+					remBtn.addEventListener('click',this.removeProduct.bind(a))
 				})
 			}).catch(e=>{})
 

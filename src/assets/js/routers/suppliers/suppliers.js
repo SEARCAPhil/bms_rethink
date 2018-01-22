@@ -252,6 +252,9 @@ const loadInit=(params)=>{
 	},
 	'/suppliers/:id/products/tabs/categories':(params)=>{
 		loadInit(params)
+	},
+	'/suppliers/:id/products/:pid/registration/update':(params)=>{
+		loadInit(params)
 	}
 }).resolve()
 
