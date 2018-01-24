@@ -228,7 +228,7 @@ const loadProductInit=(params)=>{
 							let specsNameSection = document.createElement('span')
 							specsNameSection.classList.add('specs-name-section')
 							specsNameSection.style.fontWeight = 'bold'
-							specsNameSection.innerHTML = `
+							specsNameSection.innerHTML = `<br/>
 								${data[x].specs[y].name}
 							`
 							specsNameSection.setAttribute('data-list',data[x].specs[y].id)
