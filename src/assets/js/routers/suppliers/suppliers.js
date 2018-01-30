@@ -67,7 +67,7 @@ const loadProfilePage=(id)=>{
 const getSuppLiersInfo=(id)=>{
 	const XHR=new window.bms.exports.XHR()
 	return new Promise((resolve,reject)=>{
-		XHR.request({url:`http://192.168.80.56/bms_api/src/api/suppliers/?id=${id}`,method:'GET'}).then((data)=>{
+		XHR.request({url:`http://localhost/bms_api/src/api/suppliers/?id=${id}`,method:'GET'}).then((data)=>{
 			var res=JSON.parse(data)
 			resolve(res.data)
 		}).catch(e=>{

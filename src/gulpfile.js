@@ -115,6 +115,12 @@ gulp.task('generating app shell',()=>{
 	.pipe(gulp.dest('../www/assets/js'))
 })
 
+//electron app
+gulp.task('copying twbs to www/node_modules',()=>{
+	gulp.src(['../node_modules/bootstrap/**/*.*'])
+	.pipe(gulp.dest('../www/node_modules/bootstrap'))
+})
+
 //https://developers.google.com/web/tools/workbox/get-started/gulp
 /*gulp.task('bundle-sw', () => {
   return wbBuild.generateSW({
@@ -133,6 +139,6 @@ gulp.task('generating app shell',()=>{
 
 
 gulp.task('default',(cb)=>{
-	runSequence('minifying html','minifying css','copying fonts','copying images','creating export classes','generating app shell','copying manifest','copying js to js_native folder','minifying modules and saving to js_es','copying other js files')
+	runSequence('minifying html','minifying css','copying fonts','copying images','creating export classes','generating app shell','copying manifest','copying js to js_native folder','minifying modules and saving to js_es','copying other js files','copying twbs to www/node_modules')
 });
 
