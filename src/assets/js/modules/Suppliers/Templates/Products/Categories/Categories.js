@@ -33,7 +33,7 @@ export default class{
 							}
 
 							if(this.properties.buttons.indexOf('remove')>=0){
-								htmlContent+=`<button class="btn btn-danger btn-sm product-delete-modal-button"  data-target="#product-modal" data-popup-toggle="open" data-category-id="${this.properties.id}"><i class="material-icons md-12">remove</i> Remove</button> `;
+								htmlContent+=`<span class="btn btn-sm product-delete-modal-button text-danger"  data-target="#product-modal" data-popup-toggle="open" data-category-id="${this.properties.id}"><i class="material-icons md-12">remove</i> REMOVE</span> `;
 							}
 
 			htmlContent+=`</small>

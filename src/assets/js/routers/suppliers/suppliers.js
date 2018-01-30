@@ -136,6 +136,23 @@ const loadRegistration=()=>{
 	
 }
 
+
+const loadSuppliersInitialPage=()=>{
+	let htm=`
+		<div class="col-lg-6 offset-lg-2 d-lg-offset-2 text-center" style="margin-top:70px;">
+    		<h2>Suppliers Database</h2>
+		    <small><p class="text-muted">
+		    	"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, qui
+		    </p></small>
+			<img src="assets/img/block-chain.png" width="250px"><br/><br/>
+			<button class="btn btn-danger" onclick="window.location='#/suppliers/forms/registration'"> REGISTER NEW SUPPLIER +</button>
+		</div>
+	`
+	document.querySelector('div[name="/suppliers/initial"]').innerHTML=htm	
+	window.bms.default.changeDisplay(['div[name="/suppliers/initial"]'],'block')
+}
+
+
 const backToList=(e)=>{
 	e.preventDefault()
 	let profSection = document.querySelector('div[name="/suppliers/profile"]')
@@ -146,9 +163,11 @@ const backToList=(e)=>{
 	profSection.classList.remove('show')
 }
 
+
+
 const loadInit=(params)=>{
 	window.bms.default.changeDisplay(['div[name="/suppliers/profile"]'],'block')
-	window.bms.default.changeDisplay(['div[name="/suppliers/forms/registration/update"]','div[name="/suppliers/forms/registration"]'],'none')
+	window.bms.default.changeDisplay(['div[name="/suppliers/forms/registration/update"]','div[name="/suppliers/forms/registration"]','div[name="/suppliers/initial"]'],'none')
 	
 
 	//if(window.bms.default.state.supplier.cur.id==params.id) return 0;
@@ -190,6 +209,10 @@ const loadInit=(params)=>{
 	'/suppliers/all':()=>{
 		window.bms.default.spinner.show()
 		loadSuppliers()
+
+		loadSuppliersInitialPage()
+
+		
 		
 
 	let suppliersSection = document.querySelector('div[name="/suppliers"]')
@@ -208,7 +231,7 @@ const loadInit=(params)=>{
 	},
 	'/suppliers/forms/registration':()=>{
 		window.bms.default.changeDisplay(['div[name="/suppliers/forms/registration"]'],'block')
-		window.bms.default.changeDisplay(['div[name="/suppliers/forms/registration/update"]','div[name="/suppliers/profile"]','route[name="/suppliers/products"]','route[name="/suppliers/settings"]','route[name="/suppliers/logs"]'],'none')
+		window.bms.default.changeDisplay(['div[name="/suppliers/forms/registration/update"]','div[name="/suppliers/profile"]','route[name="/suppliers/products"]','route[name="/suppliers/settings"]','route[name="/suppliers/logs"]','div[name="/suppliers/initial"]'],'none')
 		
 		
 

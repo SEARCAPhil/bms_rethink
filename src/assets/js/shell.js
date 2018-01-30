@@ -118,13 +118,16 @@ appRoute.on({
 	activeMenu('home_menu')
 	loadHome().then(()=>{
 		hideInit()
-		changeDisplay(['div[name="/suppliers"]','div[name="/suppliers/profile"]','div[name="/suppliers/forms/registration"]','div[name="/suppliers/forms/registration/update"]'],'none')
+		changeDisplay(['div[name="/suppliers"]','div[name="/suppliers/profile"]','div[name="/suppliers/forms/registration"]','div[name="/suppliers/forms/registration/update"]','.nav-top-menu'],'none')
 		changeDisplay(['div[name="/home"]'],'block')
 	})
 },
 '/suppliers/*':()=>{
 	activeMenu('suppliers_main_menu')
 	hideInit()
+	//changeDisplay(['.nav-top-menu'],'block')
+	document.querySelector('.nav-top-menu').classList.remove('hide')
+
 
 
 	

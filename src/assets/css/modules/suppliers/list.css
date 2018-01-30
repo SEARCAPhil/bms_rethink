@@ -56,11 +56,6 @@
 	border-bottom: 2px solid #ffb80c;
 }
 
-.profile-section{
-	padding: 10px;
-	border-radius: 2px;
-}
-
 .product-category-section{
 	padding: 10px;
 }
@@ -76,4 +71,32 @@
 	border-bottom: 1px solid #ccc;
 	padding-bottom: 50px;
 	padding-top: 20px;
+}
+
+.header-circle{
+	float:left;
+	width:33px;
+	height:33px;
+	border-radius:50%;
+	text-align:center;
+	background:#009688;
+	overflow:hidden;
+	margin-left:10px;
+	margin-right:10px;
+	color:rgb(255,255,255);
+	cursor:pointer;
+	padding:1px;
+}
+.product-price-span{
+	padding-right: 2px;
+}
+.specs-section-p{
+	border-left: 3px solid rgba(200,200,200,0.5);
+	padding-left: 15px;
+	transition: border 0.3s ease-in-out;
+	font-size: smaller;
+}
+
+.specs-section-p:hover{
+	border-left: 3px solid green;
 }

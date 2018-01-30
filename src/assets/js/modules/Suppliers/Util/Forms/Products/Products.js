@@ -132,27 +132,25 @@ export default class{
 					</dialog>
 
 				<div class="profile-section">
-					<div class="product-main-tabs">
-						<ul class="nav nav-tabs">
-						  <li class="nav-item">
-						    <a class="nav-link active all" href="#/suppliers/${params.id}/products"><i class="material-icons md-18">local_mall</i> All</a>
-						  </li>
-						  <li class="nav-item">
-						    <a class="nav-link categories" href="#/suppliers/${params.id}/products/tabs/categories">Categories</a>
-						  </li>
-						</ul>
-					</div>
-					
-					
-					<div class="product-container" style="padding-top:20px;">
+										
+					<div class="product-container">
 						<!--<div class="row col">
 							<div class="col-lg-1"><i class="material-icons">search</i></div>
 							<div class="col-lg-11"><input type="text" placeholder="find" class="form-control"></div>
 							<br/><br/>
 
 						</div>-->
-						<div class="product-table-section-main" style="margin-top:50px;">
-							<h3>Products <span style="float:left;width:33px;height:33px;border-radius:50%;text-align:center;background:#009688;overflow:hidden;margin-left:10px;margin-right:10px;color:rgb(255,255,255);cursor:pointer;valign:bottom;padding:1px;"><i class="material-icons md-24">add_shopping_cart</i></span></h3>
+						<div class="product-table-section-main" style="margin-top:20px;">
+							<h3>Products <span class="header-circle"><i class="material-icons md-24">add_shopping_cart</i></span>
+								&emsp;&emsp;<small style="font-size:12px;">
+									<a class="active all" href="#/suppliers/${params.id}/products"><i class="material-icons md-18">local_mall</i> All</a>
+									&emsp;<a class="categories" href="#/suppliers/${params.id}/products/tabs/categories">Categories</a>
+								</small>
+							</h3>
+							
+								
+
+							
 						</div>
 					</div>
 					<div class="category-container hide">
@@ -224,11 +222,12 @@ export default class{
 									<td>
 										<details open>
 											<summary><a href="#/suppliers/${id}/products/${parsedData}">${data.name}</a></summary>
-										</details>
+										
 										<br/>
 										<small><p><b>Description :</b> ${data.description}</p></small>
+									</details>
 									</td>
-									<td></td>
+									<td style="min-width:100px;" class="price-section"></td>
 									<td></td>
 								</tr>
 							`
@@ -241,6 +240,7 @@ export default class{
 						//process XHR HERE
 						window.bms.default.spinner.hide()
 
+						window.location.reload(true);
 	
 
 					}).catch((err)=>{

@@ -77,7 +77,7 @@ const changeSpecsNameToTextField=(e)=>{
 const loadProductInit=(params)=>{
 
 	window.bms.default.changeDisplay(['route[name="/suppliers/products"]'],'block')
-	window.bms.default.changeDisplay(['route[name="/suppliers/about"]','route[name="/suppliers/settings"]','route[name="/suppliers/logs"]','route[name="/suppliers/logs"]','route[name="/suppliers/accounts"]'],'none')
+	window.bms.default.changeDisplay(['route[name="/suppliers/about"]','route[name="/suppliers/settings"]','route[name="/suppliers/logs"]','route[name="/suppliers/logs"]','route[name="/suppliers/accounts"]','.company-name-section'],'none')
 
 
 	let page = 1
@@ -89,10 +89,10 @@ const loadProductInit=(params)=>{
 			//create button
 			let prodCreateBtn = document.createElement('button')
 
-			prodCreateBtn.classList.add('btn','btn-sm','btn-dark')
+			prodCreateBtn.classList.add('btn','btn-xs','btn-dark')
 			prodCreateBtn.setAttribute('data-target','#product-modal')
 			prodCreateBtn.setAttribute('data-popup-toggle','open')
-			prodCreateBtn.textContent = 'add +'
+			prodCreateBtn.textContent = '+'
 
 			prodCreateBtn.addEventListener('click',ProdUtil.loadProductRegistrationModal)
 
@@ -104,8 +104,8 @@ const loadProductInit=(params)=>{
 
 			//submit button
 			let submitProductMenuOptions = document.createElement('button')
-			submitProductMenuOptions.classList.add('btn','btn-sm')
-			submitProductMenuOptions.textContent = 'PROCEED'
+			submitProductMenuOptions.classList.add('btn','btn-xs')
+			submitProductMenuOptions.textContent = 'Go'
 			submitProductMenuOptions.setAttribute('data-target','#product-modal')
 			submitProductMenuOptions.setAttribute('data-popup-toggle','open')
 			submitProductMenuOptions.addEventListener('click',ProdUtil.prodSubmitMenu.bind(ProdUtil))
@@ -115,6 +115,7 @@ const loadProductInit=(params)=>{
 			prodMenuOptions.classList.add('row','col')
 			prodMenuOptions.style.marginBottom = '15px'
 			prodMenuOptions.innerHTML=`
+
 				<b class="text-muted">&emsp;Options :&emsp;</b>
 					<span class="prod-menu-section"></span> Select / Deselect All&emsp;
 					<select class="prod-menu-action">
@@ -266,7 +267,7 @@ const loadProductInit=(params)=>{
 						htm.innerHTML = `
 							<tr>
 								<td colspan="2" data-list="${data[x].id}" style="position:relative;">
-									<details ${(x<2?'open':'')}>
+									<details ${(x<1?'open':'')}>
 										<summary>
 											<a href="#/suppliers/${params.id}/products/${data[x].id}">${data[x].name}</a>
 											<p><small><b>Category : </b> ${data[x].category?data[x].category:'N/A'}</small></p>
@@ -342,7 +343,7 @@ appRoute.on({
 
 		ProdUtil.loadProductSection(params).then(()=>{
 			//hide product list
-			window.bms.default.changeDisplay(['.product-container','.category-profile-container'],'none')
+			window.bms.default.changeDisplay(['.product-container','.category-profile-container','.company-name-section'],'none')
 
 			ProdUtil.getInfo(params.pid).then(data=>{
 				
@@ -358,15 +359,24 @@ appRoute.on({
 
 				//Prices
 				let prices = ''
+				let oldPrice = 0
 				//Prices
-				for (let z = 0; z < data.prices.length; z++){
-					prices+=`<p class="text-danger"><b>${data.prices[z].currency} ${data.prices[z].amount}</b> </p>`
-
+				for (let z = 0; z < (data.prices.length>1?2:data.prices.length); z++ ){
+					
+					
 					//only used the latest and previous price
 					if(z==1){
-						prices+=`<small><p class="text-muted"><strike>${data.prices.currency} ${data.prices.amount}</strike> </p></small>`	
-						return 0;
+						prices+=`<small>
+						<p class="text-muted"><strike>${data.prices[z].currency} ${data.prices[z].amount}</strike> 
+						<button class="btn btn-danger btn-xs">${(((oldPrice-data.prices[z].amount)/oldPrice)*100).toFixed(2)} % </button></p>
+						
+
+						</small>`	
+						break;
 					}
+
+					prices+=`<p class="text-danger"><b>${data.prices[z].currency} ${data.prices[z].amount}</b> </p>`
+					oldPrice = data.prices[z].amount
 				}
 
 				//DOM insert
@@ -374,7 +384,7 @@ appRoute.on({
 					<h3>${data.name}</h3>
 					${prices}
 					<span class="product-menu-section"></span>
-					
+					<hr/>
 					<div class="specs-section" style="margin-top:60px;"></div>
 				`
 
@@ -383,13 +393,13 @@ appRoute.on({
 					let prodMenuSection = document.querySelector('.product-menu-section')
 
 					//Menu
-					prodMenuSection.append(delProdBtn)
+					//prodMenuSection.append(delProdBtn)
 
 					//specs
-					let specs = ''
+					let specs = '<h3>Specifications <span class="header-circle"><i class="material-icons md-24">bookmark</i></span></h3><br/>'
 
 					for(let y =0; y < data.specs.length; y++){
-						specs+= `<p><b>${data.specs[y].name} :</b> ${data.specs[y].value}</p>`
+						specs+= `<p class="specs-section-p"><b>${data.specs[y].name} :</b> ${data.specs[y].value}</p>`
 					}
 
 					specsSection.innerHTML+=specs

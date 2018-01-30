@@ -32,11 +32,11 @@ let PopupInstance
 			window.bms.default.changeDisplay(['.category-container'],'block')
 			window.bms.default.changeDisplay(['.product-profile-container','.product-container'],'none')
 
-			document.querySelector('.product-main-tabs > ul > li > a.categories').classList.add('active')
-			document.querySelector('.product-main-tabs > ul > li > a.all').classList.remove('active')
+			//document.querySelector('.product-main-tabs > ul > li > a.categories').classList.add('active')
+			//document.querySelector('.product-main-tabs > ul > li > a.all').classList.remove('active')
 
 			//load menu
-			CatUtil.loadCategorySection()
+			CatUtil.loadCategorySection(params)
 			CatUtil.loadCategories(params.id).then(e=>{
 				window.bms.default.spinner.hide()
 				PopupInstance=new PopupES()
@@ -44,6 +44,8 @@ let PopupInstance
 				CatUtil.bindUpdateModalButton()
 			})
 		
+		}).catch(e=>{
+			window.bms.default.spinner.hide()
 		})
 	},
 	'/suppliers/:id/products/category/:cid':(params)=>{

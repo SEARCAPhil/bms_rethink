@@ -23,8 +23,8 @@ const loadSettingsSection=()=>{
 				</dialog>
 
 		<section class="profile-tabs profile-tabs-about">
-			<div class="profile-section">
-				<h5><i class="material-icons md-18">settings</i> Settings</h5>
+			<div class="profile-section"><br/>
+				<h3>Settings <span class="header-circle"><i class="material-icons md-18">settings_input_composite</i></span></h3>
 				<hr/>
 				<div class="settings-container">
 					<div class="settings-update-section"></div>

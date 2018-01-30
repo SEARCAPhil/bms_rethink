@@ -23,9 +23,9 @@ const loadData=(data)=>{
 	about=(data.about.length>1000)?data.about.substring(0,1000)+`<a href="#" onclick="event.preventDefault();this.parentNode.innerHTML=this.getAttribute('data-content')" data-content="${data.about}">. . .  read more</a>`:data.about
 
 	document.querySelector('#profile-tab-navigation').innerHTML=`
-		<h5>Industry</h5><hr/>
+		<h5 style="color:dimgrey;"><i class="material-icons">location_city</i> Industry</h5>
 		<p>${industries}</p><br/><br/>
-		<h5>About</h5><hr/>
+		<h5 style="color:dimgrey;"><i class="material-icons">description</i> About</h5>
 		<p>${about}</p>
 	`
 }
@@ -67,7 +67,7 @@ const activateTabNavigation=(id)=>{
 	'/suppliers/:id/about':(params)=>{
 		activateTabNavigation('about-tab')
 		spinner.show()
-		window.bms.default.changeDisplay(['route[name="/suppliers/about"]'],'block')
+		window.bms.default.changeDisplay(['route[name="/suppliers/about"]','.company-name-section'],'block')
 		window.bms.default.changeDisplay(['route[name="/suppliers/products"]','route[name="/suppliers/settings"]','route[name="/suppliers/accounts"]','route[name="/suppliers/logs"]'],'none')
 
 		const About=new AboutClass()
@@ -105,7 +105,7 @@ const activateTabNavigation=(id)=>{
 		window.bms.default.lazyLoad(['./assets/js_native/assets/js/routers/suppliers/products.js'],{once:true})
 	},
 	'/suppliers/:id/products/tabs/categories':(params)=>{
-		activateTabNavigation('products-tab')
+		//activateTabNavigation('products-tab')
 		spinner.show()
 		window.bms.default.lazyLoad(['./assets/js_native/assets/js/routers/suppliers/products/category/category.js'],{once:true})
 	},

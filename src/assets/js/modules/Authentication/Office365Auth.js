@@ -38,7 +38,9 @@
                     // Change button to Sign Out
                     XHR.request({url:'https://graph.microsoft.com/beta/me/',method:'GET',headers:{'Authorization':'Bearer '+accessToken}}).then(json=>{
                       var data=JSON.parse(json)
-                      console.log(data)
+                      if(data.id){
+                        window.location = '../../#/home/'
+                      }
                     })
                 }, function (error) {
                     console.log(error);

@@ -73,10 +73,9 @@
     }
     .hamburger{
         float: left;
-        margin-top: 12px;
     }
     .hamburger .burger{
-        float: left;
+       
         display: inherit;
         width: 18px;
         height: 2px;
@@ -85,6 +84,12 @@
     }
     .hamburger.hidden{
         display: none;
+    }
+    .nav-top-menu{
+        display: none;
+    }
+    .nav-top-menu li a{
+        color: rgb(200,200,200);
     }
     initial-page{
         float: left;
@@ -143,6 +148,28 @@
         <header>
             <nav class="navbar navbar-dark navbar-top fixed-top">
 
+                <a href="#/suppliers/all" class="back-to-list-button d-lg-none">
+                    <i class="material-icons">arrow_back</i> Back
+                </a>
+
+                <ul class="nav  ml-auto nav-top-menu">
+                  <li class="nav-item" id="about-tab">
+                    <a class="nav-link active" href="#"><i class="material-icons md-18">dashboard</i></a>
+                  </li>
+                  <li class="nav-item" id="products-tab">
+                    <a class="nav-link" href="#" id="about-tab"><i class="material-icons md-18">shopping_basket</i></a>
+                  </li>
+                  <li class="nav-item" id="accounts-tab">
+                    <a class="nav-link" href="#"><i class="material-icons md-18">account_circle</i></a>
+                  </li>
+                  <li class="nav-item" id="logs-tab">
+                    <a class="nav-link" href="#"><i class="material-icons md-18">history</i></a>
+                  </li>
+                  <li class="nav-item" id="settings-tab">
+                    <a class="nav-link" href="#"><i class="material-icons md-18">settings</i></a>
+                  </li>
+                </ul>
+
                 <!--bootstrap menu-->
                 <span class="navbar-brand hamburger mb-0 h1 docker-menu d-lg-none" data-target=".docker">
                     <span class="burger"></span>
@@ -155,7 +182,7 @@
                     <span class="burger"></span>
                     <span class="burger"></span>  
                 </span>
-
+                
             </nav>
         </header>
         <!--/header-->
@@ -252,11 +279,19 @@
         <section class="online-status online"></section>
         <router class="row">
             <route class="default-spinner"></route>
+
             <div name="/home" page="pages/welcome.html" class="col col-lg-9 col-sm-12 col-xs-12 offset-lg-2 max-height-panel"></div>
+
             <div name="/suppliers" page="pages/suppliers/list/list.html" class="col-md-12 col-lg-2 offset-lg-2 max-height-panel" style="z-index: 1;box-shadow: 0px 0px 4px rgba(180,180,180,0.6);"></div>
+
+            <div name="/suppliers/initial" page="pages/initial.html" class="col col-lg-8 col-sm-12 col-xs-12 max-height-panel" style="padding-top:70px;background: rgb(252,252,252);"></div>
+
             <div name="/suppliers/profile" page="pages/suppliers/profile/profile.html" class="col col-lg-8 col-sm-12 col-xs-12 d-none d-lg-block max-height-panel" style="background: rgb(252,252,252);"></div>
-            <div name="/suppliers/forms/registration" class="col-lg-8 col-sm-12 col-xs-12 max-height-panel"></div>
-            <div name="/suppliers/forms/registration/update" class="col-lg-8 col-sm-12 col-xs-12 max-height-panel"></div>
+
+            <div name="/suppliers/forms/registration" class="col-lg-8 col-sm-12 col-xs-12 max-height-panel" style="background: rgb(252, 252, 252);"></div>
+            <div name="/suppliers/forms/registration/update" class="col-lg-8 col-sm-12 col-xs-12 max-height-panel" style="background: rgb(252, 252, 252);"></div>
+
+
         </router>
         <div class="d-none d-sm-block hidden-on-xs"></div>
         <div class="d-sm-none d-md-block hidden-on-sm"></div>

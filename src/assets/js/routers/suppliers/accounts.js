@@ -34,8 +34,8 @@ const loadAccountSection=()=>{
 				</dialog>
 
 				<section class="profile-tabs profile-tabs-accounts">
-			<div class="accounts-section">
-				<h5>Accounts</h5>
+			<div class="accounts-section"><br/>
+				<h3>Accounts <span class="header-circle"><i class="material-icons md-24">nature_people</i></span></h3>
 				<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation</p>
 				<button class="btn btn-dark btn-sm" data-target="#account-modal" data-popup-toggle="open" id="create-account-button-modal">Add +</button>
 				<hr/>
@@ -61,7 +61,7 @@ appRoute.on({
 	'/suppliers/:id/accounts':(params)=>{ 
 		
 		window.bms.default.changeDisplay(['route[name="/suppliers/accounts"]'],'block')
-		window.bms.default.changeDisplay(['route[name="/suppliers/products"]','route[name="/suppliers/about"]','route[name="/suppliers/settings"]','route[name="/suppliers/logs"]'],'none')
+		window.bms.default.changeDisplay(['route[name="/suppliers/products"]','route[name="/suppliers/about"]','route[name="/suppliers/settings"]','route[name="/suppliers/logs"]','.company-name-section'],'none')
 
 		loadAccountSection().then(()=>{
 			//enable dynamic dialog

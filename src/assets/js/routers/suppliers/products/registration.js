@@ -130,8 +130,8 @@ const addInputField=()=>{
 		<div class="col-lg-4 col-md-4 specs-name-section"></div>
 		<div class="col-lg-7 col-md-7 specs-value-section"></div>
 		 <div class="col-lg-1 col-md-1">
-			<div style="padding:5px;float:left;" class="remove-input-field-button" data-rand-parent="${rand}" data-target="#product-modal" data-popup-toggle="open">-</div>
-			<div style="padding:5px;float:left;" class="add-input-field-button" data-rand-parent="${rand}">+</div>
+			<div style="padding:5px;float:left;" class="remove-input-field-button" data-rand-parent="${randomID}" data-target="#product-modal" data-popup-toggle="open">-</div>
+			<div style="padding:5px;float:left;" class="add-input-field-button" data-rand-parent="${randomID}">+</div>
 		</div>
 	`
 	specsSection.querySelector('.specs-name-section').append(txtField)

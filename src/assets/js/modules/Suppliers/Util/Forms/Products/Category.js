@@ -89,7 +89,7 @@ export default class{
 
 
 
-	loadCategorySection(){ 
+	loadCategorySection(params={}){ 
 		let el = document.querySelector('.category-menu-section')
 		
 		let btn = document.createElement('button')
@@ -106,13 +106,17 @@ export default class{
 		btn.addEventListener('click',this.loadCategoryModal.bind(a))
 		
 		el.innerHTML+=`<h3 style="margin-top:20px;">Categories 
+			<small style="font-size:12px;">
+				<a class="active all" href="#/suppliers/${params.id}/products"><i class="material-icons md-18">local_mall</i> All</a>
+				&emsp;<a class="categories" href="#/suppliers/${params.id}/products/tabs/categories">Categories</a>
+			</small> 
 			<span style="float:left;width:33px;height:33px;border-radius:50%;text-align:center;background:#009688;overflow:hidden;margin-left:10px;margin-right:10px;color:rgb(255,255,255);cursor:pointer;valign:bottom;padding:1px;"><i class="material-icons md-36">library_books</i></span>
 			<span class="category-add-button-section"></span></h3><hr/>
 		`
 		//add button
 		let btnSection = document.querySelector('.category-add-button-section')
 		btnSection.append(btn)
-
+		window.bms.default.spinner.hide()
 		this.PopupInstance=new PopupES()
 	}
 
@@ -347,10 +351,11 @@ export default class{
 	}
 
 	showSuccessNotif(opt){
-		let listSection=document.querySelector('.product-container')
-		listSection.prepend(CatTemp.render({name:opt.name,description:opt.description,id:opt.id,cid:opt.company_id,buttons:['update','remove']}))
+		let listSection=document.querySelector('.category-menu-section')
+		listSection.append(CatTemp.render({name:opt.name,description:opt.description,id:opt.id,cid:opt.company_id,buttons:['update','remove']}))
 		this.bindDeleteModalButton()
 		this.bindUpdateModalButton()
+		this.PopupInstance=new PopupES()
 	}
 	showErrorNotif(){
 		document.querySelector('#reg-notif-area').innerHTML=`
