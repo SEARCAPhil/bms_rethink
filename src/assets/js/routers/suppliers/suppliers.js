@@ -1,5 +1,5 @@
-const appRoute=new window.bms.exports.Router('http://localhost/bms_rethink/www/',true)
-const appRouteProd=new window.bms.exports.Router('http://localhost/bms_rethink/www/',true)
+const appRoute=new window.bms.exports.Router('http://127.0.0.1/bms_rethink/www/',true)
+const appRouteProd=new window.bms.exports.Router('http://127.0.0.1/bms_rethink/www/',true)
 
 //stores the ID of previously fetched profile
 window.bms.default.state.supplier.cur={
@@ -67,7 +67,7 @@ const loadProfilePage=(id)=>{
 const getSuppLiersInfo=(id)=>{
 	const XHR=new window.bms.exports.XHR()
 	return new Promise((resolve,reject)=>{
-		XHR.request({url:`http://localhost/bms_api/src/api/suppliers/?id=${id}`,method:'GET'}).then((data)=>{
+		XHR.request({url:`http://192.168.80.56/bms_api/src/api/suppliers/?id=${id}`,method:'GET'}).then((data)=>{
 			var res=JSON.parse(data)
 			resolve(res.data)
 		}).catch(e=>{

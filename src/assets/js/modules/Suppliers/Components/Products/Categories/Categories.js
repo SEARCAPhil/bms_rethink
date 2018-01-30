@@ -1,8 +1,12 @@
+import Network from '../../../../../config/network/network.config.js'
+
+const NetConf = new Network()
+
 export default class{
 	constructor(){}
 	categories(id){
 
-		var url=`http://localhost/bms_api/src/api/suppliers/products/categories/?cid=${id}&sub=true`
+		var url=`${NetConf.get()}/suppliers/products/categories/?cid=${id}&sub=true`
 
 		//require exports.js
 		const XHR=new window.bms.exports.XHR()
@@ -13,7 +17,7 @@ export default class{
 
 	view(id){
 
-		var url=`http://localhost/bms_api/src/api/suppliers/products/categories/?id=${id}`
+		var url=`${NetConf.get()}/suppliers/products/categories/?id=${id}`
 
 		//require exports.js
 		const XHR=new window.bms.exports.XHR()
@@ -24,7 +28,7 @@ export default class{
 
 	register(opt={}){
 
-		var url=`http://localhost/bms_api/src/api/suppliers/products/categories/`
+		var url=`${NetConf.get()}/suppliers/products/categories/`
 
 		//require exports.js
 		const XHR=new window.bms.exports.XHR()
@@ -34,7 +38,7 @@ export default class{
 
 	remove(opt={}){
 
-		var url=`http://localhost/bms_api/src/api/suppliers/products/categories/`
+		var url=`${NetConf.get()}/suppliers/products/categories/`
 
 		//require exports.js
 		const XHR=new window.bms.exports.XHR()
@@ -45,7 +49,7 @@ export default class{
 
 	update(opt={}){
 
-		var url=`http://localhost/bms_api/src/api/suppliers/products/categories/`
+		var url=`${NetConf.get()}/api/suppliers/products/categories/`
 
 		//require exports.js
 		const XHR=new window.bms.exports.XHR()

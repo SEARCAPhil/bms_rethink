@@ -135,9 +135,9 @@
     </style>
 
    
-    <link rel="preload" type="text/css" href="../node_modules/bootstrap/dist/css/bootstrap.min.css"  as="style" onload="this.rel='stylesheet'" />
+    <link rel="preload" type="text/css" href=".././node_modules/bootstrap/dist/css/bootstrap.min.css"  as="style" onload="this.rel='stylesheet'" />
     <link rel="preload" type="text/css"  href="assets/css/docker.css" as="style" onload="this.rel='stylesheet'"/>
-    <link rel="preload" href="./assets/css/default.css" as="style" onload="this.rel='stylesheet'"/>
+    <link rel="preload" href="assets/css/default.css" as="style" onload="this.rel='stylesheet'"/>
    
 
 </head>
@@ -329,14 +329,15 @@
                 var s = document.createElement('script')
                 s.src = "./assets/js_native/assets/js/shell.js"
                 document.body.append(s)
-                setTimeout(()=>{ window.location = "http://localhost/bms_rethink/www/#/home/"})
+                console.log(window.location)
+                setTimeout(()=>{ window.location.hash = "#/home/"})
             }
         }
     </script>   
     <script>
         setTimeout(()=>{
               // Define a new FontFace
-              const notoSansRegular = new FontFace('Material Icons', 'url(./assets/fonts/MaterialIcons-Regular.woff2)');
+              const notoSansRegular = new FontFace('Material Icons', 'url(assets/fonts/MaterialIcons-Regular.woff2)');
               //console.log(notoSansRegular);
 
               // Add the FontFace to the FontFaceSet

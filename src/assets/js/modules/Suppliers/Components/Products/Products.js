@@ -1,3 +1,7 @@
+import Network from '../../../../config/network/network.config.js'
+
+const NetConf = new Network()
+
 export default class{
 	constructor(){}
 	lists(options={}){
@@ -5,7 +9,7 @@ export default class{
 		opt.page=opt.page||1
 
 
-		var url=`http://localhost/bms_api/src/api/suppliers/products/?cid=${opt.id}&page=${opt.page}`
+		var url=`${NetConf.get()}/suppliers/products/?cid=${opt.id}&page=${opt.page}`
 
 		//require exports.js
 		const XHR=new window.bms.exports.XHR()
@@ -19,7 +23,7 @@ export default class{
 		opt.page=opt.page||1
 
 
-		var url=`http://localhost/bms_api/src/api/suppliers/products/?cid=${opt.id}&page=${opt.page}&cat=${opt.cat_id}`
+		var url=`${NetConf.get()}/suppliers/products/?cid=${opt.id}&page=${opt.page}&cat=${opt.cat_id}`
 
 		//require exports.js
 		const XHR=new window.bms.exports.XHR()
@@ -31,7 +35,7 @@ export default class{
 
 	register(opt={}){
 
-		var url=`http://localhost/bms_api/src/api/suppliers/products/`
+		var url=`${NetConf.get()}/suppliers/products/`
 
 		//require exports.js
 		const XHR=new window.bms.exports.XHR()
@@ -41,7 +45,7 @@ export default class{
 
 	update(opt={}){
 
-		var url=`http://localhost/bms_api/src/api/suppliers/products/`
+		var url=`${NetConf.get()}/suppliers/products/`
 
 		//require exports.js
 		const XHR=new window.bms.exports.XHR()
@@ -51,7 +55,7 @@ export default class{
 
 	view(id){
 
-		var url=`http://localhost/bms_api/src/api/suppliers/products/?id=${id}`
+		var url=`${NetConf.get()}/suppliers/products/?id=${id}`
 
 		//require exports.js
 		const XHR=new window.bms.exports.XHR()
@@ -61,7 +65,7 @@ export default class{
 	}
 	remove(opt={}){
 
-		var url=`http://localhost/bms_api/src/api/suppliers/products/`
+		var url=`${NetConf.get()}/suppliers/products/`
 
 		//require exports.js
 		const XHR=new window.bms.exports.XHR()

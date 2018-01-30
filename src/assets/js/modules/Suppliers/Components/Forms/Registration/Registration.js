@@ -1,8 +1,13 @@
+import Network from '../../../../../config/network/network.config.js'
+
+const NetConf = new Network()
+
+
 export default class{
 	constructor(){}
 	register(opt={}){
 
-		var url=`http://localhost/bms_api/src/api/suppliers/`
+		var url=`${NetConf.get()}/suppliers/`
 
 		//require exports.js
 		const XHR=new window.bms.exports.XHR()
@@ -12,7 +17,7 @@ export default class{
 
 	update(opt={}){
 
-		var url=`http://localhost/bms_api/src/api/suppliers/`
+		var url=`${NetConf.get()}/suppliers/`
 
 		//require exports.js
 		const XHR=new window.bms.exports.XHR()

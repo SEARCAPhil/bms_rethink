@@ -1,9 +1,14 @@
+import Network from '../../../../config/network/network.config.js'
+
+const NetConf = new Network()
+
+
 export default class{
 	constructor(){}
 
 	lists(id,page=1){
 
-		var url=`http://localhost/bms_api/src/api/suppliers/accounts/?cid=${id}&page=${page}`
+		var url=`${NetConf.get()}/suppliers/accounts/?cid=${id}&page=${page}`
 
 		//require exports.js
 		const XHR=new window.bms.exports.XHR()
@@ -14,7 +19,7 @@ export default class{
 
 	register(opt={}){
 
-		var url=`http://localhost/bms_api/src/api/suppliers/accounts/`
+		var url=`${NetConf.get()}/suppliers/accounts/`
 
 		//require exports.js
 		const XHR=new window.bms.exports.XHR()
@@ -24,7 +29,7 @@ export default class{
 
 	remove(opt={}){
 
-		var url=`http://localhost/bms_api/src/api/suppliers/accounts/`
+		var url=`${NetConf.get()}/suppliers/accounts/`
 
 		//require exports.js
 		const XHR=new window.bms.exports.XHR()
@@ -34,7 +39,7 @@ export default class{
 
 	block(opt={}){
 
-		var url=`http://localhost/bms_api/src/api/suppliers/accounts/`
+		var url=`${NetConf.get()}/suppliers/accounts/`
 
 		//require exports.js
 		const XHR=new window.bms.exports.XHR()
@@ -43,7 +48,7 @@ export default class{
 	}
 
 	changePass(opt={}){
-		var url=`http://localhost/bms_api/src/api/suppliers/accounts/`
+		var url=`${NetConf.get()}/suppliers/accounts/`
 
 		//require exports.js
 		const XHR=new window.bms.exports.XHR()

@@ -1,3 +1,9 @@
+import Network from '../../../../config/network/network.config.js'
+
+const NetConf = new Network()
+
+
+
 export default class{
 	constructor(){}
 	getList(options={}){
@@ -5,7 +11,7 @@ export default class{
 		opt.page=opt.page||1
 		opt.filter=opt.filter||'all'
 
-		var url=`http://localhost/bms_api/src/api/suppliers/?status=${opt.filter}&${opt.page}`
+		var url=`${NetConf.get()}/suppliers/?status=${opt.filter}&${opt.page}`
 
 		//require exports.js
 		const XHR=new window.bms.exports.XHR()
@@ -20,7 +26,7 @@ export default class{
 		//is prohibited and we will receive a preflight error response. To be able to test it locally
 		//the developer decided to use POST BUT the data contains an action field equivalent with a value of 'remove'
 		// Thus, the API will also rely on the action field to determine wether it will add or remove content in the database
-		var url=`http://localhost/bms_api/src/api/suppliers/`
+		var url=`${NetConf.get()}/suppliers/`
 
 		//require exports.js
 		const XHR=new window.bms.exports.XHR()
@@ -38,7 +44,7 @@ export default class{
 		//is prohibited and we will receive a preflight error response. To be able to test it locally
 		//the developer decided to use POST BUT the data contains an action field equivalent with a value of 'remove'
 		// Thus, the API will also rely on the action field to determine wether it will add or remove content in the database
-		var url=`http://localhost/bms_api/src/api/suppliers/`
+		var url=`${NetConf.get()}/suppliers/`
 
 		//require exports.js
 		const XHR=new window.bms.exports.XHR()
@@ -56,7 +62,7 @@ export default class{
 		//is prohibited and we will receive a preflight error response. To be able to test it locally
 		//the developer decided to use POST BUT the data contains an action field equivalent with a value of 'remove'
 		// Thus, the API will also rely on the action field to determine wether it will add or remove content in the database
-		var url=`http://localhost/bms_api/src/api/suppliers/`
+		var url=`${NetConf.get()}/suppliers/`
 
 		//require exports.js
 		const XHR=new window.bms.exports.XHR()

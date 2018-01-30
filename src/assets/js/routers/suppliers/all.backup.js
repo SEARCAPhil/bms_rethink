@@ -1,5 +1,5 @@
 
-const appRoute=new window.bms.exports.AppRoute({root:'http://localhost/bms_rethink/www/'})
+const appRoute=new window.bms.exports.AppRoute({root:'http://127.0.0.1/bms_rethink/www/'})
 
 const enableMenu=(id)=>{
 	document.querySelectorAll('.tab-navigation').forEach((el,index)=>{

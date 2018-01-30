@@ -1,4 +1,4 @@
-const appRoute=new window.bms.exports.Router('http://localhost/bms_rethink/www/',true)
+const appRoute=new window.bms.exports.Router('http://127.0.0.1/bms_rethink/www/',true)
 import LogClass from '../../modules/Suppliers/Components/Logs/Logs.js'
 import LogTemplate from '../../modules/Suppliers/Templates/Logs/Logs.js'
 

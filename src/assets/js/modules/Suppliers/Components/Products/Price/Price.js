@@ -1,9 +1,13 @@
+import Network from '../../../../../config/network/network.config.js'
+
+const NetConf = new Network()
+
 export default class{
 	constructor(){}
 
 	update(opt={}){
 
-		var url=`http://localhost/bms_api/src/api/suppliers/products/prices/`
+		var url=`${NetConf.get()}/suppliers/products/prices/`
 
 		//require exports.js
 		const XHR=new window.bms.exports.XHR()
