@@ -79,7 +79,7 @@
         display: inherit;
         width: 18px;
         height: 2px;
-        background: #fff;
+        background: rgb(255,184,12) !important;
         margin: 2px 98% 1px 15px;
     }
     .hamburger.hidden{
@@ -89,7 +89,10 @@
         display: none;
     }
     .nav-top-menu li a{
-        color: rgb(200,200,200);
+        color: rgb(255,184,12) !important;
+    }
+    .back-to-list-button{
+        color: rgb(255,184,12) !important;
     }
     initial-page{
         float: left;
@@ -232,12 +235,13 @@
                                 <br/>Suppliers
                         </li>
 
-                        <li data-status="invitations" 
-                            class="main-menu-list-item deactivated suppliers_main_menu2" 
+                        <li data-status="bids" 
+                            class="main-menu-list-item bids-menu-list" 
+                            id="bids-menu-list"
                             data-menu="main-menu-list-item" 
-                            data-role="none">
-                                <i class="material-icons md-24" style="width: 24px;">insert_invitation</i> 
-                                <br/>Invitations 
+                            data-role="none" onclick="window.location.hash='#/bids/all'">
+                                <i class="material-icons md-24" style="width: 24px;">trending_up</i> 
+                                <br/>Bids
                         </li>
 
                         <li data-status="open" 
@@ -263,7 +267,7 @@
                 <menu class="col col-md-12">
                     <ul class="list-unstyled main-menu">
                         <li data-role="none">
-                            <a href="pages/authentication/" 
+                            <a href="pages/authentication/o365.html" 
                                 style="color:rgb(255,184,12);" 
                                 data-ajax="false" 
                                 onclick="signout();" 
@@ -277,7 +281,7 @@
          </aside>
         <!--/docker-->
         <section class="online-status online"></section>
-        <router class="row">
+        <router class="row suppliers-router-section">
             <route class="default-spinner"></route>
 
             <div name="/home" page="pages/welcome.html" class="col col-lg-9 col-sm-12 col-xs-12 offset-lg-2 max-height-panel"></div>
@@ -290,9 +294,22 @@
 
             <div name="/suppliers/forms/registration" class="col-lg-8 col-sm-12 col-xs-12 max-height-panel" style="background: rgb(252, 252, 252);"></div>
             <div name="/suppliers/forms/registration/update" class="col-lg-8 col-sm-12 col-xs-12 max-height-panel" style="background: rgb(252, 252, 252);"></div>
+        </router>
 
+        <router class="row bids-router-section" id="bids-router-section">
+            <!--bids list-->
+            <div name="/bids"  class="col-md-12 col-lg-2 offset-lg-2 max-height-panel" style="z-index: 1;box-shadow: 0px 0px 4px rgba(180,180,180,0.6);"></div>
+
+            <div name="/bids/initial" class="col col-lg-8 col-sm-12 col-xs-12 max-height-panel" style="padding-top:70px;background: rgb(252,252,252);"></div>
+            <!--registration-->
+             <div name="/bids/forms/registration" class="col-lg-8 col-sm-12 col-xs-12 max-height-panel" style="background: rgb(252, 252, 252);">
+                <div name="/bids/forms/registration/1"></div>   
+                <div name="/bids/forms/registration/2"></div> 
+                <div name="/bids/forms/registration/3"></div>   
+             </div>
 
         </router>
+
         <div class="d-none d-sm-block hidden-on-xs"></div>
         <div class="d-sm-none d-md-block hidden-on-sm"></div>
         <div class="d-md-none d-lg-block hidden-on-md"></div>

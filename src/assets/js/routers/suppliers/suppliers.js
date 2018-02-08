@@ -27,7 +27,7 @@ const loadSuppliers=()=>{
 		}
 
 		XHR.request({url:'./pages/suppliers/list/list.html',method:'GET'}).then((data)=>{
-			var targ=document.querySelector('div[name="/suppliers"]')
+			let targ=document.querySelector('div[name="/suppliers"]')
 			targ.innerHTML=data
 			setTimeout(()=>{
 				window.bms.default.scriptLoader(targ)

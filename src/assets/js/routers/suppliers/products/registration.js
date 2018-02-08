@@ -112,7 +112,8 @@ const addInputField=()=>{
 	txtField.setAttribute('autofocus','')
 	txtField.setAttribute('data-rand',randomID)
 
-	txtField.addEventListener('keyup',saveSpecsName)
+	//txtField.removeEventListener('keyup',saveSpecsName)
+	//txtField.addEventListener('keyup',saveSpecsName)
 
 
 
@@ -122,7 +123,8 @@ const addInputField=()=>{
 	txtFieldSpecsValue.setAttribute('autofocus','')
 	txtFieldSpecsValue.setAttribute('data-rand',randomID)
 
-	txtFieldSpecsValue.addEventListener('keyup',saveSpecsName)
+	//txtFieldSpecsValue.removeEventListener('keyup',saveSpecsName)
+	//txtFieldSpecsValue.addEventListener('keyup',saveSpecsName)
 
 	let specsSection = document.createElement('span')
 	specsSection.classList.add('row')
@@ -306,6 +308,7 @@ const loadProductInit=(params)=>{
 
 				//respond to type
 				document.querySelectorAll('.specs-form-section').forEach((el,index)=>{
+					el.removeEventListener('keyup',saveSpecsName)
 					el.addEventListener('keyup',saveSpecsName)
 				})
 

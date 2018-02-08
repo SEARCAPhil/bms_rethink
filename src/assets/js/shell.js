@@ -113,29 +113,36 @@ const sideBar=new window.bms.exports.Sidebar('.docker-menu ','#docker-sidebar')
 
 sideBar.toggle()
 
+//main entry point
 appRoute.on({
-'/home':(e)=>{ 
-	activeMenu('home_menu')
-	loadHome().then(()=>{
+	'/home':(e)=>{ 
+		activeMenu('home_menu')
+		loadHome().then(()=>{
+			hideInit()
+			changeDisplay(['div[name="/suppliers"]','div[name="/suppliers/profile"]','div[name="/suppliers/forms/registration"]','div[name="/suppliers/forms/registration/update"]','.nav-top-menu'],'none')
+			changeDisplay(['div[name="/home"]'],'block')
+			document.querySelector('.suppliers-router-section').classList.remove('hide')
+		})
+	},
+	'/suppliers/*':()=>{
+		activeMenu('suppliers_main_menu')
 		hideInit()
-		changeDisplay(['div[name="/suppliers"]','div[name="/suppliers/profile"]','div[name="/suppliers/forms/registration"]','div[name="/suppliers/forms/registration/update"]','.nav-top-menu'],'none')
-		changeDisplay(['div[name="/home"]'],'block')
-	})
-},
-'/suppliers/*':()=>{
-	activeMenu('suppliers_main_menu')
-	hideInit()
-	//changeDisplay(['.nav-top-menu'],'block')
-	document.querySelector('.nav-top-menu').classList.remove('hide')
+		//changeDisplay(['.nav-top-menu'],'block')
+		document.querySelector('.nav-top-menu').classList.remove('hide')
+		document.querySelector('.suppliers-router-section').classList.remove('hide')
 
+		changeDisplay(['div[name="/home"]','.bids-router-section'],'none')
+		window.bms.default.lazyLoad(['./assets/js_native/assets/js/routers/suppliers/suppliers.js'],{once:true})
 
+	},
+	'/bids/*':()=>{
+		activeMenu('bids-menu-list')
+		hideInit()
 
-	
-	changeDisplay(['div[name="/home"]'],'none')
-	window.bms.default.lazyLoad(['./assets/js_native/assets/js/routers/suppliers/suppliers.js'],{once:true})
-
-}
-
+		changeDisplay(['.suppliers-router-section','.nav-top-menu'],'none')
+		document.querySelector('.bids-router-section').classList.remove('hide')
+		window.bms.default.lazyLoad(['./assets/js_native/assets/js/routers/bidding/bidding.js'],{once:true})
+	}
 }).resolve()
 
 var initH=(window.innerHeight)
