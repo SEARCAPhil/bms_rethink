@@ -3,25 +3,36 @@
 		<section id="reg-notif-area"></section>
 		
 		<section class="float-right text-muted text-right">
-			<h3><b>4</b>/4 Steps</h3>
-			<small><p>Attachments</p></small>
+			<h3><b>2</b>/4 Steps</h3>
+			<small><p>Particulars</p></small>
 		</section>
 
 		<section class="row col-md-12">
-			<h3>File Attachments</h3>
+			<h3>Particulars</h3>
 			<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut a.</p>
 		</section>
 
 		<form class="form-horizontal row" name="bidding-request-registration" onsubmit="return false;">
 			<section class="col-md-12">
-				<button class="btn btn-default btn-sm"><i class="material-icons">laptop</i> From device</button>
-				<button class="btn btn-default btn-sm"><i class="material-icons">attachment</i> Recently Uploaded files</button>
+				<hr/>
+
+					<p>
+						<b><span class="text-info">Name</span> <small class="text-muted">(Required)</small> </b> 
+						<p class="text-muted"><small>This will help to easily identify what this request is intended for</small></p>
+						<input type="text" name="name" class="form-control" id="name" required autofocus>
+					</p>
+					
+		            <p>
+						<b><span class="text-info">Deadline</span></b> 
+						<input type="date" name="date" class="form-control" id="date">
+					</p>
+
 			</section>
 
 
 			<section class="col col-md-12 pull-right">
 				
-			<button class="btn btn-dark add-supplier-button float-right" type="button">DONE</button>
+			<button class="btn btn-dark add-supplier-button float-right" type="button">NEXT <i class="material-icons">navigate_next</i></button>
 
 			</section>
 		</form>
