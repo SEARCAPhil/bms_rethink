@@ -100,3 +100,41 @@
 .specs-section-p:hover{
 	border-left: 3px solid green;
 }
+
+.btn-circle{
+	float: left;
+	width: 25px;
+	height: 25px;
+	text-align: center;
+	background: orangered;
+	cursor: pointer;
+	color:rgb(255,255,255);
+	border-radius: 50%;
+	margin-left: 5px;
+
+}
+
+.btn-circle a {
+	color:rgb(255,255,255);
+	text-decoration:none;	
+}
+
+.btn-circle:hover{
+	opacity: 0.9;
+}
+
+#detail-info-menu li a{
+	color: #212529;
+}
+
+.particulars .particulars-menu{
+	padding-left: 10px;
+	transition: all 0.3s ease-in-out;
+	border-left: 2px solid orangered;
+	background: #f1f1f1;
+}
+.particulars:hover .particulars-menu{
+	visibility: visible !important;
+	opacity: 0.8;
+
+}

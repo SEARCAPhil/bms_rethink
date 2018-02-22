@@ -94,7 +94,6 @@ const loadHome=()=>{
 			resolve(data)
 		})
 	}) 
-	
 }
 
 const activeMenu=(id)=>{

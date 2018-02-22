@@ -11,6 +11,7 @@
 			<h3>Bidding Request</h3>
 			<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut a.</p>
 		</section>
+		<section id="bid-form-status"></section>
 
 		<form class="form-horizontal row" name="bidding-request-registration" onsubmit="return false;">
 			<section class="col-md-12">
@@ -19,16 +20,16 @@
 					<p>
 						<b><span class="text-info">Name</span> <small class="text-muted">(Required)</small> </b> 
 						<p class="text-muted"><small>This will help to easily identify what this request is intended for</small></p>
-						<input type="text" name="name" class="form-control" id="name" required autofocus>
+						<input type="text" name="name" class="form-control" id="name" autofocus>
 					</p>
 					
 					<p><b><span class="text-info">Description</span></b></p>
-					<p><textarea class="form-control" rows="10" placeholder="Write a brief description" name="about" id="details"></textarea></p>
+					<p><textarea class="form-control" rows="10" placeholder="Write a brief description" name="description" id="description"></textarea></p>
 
 					
 		            <p>
 						<b><span class="text-info">Deadline</span></b> 
-						<input type="date" name="date" class="form-control" id="date">
+						<input type="date" name="deadline" class="form-control" id="deadline">
 					</p>
 
 			</section>
@@ -36,7 +37,7 @@
 
 			<section class="col col-md-12 pull-right">
 				
-			<button class="btn btn-dark add-supplier-button float-right" type="button">SAVE</button>
+			<button class="btn btn-dark add-bidding-button float-right">SAVE</button>
 
 			</section>
 		</form>
@@ -44,3 +45,4 @@
 
 	</article>
 </div>
+<!--<script async src="./assets/js_native/assets/js/modules/Bidding/Util/Forms/Registration/Registration.js"></script>-->

@@ -8,7 +8,7 @@ window.bms.default.state.supplier.cur={
 }
 window.bms.default.pages=[]
 window.bms.default.spinner=new window.bms.exports.Spinner({
-	target:'div[name="/suppliers/profile"]',
+	target:'body',
 	class:'spinner'
 })
 

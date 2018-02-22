@@ -105,6 +105,9 @@
         font-weight: 400;
         font-size: 1rem;
     }
+    [data-popup]{
+        visibility: hidden;
+    }
 
     /*spinner*/
     /*https://codepen.io/ruigewaard/pen/CtnsJ*/
@@ -173,19 +176,30 @@
                   </li>
                 </ul>
 
-                <!--bootstrap menu-->
-                <span class="navbar-brand hamburger mb-0 h1 docker-menu d-lg-none" data-target=".docker">
-                    <span class="burger"></span>
-                    <span class="burger"></span>
-                    <span class="burger"></span>
-                </span>
-
+                
                 <span class="navbar-brand hamburger mb-0 h1 d-none d-lg-block hidden">
                  <span class="burger"></span>
                     <span class="burger"></span>
                     <span class="burger"></span>  
                 </span>
                 
+                
+                            
+                <!--<small class="float-left">
+                    <span><b>Van Alen S. Limbaco</b></span>
+                </small>
+                <div style="float: left;width: 25px;height: 25px;border-radius: 50%;margin-right: 10px;overflow: hidden;">
+                    <img src="assets/img/user.png" width="100%">
+                </div>-->
+                      
+                      <!--bootstrap menu-->
+                <span class="navbar-brand hamburger mb-0 h1 docker-menu d-lg-none" data-target=".docker">
+                    <span class="burger"></span>
+                    <span class="burger"></span>
+                    <span class="burger"></span>
+                </span>
+
+
             </nav>
         </header>
         <!--/header-->
@@ -309,7 +323,7 @@
                 <div name="/bids/forms/registration/4"></div>   
              </div>
 
-             <div name="/bids/info" class="col-lg-8"  style="background: rgb(252, 252, 252);">
+             <div name="/bids/info" class="col-lg-8"  style="background: rgb(252, 252, 252);overflow-y: auto;max-height: 100vh;">
                 <div name="/bids/info/details"></div> 
                 <div name="/bids/info/requirements"></div> 
              </div>
