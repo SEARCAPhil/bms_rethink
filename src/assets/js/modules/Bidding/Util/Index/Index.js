@@ -27,7 +27,7 @@ export default class {
 							 	<i class="material-icons md-18">send</i> Send 
 							</a>
 						</li>
-						<li class="nav-item">
+						<li class="nav-item file-attachment-dialog-btn">
 							<a class="nav-link">
 								<i class="material-icons md-18">attach_file</i> Attach
 							</a>

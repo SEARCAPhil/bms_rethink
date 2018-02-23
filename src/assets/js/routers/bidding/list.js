@@ -1,9 +1,18 @@
+import IndexedDB from '../../modules/Bidding/Util/Storage/Bidding'
+import IndexedDBReq from '../../modules/Bidding/Util/Storage/Requirements'
+import IndexedDBPart from '../../modules/Bidding/Util/Storage/Particulars'
 import ListTemplate from '../../modules/Bidding/Templates/List/List'
 import ListService from '../../modules/Bidding/Services/List/List'
 import ListUtilities from '../../modules/Bidding/Util/List/List.js'
+import ParticularUtilities from '../../modules/Bidding/Util/Particulars.js'
+import RequirementsUtilities from '../../modules/Bidding/Util/Requirements.js'
 import PopupES from '../../Components/PopupES/PopupES.js'
 
 const appRoute = new window.bms.exports.Router('http://127.0.0.1/bms_rethink/www/',true)
+const IDB = new IndexedDB()
+const IDBReq = new IndexedDBReq()
+const IDBPart = new IndexedDBPart()
+
 const XHR = new window.bms.exports.XHR()
 let DB = new window.bms.exports.IndexedDB()
 
@@ -13,91 +22,46 @@ window.bms.templates.biddingList=ListTemplate
 const List = new ListTemplate()
 const listUtil = new ListUtilities()
 const ListServ = new ListService()
+const PartUtil = new ParticularUtilities()
+const ReqUtil = new RequirementsUtilities()
 
 let PopupInstance = {}
 
 
 
 const viewBiddingInfo = (id) => {
-
-
 	ListServ.view({id, token: 'abc'}).then(data => {
 
 		const parsedData=JSON.parse(data)
 		const json=parsedData.data
 		json[0].id = parseInt(json[0].id)
-
-		// save info to storage
-		let trans = DB.open('bidding')
-		const bids = trans.get(json[0].id)
-		
-		bids.onsuccess = () => {
-			// string to int
-			json[0].status = parseInt(json[0].status)
-			// insert or update
-			if (bids.result=='undefined') {
-				trans.add(json[0])
-			}else{
-				trans.put(json[0])
-			}
-		}
+		json[0].status = parseInt(json[0].status)
 
 		var e = new CustomEvent('biddingInfoChange', {detail: json})
 		document.dispatchEvent(e)
 
 		// save to storage
-		// particulars
-		let part = DB.open('particulars')
-		const parts = part.get(parseInt(json[0].id))
-		
-		
+		IDB.set(json[0])
 
-		//particulars
-		parts.onsuccess = () => {
-			// insert or update
-			if (parts.result=='undefined') {
-				json[0].particulars.forEach((val, index) => {
+		// save particulars to storage
+		json[0].particulars.forEach((val, index) => {
+			// return an int
+			val.id = parseInt(val.id)
+			val.bidding_id = parseInt(val.bidding_id)
+			// save 
+			IDBPart.set(val)
 
-					// return an int
-					val.id = parseInt(val.id)
-					val.bidding_id = parseInt(val.bidding_id)
-					part.add(val)
-
-					// requirements
-					let req = DB.open('requirements')
-					//requirements
-					val.requirements.forEach((res, i) => {
-						res.id = parseInt(res.id)
-						res.particular_id = parseInt(res.particular_id)
-						req.add(res)
-					})
-				})
-			}else{
-				json[0].particulars.forEach((val, index) => {
-
-					// return an int
-					val.id = parseInt(val.id)
-					val.bidding_id = parseInt(val.bidding_id)
-					part.put(val)
-
-					// requirements
-					let req = DB.open('requirements')
-					//requirements
-					val.requirements.forEach((res, i) => {
-						
-						res.id = parseInt(res.id)
-						
-						res.particular_id = parseInt(res.particular_id)
-						
-						req.put(res)
-	
-					})
-				})
-			}
-		}
+			// requirements
+			val.requirements.forEach((res, i) => {
+				res.id = parseInt(res.id)
+				res.particular_id = parseInt(res.particular_id)
+				IDBReq.set(res)
+			})
+		})
 		
 	})	
 }
+
 
 const changeBiddingInfo = (e) => {
 	const details = e.detail[0]
@@ -127,100 +91,6 @@ const changeBiddingInfo = (e) => {
 	}
 	
 }
-
-// modal
-const removeParticulars = (e) => {
-
-	let data = {
-		id: e.target.el.id,
-		action: 'remove',
-	}
-
-	ListServ.removeParticulars(data).then((json) => {
-		let res = JSON.parse(json)
-
-		if(res.data){
-			e.target.el.parentNode.parentNode.parentNode.parentNode.remove()
-			PopupInstance.closeAll()
-		}
-		
-	})
-
-}
-const loadRemoveParticulars = (e) => {
-	const URL='pages/suppliers/modal/remove.html'
-	const id=e.target.id
-
-	return XHR.request({method:'GET',url:URL}).then(res=>{
-		let modalTarget=document.getElementById('modal-bidding-body')
-		modalTarget.innerHTML=res
-
-		setTimeout(()=>{
-			window.bms.default.scriptLoader(modalTarget)
-		},50)
-
-		setTimeout(()=>{
-			//remove cancel
-			document.getElementById('modal-dialog-close-button').addEventListener('click',()=>{
-	
-				document.getElementById('bidding-modal').close()
-				
-			})
-
-			let btn = document.getElementById('modal-dialog-remove-button')
-			btn.el =  e.target
-			btn.addEventListener('click', removeParticulars)
-		})
-	}).catch(e=>{})
-}
-
-
-const removeRequirements = (e) => {
-
-	let data = {
-		id: e.target.el.id,
-		action: 'remove',
-	}
-
-	ListServ.removeRequirements(data).then((json) => {
-		let res = JSON.parse(json)
-
-		if(res.data){
-			e.target.el.parentNode.parentNode.parentNode.parentNode.remove()
-			PopupInstance.closeAll()
-		}
-		
-	})
-
-}
-
-const loadRemoveRequirements= (e) => {
-	const URL='pages/suppliers/modal/remove.html'
-	const id=e.target.id
-
-	return XHR.request({method:'GET',url:URL}).then(res=>{
-		let modalTarget=document.getElementById('modal-bidding-body')
-		modalTarget.innerHTML=res
-
-		setTimeout(()=>{
-			window.bms.default.scriptLoader(modalTarget)
-		},50)
-
-		setTimeout(()=>{
-			//remove cancel
-			document.getElementById('modal-dialog-close-button').addEventListener('click',()=>{
-	
-				document.getElementById('bidding-modal').close()
-				
-			})
-
-			let btn = document.getElementById('modal-dialog-remove-button')
-			btn.el =  e.target
-			btn.addEventListener('click', removeRequirements)
-		})
-	}).catch(e=>{})
-}
-
 
 const appendParticulars = (data) => {
 	let html = `
@@ -284,28 +154,11 @@ const appendParticulars = (data) => {
 	PopupInstance = new PopupES()
 
 	// remove particulars
-	document.querySelectorAll('.remove-particulars-modal').forEach((val, index) => {
-		val.addEventListener('click',loadRemoveParticulars)
-	})
-
-	// remove particulars
-	document.querySelectorAll('.remove-requirements-modal-btn').forEach((val, index) => {
-		val.addEventListener('click',loadRemoveRequirements)
-	})
+	PartUtil.bindRemoveParticulars()
+	// remove requirements
+	ReqUtil.bindRemoveRequirements()
 }
 
-const showBids = () => {
-	ListServ.lists().then(data => {
-		const parsedData=JSON.parse(data)
-		const json=parsedData.data
-		for(let x=0; x<json.length; x++){
-
-			document.querySelector('.list-bidding-section').appendChild(List.render({id:json[x].id,name:json[x].name,description:json[x].description,class:'col-xs-12 col-md-12 col-sm-12 list'}))
-		}
-
-		window.bms.default.spinner.hide()
-	})	
-}
 
 appRoute.on({
 	'*': () => {
@@ -330,7 +183,7 @@ appRoute.on({
 			listUtil.listsFromLocal({filter: 'all'})
 			listUtil.lists()
 		}
-		//showBids()
 
+		window.bms.default.lazyLoad(['./assets/js_native/assets/js/modules/Bidding/Util/Attachments.js'])
 	}
 }).resolve()

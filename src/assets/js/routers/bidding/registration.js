@@ -1,82 +1,22 @@
+import IndexedDB from '../../modules/Bidding/Util/Storage/Bidding'
+import IndexedDBReq from '../../modules/Bidding/Util/Storage/Requirements'
+import ListUtilities from '../../modules/Bidding/Util/List/List.js'
 import RegUtilities from '../../modules/Bidding/Util/Registration/Registration.js'
 
 const appRoute = new window.bms.exports.Router('http://127.0.0.1/bms_rethink/www/',true)
-const XHR = new window.bms.exports.XHR()
+const appRoute2 = new window.bms.exports.Router('http://127.0.0.1/bms_rethink/www/',true)
+const IDB = new IndexedDB()
+const IDBReq = new IndexedDBReq()
+const listUtil = new ListUtilities()
 const RegUtil = new RegUtilities()
-let DB = new window.bms.exports.IndexedDB()
 
-window.bms.default.pages = []
+
+
 window.bms.default.spinner = new window.bms.exports.Spinner({
 	target:'body',
 	class:'spinner'
 })
 
-
-const getReqInfoFromLocal = (id) => {
-	return new Promise((resolve, reject) => {
-		setTimeout(() => {
-			let trans = DB.open('requirements')
-			const local = trans.get(parseInt(id))
-			local.onsuccess = () => { 
-				resolve(local.result)
-			}
-			local.onerror = (err) => {
-				reject(err)
-			}
-		},100)	
-	})
-
-}
-
-const setBiddingInfoToLocal = (data) => {
-	return new Promise((resolve, reject) => {
-		setTimeout(() => {
-			let trans = DB.open('bidding')
-			trans.put(parseInt(id))
-				resolve(local.result)
-		},100)	
-	})
-
-}
-
-const setReqInfoToLocal = (data) => {
-	return new Promise((resolve, reject) => {
-		setTimeout(() => {
-			let trans = DB.open('requirements')
-			const local = trans.get(parseInt(id))
-			
-			trans.put(data)
-
-			resolve(data)
-			
-		},100)	
-	})
-
-}
-
-
-const viewBiddingInfoLocal = (id) => {
-	return new Promise((resolve, reject) => {
-		setTimeout(() => {
-			let trans = DB.open('bidding')
-			const local = trans.get(parseInt(id))
-			local.onsuccess = () => { 
-				// if contains data
-				if (local.result) {
-					resolve(local.result)	
-				}else{
-					reject()	
-				}
-				
-			}
-
-			local.onerror = (err) => {
-				reject(err)
-			}
-
-		},100)
-	})
-}
 
 
 const bindAddFundSelection = () => {
@@ -183,6 +123,20 @@ const addSpecsField = (param = {}) => {
 	bindRemoveSpecsSection()
 }
 
+appRoute2.on({
+ 	'/*': () => {
+ 		// this is required to always treat suppliers as separate route
+ 		// without this, link will stop working after a few clicks
+ 	},'/bids/forms/registration/*': (params) => {
+		// show list onpageloaded
+		if (!document.querySelector('.list')) {
+			listUtil.listsFromLocal({filter: 'all'})
+			listUtil.lists()
+		}
+
+	}
+}).resolve()
+
 appRoute.on({
  	'/*': () => {
  		// this is required to always treat suppliers as separate route
@@ -217,7 +171,7 @@ appRoute.on({
 
 		RegUtil.loadRegistration()
 		window.bms.default.lazyLoad(['./assets/js_native/assets/js/modules/Bidding/Util/Forms/Registration/RegistrationUpdate.js'])
-		viewBiddingInfoLocal(params.id).then(json => {
+		IDB.get(params.id).then(json => {
 			let nameField = document.querySelector('form[name="bidding-request-registration"] input[name="name"]')
 			let descField = document.querySelector('form[name="bidding-request-registration"] textarea[name="description"]')
 			let deadlineField = document.querySelector('form[name="bidding-request-registration"] input[name="deadline"]')
@@ -306,7 +260,7 @@ appRoute.on({
 		}
 
 		RegUtil.loadRegistrationItem().then(() => {
-			getReqInfoFromLocal(params.id).then((json) => {
+			IDBReq.get(params.id).then((json) => {
 				if (json.id) {
 					let nameField = document.querySelector('form[name="bidding-request-requirements"] input[name="name"]')
 					let quantityField = document.querySelector('form[name="bidding-request-requirements"] input[name="quantity"]')
