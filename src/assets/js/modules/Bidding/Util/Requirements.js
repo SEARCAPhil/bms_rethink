@@ -64,5 +64,13 @@ export default class {
 		})
 	}
 
+	appendAttachments (data) {
+		const attSec = document.getElementById('attachments-requirements-info-section')
+		attSec.innerHTML += `	<div class="col-lg-3 col-md-3" style="padding:5px;background:#e9ecef;border:1px solid #fefefe;">
+									<div class="file-icon file-icon-sm" data-type="${data.type}"></div> ${data.original_filename}
+									<i class="material-icons md-12">arrow_drop_down</i>
+								</div>`
+	}
+
 
 }

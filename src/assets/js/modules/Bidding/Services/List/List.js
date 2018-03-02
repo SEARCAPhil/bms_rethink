@@ -24,6 +24,10 @@ export default class{
 		var url=`${NetConf.get()}/bidding/`
 		return XHR.request({method:'POST',url:url,body:JSON.stringify(opt)})
 	}
+	status(opt = {}){
+		var url=`${NetConf.get()}/bidding/status.php`
+		return XHR.request({method:'POST',url:url,body:JSON.stringify(opt)})
+	}
 	send(opt = {}){
 		var url=`${NetConf.get()}/bidding/collaborators/`
 		return XHR.request({method:'POST',url:url,body:JSON.stringify(opt)})

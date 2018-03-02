@@ -79,6 +79,33 @@
 	}
 
 
+	// for dropdown
+	window.bms.default.dropdown = (className) => {
+		window.bms.default.modal = window.bms.default.modal || {}
+		const targ = document.querySelectorAll(`.${className}`)
+		targ.forEach((el, index) => {
+			if(el.classList.contains('data-bind-dropdown')) return 0
+			el.addEventListener('click', (e) => {
+				e.target.preventDefault()
+				// get ID
+				window.bms.default.modal.resources =  el.getAttribute('data-resources')
+				//close all open dropdpwn
+				document.querySelectorAll('.dropdown-section').forEach((el2, index2) => {
+					el2.classList.remove('open')
+				})
+
+				const targEl = el.getAttribute('data-target')
+				// prevent adding new listeners
+				el.classList.add('data-bind-dropdown')
+
+				let target = document.getElementById(targEl)
+				target.classList.toggle('open','close')
+
+			})
+		})
+	}
+
+
 
 	if(!sideBar) sideBarInit()
 

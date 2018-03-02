@@ -40,6 +40,7 @@
                       var data=JSON.parse(json)
                       if(data.id){
                         window.location = '../../#/home/'
+                        window.localStorage.setItem('id', data.id)
                       }
                     })
                 }, function (error) {

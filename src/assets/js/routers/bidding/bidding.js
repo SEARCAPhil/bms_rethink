@@ -17,15 +17,21 @@ window.bms.default.spinner = new window.bms.exports.Spinner({
 
 
 
-const loadCSS = () => {
+const loadCSS = (href) => {
 	let css = document.createElement('link')
 	css.type= 'text/css'
 	css.rel = 'stylesheet'
-	css.href = 'assets/css/modules/suppliers/list.css'
+	css.href = href
 	document.body.append(css)
 }
 
-
+const appendReqAttachments = (data) => {
+	const attSec = document.getElementById('attachments-requirements-info-section')
+	attSec.innerHTML += `	<div class="col-lg-3 col-md-3" style="padding:5px;background:#e9ecef;border:1px solid #fefefe;">
+									<div class="file-icon file-icon-sm" data-type="${data.type}"></div> ${data.original_filename}
+									<i class="material-icons md-12">arrow_drop_down</i>
+								</div>`
+}
 
 appRoute.on({
  	'/*': () => {
@@ -35,7 +41,7 @@ appRoute.on({
 	'/bids/*': () => {
 		IndexUtil.loadBiddingListSection()
 		IndexUtil.loadBiddingInitialPage()
-		loadCSS()
+		loadCSS('assets/css/modules/suppliers/list.css')
 	},
 	'/bids/:id/info/': (params) => {
 		window.bms.default.state.bidding.cur.bid.id = params.id
@@ -58,9 +64,11 @@ appRoute.on({
 		setTimeout(() => {
 			InfoUtil.bindRemoveBidding()
 			InfoUtil.bindSendBidding()
+			InfoUtil.bindSetStatus()
 		},100)
 		// load external css
-		loadCSS()
+		loadCSS('assets/css/modules/suppliers/list.css')
+		loadCSS('node_modules/fileicon/fileicon.css')
 	},
 	'/bids/requirements/:id': (params) => {
 		window.bms.default.changeDisplay(['div[name="/bids/initial"]','div[name="/bids/forms/registration/2"]','div[name="/bids/forms/registration"]','div[name="/bids/forms/registration/3"]','div[name="/bids/info"]'],'none')
@@ -68,6 +76,8 @@ appRoute.on({
 		IndexUtil.loadBiddingListSection()
 
 		const targ = document.querySelector('.specs-section-info')
+		const attTarg = document.getElementById('attacments-requirements-info-section')
+		window.bms.default.lazyLoad(['./assets/js_native/assets/js/modules/bidding/Util/Attachments/Requirements.js'])
 
 		// get requirements
 		IDBReq.get(params.id).then((json) => {
@@ -88,14 +98,20 @@ appRoute.on({
 				    	</div>
 					`
 				})
+
+				json.attachments.forEach((val, index) => {
+					appendReqAttachments({type: val.type, original_filename: val.original_filename })
+				})
+
 			}
 		})
 
-		loadCSS()
+		loadCSS('assets/css/modules/suppliers/list.css')
+		loadCSS('node_modules/fileicon/fileicon.css')
 	},
 	'/bids/forms/registration/*': (params) => {
 		IndexUtil.loadBiddingListSection()
 		window.bms.default.lazyLoad(['./assets/js_native/assets/js/routers/bidding/registration.js'],{once:true})
-		loadCSS()
+		loadCSS('assets/css/modules/suppliers/list.css')
 	}
 }).resolve()

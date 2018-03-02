@@ -77,6 +77,43 @@ window.bms.default.changeDisplay=(selector=[],display="block")=>{
 }
 
 
+// for dropdown
+window.bms.default.dropdown = (className) => {
+	window.bms.default.modal = window.bms.default.modal || {}
+	const targ = document.querySelectorAll(`.${className}`)
+	targ.forEach((el, index) => {
+		if(el.classList.contains('data-bind-dropdown')) return 0
+		el.addEventListener('click', (e) => {
+			e.preventDefault()
+			// target ID
+			const targEl = el.getAttribute('data-device-dropdown')
+
+			// get ID
+			// Holds the ID to be sent to the server
+			window.bms.default.modal.resources =  el.getAttribute('data-resources')
+			window.bms.default.modal.element = el
+
+			// dropdown section
+			let target = document.getElementById(targEl)
+
+			let a = new Promise((resolve, reject) => {
+				//close all open dropdpwn
+				document.querySelectorAll('.dropdown-section').forEach((el2, index2) => {
+					if (el2.classList.contains('open') && el2!=target)  el2.classList.remove('open') 
+					resolve()
+				})
+			}).then(() => {
+				
+				target.classList.toggle('open')
+
+				// prevent adding new listeners
+				el.classList.add('data-bind-dropdown')
+			})
+		})
+	})
+}
+
+
 var changeDisplay=window.bms.default.changeDisplay
 
 const hideInit=()=>{
@@ -112,8 +149,14 @@ const sideBar=new window.bms.exports.Sidebar('.docker-menu ','#docker-sidebar')
 
 sideBar.toggle()
 
+
 //main entry point
 appRoute.on({
+	'': () =>{
+		// redirect to home 
+		// THIS IS TEMPORARY AND FOR DEMONSTRATION PURPOSES ONLY
+		window.location.hash = '/home'
+	},
 	'/home':(e)=>{ 
 		activeMenu('home_menu')
 		loadHome().then(()=>{

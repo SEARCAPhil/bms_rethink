@@ -1,3 +1,4 @@
+import { Attachments } from '../../modules/Bidding/Util/Attachments.js'
 import IndexedDB from '../../modules/Bidding/Util/Storage/Bidding'
 import IndexedDBReq from '../../modules/Bidding/Util/Storage/Requirements'
 import IndexedDBPart from '../../modules/Bidding/Util/Storage/Particulars'
@@ -19,6 +20,7 @@ let DB = new window.bms.exports.IndexedDB()
 window.bms.templates=window.bms.templates||{}
 window.bms.templates.biddingList=ListTemplate
 
+const AttUtil = new Attachments()
 const List = new ListTemplate()
 const listUtil = new ListUtilities()
 const ListServ = new ListService()
@@ -66,6 +68,9 @@ const viewBiddingInfo = (id) => {
 const changeBiddingInfo = (e) => {
 	const details = e.detail[0]
 	const collabsSec = document.getElementById('bidding-collaborators')
+	const attSec = document.getElementById('attacments-info-section')
+
+	document.getElementById('bidding-created-by-info').innerHTML = `${details.profile_name}`
 	document.getElementById('bidding-name').innerHTML = `${details.name}`
 	document.getElementById('bidding-number-info').innerHTML = `#${details.id}`
 	document.getElementById('bidding-description-info').innerHTML = `${details.description}`
@@ -75,6 +80,7 @@ const changeBiddingInfo = (e) => {
 	// clear section
 	document.getElementById('particulars-section').innerHTML = ''
 	collabsSec.innerHTML = ''
+	attSec.innerHTML = ''
 
 
 	if (details.particulars) {
@@ -86,10 +92,50 @@ const changeBiddingInfo = (e) => {
 	}
 
 	// email
-	for (var i = 0; i < details.collaborators.length; i++) {
-		collabsSec.innerHTML += `<span class="badge badge-md badge-pill badge-dark">${details.collaborators[i].email}</span> `
+	if (details.collaborators) {
+		for (var i = 0; i < details.collaborators.length; i++) {
+			collabsSec.innerHTML += `<span class="">${details.collaborators[i].email};</span> `
+		}	
 	}
+
+
+	// attachments
+	for (var i = 0; i < details.attachments.length; i++) {
+		appendAttachments(details.attachments[i])	
+	}
+
+
+	setTimeout(function() {
+		// dropdown
+		window.bms.default.dropdown('device-dropdown')
+		// enable popup
+		PopupInstance = new PopupES()
+		// remove attachments
+		AttUtil.bindRemoveAttachments()
+	}, 1000);
 	
+}
+
+const appendAttachments = (data) => {
+	const attSec = document.getElementById('attacments-info-section')
+	attSec.innerHTML += `	<div class="col-lg-3 col-md-3" style="padding:5px;background:#e9ecef;border:1px solid #fefefe;position:relative;">
+								<div class="d-flex align-items-stretch">
+
+									<div class="col">
+										<div class="file-icon file-icon-sm" data-type="${data.type}"></div> ${data.original_filename}
+									</div>
+
+									<div class="col-1">
+										<i class="material-icons md-18 device-dropdown" data-device-dropdown="dropdown-${data.id}" data-resources="${data.id}">arrow_drop_down</i>
+										<div class="dropdown-section float-right" id="dropdown-${data.id}">
+											<ul class="list-group list-group-flush">
+	  											<li class="list-group-item "><a href="#" onclick="event.preventDefault();window.open('http://192.168.80.56/bms_api/src/api/bidding/attachments/download.php?id=${data.id}')">Download</a></li>
+												<li class="list-group-item"><a data-target="#bidding-modal" data-popup-toggle="open" href="#" class="remove-attachments-modal">Remove</a></li>
+											<ul>
+										</div>
+									</div>
+								</div>
+							</div>`
 }
 
 const appendParticulars = (data) => {
@@ -101,7 +147,7 @@ const appendParticulars = (data) => {
 	    			<span class="float-right text-danger"></span>
 
 	    		</summary>
-	    		<div class="col-lg-12" style="padding-top:5px;">
+	    		<div class="col-lg-12" style="padding-top:5px;padding-bottom:5px;background:#f6f6f6;">
 	    			
 	    			<p>
 	    				<span class="badge badge-danger">${data.requirements.length}</span> <span class="text-danger">Requirements</spn>
@@ -117,7 +163,7 @@ const appendParticulars = (data) => {
 
     				for (let y = 0; y < data.requirements[x].funds.length; y++) {
     					html +=`
-    						<span class="text-danger badge">${data.requirements[x].funds[y].fund_type} - ${data.requirements[x].funds[y].cost_center} - ${data.requirements[x].funds[y].line_item}</span>
+    						<span class="badge badge-dark">${data.requirements[x].funds[y].fund_type} - ${data.requirements[x].funds[y].cost_center} - ${data.requirements[x].funds[y].line_item}</span>
     					`
     				}
 
@@ -176,7 +222,13 @@ appRoute.on({
 
 		document.removeEventListener('biddingInfoChange', changeBiddingInfo)
 		document.addEventListener('biddingInfoChange', changeBiddingInfo)
+
 		viewBiddingInfo(params.id)
+		// more settings
+		setTimeout(() => {
+			window.bms.default.dropdown('device-dropdown')	
+		},1000)
+
 
 		// show list onpageloaded
 		if (!document.querySelector('.list')) {
@@ -184,6 +236,20 @@ appRoute.on({
 			listUtil.lists()
 		}
 
-		window.bms.default.lazyLoad(['./assets/js_native/assets/js/modules/Bidding/Util/Attachments.js'])
-	}
+		// clear settings
+		window.bms.bidding.requirements = window.bms.bidding.requirements || {}
+		window.bms.bidding.requirements.fundToRemove =  {}
+
+
+		window.bms.default.lazyLoad(['./assets/js_native/assets/js/modules/Bidding/Util/AttachmentsModal.js'])
+		window.bms.default.lazyLoad(['./assets/js_native/assets/js/modules/Bidding/Util/Invitation.js'])
+	},
+	'/bids/requirements/:id': (params) => {
+
+		// show list onpageloaded
+		if (!document.querySelector('.list')) {
+			listUtil.listsFromLocal({filter: 'all'})
+			listUtil.lists()
+		}
+	},
 }).resolve()

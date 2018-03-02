@@ -16,13 +16,13 @@ export default class {
 	}
 
 
-	loadBiddingInfo (id) {
+	loadBiddingInfo (id, data = {}) {
 		return new Promise((resolve,reject) => {
 			let htm = `
-			<section class="row" style="background:#F4F9FD;padding:3px;margin-top:50px;">
+			<section class="row" style="background:#F4F9FD;padding:3px;margin-top:50px;position:relative;">
 				<small class="col-lg-11 offset-lg-1" id="detail-info-menu">
 					<ul class="nav">
-						<li class="nav-item">
+						<li class="nav-item row">
 							<a class="nav-link send-bidding-modal-btn"  href="#" data-target="#bidding-modal" data-popup-toggle="open">
 							 	<i class="material-icons md-18">send</i> Send 
 							</a>
@@ -44,16 +44,60 @@ export default class {
 							</a>
 						</li>
 
+						<li class="nav-item" style="position:relative;">
+							<a href="#" class="device-dropdown" data-device-dropdown="dropdown-info-${id}" data-resources="${id}">
+								<i class="material-icons md-18">more_vert</i>
+							</a>
+							<div class="dropdown-section float-right" id="dropdown-info-${id}" style="left:0px;">
+								<ul class="list-group list-group-flush">
+									<li class="list-group-item"><a class="text-muted">Set status to :</a></li>
+									<li class="list-group-item">
+										<a href="#" onclick="event.preventDefault()" class="set-bidding-modal-btn" data-target="#bidding-modal" data-popup-toggle="open">
+											<span class="bidding-status-info"> </span> Failed
+										</a>
+									</li>
+									<li class="list-group-item">
+										<a href="#" onclick="event.preventDefault()" class="set-bidding-modal-btn" data-target="#bidding-modal" data-popup-toggle="open">
+											<span class="bidding-status-info"> </span> Closed
+										</a>
+									</li>
+									<li class="list-group-item">
+										<a href="#" onclick="event.preventDefault()" class="set-bidding-modal-btn" data-target="#bidding-modal" data-popup-toggle="open">
+											<span class="bidding-status-info"><i class="material-icons text-success md-18">check</i></span> Open
+										</a>
+									</li>
+								<ul>
+							</div>
+						</li>
+
 					</ul>
 				</small>
 			</section>
+
 			<section class="row" style="padding:3px;margin-bottom:40px;" id="detail-info-collaborator">
+
+				<!--collaborators-->
 				<div class="col-lg-11 col-sm-12 offset-lg-1 row">
-					<span class="text-muted col-lg-1 col-sm-2 col-2 float-left"> To <i class="material-icons md-18">add_circle_outline</i> </span>
+					<span class="text-muted col-lg-1 col-sm-2 col-2 float-left row"> To <i class="material-icons md-18">add_circle_outline</i> </span>
 					<span class="col text-muted float-left" style="width:200px;border:1px solid #ccc;background:#f1f1f1ee;" contenteditable="true" id="bidding-collaborator-email"></span>
 				</div>
+
+				<!--attachments-->
+				<div class="col-lg-11 col-sm-12 offset-lg-1 row attachment-pool-section" style="padding-top:10px;"></div>
 			</section>
 				<section class="col-lg-11 offset-lg-1">
+					<small>
+						<div>
+							<div style="float: left;width: 25px;height: 25px;border-radius: 50%;background: #ccc;margin-right: 10px;overflow: hidden;">
+								<img src="assets/img/user.png" width="100%">
+							</div>
+							<small>
+								<span><b id="bidding-created-by-info"></b></span><br>
+								<span class="text-muted" id="bidding-date-created"></span>
+							</small>
+						</div>
+						<hr/>
+					</small>
 		    		<h2 id="bidding-name"></h2>
 		    		<p class="text-muted">
 		    			<span id="bidding-description-info"></span>
@@ -61,22 +105,16 @@ export default class {
 		    		</p>
 				    <small>
 				    	
-				    	<div>
-							<div style="float: left;width: 25px;height: 25px;border-radius: 50%;background: #ccc;margin-right: 10px;overflow: hidden;">
-								<img src="assets/img/user.png" width="100%">
-							</div>
-							<small>
-								<span><b>Van Alen S. Limbaco</b></span><br>
-								<span class="text-muted" id="bidding-date-created"></span>
-							</small>
-						</div>
 						<br/>
 						<p class="deadline"><b>Deadline</b> : <span id="bidding-deadline-info">N/A</span></p>
-						<p id="bidding-collaborators"></p>
-				    	<!--<p>
+						<p>
+							<b>Granted access to : </b> <span id="bidding-collaborators"></span>
+						</p>
+				    	<p>
 				    		<b>Attachments</b>
-							<span class="badge badge-dark">VAT-Excempt.pdf</span> 
-				    	</p>-->
+				    		<!--attachments section -->
+							<div class="row" id="attacments-info-section" style="padding:5px;"></div>
+				    	</p>
 				    </small>
 				    <hr/>		
 				</section>
@@ -154,22 +192,37 @@ export default class {
 
 	loadBiddingRequirementsInfo () {
 		let htm = `
-			<section class="row" style="background:#F4F9FD;padding:3px;margin-top:50px;margin-bottom:40px;">
+			<section class="row" style="background:#F4F9FD;padding:3px;margin-top:50px;margin-bottom:5px;">
 					<small class="col-lg-11 offset-lg-1">
 						<ul class="nav">
 							<li class="nav-item">
 								<a class="nav-link disabled">
-								 	<i class="material-icons md-18">send</i> Send 
+								 	<i class="material-icons md-18">insert_invitation</i> Send Invitation
 								</a>
 							</li>
 							<li class="nav-item">
-								<a class="nav-link disabled">
+								<a class="nav-link file-attachment-requirement-dialog-btn">
 									<i class="material-icons md-18">attach_file</i> Attach
 								</a>
 							</li>
 						</ul>
 					</small>
 			</section>
+
+			<section class="row" style="padding:3px;margin-bottom:40px;" id="detail-info-collaborator">
+
+				<!--collaborators-->
+				<div class="col-lg-11 col-sm-12 offset-lg-1 row">
+					<span class="text-muted col-lg-2 col-sm-3 col-3 float-left row"> Supplier <i class="material-icons md-18">add_circle_outline</i> </span>
+					<span class="col text-muted float-left" style="width:200px;border:1px solid #ccc;background:#f1f1f1ee;" contenteditable="true" id="bidding-collaborator-email"></span>
+				</div>
+
+
+				<!--attachments-->
+				<div class="col-lg-11 col-sm-12 offset-lg-1 row attachment-requirements-pool-section" style="padding-top:10px;"></div>
+
+			</section>
+
 			<section class="col-lg-11 offset-lg-1">
 	    		<h2 class="req-name"></h2>
 			    <small>
@@ -180,6 +233,13 @@ export default class {
 			    		
 			    	</p>
 			    	<p><b>Quantity : </b> <span class="req-quantity"></span> <span class="req-unit"></span></p>
+
+			    	<p>
+			    		<b>Attachments</b>
+			    		<!--attachments section -->
+						<div class="row" id="attachments-requirements-info-section" style="padding:5px;"></div>
+			    	</p>
+
 
 			    </small>
 			    <hr/>	

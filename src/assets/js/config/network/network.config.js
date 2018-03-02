@@ -3,7 +3,7 @@ export default class Network{
 	constructor(){
 		this.config = {
 			protocol: 'http',
-			host: 'localhost',
+			host: '192.168.80.56',
 			port: null,
 			domain:'bms_api/src/api'
 		}

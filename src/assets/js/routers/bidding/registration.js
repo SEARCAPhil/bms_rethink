@@ -1,5 +1,6 @@
 import IndexedDB from '../../modules/Bidding/Util/Storage/Bidding'
 import IndexedDBReq from '../../modules/Bidding/Util/Storage/Requirements'
+import IndexedDBPart from '../../modules/Bidding/Util/Storage/Particulars'
 import ListUtilities from '../../modules/Bidding/Util/List/List.js'
 import RegUtilities from '../../modules/Bidding/Util/Registration/Registration.js'
 
@@ -7,6 +8,7 @@ const appRoute = new window.bms.exports.Router('http://127.0.0.1/bms_rethink/www
 const appRoute2 = new window.bms.exports.Router('http://127.0.0.1/bms_rethink/www/',true)
 const IDB = new IndexedDB()
 const IDBReq = new IndexedDBReq()
+const IDBPart = new IndexedDBPart()
 const listUtil = new ListUtilities()
 const RegUtil = new RegUtilities()
 
@@ -36,6 +38,13 @@ const bindRemoveFundSelection = () => {
 }
 
 const removeFundSelection = (e) => {
+	// items from database contain id
+	const resourceID = e.target.getAttribute('data-resources')
+	if (resourceID) {
+		// mark to be deleted
+		window.bms.bidding.requirements.fundToRemove[resourceID] = true
+	}
+
 	e.target.parentNode.parentNode.parentNode.remove()
 }
 
@@ -65,7 +74,7 @@ const addFundSelection = (param = {}) => {
 						    </div>
 						    <div class="col-lg-1 col-md-1">
 						 		<div class="btn-circle add-fund-btn"><i class="material-icons">add</i></div>
-						 		<div class="btn-circle remove-fund-btn"><i class="material-icons">remove</i></div>
+						 		<div class="btn-circle remove-fund-btn" ${param.id ? ('data-resources="'+param.id+'"') : ''}><i class="material-icons" ${param.id ? ('data-resources="'+param.id+'"') : ''}>remove</i></div>
 						    </div>
 						`
 
@@ -159,6 +168,7 @@ appRoute.on({
 	},
 	'/bids/forms/registration/:id/steps/1/update': (params) => {
 		window.bms.default.state.bidding.cur.bid.id = params.id
+
 		window.bms.default.changeDisplay(['div[name="/bids/forms/registration"]','div[name="/bids/forms/registration/1"]'],'block')
 		window.bms.default.changeDisplay(['div[name="/bids/initial"]','div[name="/bids/forms/registration/2"]','div[name="/bids/forms/registration/3"]'],'none')
 			
@@ -169,19 +179,21 @@ appRoute.on({
 			window.bms.default.changeDisplay(['div[name="/bids"]'],'none')	
 		}
 
-		RegUtil.loadRegistration()
-		window.bms.default.lazyLoad(['./assets/js_native/assets/js/modules/Bidding/Util/Forms/Registration/RegistrationUpdate.js'])
-		IDB.get(params.id).then(json => {
-			let nameField = document.querySelector('form[name="bidding-request-registration"] input[name="name"]')
-			let descField = document.querySelector('form[name="bidding-request-registration"] textarea[name="description"]')
-			let deadlineField = document.querySelector('form[name="bidding-request-registration"] input[name="deadline"]')
+		RegUtil.loadRegistration().then(() => {
+			window.bms.default.lazyLoad(['./assets/js_native/assets/js/modules/Bidding/Util/Forms/Registration/RegistrationUpdate.js'])
+			IDB.get(params.id).then(json => {
+				let nameField = document.querySelector('form[name="bidding-request-registration"] input[name="name"]')
+				let descField = document.querySelector('form[name="bidding-request-registration"] textarea[name="description"]')
+				let deadlineField = document.querySelector('form[name="bidding-request-registration"] input[name="deadline"]')
 
-			if (json.id) {
-				nameField.value = json.name
-				descField.value = json.description
-				deadlineField.value = json.deadline
-			}
+				if (json.id) {
+					nameField.value = json.name
+					descField.value = json.description
+					deadlineField.value = json.deadline
+				}
+			})	
 		})
+		
 
 	},
 	'/bids/forms/registration/:id/steps/2': (params) => {
@@ -249,6 +261,10 @@ appRoute.on({
 
 	},
 	'/bids/forms/registration/:id/steps/3/update': (params) => {
+
+		window.bms.bidding.requirements = window.bms.bidding.requirements || {}
+		window.bms.bidding.requirements.fundToRemove =  window.bms.bidding.requirements.fundToRemove || {}
+
 		window.bms.default.changeDisplay(['div[name="/bids/forms/registration"]','div[name="/bids/forms/registration/3"]'],'block')
 		window.bms.default.changeDisplay(['div[name="/bids/initial"]','div[name="/bids/forms/registration/1"]','div[name="/bids/forms/registration/4"]','div[name="/bids/forms/registration/2"]'],'none')
 			
@@ -262,6 +278,9 @@ appRoute.on({
 		RegUtil.loadRegistrationItem().then(() => {
 			IDBReq.get(params.id).then((json) => {
 				if (json.id) {
+
+					let particularID = json.particular_id
+
 					let nameField = document.querySelector('form[name="bidding-request-requirements"] input[name="name"]')
 					let quantityField = document.querySelector('form[name="bidding-request-requirements"] input[name="quantity"]')
 					let unitField = document.querySelector('form[name="bidding-request-requirements"] input[name="unit"]')
@@ -297,7 +316,12 @@ appRoute.on({
 					for (let  x = 0; x < json.specs.length; x++) { 
 						if (x == 0) document.querySelector('.specs-section').innerHTML = ''
 						addSpecsField({name:json.specs[x].name, value:json.specs[x].value, id:json.specs[x].id})
-					} 
+					}
+
+					// get bidding_id from particulars
+					IDBPart.get(particularID).then((jsonP) => {
+						 window.bms.default.state.bidding.cur.bid.id = jsonP.bidding_id
+					})
 				}
 
 				// specs

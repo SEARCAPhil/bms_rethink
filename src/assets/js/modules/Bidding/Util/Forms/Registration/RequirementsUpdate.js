@@ -137,6 +137,7 @@ const updateReq = (e) => {
 		id: parseInt(window.bms.default.state.bidding.cur.requirements.id),
 		excempted: excemptionField.value,
 		specs: specsArr,
+		fundsToRemove : window.bms.bidding.requirements.fundToRemove,
 		action: 'update',
 	}
 	

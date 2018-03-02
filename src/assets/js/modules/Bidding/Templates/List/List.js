@@ -19,7 +19,7 @@ export default class{
 			<a href="#/bids/${this.properties.id}/info">
 				<h6 class="suppliers-list-item-header">${this.properties.name}</h6>
 	            <small>
-	           		<p>${this.properties.description}</p>
+	           		<p style="font-size:smaller;">${this.properties.description}</p>
 	            </small>
 	        </a>`
         return this;

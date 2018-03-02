@@ -83,6 +83,29 @@ export default class {
 		})
 	}
 
+	setStatus (e) {
+		window.bms.default.spinner.show()
+
+		let data = {
+			id: window.bms.default.state.bidding.cur.bid.id,
+			status: 1,
+		}
+
+		this.ListServ.status(data).then((json) => {
+			let res = JSON.parse(json)
+
+			if(res){
+
+			}
+
+			window.bms.default.spinner.hide()
+			document.getElementById('bidding-modal').close()
+		}).catch((err) => {
+			window.bms.default.spinner.hide()
+			document.getElementById('bidding-modal').close()
+		})
+	}
+
 	loadRemoveBidding (e) {
 		const URL='pages/suppliers/modal/remove.html'
 		const id=e.target.id
@@ -135,6 +158,30 @@ export default class {
 	}
 
 
+	loadSetStatus (e) {
+		const URL='pages/bidding/modal/status.html'
+		const id=e.target.id
+		const proto = Object.assign({ __proto__: this.__proto__ }, this)
+
+		return this.XHR.request({method:'GET',url:URL}).then(res=>{
+			let modalTarget=document.getElementById('modal-bidding-body')
+			modalTarget.innerHTML=res
+
+			setTimeout(()=>{
+				window.bms.default.scriptLoader(modalTarget)
+				//remove cancel
+				document.getElementById('modal-dialog-close-button').addEventListener('click',()=>{
+					document.getElementById('bidding-modal').close()
+				})
+
+				let btn = document.getElementById('modal-dialog-send-button')
+				btn.el =  e.target
+				btn.addEventListener('click', this.setStatus.bind(proto))
+			},50)
+		}).catch(e=>{})
+	}
+
+
 	bindRemoveBidding () {
 		const proto = Object.assign({ __proto__: this.__proto__ }, this)
 		document.querySelector('.remove-bidding-modal-btn').addEventListener('click',this.loadRemoveBidding.bind(proto))
@@ -144,6 +191,20 @@ export default class {
 	bindSendBidding () {
 		const proto = Object.assign({ __proto__: this.__proto__ }, this)
 		document.querySelector('.send-bidding-modal-btn').addEventListener('click',this.loadSendBidding.bind(proto))
+	}
+
+	bindSetStatus () {
+		const proto = Object.assign({ __proto__: this.__proto__ }, this)
+		document.querySelector('.set-bidding-modal-btn').addEventListener('click',this.loadSetStatus.bind(proto))
+	}
+
+
+	appendAttachments (data) {
+		const attSec = document.getElementById('attacments-info-section')
+		attSec.innerHTML += `	<div class="col-lg-3 col-md-3" style="padding:5px;background:#e9ecef;border:1px solid #fefefe;">
+									<div class="file-icon file-icon-sm" data-type="${data.type}"></div> ${data.original_filename}
+									<i class="material-icons md-12">arrow_drop_down</i>
+								</div>`
 	}
 
 

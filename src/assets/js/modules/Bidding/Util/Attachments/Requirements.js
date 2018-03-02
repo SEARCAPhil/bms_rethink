@@ -1,12 +1,14 @@
-import AttachmentsService from '../Services/Attachments'
-import InfoUtilities from './Info'
+import AttachmentsService from '../../Services/Requirements'
+import AttachmentsDialog from '../../../../components/FileDialog/Dialog'
+import ReqUtilities from '../Requirements'
 
-export class Attachments{
+
+
+export class AttachmentsReq{
 	constructor () {
 		this.AttServ = new AttachmentsService()
-		this.InfoUtil = new InfoUtilities()
-		this.target = document.querySelector('#recently-attached-section-bidding')
-		this.XHR = new window.bms.exports.XHR()
+		this.ReqUtil = new ReqUtilities()
+		this.target = document.querySelector('#recently-attached-section-requirements')
 
 	}
 
@@ -39,11 +41,11 @@ export class Attachments{
 						type: data.data[i].type,
 						original_filename: data.data[i].original_filename,
 					}
-					this.InfoUtil.appendAttachments(d)
+					this.ReqUtil.appendAttachments(d)
 				}
 
 				// close dialog
-				document.querySelector('#file-attachment-main-dialog-bidding').classList.remove('open')
+				document.querySelector('.file-attachment-main-dialog').classList.remove('open')
 			}
 
 			e.target.removeAttribute('disabled')
@@ -59,9 +61,9 @@ export class Attachments{
 		window.bms.bidding.files = window.bms.bidding.files || {}
 		window.bms.bidding.files.recentFilesToUpload = window.bms.bidding.files.recentFilesToUpload  || {}
 
-		html.classList.add('recently-attached')
+		html.classList.add('recently-attached-requirements')
 
-		html.innerHTML = `<input type="checkbox" class="attachment-recent-checkbox-bidding" data-resources="${json.id}" data-original-filename="${json.original_filename}"> 
+		html.innerHTML = `<input type="checkbox" class="attachment-recent-checkbox-requirements" data-resources="${json.id}" data-original-filename="${json.original_filename}"> 
 							<div class="file-icon file-icon-sm" data-type="${json.type}"></div> 
 							<a href="#">${json.original_filename}</a> 
 							<small class="text-muted"> (${json.size}KB&emsp;${json.date_created})</small>`
@@ -72,10 +74,10 @@ export class Attachments{
 
 
 	appendFileToBeUploaded (e) {
-		const targ = document.querySelectorAll('.attachment-pool-section')
+		const targ = document.querySelectorAll('.attachment-requirements-pool-section')
 
 		// close dialog
-		document.querySelector('#file-attachment-main-dialog-bidding').classList.remove('open')
+		document.querySelector('#file-attachment-main-dialog-requirements').classList.remove('open')
 
 		targ.forEach((el, index) => {
 			for (var i = 0; i < e.target.files.length; i++) {
@@ -105,7 +107,7 @@ export class Attachments{
 		let request = new XMLHttpRequest();
 
 
-		request.open("POST", "http://127.0.0.1/bms_api/src/api/bidding/attachments/");
+		request.open("POST", "http://127.0.0.1/bms_api/src/api/bidding/requirements/attachments/");
 
 		request.upload.addEventListener('progress', (e) => {
 			let targ = document.getElementById(`progress-bar-${index}`)
@@ -126,7 +128,7 @@ export class Attachments{
 					type: file.type.split('/')[1],
 					original_filename: file.name,
 				}
-				this.InfoUtil.appendAttachments(d)
+				this.ReqUtil.appendAttachments(d)
 			}else{
 				targ.parentNode.textContent = 'Error uploading'
 			}
@@ -137,7 +139,7 @@ export class Attachments{
 	}
 
 	bindSelectFile () {
-		const el = document.querySelectorAll('.attachment-recent-checkbox-bidding')
+		const el = document.querySelectorAll('.attachment-recent-checkbox-requirements')
 		el.forEach((val, index) => {
 			val.removeEventListener('click', this.enableUploadButton)
 			val.addEventListener('click', this.enableUploadButton)
@@ -145,7 +147,7 @@ export class Attachments{
 	}
 
 	enableUploadButton(e) {
-		const btn = document.getElementById('file-attachment-upload-recent-btn-bidding')
+		const btn = document.getElementById('file-attachment-upload-recent-btn-requirements')
 		const id = e.target.getAttribute('data-resources')
 		const oFilename = e.target.getAttribute('data-original-filename')
 
@@ -163,85 +165,41 @@ export class Attachments{
 	}
 
 	bindAttach() {
-		const btn = document.getElementById('file-attachment-upload-recent-btn-bidding')
+		const btn = document.getElementById('file-attachment-upload-recent-btn-requirements')
 		const proto = Object.assign({__proto__: this.__proto__}, this)
 		btn.addEventListener('click', this.attach.bind(proto))
 	}
 
 
 	bindSelectDeviceFile () {
-		const el = document.querySelector('#file-upload-attachment-bidding')
+		const el = document.querySelector('#file-upload-attachment-requirements')
 		const proto = Object.assign({__proto__: this.__proto__}, this)
 		el.removeEventListener('change', this.appendFileToBeUploaded.bind(proto))
 		el.addEventListener('change', this.appendFileToBeUploaded.bind(proto))
 	}
-
-
-	removeAttachments (e) {
-
-		window.bms.default.spinner.show()
-		e.target.setAttribute('disabled', 'disabled')
-
-		let data = {
-			id: window.bms.default.modal.resources,
-			action: 'remove',
-		}
-
-		this.AttServ.remove(data).then((json) => {
-			let res = JSON.parse(json)
-
-			if(res.data){
-				window.bms.default.modal.element.parentNode.parentNode.parentNode.remove()
-				document.getElementById('bidding-modal').close()
-				window.bms.default.spinner.hide()
-			}else{
-				document.querySelector('#bidding-modal > .content > .body').innerHTML = `
-					<div class="col text-center">
-						<h3 class="text-danger">Failed</h3>
-						<p class="text danger">Unable To Remove this Item. Please try again later</p>
-					</div>
-				`
-				window.bms.default.spinner.hide()
-			}
-		}).catch((err) => {
-			window.bms.default.spinner.hide()
-		})
-	}
-
-	loadRemoveAttachments (e) {
-		const URL='pages/suppliers/modal/remove.html'
-		const id=e.target.id
-		const proto = Object.assign({ __proto__: this.__proto__ }, this)
-
-		return this.XHR.request({method:'GET',url:URL}).then(res=>{
-			let modalTarget=document.getElementById('modal-bidding-body')
-			modalTarget.innerHTML=res
-
-			setTimeout(()=>{
-				window.bms.default.scriptLoader(modalTarget)
-			},50)
-
-			setTimeout(()=>{
-				//remove cancel
-				document.getElementById('modal-dialog-close-button').addEventListener('click',()=>{
-		
-					document.getElementById('bidding-modal').close()
-					
-				})
-
-				let btn = document.getElementById('modal-dialog-remove-button')
-				btn.el =  e.target
-				btn.addEventListener('click', this.removeAttachments.bind(proto))
-			})
-		}).catch(e=>{})
-	}
-
-
-	bindRemoveAttachments () {
-		const proto = Object.assign({ __proto__: this.__proto__ }, this)
-		document.querySelectorAll('.remove-attachments-modal').forEach((val, index) => {
-			val.addEventListener('click',this.loadRemoveAttachments.bind(proto))
-		})
-	}
-
 }
+
+const dial= new AttachmentsDialog({id:'requirements'})
+document.querySelectorAll('.file-attachment-requirement-dialog-btn').forEach((val, index) => {
+
+	const el = val.cloneNode(true)
+
+
+
+	el.addEventListener('click', () => {
+		dial.dialog().then(() => {
+			// get recent files
+			const att = new AttachmentsReq()
+			// show recent once
+			if (!document.querySelector('.recently-attached-requirements')) {
+				att.recent()
+				att.bindAttach()
+				att.bindSelectDeviceFile()
+			}
+		})
+	})
+
+	val.replaceWith(el)
+})
+
+

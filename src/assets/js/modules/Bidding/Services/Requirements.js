@@ -10,7 +10,7 @@ export default class{
 		opt.page=opt.page||1
 		opt.filter=opt.filter||'all'
 
-		const url=`${NetConf.get()}/bidding/attachments/recent/?page=${opt.page}`
+		const url=`${NetConf.get()}/bidding/requirements/attachments/recent/?page=${opt.page}`
 		//require exports.js
 		const XHR=new window.bms.exports.XHR()
 
@@ -19,12 +19,7 @@ export default class{
 	}
 
 	attach(opt){
-		var url=`${NetConf.get()}/bidding/attachments/recent/`
-		return XHR.request({method:'POST',url:url,body:JSON.stringify(opt)})
-	}
-
-	remove(opt = {}){
-		var url=`${NetConf.get()}/bidding/attachments/`
+		var url=`${NetConf.get()}/bidding/requirements/attachments/recent/`
 		return XHR.request({method:'POST',url:url,body:JSON.stringify(opt)})
 	}
 
