@@ -109,6 +109,29 @@
         visibility: hidden;
     }
 
+    [name="/bids/info/particulars/details"] {
+        height: 100vh;
+        overflow: hidden;
+        overflow-y: auto;
+    }
+
+    [name="/bids/info/particulars"].show {
+        display: flex!important;
+    }
+    [name="/bids/info/particulars/proposals"] {
+        padding-top:60px;
+        background: #eeeeee;
+        border-left: 1px solid #d3d3d3;
+        display: block !important;
+    }
+
+    [name="/bids/info/particulars/proposals/form"] {
+        height: 100vh;
+        overflow: hidden;
+        overflow-y: auto;
+    }
+
+
     /*spinner*/
     /*https://codepen.io/ruigewaard/pen/CtnsJ*/
     .spinner{
@@ -329,8 +352,37 @@
                 <div name="/bids/info/requirements"></div> 
              </div>
 
-             <div name="/bids/info/particulars" class="col-lg-8"  style="background: rgb(252, 252, 252);">
-                <div name="/bids/info/particulars/details"></div> 
+             <div name="/bids/info/particulars" class="col-lg-8 d-flex"  style="background: rgb(252, 252, 252);height:100vh;overflow-y:auto;">
+                <div name="/bids/info/particulars/details" class="row"></div> 
+                <div name="/bids/info/particulars/proposals/form" class="row hide"></div> 
+                <div name="/bids/info/particulars/proposals" class="col-6 col-sm-3 col-md-3 col-lg-3 row hide">
+                    <div class="col-12 text-right">
+                        <small>
+                            <p class="proposal-requirement-dialog-btn text-muted">Close (x)</p>
+                        </small>
+                    </div>
+                    <div class="col-12">
+                        <p>
+                            <b>Proposals</b>
+                            <span class="badge badge-info">0</span>
+                            <hr/>
+                        </p>
+                    </div>
+
+                    <div class="col-12">
+
+                        <center>
+                            <p class="text-muted">
+                                <i class="material-icons md-48">insert_drive_file</i><br/>
+                                Submit a good propasal and stand above all other companies now!<br/>
+                                <br/>
+                                <a href="#/bids/requirements/proposal/form" class="requirements-proposal-link">Submit <i class="material-icons md-18">add_circle</i></a>
+                            </p>
+                        </center>
+
+                    </div>
+
+                </div> 
                 <div name="/bids/info/particulars/products"></div> 
              </div>
 

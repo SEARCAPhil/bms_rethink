@@ -82,8 +82,14 @@ window.bms.default.dropdown = (className) => {
 	window.bms.default.modal = window.bms.default.modal || {}
 	const targ = document.querySelectorAll(`.${className}`)
 	targ.forEach((el, index) => {
+
 		if(el.classList.contains('data-bind-dropdown')) return 0
+		// mark as binded
+		el.classList.add('data-bind-dropdown')
+		
 		el.addEventListener('click', (e) => {
+
+
 			e.preventDefault()
 			// target ID
 			const targEl = el.getAttribute('data-device-dropdown')

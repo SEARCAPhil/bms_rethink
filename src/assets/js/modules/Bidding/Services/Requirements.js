@@ -19,8 +19,22 @@ export default class{
 	}
 
 	attach(opt){
-		var url=`${NetConf.get()}/bidding/requirements/attachments/recent/`
+		const url=`${NetConf.get()}/bidding/requirements/attachments/recent/`
 		return XHR.request({method:'POST',url:url,body:JSON.stringify(opt)})
 	}
 
+	remove(opt = {}){
+		const url=`${NetConf.get()}/bidding/requirements/attachments/`
+		return XHR.request({method:'POST',url:url,body:JSON.stringify(opt)})
+	}
+
+	send(opt = {}){
+		const url=`${NetConf.get()}/bidding/requirements/recepients/`
+		return XHR.request({method:'POST',url:url,body:JSON.stringify(opt)})
+	}
+
+	removeRecepients(opt = {}){
+		const url=`${NetConf.get()}/bidding/requirements/recepients/`
+		return XHR.request({method:'POST',url:url,body:JSON.stringify(opt)})
+	}
 }

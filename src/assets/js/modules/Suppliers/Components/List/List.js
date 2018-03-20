@@ -11,7 +11,20 @@ export default class{
 		opt.page=opt.page||1
 		opt.filter=opt.filter||'all'
 
-		var url=`${NetConf.get()}/suppliers/?status=${opt.filter}&${opt.page}`
+		var url=`${NetConf.get()}/suppliers/?status=${opt.filter}&page=${opt.page}`
+
+		//require exports.js
+		const XHR=new window.bms.exports.XHR()
+
+		return XHR.request({method:'GET',url:url})
+
+	}
+
+	search(options={}){
+		var opt=options||{}
+		opt.page=opt.page||1
+
+		var url=`${NetConf.get()}/suppliers/?&page=${opt.page}&param=${opt.param}&search=true`
 
 		//require exports.js
 		const XHR=new window.bms.exports.XHR()

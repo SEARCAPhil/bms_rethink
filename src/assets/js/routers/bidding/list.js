@@ -113,6 +113,8 @@ const changeBiddingInfo = (e) => {
 		// remove attachments
 		AttUtil.bindRemoveAttachments()
 	}, 1000);
+
+
 	
 }
 
@@ -227,7 +229,8 @@ appRoute.on({
 		// more settings
 		setTimeout(() => {
 			window.bms.default.dropdown('device-dropdown')	
-		},1000)
+			window.bms.default.lazyLoad(['./assets/js_native/assets/js/modules/Bidding/Util/AttachmentsModal.js'])
+		},800)
 
 
 		// show list onpageloaded
@@ -240,11 +243,16 @@ appRoute.on({
 		window.bms.bidding.requirements = window.bms.bidding.requirements || {}
 		window.bms.bidding.requirements.fundToRemove =  {}
 
-
-		window.bms.default.lazyLoad(['./assets/js_native/assets/js/modules/Bidding/Util/AttachmentsModal.js'])
-		window.bms.default.lazyLoad(['./assets/js_native/assets/js/modules/Bidding/Util/Invitation.js'])
 	},
 	'/bids/requirements/:id': (params) => {
+
+		// show list onpageloaded
+		if (!document.querySelector('.list')) {
+			listUtil.listsFromLocal({filter: 'all'})
+			listUtil.lists()
+		}
+	},
+	'/bids/requirements/:id/proposal/form': (params) => {
 
 		// show list onpageloaded
 		if (!document.querySelector('.list')) {

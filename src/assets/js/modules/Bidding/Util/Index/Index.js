@@ -16,7 +16,7 @@ export default class {
 	}
 
 
-	loadBiddingInfo (id, data = {}) {
+	loadBiddingInfo (data = {}) {
 		return new Promise((resolve,reject) => {
 			let htm = `
 			<section class="row" style="background:#F4F9FD;padding:3px;margin-top:50px;position:relative;">
@@ -39,31 +39,37 @@ export default class {
 						</li>
 
 						<li class="nav-item">
-							<a class="nav-link nav-link" href="#/bids/forms/registration/${id}/steps/1/update">
+							<a class="nav-link nav-link" href="#/bids/forms/registration/${data.id}/steps/1/update">
 								Update
 							</a>
 						</li>
 
 						<li class="nav-item" style="position:relative;">
-							<a href="#" class="device-dropdown" data-device-dropdown="dropdown-info-${id}" data-resources="${id}">
+							<a href="#" class="device-dropdown" data-device-dropdown="dropdown-info-${data.id}" data-resources="${data.id}">
 								<i class="material-icons md-18">more_vert</i>
 							</a>
-							<div class="dropdown-section float-right" id="dropdown-info-${id}" style="left:0px;">
+							<div class="dropdown-section float-right" id="dropdown-info-${data.id}" style="left:0px;">
 								<ul class="list-group list-group-flush">
 									<li class="list-group-item"><a class="text-muted">Set status to :</a></li>
 									<li class="list-group-item">
-										<a href="#" onclick="event.preventDefault()" class="set-bidding-modal-btn" data-target="#bidding-modal" data-popup-toggle="open">
-											<span class="bidding-status-info"> </span> Failed
+										<a href="#" onclick="event.preventDefault()" class="set-bidding-modal-btn" data-target="#bidding-modal" data-popup-toggle="open" data-resources="6">
+											<span class="bidding-status-info">
+												${data.status == '6' ? '<i class="material-icons text-success md-18">check</i>' : '' }
+											</span> Failed
 										</a>
 									</li>
 									<li class="list-group-item">
-										<a href="#" onclick="event.preventDefault()" class="set-bidding-modal-btn" data-target="#bidding-modal" data-popup-toggle="open">
-											<span class="bidding-status-info"> </span> Closed
+										<a href="#" onclick="event.preventDefault()" class="set-bidding-modal-btn" data-target="#bidding-modal" data-popup-toggle="open" data-resources="5">
+											<span class="bidding-status-info"> 
+												${data.status == '5' ? '<i class="material-icons text-success md-18">check</i>' : '' }
+											</span> Closed
 										</a>
 									</li>
 									<li class="list-group-item">
-										<a href="#" onclick="event.preventDefault()" class="set-bidding-modal-btn" data-target="#bidding-modal" data-popup-toggle="open">
-											<span class="bidding-status-info"><i class="material-icons text-success md-18">check</i></span> Open
+										<a href="#" onclick="event.preventDefault()" class="set-bidding-modal-btn" data-target="#bidding-modal" data-popup-toggle="open"  data-resources="2">
+											<span class="bidding-status-info">
+												${data.status !='5' && data.status !='6' ? '<i class="material-icons text-success md-18">check</i>' : '' }
+											</span> Open
 										</a>
 									</li>
 								<ul>
@@ -165,15 +171,7 @@ export default class {
 
 	loadBiddingParticulars (id) {
 		return new Promise((resolve, reject) => {
-			let htm = `<link rel="preload" as="style" href="../node_modules/popup-es/dist/src/css/popup-es.min.css" onload="this.rel='stylesheet'">
-						<dialog id="bidding-modal" data-popup="fade">
-							<div class="content">
-								<!--close button-->
-								<a href="#" data-popup-toggle="close">x</a>
-								<div class="header"></div>
-								<div class="body" id="modal-bidding-body"></div>
-							</div>	
-						</dialog>
+			let htm = `
 				<section class="col-lg-11 offset-lg-1" style="margin-top:70px;">
 		    		<div class="row col">
 		    			<span class="float-left"><b>Particulars</b></span> 
@@ -192,11 +190,20 @@ export default class {
 
 	loadBiddingRequirementsInfo () {
 		let htm = `
+			<link rel="preload" as="style" href="../node_modules/popup-es/dist/src/css/popup-es.min.css" onload="this.rel='stylesheet'">
+			<dialog id="bidding-requirements-modal" data-popup="fade">
+				<div class="content">
+					<!--close button-->
+					<a href="#" data-popup-toggle="close">x</a>
+					<div class="header"></div>
+					<div class="body" id="modal-bidding-requirements-body"></div>
+				</div>	
+			</dialog>
 			<section class="row" style="background:#F4F9FD;padding:3px;margin-top:50px;margin-bottom:5px;">
 					<small class="col-lg-11 offset-lg-1">
 						<ul class="nav">
 							<li class="nav-item">
-								<a class="nav-link disabled">
+								<a href="#" onclick="event.preventDefault()" class="nav-link send-requirements-modal-btn" data-target="#bidding-requirements-modal" data-popup-toggle="open">
 								 	<i class="material-icons md-18">insert_invitation</i> Send Invitation
 								</a>
 							</li>
@@ -205,25 +212,27 @@ export default class {
 									<i class="material-icons md-18">attach_file</i> Attach
 								</a>
 							</li>
+
+							<li class="nav-item">
+								<a class="nav-link proposal-requirement-dialog-btn">
+									<i class="material-icons md-18">receipt</i> Proposals
+								</a>
+							</li>
+
 						</ul>
 					</small>
 			</section>
 
 			<section class="row" style="padding:3px;margin-bottom:40px;" id="detail-info-collaborator">
-
-				<!--collaborators-->
-				<div class="col-lg-11 col-sm-12 offset-lg-1 row">
-					<span class="text-muted col-lg-2 col-sm-3 col-3 float-left row"> Supplier <i class="material-icons md-18">add_circle_outline</i> </span>
-					<span class="col text-muted float-left" style="width:200px;border:1px solid #ccc;background:#f1f1f1ee;" contenteditable="true" id="bidding-collaborator-email"></span>
-				</div>
-
+				<!--recepients-->
+				<div class="col-lg-11 col-sm-12 offset-lg-1 row attachment-recepients-section" style="padding-top:10px;"></div>
 
 				<!--attachments-->
-				<div class="col-lg-11 col-sm-12 offset-lg-1 row attachment-requirements-pool-section" style="padding-top:10px;"></div>
+				<div class="col-lg-11 col-sm-12 offset-lg-1 row attachment-requirements-pool-section"></div>
 
 			</section>
 
-			<section class="col-lg-11 offset-lg-1">
+			<section class="col-lg-10 offset-lg-1">
 	    		<h2 class="req-name"></h2>
 			    <small>
 			    	<p>
@@ -258,6 +267,15 @@ export default class {
 		const targ=document.querySelector('div[name="/bids"]')
 		const oldElem = document.querySelector('.list-bids-container')
 		const htm = `
+			<link rel="preload" as="style" href="../node_modules/popup-es/dist/src/css/popup-es.min.css" onload="this.rel='stylesheet'">
+			<dialog id="bidding-modal" data-popup="fade">
+				<div class="content">
+					<!--close button-->
+					<a href="#" data-popup-toggle="close">x</a>
+					<div class="header"></div>
+					<div class="body" id="modal-bidding-body"></div>
+				</div>	
+			</dialog>
 			<article class="row list-bids-container">
 				<!--list-->
 			    <section class="col-md-12 col-lg-12 float-left list-sidebar" style="background:#fff;box-shadow:0 0 5px rgba(200,200,200,.7);min-height: 100vh">     

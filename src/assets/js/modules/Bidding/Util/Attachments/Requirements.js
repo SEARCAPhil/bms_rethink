@@ -9,6 +9,7 @@ export class AttachmentsReq{
 		this.AttServ = new AttachmentsService()
 		this.ReqUtil = new ReqUtilities()
 		this.target = document.querySelector('#recently-attached-section-requirements')
+		this.XHR = new window.bms.exports.XHR()
 
 	}
 
@@ -38,10 +39,19 @@ export class AttachmentsReq{
 				for (var i = 0; i < data.data.length; i++) {
 
 					const d = {
+						id: data.data[i].id,
 						type: data.data[i].type,
 						original_filename: data.data[i].original_filename,
 					}
 					this.ReqUtil.appendAttachments(d)
+					// more settings
+					setTimeout(() => {
+						const pop = new window.bms.exports.PopupES()
+						window.bms.default.dropdown('device-dropdown')	
+						// remove attachments
+						this.bindRemoveAttachments()
+
+					},1000)
 				}
 
 				// close dialog
@@ -125,10 +135,22 @@ export class AttachmentsReq{
 				targ.parentNode.parentNode.remove()
 				// DOM
 				const d = {
+					id: request.responseText,
 					type: file.type.split('/')[1],
 					original_filename: file.name,
 				}
+
 				this.ReqUtil.appendAttachments(d)
+
+				// more settings
+				setTimeout(() => {
+					const pop = new window.bms.exports.PopupES()
+					window.bms.default.dropdown('device-dropdown')	
+					// remove attachments
+					this.bindRemoveAttachments()
+
+				},1000)
+
 			}else{
 				targ.parentNode.textContent = 'Error uploading'
 			}
@@ -177,29 +199,82 @@ export class AttachmentsReq{
 		el.removeEventListener('change', this.appendFileToBeUploaded.bind(proto))
 		el.addEventListener('change', this.appendFileToBeUploaded.bind(proto))
 	}
-}
 
-const dial= new AttachmentsDialog({id:'requirements'})
-document.querySelectorAll('.file-attachment-requirement-dialog-btn').forEach((val, index) => {
+	removeAttachments (e) {
 
-	const el = val.cloneNode(true)
+		window.bms.default.spinner.show()
+		e.target.setAttribute('disabled', 'disabled')
 
+		let data = {
+			id: window.bms.default.modal.resources,
+			action: 'remove',
+		}
 
+		this.AttServ.remove(data).then((json) => {
+			let res = JSON.parse(json)
 
-	el.addEventListener('click', () => {
-		dial.dialog().then(() => {
-			// get recent files
-			const att = new AttachmentsReq()
-			// show recent once
-			if (!document.querySelector('.recently-attached-requirements')) {
-				att.recent()
-				att.bindAttach()
-				att.bindSelectDeviceFile()
+			if(res.data){
+				window.bms.default.modal.element.parentNode.parentNode.parentNode.remove()
+				document.getElementById('bidding-modal').close()
+				window.bms.default.spinner.hide()
+			}else{
+				document.querySelector('#bidding-modal > .content > .body').innerHTML = `
+					<div class="col text-center">
+						<h3 class="text-danger">Failed</h3>
+						<p class="text danger">Unable To Remove this Item. Please try again later</p>
+					</div>
+				`
+				document.getElementById('bidding-modal').close()
+				window.bms.default.spinner.hide()
 			}
+		}).catch((err) => {
+			document.querySelector('#bidding-modal > .content > .body').innerHTML = `
+					<div class="col text-center">
+						<h3 class="text-danger">Failed</h3>
+						<p class="text danger">Unable To Remove this Item. Please try again later</p>
+					</div>
+				`
+			document.getElementById('bidding-modal').close()
+			window.bms.default.spinner.hide()
 		})
-	})
+	}
 
-	val.replaceWith(el)
-})
+	loadRemoveAttachments (e) {
+		const URL='pages/suppliers/modal/remove.html'
+		const id=e.target.id
+		const proto = Object.assign({ __proto__: this.__proto__ }, this)
 
+		return this.XHR.request({method:'GET',url:URL}).then(res=>{
+			let modalTarget=document.getElementById('modal-bidding-body')
+			modalTarget.innerHTML=res
+
+			setTimeout(()=>{
+				window.bms.default.scriptLoader(modalTarget)
+			},50)
+
+			setTimeout(()=>{
+				//remove cancel
+				document.getElementById('modal-dialog-close-button').addEventListener('click',()=>{
+		
+					document.getElementById('bidding-modal').close()
+					
+				})
+
+				let btn = document.getElementById('modal-dialog-remove-button')
+				btn.el =  e.target
+				btn.addEventListener('click', this.removeAttachments.bind(proto))
+			})
+		}).catch(e=>{})
+	}
+
+
+	bindRemoveAttachments () {
+		const proto = Object.assign({ __proto__: this.__proto__ }, this)
+		document.querySelectorAll('.remove-attachments-modal').forEach((val, index) => {
+			val.addEventListener('click',this.loadRemoveAttachments.bind(proto))
+		})
+	}
+
+
+}
 

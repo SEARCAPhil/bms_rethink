@@ -88,7 +88,7 @@ export default class {
 
 		let data = {
 			id: window.bms.default.state.bidding.cur.bid.id,
-			status: 1,
+			status: e.target.resources,
 		}
 
 		this.ListServ.status(data).then((json) => {
@@ -176,6 +176,7 @@ export default class {
 
 				let btn = document.getElementById('modal-dialog-send-button')
 				btn.el =  e.target
+				btn.resources = e.target.getAttribute('data-resources')
 				btn.addEventListener('click', this.setStatus.bind(proto))
 			},50)
 		}).catch(e=>{})
@@ -195,15 +196,30 @@ export default class {
 
 	bindSetStatus () {
 		const proto = Object.assign({ __proto__: this.__proto__ }, this)
-		document.querySelector('.set-bidding-modal-btn').addEventListener('click',this.loadSetStatus.bind(proto))
+		const el = document.querySelectorAll('.set-bidding-modal-btn')
+		el.forEach((els, index) => {
+			els.addEventListener('click',this.loadSetStatus.bind(proto))
+		})
 	}
 
 
 	appendAttachments (data) {
 		const attSec = document.getElementById('attacments-info-section')
 		attSec.innerHTML += `	<div class="col-lg-3 col-md-3" style="padding:5px;background:#e9ecef;border:1px solid #fefefe;">
-									<div class="file-icon file-icon-sm" data-type="${data.type}"></div> ${data.original_filename}
-									<i class="material-icons md-12">arrow_drop_down</i>
+									<div class="d-flex align-items-stretch">
+										<div class="col">
+											<div class="file-icon file-icon-sm" data-type="${data.type}"></div> ${data.original_filename}
+										</div>
+										<div class="col-1">
+											<i class="material-icons md-18 device-dropdown" data-device-dropdown="dropdown-req-${data.id}" data-resources="${data.id}">arrow_drop_down</i>
+											<div class="dropdown-section float-right" id="dropdown-req-${data.id}">
+												<ul class="list-group list-group-flush">
+		  											<li class="list-group-item "><a href="#" onclick="event.preventDefault();window.open('http://192.168.80.56/bms_api/src/api/bidding/requirements/attachments/download.php?id=${data.id}')">Download</a></li>
+													<li class="list-group-item"><a data-target="#bidding-modal" data-popup-toggle="open" href="#" class="remove-attachments-modal">Remove</a></li>
+												<ul>
+											</div>
+										</div>
+									</div>
 								</div>`
 	}
 

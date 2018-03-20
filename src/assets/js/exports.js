@@ -3,6 +3,7 @@ import XHR from './lib/XHR/XHR'
 import Sidebar from './components/Sidebar/Sidebar'
 import Spinner from './components/Spinner/Spinner'
 import IndexedDB from './components/IndexedDB/IndexedDB'
+import PopupES from './components/PopupES/PopupES'
 
 window.bms=window.bms||{
 	deviceInstance:'mobile',
@@ -29,6 +30,7 @@ window.bms=window.bms||{
 		Sidebar,
 		Spinner,
 		IndexedDB,
+		PopupES,
 	},
 	func:{}
 }

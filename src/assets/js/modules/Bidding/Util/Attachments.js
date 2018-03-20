@@ -123,10 +123,20 @@ export class Attachments{
 				targ.parentNode.parentNode.remove()
 				// DOM
 				const d = {
+					id: request.responseText,
 					type: file.type.split('/')[1],
 					original_filename: file.name,
 				}
 				this.InfoUtil.appendAttachments(d)
+				// more settings
+				setTimeout(() => {
+					const pop = new window.bms.exports.PopupES()
+					window.bms.default.dropdown('device-dropdown')	
+					// remove attachments
+					this.bindRemoveAttachments()
+
+				},1000)
+					
 			}else{
 				targ.parentNode.textContent = 'Error uploading'
 			}

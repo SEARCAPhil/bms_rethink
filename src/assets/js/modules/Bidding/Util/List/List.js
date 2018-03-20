@@ -11,10 +11,8 @@ export default class {
 
 	lists (opt = {}) {
 		this.ListServ.lists(opt).then(data => {
-			const parsedData=JSON.parse(data)
-			const json=parsedData.data
+			const json=JSON.parse(data)
 			const targ = document.querySelector('.list-bidding-section')
-
 
 			setTimeout(() => {
 				// open DB
@@ -71,7 +69,7 @@ export default class {
 
 
 			targ.innerHTML = ''
-			myIndex.openCursor(IDBKeyRange.bound(filter,filter)).onsuccess = (event) => {
+			myIndex.openCursor(IDBKeyRange.bound(filter,filter ? 10 : filter)).onsuccess = (event) => {
 				const cursor = (event.target.result)
 				if(cursor) {
 					//add to DOM
