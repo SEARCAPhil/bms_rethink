@@ -149,6 +149,17 @@ const activeMenu=(id)=>{
 	})
 }
 
+const loadCommonSettings = () => {
+	setTimeout(() => {
+		document.getElementById('givenName-header-section').innerHTML = window.localStorage.getItem('givenName')
+		document.getElementById('image-header-section').innerText = window.localStorage.getItem('givenName').substr(0,2).toUpperCase()
+
+		window.bms.default.dropdown('device-dropdown')	
+
+	},2000)
+
+}
+
 
 const appRoute=new window.bms.exports.Router('http://localhost/bms_rethink/www/',true)
 const sideBar=new window.bms.exports.Sidebar('.docker-menu ','#docker-sidebar')
@@ -166,6 +177,7 @@ appRoute.on({
 	'/home':(e)=>{ 
 		activeMenu('home_menu')
 		loadHome().then(()=>{
+			loadCommonSettings()
 			hideInit()
 			changeDisplay(['div[name="/suppliers"]','div[name="/suppliers/profile"]','div[name="/suppliers/forms/registration"]','div[name="/suppliers/forms/registration/update"]','.nav-top-menu'],'none')
 			changeDisplay(['div[name="/home"]'],'block')
@@ -175,6 +187,7 @@ appRoute.on({
 	'/suppliers/*':()=>{
 		activeMenu('suppliers_main_menu')
 		hideInit()
+		loadCommonSettings()
 		//changeDisplay(['.nav-top-menu'],'block')
 		document.querySelector('.nav-top-menu').classList.remove('hide')
 		document.querySelector('.suppliers-router-section').classList.remove('hide')
@@ -186,6 +199,7 @@ appRoute.on({
 	'/bids/*':()=>{
 		activeMenu('bids-menu-list')
 		hideInit()
+		loadCommonSettings()
 
 		changeDisplay(['.suppliers-router-section','.nav-top-menu'],'none')
 		document.querySelector('.bids-router-section').classList.remove('hide')
@@ -194,6 +208,7 @@ appRoute.on({
 }).resolve()
 
 var initH=(window.innerHeight)
+
 
 const changeHeight=(selector)=>{
 	document.querySelectorAll(selector).forEach((el,index)=>{

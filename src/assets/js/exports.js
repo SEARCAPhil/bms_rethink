@@ -4,6 +4,7 @@ import Sidebar from './components/Sidebar/Sidebar'
 import Spinner from './components/Spinner/Spinner'
 import IndexedDB from './components/IndexedDB/IndexedDB'
 import PopupES from './components/PopupES/PopupES'
+import Config from './config/network/network.config'
 
 window.bms=window.bms||{
 	deviceInstance:'mobile',
@@ -22,8 +23,13 @@ window.bms=window.bms||{
 					requirements: {},
 				},
 			},
-		}
-	}, //global functions
+		},
+
+	},
+	config: {
+		network: new Config().get(),
+	 
+	},//global functions
 	exports:{
 		Router,
 		XHR,

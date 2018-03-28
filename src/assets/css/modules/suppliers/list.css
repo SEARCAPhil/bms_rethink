@@ -38,8 +38,8 @@
 }
 
 .list.active{
-  border:1px solid #ccc;
-  background: rgba(200,200,200,0.3);
+  border-left:3px solid #17a2b8;
+  background: rgba(240,240,240,0.3);
 }
 
 

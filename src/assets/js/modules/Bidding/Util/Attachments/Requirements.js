@@ -14,7 +14,7 @@ export class AttachmentsReq{
 	}
 
 	recent () {
-		this.AttServ.recent().then(json => {
+		this.AttServ.recent({ token: window.localStorage.getItem('token')}).then(json => {
 			const data = JSON.parse(json)
 			if (data.data) {
 				data.data.forEach((val, index) => {
@@ -113,6 +113,8 @@ export class AttachmentsReq{
 	upload(file,index) {
 		const formData = new FormData() 
 		formData.append('files', file)
+		formData.append('id', window.bms.default.state.bidding.cur.requirements.id)
+		formData.append('token', window.localStorage.getItem('token'))
 
 		let request = new XMLHttpRequest();
 

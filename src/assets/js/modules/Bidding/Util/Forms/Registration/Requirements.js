@@ -94,6 +94,7 @@ const registerReq = (e) => {
 		id: window.bms.default.state.bidding.cur.particulars.id,
 		excempted: excemptionField.value,
 		specs: specsArr,
+		token: localStorage.getItem('token'),
 		action: 'create',
 	}
 	
@@ -104,7 +105,7 @@ const registerReq = (e) => {
 		let res = JSON.parse(json)
 
 		if (res.data) {
-			window.location.hash = `#/bids/forms/registration/${res.data}/steps/4`
+			window.location.hash = `#/bids/requirements/${res.data}`
 			window.bms.default.spinner.hide()
 			document.getElementById('bid-form-status').innerHTML = ''
 			return 0

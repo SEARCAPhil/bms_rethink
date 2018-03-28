@@ -10,7 +10,7 @@ export default class{
 		opt.page=opt.page||1
 		opt.filter=opt.filter||'all'
 
-		const url=`${NetConf.get()}/bidding/attachments/recent/?page=${opt.page}`
+		const url=`${NetConf.get()}/bidding/attachments/recent/?page=${opt.page}&token=${opt.token}`
 		//require exports.js
 		const XHR=new window.bms.exports.XHR()
 

@@ -37,11 +37,21 @@
                 userAgentApplication.acquireTokenSilent(applicationConfig.graphScopes).then(function (accessToken) {
                     // Change button to Sign Out
                     XHR.request({url:'https://graph.microsoft.com/beta/me/',method:'GET',headers:{'Authorization':'Bearer '+accessToken}}).then(json=>{
-                      var data=JSON.parse(json)
-                      if(data.id){
-                        window.location = '../../#/home/'
-                        window.localStorage.setItem('id', data.id)
-                      }
+                        let data=JSON.parse(json)
+                        if(data.id){
+                            // O365 check
+                            loginOnPremiseServer (data).then((json) => { 
+                                localStorage.setItem('token', json.token)
+                                 localStorage.setItem('role', json.role)
+                                window.localStorage.setItem('id', data.id)
+                                window.localStorage.setItem('givenName', data.displayName)
+
+                                window.location = '../../#/home/'
+                               
+                            }).catch((err) => {
+                                alert('Unable to authenticate. Please try again later.')
+                            })
+                        }
                     })
                 }, function (error) {
                     console.log(error);
@@ -64,6 +74,31 @@
         function logout() {
             // Removes all sessions, need to call AAD endpoint to do full logout
             userAgentApplication.logout();
+        }
+
+        function loginOnPremiseServer (data) {
+            return new Promise((resolve, reject) => {
+                const XHR=new window.bms.exports.XHR()
+                const payload = {
+                    url:'http://192.168.80.56/bms_api/src/api/auth/',
+                    method:'POST',
+                    body: JSON.stringify({
+                        data,
+                    }),
+                }
+
+                XHR.request(payload).then((json) => {
+
+                    const data = JSON.parse(json)
+                    try{
+                        resolve(data) 
+                    }catch(err) {
+                        reject(err)
+                    }
+                   
+                })
+            })
+
         }
 
 

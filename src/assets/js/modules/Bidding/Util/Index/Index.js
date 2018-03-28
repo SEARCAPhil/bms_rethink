@@ -38,9 +38,17 @@ export default class {
 							</a>
 						</li>
 
+
 						<li class="nav-item">
 							<a class="nav-link nav-link" href="#/bids/forms/registration/${data.id}/steps/1/update">
 								Update
+							</a>
+						</li>
+
+
+						<li class="nav-item">
+							<a class="nav-link nav-link remove-bidding-modal-btn" href="${window.bms.config.network}/bidding/reports/bidding_request.php" target="_blank">
+								<i class="material-icons md-18">picture_as_pdf</i> PRINT
 							</a>
 						</li>
 
@@ -113,11 +121,11 @@ export default class {
 				    	
 						<br/>
 						<p class="deadline"><b>Deadline</b> : <span id="bidding-deadline-info">N/A</span></p>
+						<p class="bidding-excemption text-danger"><b>For Bidding Excemption</b> : <span id="bidding-excemption-info">N/A</span></p>
 						<p>
-							<b>Granted access to : </b> <span id="bidding-collaborators"></span>
+							<b>Shared to : </b> <span id="bidding-collaborators"></span>
 						</p>
 				    	<p>
-				    		<b>Attachments</b>
 				    		<!--attachments section -->
 							<div class="row" id="attacments-info-section" style="padding:5px;"></div>
 				    	</p>
@@ -280,18 +288,37 @@ export default class {
 				<!--list-->
 			    <section class="col-md-12 col-lg-12 float-left list-sidebar" style="background:#fff;box-shadow:0 0 5px rgba(200,200,200,.7);min-height: 100vh">     
 					<section style="margin-top:55px;">
-						<div class="row">
+						<!--<div class="row">
 							<span class="search-list-section-icon"><i class="material-icons">search</i></span>
 							<span class="search-list-section hide"><input class="form-control" type="text" style="padding:4px;border:none;background:#fcfcfc;" placeholder="Search"></span>
-						</div>
+						</div>-->
 					</section>
 					<section>
-						<div class="col col-md-12" data-role="none" style="margin-bottom: 5px;">
-			                <span class="menuList allNav"><a href="#/bids/all">All</a></span>&emsp;
-			                <span class="menuList blockedNav"><a href="#/bids/open">Open</a></span>&emsp;
-			                <span class="menuList blockedNav"><a href="#/bids/closed">Closed</a></span>&emsp;
-			                 <span class="menuList blockedNav"><a href="#/bids/drafts">Drafts</a></span>&emsp;
-			                <span class="menuList suppliers_new_button"><a href="#/bids/forms/registration/steps/1">New <i class="material-icons md-18">add_circle_outline</i></a></span>
+						<div class="col col-md-12" data-role="none" style="margin-bottom: 5px;border-bottom:1px solid rgba(240,240,240,0.4);">
+							<a href="#" class="device-dropdown" data-device-dropdown="list-menu-drop" onclick="event.preventDefault();">
+								Filter <i class="material-icons md-18">expand_more</i>
+							</a>
+
+							<div class="dropdown-section float-right" id="list-menu-drop" style="left:0px;">
+								<ul class="list-group list-group-flush">
+									<li class="list-group-item">
+										<span class="menuList allNav"><a href="#/bids/all">All</a></span>
+									</li>
+									<li class="list-group-item">
+										<span class="menuList blockedNav"><a href="#/bids/open">Open</a></span>
+									</li>
+
+									<li class="list-group-item">
+										<span class="menuList blockedNav"><a href="#/bids/closed">Closed</a></span>
+									</li>
+
+									<li class="list-group-item">
+										<span class="menuList blockedNav"><a href="#/bids/drafts">Drafts</a>
+									</li>
+								<ul>
+							</ul></ul></div>
+
+			                <span class="menuList suppliers_new_button float-right"><a href="#/bids/forms/registration/steps/1">New <i class="material-icons md-18">add_circle_outline</i></a></span>
 			                <br> 
 			           	</div>
 					</section>	

@@ -20,6 +20,7 @@ const register = (e) => {
 	let nameField = document.querySelector('form[name="bidding-request-registration"] input[name="name"]')
 	let descField = document.querySelector('form[name="bidding-request-registration"] textarea[name="description"]')
 	let deadlineField = document.querySelector('form[name="bidding-request-registration"] input[name="deadline"]')
+	let excemptionField = document.querySelector('form[name="bidding-request-registration"] input[name="forExcemption"]:checked')
 
 	if (nameField.value.length < 1) {
 		nameField.classList.add('error')
@@ -34,7 +35,9 @@ const register = (e) => {
 		name: nameField.value,
 		desc: descField.value,
 		deadline: deadlineField.value,
+		excemption: parseInt(excemptionField.value),
 		action: 'create',
+		token: localStorage.getItem('token'),
 	}
 
 	Reg.create(data).then(json => {

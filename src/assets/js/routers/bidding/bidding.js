@@ -73,6 +73,57 @@ const appendReqRecepients = (data) => {
 							</div>`
 }
 
+const loadRequirementsDetails = (json) => {
+	const targ = document.querySelector('.specs-section-info')
+	const attTarg = document.getElementById('attacments-requirements-info-section')
+
+	document.querySelector('.req-name').textContent = json.name
+	document.querySelector('.req-currency').textContent = json.budget_currency
+	document.querySelector('.req-amount').textContent = json.budget_amount
+	document.querySelector('.req-quantity').textContent = json.quantity
+	document.querySelector('.req-unit').textContent = json.unit
+
+	json.specs.forEach((val, index) => {
+		targ.innerHTML += `
+			<div class="col-2">
+	    		<b>${val.name}</b>
+	    	</div>
+	    	<div class="col-10">
+	    		<p>${val.value}</p>
+	    	</div>
+		`
+	})
+
+	json.attachments.forEach((val, index) => {
+		appendReqAttachments({type: val.type, original_filename: val.original_filename, id: val.id })
+	})
+
+	// recepients
+	json.recepients.forEach((val, index) => {
+		appendReqRecepients({name: val.name, id: val.id })
+	})
+
+	setTimeout(() => {
+			// dropdown
+			window.bms.default.dropdown('device-dropdown')
+			// enable popup
+			PopupInstance = new PopupES()
+			// remove attachments
+			AttUtil.bindRemoveAttachments()
+
+			// send
+			ReqUtil.bindSendRequirements()
+
+			// send
+			ReqUtil.bindRemoveRecepients()
+
+			// show proposals
+			ReqUtil.bindShowProposalSection(json.id)
+	},10)
+
+
+}
+
 appRoute.on({
  	'/*': () => {
  		// this is required to always treat suppliers as separate route
@@ -88,7 +139,22 @@ appRoute.on({
 		window.bms.default.changeDisplay(['div[name="/bids/initial"]','div[name="/bids/forms/registration/2"]','div[name="/bids/forms/registration"]','div[name="/bids/forms/registration/3"]', '[name="/bids/info/particulars/proposals/form"]'],'none')
 		window.bms.default.changeDisplay(['div[name="/bids/info/particulars/details"]'],'block')
 		
-		IDB.get(params.id).then((json) => {	
+		IndexUtil.loadBiddingInfo({id: params.id, status: 1}).then(() => {
+			setTimeout(() => {
+				InfoUtil.bindRemoveBidding()
+				InfoUtil.bindSendBidding()
+				InfoUtil.bindSetStatus()
+			},600)
+		})
+
+		document.querySelectorAll(`.list`).forEach((el, index) => {
+			if (el.getAttribute('data-list')==params.id) {
+				el.classList.add('active')
+			} else {
+				el.classList.remove('active')
+			}
+		})
+		/*IDB.get(params.id).then((json) => {	
 		
 			// get bidding information
 			IndexUtil.loadBiddingInfo({id: params.id, status: json.status}).then(() => {
@@ -101,17 +167,19 @@ appRoute.on({
 					InfoUtil.bindSendBidding()
 					InfoUtil.bindSetStatus()
 				},600)
+			}).catch((err) => {
+				console.log(err)
 			})
 		}).catch(err => {
 
-		})
+		})*/
 		// show particulars
 		IndexUtil.loadBiddingParticulars(params.id)
 		IndexUtil.loadBiddingListSection()
 
 		// load external css
 		loadCSS('assets/css/modules/suppliers/list.css')
-		loadCSS('node_modules/fileicon/fileicon.css')
+		loadCSS('assets/css/fileicon.css')
 	},
 	'/bids/requirements/:id': (params) => {
 		window.bms.default.state.bidding.cur.requirements.id = params.id
@@ -120,12 +188,16 @@ appRoute.on({
 		IndexUtil.loadBiddingRequirementsInfo()
 		IndexUtil.loadBiddingListSection()
 
-		const targ = document.querySelector('.specs-section-info')
-		const attTarg = document.getElementById('attacments-requirements-info-section')
 		window.bms.default.lazyLoad(['./assets/js_native/assets/js/modules/bidding/Util/Attachments/RequirementsModal.js'])
 
+		ReqUtil.get(params.id).then(json => {
+			if (json.id) {
+				loadRequirementsDetails(json)
+			}
+		})
+
 		// get requirements
-		IDBReq.get(params.id).then((json) => {
+		/*IDBReq.get(params.id).then((json) => {
 			if (json.id) {
 				document.querySelector('.req-name').textContent = json.name
 				document.querySelector('.req-currency').textContent = json.budget_currency
@@ -172,10 +244,10 @@ appRoute.on({
 				},10)
 
 			}
-		})
+		})*/
 
 		loadCSS('assets/css/modules/suppliers/list.css')
-		loadCSS('node_modules/fileicon/fileicon.css')
+		loadCSS('assets/css/fileicon.css')
 	},
 	'/bids/requirements/:id/proposal/form': (params) => {
 		window.bms.default.changeDisplay(['div[name="/bids/initial"]','div[name="/bids/forms/registration/2"]', 'div[name="/bids/forms/registration"]', 'div[name="/bids/forms/registration/3"]', 'div[name="/bids/info"]', 'div[name="/bids/info"]','[name="/bids/info/particulars/details"]'],'none')
@@ -187,7 +259,7 @@ appRoute.on({
 		ReqUtil.loadProposalForm().then(() => {
 			const section = document.querySelector('.specs-section-proposal')
 			// get requirements
-			IDBReq.get(params.id).then((json) => {
+			/*IDBReq.get(params.id).then((json) => {
 				if (json.id) {
 					// change unit & quantity
 					document.querySelector('.req-quantity-reg').textContent = json.quantity
@@ -224,7 +296,7 @@ appRoute.on({
 					},10)
 
 				}
-			})
+			})*/
 		}) 
 
 		// load list if not exists

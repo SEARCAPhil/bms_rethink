@@ -245,6 +245,7 @@ appRoute.on({
 
 	},
 	'/bids/forms/registration/:id/steps/3': (params) => {
+		
 		window.bms.default.changeDisplay(['div[name="/bids/forms/registration"]','div[name="/bids/forms/registration/3"]'],'block')
 		window.bms.default.changeDisplay(['div[name="/bids/initial"]','div[name="/bids/forms/registration/1"]','div[name="/bids/forms/registration/4"]','div[name="/bids/forms/registration/2"]'],'none')
 			

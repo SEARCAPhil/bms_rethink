@@ -32,7 +32,7 @@ let PopupInstance = {}
 
 
 const viewBiddingInfo = (id) => {
-	ListServ.view({id, token: 'abc'}).then(data => {
+	ListServ.view({id: id, token : window.localStorage.getItem('token')}).then(data => {
 
 		const parsedData=JSON.parse(data)
 		const json=parsedData.data
@@ -75,6 +75,7 @@ const changeBiddingInfo = (e) => {
 	document.getElementById('bidding-number-info').innerHTML = `#${details.id}`
 	document.getElementById('bidding-description-info').innerHTML = `${details.description}`
 	document.getElementById('bidding-deadline-info').innerHTML = `${details.deadline !== '0000-00-00' ? details.deadline : 'N/A'}`
+	document.getElementById('bidding-excemption-info').innerHTML = `${details.excemption == 1 ? 'YES' : 'NO'}`
 	document.getElementById('bidding-date-created').innerHTML = `${details.date_created}`
 
 	// clear section
@@ -152,7 +153,7 @@ const appendParticulars = (data) => {
 	    		<div class="col-lg-12" style="padding-top:5px;padding-bottom:5px;background:#f6f6f6;">
 	    			
 	    			<p>
-	    				<span class="badge badge-danger">${data.requirements.length}</span> <span class="text-danger">Requirements</spn>
+	    				<span class="badge badge-danger">${data.requirements.length}</span> <span class="text-danger">Requirements &emsp;<u><a href="#/bids/forms/registration/${data.id}/steps/3">Add New</a></u></spn>
 	    			</p>
 	    			`
 	// requirements
@@ -213,12 +214,12 @@ appRoute.on({
 
 	},
 	'/bids/all': () => {
-		listUtil.listsFromLocal({filter: 'all'})
-		listUtil.lists()
+		// listUtil.listsFromLocal({filter: 'all'})
+		listUtil.lists({token : window.localStorage.getItem('token')})
 	},
 	'/bids/drafts': () => {
-		listUtil.listsFromLocal({filter: 'drafts'})
-		listUtil.lists({filter: 'drafts'})
+		// listUtil.listsFromLocal({filter: 'drafts'})
+		listUtil.lists({filter: 'drafts', token : window.localStorage.getItem('token')})
 	},
 	'/bids/:id/info/': (params) => {
 
@@ -235,8 +236,8 @@ appRoute.on({
 
 		// show list onpageloaded
 		if (!document.querySelector('.list')) {
-			listUtil.listsFromLocal({filter: 'all'})
-			listUtil.lists()
+			//listUtil.listsFromLocal({filter: 'all'})
+			listUtil.lists({ token : window.localStorage.getItem('token') })
 		}
 
 		// clear settings
@@ -248,7 +249,7 @@ appRoute.on({
 
 		// show list onpageloaded
 		if (!document.querySelector('.list')) {
-			listUtil.listsFromLocal({filter: 'all'})
+			// listUtil.listsFromLocal({filter: 'all'})
 			listUtil.lists()
 		}
 	},
@@ -256,8 +257,8 @@ appRoute.on({
 
 		// show list onpageloaded
 		if (!document.querySelector('.list')) {
-			listUtil.listsFromLocal({filter: 'all'})
-			listUtil.lists()
+			//listUtil.listsFromLocal({filter: 'all'})
+			listUtil.lists({ token : window.localStorage.getItem('token') })
 		}
 	},
 }).resolve()

@@ -20,7 +20,7 @@
   "dependencies": {
     "inherits": "^2.0.1",
     "navigo": "^5.3.3",
-    "readable-stream": "^2.3.3"
+    "readable-stream": "^2.3.5"
   },
   "resolutions": {
     "minimist": "0.0.8",
@@ -86,7 +86,9 @@
     "async": "1.5.2",
     "temp-file": "3.1.1",
     "electron-builder-lib": "19.53.4",
-    "electron-publish": "19.53.3"
+    "electron-publish": "19.53.3",
+    "process-nextick-args": "2.0.0",
+    "7zip-bin-linux": "1.2.0"
   },
   "devDependencies": {
     "babel-core": "^6.26.0",

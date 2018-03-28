@@ -71,6 +71,7 @@ const register = (e) => {
 		desc: descField.value,
 		deadline: deadlineField.value,
 		id: window.bms.default.state.bidding.cur.bid.id,
+		token: localStorage.getItem('token'),
 		action: 'update',
 	}
 

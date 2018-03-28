@@ -15,7 +15,7 @@ document.querySelectorAll('.file-attachment-requirement-dialog-btn').forEach((va
 			const att = new AttachmentsReq()
 			// show recent once
 			if (!document.querySelector('.recently-attached-requirements')) {
-				att.recent()
+				att.recent({ token: window.localStorage.getItem('token')})
 				att.bindAttach()
 				att.bindSelectDeviceFile()
 			}

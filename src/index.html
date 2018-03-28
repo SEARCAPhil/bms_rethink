@@ -206,14 +206,16 @@
                     <span class="burger"></span>  
                 </span>
                 
-                
+                <ul class="nav  ml-auto nav-top-menu d-none d-lg-block">
+                  
+                  <li class="nav-item" id="settings-tab" style="color: #fff;">
+                     <span class="float-left mr-3" id="givenName-header-section" style="padding-top: 5px;"></span>
+                     <div class="text-center" style="float: left;width: 35px;height: 35px;border-radius: 50%;margin-right: 10px;overflow: hidden;background: #ffb80c;color:#fff;padding-top: 5px;" id="image-header-section">
+                       
+                    </div>
+                  </li>
+                </ul>
                             
-                <!--<small class="float-left">
-                    <span><b>Van Alen S. Limbaco</b></span>
-                </small>
-                <div style="float: left;width: 25px;height: 25px;border-radius: 50%;margin-right: 10px;overflow: hidden;">
-                    <img src="assets/img/user.png" width="100%">
-                </div>-->
                       
                       <!--bootstrap menu-->
                 <span class="navbar-brand hamburger mb-0 h1 docker-menu d-lg-none" data-target=".docker">
@@ -262,6 +264,7 @@
                                 <i class="material-icons md-24" style="width: 24px;">home</i> 
                                 <br/>Home
                         </li>
+                        <!--
                         <li data-status="supplies" 
                             class="main-menu-list-item suppliers_main_menu" 
                             id="suppliers_main_menu" 
@@ -270,7 +273,7 @@
 
                                 <i class="material-icons md-24" style="width: 24px;">local_mall</i> 
                                 <br/>Suppliers
-                        </li>
+                        </li>-->
 
                         <li data-status="bids" 
                             class="main-menu-list-item bids-menu-list" 
@@ -353,8 +356,8 @@
              </div>
 
              <div name="/bids/info/particulars" class="col-lg-8 d-flex"  style="background: rgb(252, 252, 252);height:100vh;overflow-y:auto;">
-                <div name="/bids/info/particulars/details" class="row"></div> 
-                <div name="/bids/info/particulars/proposals/form" class="row hide"></div> 
+                <div name="/bids/info/particulars/details" class="row" style="width:100%;"></div> 
+                <div name="/bids/info/particulars/proposals/form" class="row col hide"></div> 
                 <div name="/bids/info/particulars/proposals" class="col-6 col-sm-3 col-md-3 col-lg-3 row hide">
                     <div class="col-12 text-right">
                         <small>

@@ -11,6 +11,29 @@ export default class {
 		this.IDB = new IndexedDB()
 	}
 
+
+	get (id) { 
+		//window.bms.default.spinner.show()
+		let data = {
+			id,
+			token: window.localStorage.getItem('token'),
+		}
+
+		return new Promise((resolve, reject) => {
+			this.ReqServ.view(data).then((json) => {
+				let res = JSON.parse(json)
+			
+				if(res[0]){
+					window.bms.default.spinner.hide()
+					resolve(res[0])
+				}
+
+
+			})
+		})
+	}
+
+
 	removeRequirements (e) {
 		window.bms.default.spinner.show()
 		let data = {
@@ -201,30 +224,39 @@ export default class {
 			action: 'send',
 		}
 
+		const br = Object.values(window.bms.bidding.suppliersSendingList)
+		let x =0;
+
 		this.ReqServ.send(data).then((json) => {
 			let res = JSON.parse(json)
 			const target = document.querySelector('.attachment-recepients-section')
 
 			if(res.data){
-				const html = document.createElement('div')
-				html.classList.add('col-lg-2', 'col-md-2')
-				html.setAttribute('style', 'padding:5px;background:#393f45;border:1px solid #fefefe;color:#fff;')
-				html.id = `requirements-recepients-list-${res.data}`
-				html.innerHTML = `<div class="d-flex align-items-stretch">
-									<div class="col-9">
-										<div style="float:left;width:100%;max-height:30px;overflow:hidden;text-overflow:ellipsis;">abcdef</div>
-									</div>
 
-									<div class="col-1">
-										<i class="material-icons md-18 device-dropdown" data-device-dropdown="dropdown-req-recepients-${res.data}" data-resources="2">arrow_drop_down</i>
-										<div class="dropdown-section float-right" id="dropdown-req-recepients-${res.data}">
-											<ul class="list-group list-group-flush">
-												<li class="list-group-item"><a data-target="#bidding-modal" data-popup-toggle="open" href="#" class="remove-receipients-modal" data-resources="2">Cancel Invitation</a></li>
-											<ul>
-										</ul></ul></div>
-									</div>
-								</div>`
-				target.append(html)
+				for(let val in res.data) {
+
+					const html = document.createElement('div')
+					html.classList.add('col-lg-2', 'col-md-2')
+					html.setAttribute('style', 'padding:5px;background:#393f45;border:1px solid #fefefe;color:#fff;')
+					html.id = `requirements-recepients-list-${val}`
+					html.innerHTML = `<div class="d-flex align-items-stretch">
+										<div class="col-9">
+											<div style="float:left;width:100%;max-height:30px;overflow:hidden;text-overflow:ellipsis;">${br[x]}</div>
+										</div>
+
+										<div class="col-1">
+											<i class="material-icons md-18 device-dropdown" data-device-dropdown="dropdown-req-recepients-${val}" data-resources="2">arrow_drop_down</i>
+											<div class="dropdown-section float-right" id="dropdown-req-recepients-${val}">
+												<ul class="list-group list-group-flush">
+													<li class="list-group-item"><a data-target="#bidding-modal" data-popup-toggle="open" href="#" class="remove-receipients-modal" data-resources="${val}">Cancel Invitation</a></li>
+												<ul>
+											</ul></ul></div>
+										</div>
+									</div>`
+					target.append(html)
+					x++
+				}
+				
 				// e.target.el.parentNode.parentNode.parentNode.parentNode.remove()
 				document.getElementById('bidding-requirements-modal').close()
 

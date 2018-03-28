@@ -121,10 +121,6 @@ gulp.task('copying twbs to www/node_modules',()=>{
 	.pipe(gulp.dest('../www/node_modules/bootstrap'))
 })
 
-gulp.task('copying fileicon to www/node_modules',()=>{
-	gulp.src(['../node_modules/fileicon.css/**/*.*'])
-	.pipe(gulp.dest('../www/node_modules/fileicon'))
-})
 
 //https://developers.google.com/web/tools/workbox/get-started/gulp
 /*gulp.task('bundle-sw', () => {
@@ -144,6 +140,6 @@ gulp.task('copying fileicon to www/node_modules',()=>{
 
 
 gulp.task('default',(cb)=>{
-	runSequence('minifying html','minifying css','copying fonts','copying images','creating export classes','generating app shell','copying manifest','copying js to js_native folder','minifying modules and saving to js_es','copying other js files','copying twbs to www/node_modules', 'copying fileicon to www/node_modules')
+	runSequence('minifying html','minifying css','copying fonts','copying images','creating export classes','generating app shell','copying manifest','copying js to js_native folder','minifying modules and saving to js_es','copying other js files','copying twbs to www/node_modules')
 });
 

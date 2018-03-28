@@ -11,7 +11,7 @@ export class Attachments{
 	}
 
 	recent () {
-		this.AttServ.recent().then(json => {
+		this.AttServ.recent({ token: window.localStorage.getItem('token')}).then(json => {
 			const data = JSON.parse(json)
 			if (data.data) {
 				data.data.forEach((val, index) => {
@@ -27,7 +27,7 @@ export class Attachments{
 		// disable button first
 		e.target.setAttribute('disabled', 'disabled')
 
-		this.AttServ.attach({attachments:window.bms.bidding.files.recentFilesToUpload, action: 'create'}).then(json => {
+		this.AttServ.attach({attachments:window.bms.bidding.files.recentFilesToUpload, action: 'create', id:window.bms.default.state.bidding.cur.bid.id, token: window.localStorage.getItem('token')}).then(json => {
 			const data = JSON.parse(json)
 
 			//show in DOM
@@ -101,6 +101,8 @@ export class Attachments{
 	upload(file,index) {
 		const formData = new FormData() 
 		formData.append('files', file)
+		formData.append('id', window.bms.default.state.bidding.cur.bid.id)
+		formData.append('token', window.localStorage.getItem('token'))
 
 		let request = new XMLHttpRequest();
 

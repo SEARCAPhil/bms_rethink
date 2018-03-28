@@ -27,7 +27,7 @@ export default class {
 					// add to DB
 					trans.add(json[x])
 					//add to DOM
-					targ.appendChild(this.List.render({id:json[x].id,name:json[x].name,description:json[x].description,class:'col-xs-12 col-md-12 col-sm-12 list'}))
+					targ.appendChild(this.List.render({id:json[x].id,name:json[x].name,description:json[x].description,class:`col-xs-12 col-md-12 col-sm-12 list ${window.bms.default.state.bidding.cur.bid.id==json[x].id ? 'active' : ''}`}))
 				}
 
 				window.bms.default.spinner.hide()
