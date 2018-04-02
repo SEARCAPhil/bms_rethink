@@ -9,6 +9,19 @@ export default class {
 		this.ListServ = new ListService()
 	}
 
+	showEmpty (targ) {
+		targ.innerHTML = `
+			<center class="col text-muted empty-list-message-section" style="margin-top:50px;">
+				<i class="material-icons md-48" >mail_outline</i>
+				<h5>Empty List</h5>
+				<p>
+			        <small>Your list empty.Start adding a new one!</small>
+			    </p>
+									
+			</center>
+		`
+	}
+
 	lists (opt = {}) {
 		this.ListServ.lists(opt).then(data => {
 			const json=JSON.parse(data)
@@ -16,7 +29,7 @@ export default class {
 
 			setTimeout(() => {
 				// open DB
-				let trans = DB.open('bidding')
+				// let trans = DB.open('bidding')
 
 				// clear area
 				targ.innerHTML = ' '
@@ -25,15 +38,28 @@ export default class {
 					json[x].id = parseInt(json[x].id)
 					json[x].status = parseInt(json[x].status)
 					// add to DB
-					trans.add(json[x])
-					//add to DOM
-					targ.appendChild(this.List.render({id:json[x].id,name:json[x].name,description:json[x].description,class:`col-xs-12 col-md-12 col-sm-12 list ${window.bms.default.state.bidding.cur.bid.id==json[x].id ? 'active' : ''}`}))
+					// trans.add(json[x])
+					// add to DOM
+					targ.appendChild(this.List.render({id:json[x].id, name:json[x].name, description:json[x].description, profile_name:json[x].profile_name, date_created:json[x].date_created, class:`col-xs-12 col-md-12 col-sm-12 list ${window.bms.default.state.bidding.cur.bid.id==json[x].id ? 'active' : ''}`}))
 				}
 
 				window.bms.default.spinner.hide()
+
+				opt.page = opt.page || 1
+
+				if (json.length < 1 && opt.page ===1) {
+					this.showEmpty (targ)	
+				}
 				
 			},100)
 
+		}).catch(err => {
+			// show empty status
+			const targ = document.querySelector('.list-bidding-section')
+			opt.page = opt.page || 1
+			if (opt.page ===1 && targ) {
+				this.showEmpty (targ)
+			}
 		})
 	}
 

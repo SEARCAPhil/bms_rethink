@@ -45,12 +45,18 @@ const register = (e) => {
 		let res = JSON.parse(json)
 
 		if (res.data) {
-			window.location.hash = `#/bids/forms/registration/${res.data}/steps/2`
 			window.bms.default.spinner.hide()
 			document.getElementById('bid-form-status').innerHTML = ''
 
 			// append data
-			document.querySelector('.list-bidding-section').prepend(List.render({id:res.data,name:data.name,description:data.desc,class:'col-xs-12 col-md-12 col-sm-12 list'}))
+			document.querySelector('.list-bidding-section').prepend(List.render({id:res.data,name:data.name, profile_name: window.localStorage.getItem('givenName') || '', date_created:'Just Now',description:data.desc,class:'col-xs-12 col-md-12 col-sm-12 list'}))
+			// remove empty message
+			if (document.querySelector('.empty-list-message-section')) {
+				document.querySelector('.empty-list-message-section').remove()	
+			}
+
+			window.location.hash = `#/bids/${res.data}/info`
+
 			return 0
 		}
 		
@@ -63,4 +69,5 @@ const register = (e) => {
 
 }
 
+document.querySelector('form[name="bidding-request-registration"]').removeEventListener('submit', register)
 document.querySelector('form[name="bidding-request-registration"]').addEventListener('submit', register)

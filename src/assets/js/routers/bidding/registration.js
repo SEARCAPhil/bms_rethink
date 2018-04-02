@@ -2,6 +2,7 @@ import IndexedDB from '../../modules/Bidding/Util/Storage/Bidding'
 import IndexedDBReq from '../../modules/Bidding/Util/Storage/Requirements'
 import IndexedDBPart from '../../modules/Bidding/Util/Storage/Particulars'
 import ListUtilities from '../../modules/Bidding/Util/List/List.js'
+import ListService from '../../modules/Bidding/Services/List/List'
 import RegUtilities from '../../modules/Bidding/Util/Registration/Registration.js'
 
 const appRoute = new window.bms.exports.Router('http://127.0.0.1/bms_rethink/www/',true)
@@ -10,6 +11,7 @@ const IDB = new IndexedDB()
 const IDBReq = new IndexedDBReq()
 const IDBPart = new IndexedDBPart()
 const listUtil = new ListUtilities()
+const ListServ = new ListService()
 const RegUtil = new RegUtilities()
 
 
@@ -139,8 +141,8 @@ appRoute2.on({
  	},'/bids/forms/registration/*': (params) => {
 		// show list onpageloaded
 		if (!document.querySelector('.list')) {
-			listUtil.listsFromLocal({filter: 'all'})
-			listUtil.lists()
+			// listUtil.listsFromLocal({filter: 'all'})
+			listUtil.lists({ token : window.localStorage.getItem('token') })
 		}
 
 	}
@@ -179,9 +181,12 @@ appRoute.on({
 			window.bms.default.changeDisplay(['div[name="/bids"]'],'none')	
 		}
 
+
+		window.bms.default.spinner.show() 
+
 		RegUtil.loadRegistration().then(() => {
 			window.bms.default.lazyLoad(['./assets/js_native/assets/js/modules/Bidding/Util/Forms/Registration/RegistrationUpdate.js'])
-			IDB.get(params.id).then(json => {
+			/*IDB.get(params.id).then(json => {
 				let nameField = document.querySelector('form[name="bidding-request-registration"] input[name="name"]')
 				let descField = document.querySelector('form[name="bidding-request-registration"] textarea[name="description"]')
 				let deadlineField = document.querySelector('form[name="bidding-request-registration"] input[name="deadline"]')
@@ -191,7 +196,35 @@ appRoute.on({
 					descField.value = json.description
 					deadlineField.value = json.deadline
 				}
-			})	
+			})*/
+
+			let nameField = document.querySelector('form[name="bidding-request-registration"] input[name="name"]')
+			let descField = document.querySelector('form[name="bidding-request-registration"] textarea[name="description"]')
+			let deadlineField = document.querySelector('form[name="bidding-request-registration"] input[name="deadline"]')
+			let excemptionField = document.querySelectorAll('form[name="bidding-request-registration"] input[name="forExcemption"]')
+
+			// view data from server
+			ListServ.view({id: params.id, token : window.localStorage.getItem('token')}).then(data => {
+
+				const parsedData=JSON.parse(data)
+				const json=parsedData.data
+
+				if (json[0]) {
+					nameField.value = json[0].name
+					descField.value = json[0].description
+					deadlineField.value = json[0].deadline
+					json[0].excemption == 1 ? (excemptionField[1].checked = 'true') : (excemptionField[0].checked = 'true')
+				}
+
+				window.bms.default.spinner.hide() 
+			}).catch(err => {
+				window.bms.default.spinner.hide()
+
+			})
+
+			
+		}).catch((err) => { 
+			window.bms.default.spinner.hide() 
 		})
 		
 

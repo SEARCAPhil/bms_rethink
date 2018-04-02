@@ -49,10 +49,10 @@ export default class {
 
 			window.bms.loadedScript = window.bms.loadedScript || []
 
-			if (window.bms.loadedScript.indexOf(url) != -1 ) {
+			/*if (window.bms.loadedScript.indexOf(url) != -1 ) {
 				resolve()
 				return 0
-			}
+			}*/
 
 			
 

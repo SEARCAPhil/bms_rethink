@@ -38,12 +38,20 @@ export class Attachments{
 					const d = {
 						type: data.data[i].type,
 						original_filename: data.data[i].original_filename,
+						id: data.data[i].id,
 					}
 					this.InfoUtil.appendAttachments(d)
 				}
 
 				// close dialog
 				document.querySelector('#file-attachment-main-dialog-bidding').classList.remove('open')
+
+				setTimeout(() => {
+					window.bms.default.dropdown('device-dropdown')
+					this.bindRemoveAttachments()
+					const pop = new window.bms.exports.PopupES()
+
+				},600)
 			}
 
 			e.target.removeAttribute('disabled')

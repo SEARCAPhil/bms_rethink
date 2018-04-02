@@ -21,6 +21,12 @@ export default class{
 	            <small>
 	           		<p style="font-size:smaller;">${this.properties.description}</p>
 	            </small>
+	            <small>
+	           		<p style="font-size:smaller;" class="text-muted">
+	           			${this.properties.profile_name} <br/>
+	           			${this.properties.date_created}
+	           		</p>
+	            </small>
 	        </a>`
         return this;
 	}
@@ -42,6 +48,8 @@ export default class{
 		this.properties=properties||{}
 		this.properties.description=this.properties.description||''
 		this.properties.class=this.properties.class||''
+		this.properties.profile_name = this.properties.profile_name || ''
+		this.properties.profile_date_created = this.properties.date_created || ''
 
 		//render template
 		this._template()

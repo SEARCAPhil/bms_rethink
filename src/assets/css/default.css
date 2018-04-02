@@ -125,3 +125,21 @@ summary{
 .material-icons.md-light { color: rgba(255, 255, 255, 1); }
 .material-icons.md-light.md-inactive { color: rgba(255, 255, 255, 0.3); }
 
+/*Popup close button*/
+dialog > .content > a {
+
+    position:  absolute;
+    right: -10px;
+    top: -10px;
+    width: 30px;
+    height: 30px;
+    background:  #fff;
+    border-radius:  50%;
+    text-align:  center;
+    border: 3px solid #dc3545;
+    color: #dc3545;
+    padding-top: -15px !important;
+    overflow:  hidden;
+    vertical-align:  text-top;
+
+}

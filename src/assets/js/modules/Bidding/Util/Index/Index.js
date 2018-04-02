@@ -19,7 +19,10 @@ export default class {
 	loadBiddingInfo (data = {}) {
 		return new Promise((resolve,reject) => {
 			let htm = `
-			<section class="row" style="background:#F4F9FD;padding:3px;margin-top:50px;position:relative;">
+			<section class="row" style="background:#F4F9FD;margin-top:50px;position:relative;">
+				<small class="col-12" id="detail-info-menu-status">
+
+				</small>
 				<small class="col-lg-11 offset-lg-1" id="detail-info-menu">
 					<ul class="nav">
 						<li class="nav-item row">
@@ -52,7 +55,7 @@ export default class {
 							</a>
 						</li>
 
-						<li class="nav-item" style="position:relative;">
+						<!--<li class="nav-item" style="position:relative;">
 							<a href="#" class="device-dropdown" data-device-dropdown="dropdown-info-${data.id}" data-resources="${data.id}">
 								<i class="material-icons md-18">more_vert</i>
 							</a>
@@ -82,7 +85,7 @@ export default class {
 									</li>
 								<ul>
 							</div>
-						</li>
+						</li>-->
 
 					</ul>
 				</small>
@@ -91,10 +94,10 @@ export default class {
 			<section class="row" style="padding:3px;margin-bottom:40px;" id="detail-info-collaborator">
 
 				<!--collaborators-->
-				<div class="col-lg-11 col-sm-12 offset-lg-1 row">
+				<!--<div class="col-lg-11 col-sm-12 offset-lg-1 row">
 					<span class="text-muted col-lg-1 col-sm-2 col-2 float-left row"> To <i class="material-icons md-18">add_circle_outline</i> </span>
 					<span class="col text-muted float-left" style="width:200px;border:1px solid #ccc;background:#f1f1f1ee;" contenteditable="true" id="bidding-collaborator-email"></span>
-				</div>
+				</div>-->
 
 				<!--attachments-->
 				<div class="col-lg-11 col-sm-12 offset-lg-1 row attachment-pool-section" style="padding-top:10px;"></div>
@@ -102,17 +105,17 @@ export default class {
 				<section class="col-lg-11 offset-lg-1">
 					<small>
 						<div>
-							<div style="float: left;width: 25px;height: 25px;border-radius: 50%;background: #ccc;margin-right: 10px;overflow: hidden;">
+							<div style="float: left;width: 55px;height: 55px;border-radius: 50%;background: #ccc;margin-right: 10px;overflow: hidden;">
 								<img src="assets/img/user.png" width="100%">
 							</div>
-							<small>
+							<p>
 								<span><b id="bidding-created-by-info"></b></span><br>
 								<span class="text-muted" id="bidding-date-created"></span>
-							</small>
+							</p><br/>
 						</div>
 						<hr/>
 					</small>
-		    		<h2 id="bidding-name"></h2>
+		    		<h3 id="bidding-name"></h3>
 		    		<p class="text-muted">
 		    			<span id="bidding-description-info"></span>
 		    			<span id="bidding-number-info" class="badge badge-sm badge-dark"></span> 
@@ -302,18 +305,24 @@ export default class {
 							<div class="dropdown-section float-right" id="list-menu-drop" style="left:0px;">
 								<ul class="list-group list-group-flush">
 									<li class="list-group-item">
-										<span class="menuList allNav"><a href="#/bids/all">All</a></span>
+										<span class="menuList allNav">
+											<i class="material-icons md-18 text-muted">inbox</i>
+											<a href="#/bids/all">All</a>
+										</span>
 									</li>
-									<li class="list-group-item">
+									<!--<li class="list-group-item">
 										<span class="menuList blockedNav"><a href="#/bids/open">Open</a></span>
 									</li>
 
 									<li class="list-group-item">
 										<span class="menuList blockedNav"><a href="#/bids/closed">Closed</a></span>
-									</li>
+									</li>-->
 
 									<li class="list-group-item">
-										<span class="menuList blockedNav"><a href="#/bids/drafts">Drafts</a>
+										<span class="menuList blockedNav">
+											<i class="material-icons md-18 text-muted">drafts</i>
+											<a href="#/bids/drafts">Drafts</a>
+										</span>
 									</li>
 								<ul>
 							</ul></ul></div>

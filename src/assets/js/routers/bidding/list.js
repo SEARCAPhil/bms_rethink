@@ -65,11 +65,258 @@ const viewBiddingInfo = (id) => {
 }
 
 
+
+const sendBidding = (e) => {
+	window.bms.default.spinner.show()
+
+	let data = {
+		id: window.bms.default.state.bidding.cur.bid.id,
+		status: e.target.el.status,
+		token : window.localStorage.getItem('token')
+	}
+
+	ListServ.status(data).then((json) => {
+		let res = JSON.parse(json)
+
+		if(res.data){
+			// force reload
+			window.location.reload()
+		} else {
+			alert('Oops! Unable to resend this request. Please try again later.')
+		}
+
+		window.bms.default.spinner.hide()
+		document.getElementById('bidding-modal').close()
+
+
+	}).catch((err) => {
+		window.bms.default.spinner.hide()
+		document.getElementById('bidding-modal').close()
+	})
+}
+
+
+const loadReSendBidding = (e) => {
+	const URL='pages/bidding/modal/send.html'
+	const id=e.target.id
+
+	return XHR.request({method:'GET',url:URL}).then(res=>{
+		let modalTarget=document.getElementById('modal-bidding-body')
+		modalTarget.innerHTML=res
+
+		setTimeout(()=>{
+			window.bms.default.scriptLoader(modalTarget)
+			//remove cancel
+			document.getElementById('modal-dialog-close-button').addEventListener('click',()=>{
+				document.getElementById('bidding-modal').close()
+			})
+
+			let btn = document.getElementById('modal-dialog-send-button')
+			btn.el =  e.target
+			btn.addEventListener('click', sendBidding)
+		},50)
+	}).catch(e=>{})
+}
+
+
+const loadApproveBidding = (e) => {
+	const URL='pages/bidding/modal/approve.html'
+	const id=e.target.id
+
+	return XHR.request({method:'GET',url:URL}).then(res=>{
+		let modalTarget=document.getElementById('modal-bidding-body')
+		modalTarget.innerHTML=res
+
+		setTimeout(()=>{
+			window.bms.default.scriptLoader(modalTarget)
+			//remove cancel
+			document.getElementById('modal-dialog-close-button').addEventListener('click',()=>{
+				document.getElementById('bidding-modal').close()
+			})
+
+			let btn = document.getElementById('modal-dialog-send-button')
+			btn.el =  e.target
+			btn.addEventListener('click', sendBidding)
+		},50)
+	}).catch(e=>{})
+}
+
+const loadCloseBidding = (e) => {
+	const URL='pages/bidding/modal/close.html'
+	const id=e.target.id
+
+	return XHR.request({method:'GET',url:URL}).then(res=>{
+		let modalTarget=document.getElementById('modal-bidding-body')
+		modalTarget.innerHTML=res
+
+		setTimeout(()=>{
+			window.bms.default.scriptLoader(modalTarget)
+			//remove cancel
+			document.getElementById('modal-dialog-close-button').addEventListener('click',()=>{
+				document.getElementById('bidding-modal').close()
+			})
+
+			let btn = document.getElementById('modal-dialog-send-button')
+			btn.el =  e.target
+			btn.addEventListener('click', sendBidding)
+		},50)
+	}).catch(e=>{})
+}
+
+// MENU based on status
+const showBiddingReqSent = () => {
+	const targ = document.getElementById('detail-info-menu-status')
+    targ.innerHTML = `<center class="row" style="background:#0c5460;color:#fff;padding:5px;">
+		<p class="col-12">
+        	 Bidding Request Sent. You Are not able to modify the content of this bidding request. 
+        </p>
+    </center>`
+}
+
+
+const showBiddingReqApprove = () => {
+	const targ = document.getElementById('detail-info-menu-status')
+	targ.innerHTML = `<center class="row" style="background:#0c5460;color:#fff;padding:5px;">
+		<p class="col-12">
+        	This Bidding request Is for approval. <span id="approve-btn-section"></span> 
+        </p>
+    </center>`
+    const btn = document.createElement('button')
+    btn.classList.add('btn', 'btn-danger', 'btn-sm', 'approve-btn')
+    btn.setAttribute('data-target', '#bidding-modal')
+    btn.setAttribute('data-popup-toggle', 'open')
+
+    btn.textContent = 'Approve'
+    btn.status = 3
+
+    btn.addEventListener('click', loadApproveBidding)
+    targ.querySelector('#approve-btn-section').append(btn)
+    // enable popup
+	PopupInstance = new PopupES()
+}
+
+
+const showBiddingApprove = () => {
+	const targ = document.getElementById('detail-info-menu-status')
+	targ.innerHTML = `<center class="row" style="background:#dee2e6;color:#6c757d;padding:5px;">
+		<p class="col-12">
+        	This Bidding request was approved. You may close this bidding request now <span id="close-btn-section"></span>
+        </p>
+    </center>`
+
+    const btn = document.createElement('button')
+    btn.classList.add('btn', 'btn-danger', 'btn-sm', 'approve-btn')
+    btn.setAttribute('data-target', '#bidding-modal')
+    btn.setAttribute('data-popup-toggle', 'open')
+
+    btn.textContent = 'Close'
+    btn.status = 5
+
+    btn.addEventListener('click', loadCloseBidding)
+    targ.querySelector('#close-btn-section').append(btn)
+
+}
+
+const showBiddingReqReturned = () => {
+	const targ = document.getElementById('detail-info-menu-status')
+	targ.innerHTML = `<center class="row" style="background:#0c5460;color:#fff;padding:5px;">
+		<p class="col-12">
+        	This Bidding request was returned. Make sure that all details are complete and follow the bidding request standard procedures
+        </p>
+    </center>`
+}
+
+const showBiddingClosed = () => {
+	const targ = document.getElementById('detail-info-menu-status')
+	targ.innerHTML = `<center class="row" style="background:#0c5460;color:#fff;padding:5px;">
+		<p class="col-12">
+        	This Bidding request is already closed. <i class="material-icons">lock</i>
+        </p>
+    </center>`
+}
+
+const isCBAAsst = () => {
+	return window.localStorage.getItem('role') === 'cba_assistant'
+}
+
+const isAdmin = () => {
+	return window.localStorage.getItem('role') === 'admin'
+}
+
+const changeSendToResend = () => {
+	const oldEl = document.querySelector('.send-bidding-modal-btn')
+	const newEl = oldEl.cloneNode(false)
+
+	newEl.classList.remove('send-bidding-modal-btn')
+	newEl.classList.add('resend-bidding-modal-btn')
+	newEl.addEventListener('click', loadReSendBidding)
+
+	newEl.innerHTML = '<i class="material-icons md-18">send</i> Re-Send '
+	newEl.status = 1
+
+	oldEl.replaceWith(newEl)
+}
+
+
+const changeSendToReturn = () => {
+	const oldEl = document.querySelector('.send-bidding-modal-btn')
+	const newEl = oldEl.cloneNode(false)
+
+	newEl.classList.remove('send-bidding-modal-btn')
+	newEl.classList.add('resend-bidding-modal-btn')
+	newEl.addEventListener('click', loadReSendBidding)
+
+	newEl.innerHTML = '<i class="material-icons md-18">keyboard_return</i> Return '
+	newEl.status = 2
+
+	oldEl.replaceWith(newEl)
+}
+
 const changeBiddingInfo = (e) => {
 	const details = e.detail[0]
 	const collabsSec = document.getElementById('bidding-collaborators')
 	const attSec = document.getElementById('attacments-info-section')
 
+	// menu
+
+	// for regular USER
+	if (details.status == 1 && !isCBAAsst()) {
+		showBiddingReqSent()
+		// clear menu, this will prevent changes
+		document.getElementById('detail-info-menu').innerHTML = ''
+	}
+
+	// for CBA Asst /APPROVE
+	if (details.status == 1 && isCBAAsst()) {
+		showBiddingReqApprove()
+		changeSendToReturn()
+	}
+	// for both
+	// must change to send to resend
+	if (details.status == 2) {
+		showBiddingReqReturned()
+		changeSendToResend()
+
+	}
+
+	if (details.status == 3) {
+		showBiddingApprove()
+		changeSendToResend()
+		// prevent any changes
+		document.getElementById('detail-info-menu').innerHTML = ''
+
+	}
+
+	// close
+	if (details.status == 5) {
+		showBiddingClosed()
+		// prevent any changes
+		document.getElementById('detail-info-menu').innerHTML = ''
+
+	}
+
+
+	// info
 	document.getElementById('bidding-created-by-info').innerHTML = `${details.profile_name}`
 	document.getElementById('bidding-name').innerHTML = `${details.name}`
 	document.getElementById('bidding-number-info').innerHTML = `#${details.id}`
@@ -95,7 +342,7 @@ const changeBiddingInfo = (e) => {
 	// email
 	if (details.collaborators) {
 		for (var i = 0; i < details.collaborators.length; i++) {
-			collabsSec.innerHTML += `<span class="">${details.collaborators[i].email};</span> `
+			collabsSec.innerHTML += `<span class="">${details.collaborators[i].profile_name};</span> `
 		}	
 	}
 
@@ -121,14 +368,14 @@ const changeBiddingInfo = (e) => {
 
 const appendAttachments = (data) => {
 	const attSec = document.getElementById('attacments-info-section')
-	attSec.innerHTML += `	<div class="col-lg-3 col-md-3" style="padding:5px;background:#e9ecef;border:1px solid #fefefe;position:relative;">
+	attSec.innerHTML += `	<div class="col-lg-3 col-md-3" style="padding:5px;background:#505050;border:1px solid #fefefe;position:relative;color:#fff;">
 								<div class="d-flex align-items-stretch">
 
-									<div class="col">
+									<div class="col-10">
 										<div class="file-icon file-icon-sm" data-type="${data.type}"></div> ${data.original_filename}
 									</div>
 
-									<div class="col-1">
+									<div class="col-2">
 										<i class="material-icons md-18 device-dropdown" data-device-dropdown="dropdown-${data.id}" data-resources="${data.id}">arrow_drop_down</i>
 										<div class="dropdown-section float-right" id="dropdown-${data.id}">
 											<ul class="list-group list-group-flush">
@@ -208,6 +455,10 @@ const appendParticulars = (data) => {
 	ReqUtil.bindRemoveRequirements()
 }
 
+// hide menu dropdown
+const hideListFilter = () => {
+	document.getElementById('list-menu-drop').classList.remove('open')
+}
 
 appRoute.on({
 	'*': () => {
@@ -216,10 +467,12 @@ appRoute.on({
 	'/bids/all': () => {
 		// listUtil.listsFromLocal({filter: 'all'})
 		listUtil.lists({token : window.localStorage.getItem('token')})
+		hideListFilter()
 	},
 	'/bids/drafts': () => {
 		// listUtil.listsFromLocal({filter: 'drafts'})
 		listUtil.lists({filter: 'drafts', token : window.localStorage.getItem('token')})
+		hideListFilter()
 	},
 	'/bids/:id/info/': (params) => {
 

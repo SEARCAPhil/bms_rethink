@@ -22,12 +22,15 @@ export default class {
 				// clear fields
 				document.querySelector('[name="/bids/info/requirements"]').innerHTML = ''
 				document.querySelector('[name="/bids/info/details"]').innerHTML = `
-					<center style="margin-top:70px;" class="text-success">
+					<center style="margin-top:70px;" class="alert alert-success col-lg-8 offset-lg-2 col-12">
 						<p>Deleted successfully! <i class="material-icons">check</i></p>
+						<small><p>You will not be able to see this item on the system any longer.<br/> Please refresh your browser or select new bidding request</p></small>
 					</center>
 				`
+				// close popup
+				document.getElementById('bidding-modal').close()
 				// remove from store
-				this.IDB.delete(data.id)
+				// this.IDB.delete(data.id)
 
 			}else{
 
@@ -37,11 +40,15 @@ export default class {
 		})
 	}
 
+	showBiddingReqSent () {
+		document.getElementById('detail-info-menu').innerHTML = `<center><p>
+	        Bidding Request Sent. You Are not able to modify the content of this bidding request.</p>
+	    </center>`
+	}
 
 	sendBidding (e) {
 		window.bms.default.spinner.show()
-		let targ = document.getElementById('bidding-collaborator-email')
-		let cont = targ.textContent.trim().split(' ')
+		let cont = Object.keys(window.bms.bidding.CBASendingList)
 		let emails = []
 
 		// removed unwanted spaces
@@ -67,8 +74,8 @@ export default class {
 			let res = JSON.parse(json)
 
 			if(res.data.length === data.emails.length) {
-				document.getElementById('detail-info-menu').remove()
-				document.getElementById('detail-info-collaborator').remove()
+				this.showBiddingReqSent()
+
 				document.getElementById('bidding-modal').close()
 				//setBiddingStatusToSentFromLocal(data.id)
 			}
@@ -135,7 +142,7 @@ export default class {
 	}
 
 	loadSendBidding (e) {
-		const URL='pages/bidding/modal/send.html'
+		const URL='pages/bidding/modal/send-to-cba.html'
 		const id=e.target.id
 		const proto = Object.assign({ __proto__: this.__proto__ }, this)
 
@@ -205,22 +212,26 @@ export default class {
 
 	appendAttachments (data) {
 		const attSec = document.getElementById('attacments-info-section')
-		attSec.innerHTML += `	<div class="col-lg-3 col-md-3" style="padding:5px;background:#e9ecef;border:1px solid #fefefe;">
-									<div class="d-flex align-items-stretch">
-										<div class="col">
-											<div class="file-icon file-icon-sm" data-type="${data.type}"></div> ${data.original_filename}
-										</div>
-										<div class="col-1">
-											<i class="material-icons md-18 device-dropdown" data-device-dropdown="dropdown-req-${data.id}" data-resources="${data.id}">arrow_drop_down</i>
-											<div class="dropdown-section float-right" id="dropdown-req-${data.id}">
-												<ul class="list-group list-group-flush">
-		  											<li class="list-group-item "><a href="#" onclick="event.preventDefault();window.open('http://192.168.80.56/bms_api/src/api/bidding/requirements/attachments/download.php?id=${data.id}')">Download</a></li>
-													<li class="list-group-item"><a data-target="#bidding-modal" data-popup-toggle="open" href="#" class="remove-attachments-modal">Remove</a></li>
-												<ul>
-											</div>
-										</div>
+		const att = document.createElement('div')
+		att.classList.add('col-lg-3', 'col-md-3')
+		att.setAttribute('style','padding:5px;background:#505050;border:1px solid #fefefe;color:#fff;')
+		att.innerHTML = `	
+							<div class="d-flex align-items-stretch">
+								<div class="col-10">
+									<div class="file-icon file-icon-sm" data-type="${data.type}"></div> ${data.original_filename}
+								</div>
+								<div class="col-2">
+									<i class="material-icons md-18 device-dropdown" data-device-dropdown="dropdown-req-${data.id}" data-resources="${data.id}">arrow_drop_down</i>
+									<div class="dropdown-section float-right" id="dropdown-req-${data.id}">
+										<ul class="list-group list-group-flush">
+  											<li class="list-group-item "><a href="#" onclick="event.preventDefault();window.open('http://192.168.80.56/bms_api/src/api/bidding/attachments/download.php?id=${data.id}')">Download</a></li>
+											<li class="list-group-item"><a data-target="#bidding-modal" data-popup-toggle="open" href="#" class="remove-attachments-modal">Remove</a></li>
+										<ul>
 									</div>
-								</div>`
+								</div>
+							</div>
+								`
+		attSec.append(att)
 	}
 
 
