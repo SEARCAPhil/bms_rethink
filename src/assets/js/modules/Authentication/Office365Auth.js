@@ -41,8 +41,16 @@
                         if(data.id){
                             // O365 check
                             loginOnPremiseServer (data).then((json) => { 
+
+                                // account ot yet verified
+                                if (!json.role) {
+                                    window.location = 'confirmation.html'
+                                    return 0
+                                }
+                                
+
                                 localStorage.setItem('token', json.token)
-                                 localStorage.setItem('role', json.role)
+                                localStorage.setItem('role', json.role)
                                 window.localStorage.setItem('id', data.id)
                                 window.localStorage.setItem('givenName', data.displayName)
 

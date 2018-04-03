@@ -34,6 +34,8 @@ let PopupInstance = {}
 const viewBiddingInfo = (id) => {
 	ListServ.view({id: id, token : window.localStorage.getItem('token')}).then(data => {
 
+		window.bms.default.spinner.hide()
+
 		const parsedData=JSON.parse(data)
 		const json=parsedData.data
 		json[0].id = parseInt(json[0].id)
@@ -176,9 +178,9 @@ const showBiddingReqSent = () => {
 
 const showBiddingReqApprove = () => {
 	const targ = document.getElementById('detail-info-menu-status')
-	targ.innerHTML = `<center class="row" style="background:#0c5460;color:#fff;padding:5px;">
+	targ.innerHTML = `<center class="row" style="background:#495057;color:#fff;padding:5px;">
 		<p class="col-12">
-        	This Bidding request Is for approval. <span id="approve-btn-section"></span> 
+        	This Bidding request Is for approval. Make sure you review this request before making any further actions. <span id="approve-btn-section"></span> 
         </p>
     </center>`
     const btn = document.createElement('button')
@@ -299,7 +301,7 @@ const changeBiddingInfo = (e) => {
 
 	}
 
-	if (details.status == 3) {
+	if (details.status == 3  && isCBAAsst()) {
 		showBiddingApprove()
 		changeSendToResend()
 		// prevent any changes
@@ -324,6 +326,7 @@ const changeBiddingInfo = (e) => {
 	document.getElementById('bidding-deadline-info').innerHTML = `${details.deadline !== '0000-00-00' ? details.deadline : 'N/A'}`
 	document.getElementById('bidding-excemption-info').innerHTML = `${details.excemption == 1 ? 'YES' : 'NO'}`
 	document.getElementById('bidding-date-created').innerHTML = `${details.date_created}`
+	document.getElementById('image-info-section').innerHTML = `${details.profile_name ? details.profile_name.substr(0,2).toUpperCase() : ''}`
 
 	// clear section
 	document.getElementById('particulars-section').innerHTML = ''
@@ -438,7 +441,7 @@ const appendParticulars = (data) => {
 		    		<span class="particulars-menu" style="visibility:hidden;">
 	    				<a href="#" class="remove-particulars-modal" data-target="#bidding-modal" data-popup-toggle="open" id="${data.id}">Remove</a>&emsp;
 
-	    				<a href="#/bids/forms/registration/${data.id}/steps/2/${encodeURIComponent(data.name)}/${data.deadline}">Edit</a>&emsp;<br/>
+	    				<a href="#/bids/forms/registration/${data.id}/steps/2/update">Edit</a>&emsp;<br/>
 
 	    			</span>
 		    	</span>
@@ -475,7 +478,7 @@ appRoute.on({
 		hideListFilter()
 	},
 	'/bids/:id/info/': (params) => {
-
+		window.bms.default.spinner.show()
 		document.removeEventListener('biddingInfoChange', changeBiddingInfo)
 		document.addEventListener('biddingInfoChange', changeBiddingInfo)
 
@@ -496,6 +499,7 @@ appRoute.on({
 		// clear settings
 		window.bms.bidding.requirements = window.bms.bidding.requirements || {}
 		window.bms.bidding.requirements.fundToRemove =  {}
+		window.bms.bidding.requirements.specsToRemove =  {}
 
 	},
 	'/bids/requirements/:id': (params) => {
@@ -503,7 +507,7 @@ appRoute.on({
 		// show list onpageloaded
 		if (!document.querySelector('.list')) {
 			// listUtil.listsFromLocal({filter: 'all'})
-			listUtil.lists()
+			listUtil.lists({token: window.localStorage.getItem('token')})
 		}
 	},
 	'/bids/requirements/:id/proposal/form': (params) => {

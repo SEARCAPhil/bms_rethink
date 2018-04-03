@@ -50,8 +50,8 @@ export default class {
 
 
 						<li class="nav-item">
-							<a class="nav-link nav-link remove-bidding-modal-btn" href="${window.bms.config.network}/bidding/reports/bidding_request.php" target="_blank">
-								<i class="material-icons md-18">picture_as_pdf</i> PRINT
+							<a class="nav-link nav-link remove-bidding-modal-btn" href="${window.bms.config.network}/bidding/reports/bidding_request.php?id=${data.id}" target="_blank">
+								<i class="material-icons md-18">print</i> PRINT
 							</a>
 						</li>
 
@@ -105,9 +105,7 @@ export default class {
 				<section class="col-lg-11 offset-lg-1">
 					<small>
 						<div>
-							<div style="float: left;width: 55px;height: 55px;border-radius: 50%;background: #ccc;margin-right: 10px;overflow: hidden;">
-								<img src="assets/img/user.png" width="100%">
-							</div>
+							<div class="text-center" style="float:left;width: 55px;height: 55px;border-radius:50%;margin-right:10px;overflow:hidden;background: #6c757d;color:#fff;padding-top:5px;font-size: 2em;" id="image-info-section"></div>
 							<p>
 								<span><b id="bidding-created-by-info"></b></span><br>
 								<span class="text-muted" id="bidding-date-created"></span>
@@ -253,6 +251,9 @@ export default class {
 			    		
 			    	</p>
 			    	<p><b>Quantity : </b> <span class="req-quantity"></span> <span class="req-unit"></span></p>
+			    	<p>
+			    		<b>Funding(s) : </b><span class="col-12 row" id="funds-requirements-info-section"></span>
+			    	</p>
 
 			    	<p>
 			    		<b>Attachments</b>

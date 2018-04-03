@@ -124,7 +124,7 @@ const updateReq = (e) => {
 			funds[index][v.name] = v.value
 		})
 	})
-
+console.log(window.bms.bidding.requirements.specsToRemove)
 
 	// data
 	let data = {
@@ -138,63 +138,37 @@ const updateReq = (e) => {
 		excempted: excemptionField.value,
 		specs: specsArr,
 		fundsToRemove : window.bms.bidding.requirements.fundToRemove,
+		specsToRemove : window.bms.bidding.requirements.specsToRemove,
 		action: 'update',
 	}
 	
-	if (errors > 0) return false;
+	setTimeout(() => {
 
-	Reg.requirements(data).then(json => {
+		if (document.querySelectorAll('form[name="bidding-request-requirements"] .error').length != 0) return false
 
-		let res = JSON.parse(json)
+		window.bms.default.spinner.show()	
 
-		if (res.data == 1) {
+		Reg.requirements(data).then(json => {
 
-			getReqInfoFromLocal(data.id).then(json => {
+			let res = JSON.parse(json)
 
-				if (json.id) {
+			if (res.data == 1) {
 
-					// update locally stored data
-					json.name = data.name
-					json.bidding_excemption_request = data.excempted
-					json.budget_amount = data.amount
-					json.budget_currency = data.currency
-					json.quantity = data.quantity
-					json.unit = data.unit
+				
+				window.location.hash = `#/bids/${window.bms.default.state.bidding.cur.bid.id}/info`
+				window.bms.default.spinner.hide()
+				document.getElementById('bid-form-status').innerHTML = ''
+				return 0
 
-					// change funds
-					json.funds = []
-					data.funds.forEach((val, index) => {
-						json.funds[index] = {
-							fund_type: val['fund-type'],
-							cost_center: val['cost-center'],
-							line_item: val['line-item'],
-							id: val['id'],
-							bidding_requirements_id: data.id,
-						}
-					})
-
-					// update DB
-					setReqInfoToLocal(json)
-
-
-					window.location.hash = `#/bids/${window.bms.default.state.bidding.cur.bid.id}/info`
-					window.bms.default.spinner.hide()
-					document.getElementById('bid-form-status').innerHTML = ''
-					return 0
-
-
-				}
-			})
-		
-
-		}
-		
-		// show error
-		showError()
-		
-	}).catch(() => {
-		showError()
-	})
+			}
+			
+			// show error
+			showError()
+			
+		}).catch(() => {
+			showError()
+		})
+	},700)
 
 }
 

@@ -3,7 +3,9 @@ import IndexedDBReq from '../../modules/Bidding/Util/Storage/Requirements'
 import IndexedDBPart from '../../modules/Bidding/Util/Storage/Particulars'
 import ListUtilities from '../../modules/Bidding/Util/List/List.js'
 import ListService from '../../modules/Bidding/Services/List/List'
+import PartService from '../../modules/Bidding/Services/Particulars'
 import RegUtilities from '../../modules/Bidding/Util/Registration/Registration.js'
+import ReqService from '../../modules/Bidding/Services/Requirements'
 
 const appRoute = new window.bms.exports.Router('http://127.0.0.1/bms_rethink/www/',true)
 const appRoute2 = new window.bms.exports.Router('http://127.0.0.1/bms_rethink/www/',true)
@@ -12,7 +14,9 @@ const IDBReq = new IndexedDBReq()
 const IDBPart = new IndexedDBPart()
 const listUtil = new ListUtilities()
 const ListServ = new ListService()
+const PartServ = new PartService()
 const RegUtil = new RegUtilities()
+const ReqServ = new ReqService()
 
 
 
@@ -38,6 +42,8 @@ const bindRemoveFundSelection = () => {
 		val.addEventListener('click', removeFundSelection)
 	})
 }
+
+
 
 const removeFundSelection = (e) => {
 	// items from database contain id
@@ -97,12 +103,19 @@ const bindAddSpecsSection = () => {
 const bindRemoveSpecsSection = () => {
 	// funding
 	document.querySelectorAll('.remove-specs-btn').forEach((val, index) => {
-		val.removeEventListener('click', removeFundSelection)
+		val.removeEventListener('click', removeSpecsSection)
 		val.addEventListener('click',removeSpecsSection)
 	})
 }
 
 const removeSpecsSection = (e) => {
+	// items from database contain id
+	const resourceID = e.target.getAttribute('data-resources')
+	if (resourceID) {
+		// mark to be deleted
+		window.bms.bidding.requirements.specsToRemove[resourceID] = true
+	}
+
 	e.target.parentNode.parentNode.parentNode.remove()
 }
 
@@ -125,7 +138,7 @@ const addSpecsField = (param = {}) => {
 						    </div>
 							 <div class="col-lg-1 col-md-1">
 								<div class="btn-circle add-specs-btn"><i class="material-icons">add</i></div>
-								<div class="btn-circle remove-specs-btn"><i class="material-icons">remove</i></div>
+								<div class="btn-circle remove-specs-btn" ${param.id ? ('data-resources="'+param.id+'"') : ''}><i class="material-icons" ${param.id ? ('data-resources="'+param.id+'"') : ''}>remove</i></div>
 							</div>
 						`
 
@@ -154,6 +167,7 @@ appRoute.on({
  		// without this, link will stop working after a few clicks
  	},
 	'/bids/forms/registration/steps/1': () => {
+
 		window.bms.default.changeDisplay(['div[name="/bids/forms/registration"]','div[name="/bids/forms/registration/1"]'],'block')
 		window.bms.default.changeDisplay(['div[name="/bids/initial"]','div[name="/bids/forms/registration/2"]','div[name="/bids/forms/registration/3"]'],'none')
 			
@@ -173,6 +187,8 @@ appRoute.on({
 
 		window.bms.default.changeDisplay(['div[name="/bids/forms/registration"]','div[name="/bids/forms/registration/1"]'],'block')
 		window.bms.default.changeDisplay(['div[name="/bids/initial"]','div[name="/bids/forms/registration/2"]','div[name="/bids/forms/registration/3"]'],'none')
+
+		window.bms.default.spinner.show()
 			
 		//toggle list sidebar for medium and small devices
 		let lg = window.getComputedStyle(document.querySelector('.hidden-on-lg')).display
@@ -232,7 +248,7 @@ appRoute.on({
 	'/bids/forms/registration/:id/steps/2': (params) => {
 		window.bms.default.changeDisplay(['div[name="/bids/forms/registration"]','div[name="/bids/forms/registration/2"]'],'block')
 		window.bms.default.changeDisplay(['div[name="/bids/initial"]','div[name="/bids/forms/registration/1"]','div[name="/bids/forms/registration/3"]'],'none')
-			
+		window.bms.default.spinner.show()
 		//toggle list sidebar for medium and small devices
 		let lg = window.getComputedStyle(document.querySelector('.hidden-on-lg')).display
 
@@ -243,13 +259,19 @@ appRoute.on({
 		//mark as selected
 		window.bms.bidding.selected.id = params.id
 		window.bms.default.state.bidding.cur.id = params.id
+		RegUtil.loadRegistrationParticulars().then(() => {
+			window.bms.default.lazyLoad(['./assets/js_native/assets/js/modules/Bidding/Util/Forms/Registration/Particulars.js'])
+			window.bms.default.spinner.hide()
+		}).catch(err => {
+			window.bms.default.spinner.hide()
+		})
 
-		window.bms.default.lazyLoad(['./assets/js_native/assets/js/modules/Bidding/Util/Forms/Registration/Particulars.js'],{once:true})
 
-		RegUtil.loadRegistrationParticulars()
+		
 
 	},
-	'/bids/forms/registration/:id/steps/2/:name/:deadline': (params) => {
+	'/bids/forms/registration/:id/steps/2/update': (params) => {
+		window.bms.default.spinner.show() 
 		window.bms.default.changeDisplay(['div[name="/bids/forms/registration"]','div[name="/bids/forms/registration/2"]'],'block')
 		window.bms.default.changeDisplay(['div[name="/bids/initial"]','div[name="/bids/forms/registration/1"]','div[name="/bids/forms/registration/3"]'],'none')
 			
@@ -266,19 +288,35 @@ appRoute.on({
 
 		RegUtil.loadRegistrationParticulars().then(() => {
 			// update
-			let nameField = document.getElementById('name')
-			let deadlineField = document.getElementById('deadline')
-			nameField.value = params.name
-			deadlineField.value = params.deadline
+			
 			window.bms.default.state.bidding.cur.particulars.id = params.id
+
+			// view info from server
+			PartServ.view({id: params.id, token : window.localStorage.getItem('token')}).then(data => {
+				const json=JSON.parse(data)
+				
+				if (json[0]) {
+					let nameField = document.getElementById('name')
+					let deadlineField = document.getElementById('deadline')
+					nameField.value = json[0].name
+					deadlineField.value = json[0].deadline
+					window.bms.default.state.bidding.cur.bid.id = json[0].bidding_id
+				} 
+
+				window.bms.default.spinner.hide()
+			}).catch(err => {
+				window.bms.default.spinner.hide()
+			})
+
 		})
+
 		window.bms.default.lazyLoad(['./assets/js_native/assets/js/modules/Bidding/Util/Forms/Registration/ParticularsUpdate.js'])
 		
 
 
 	},
 	'/bids/forms/registration/:id/steps/3': (params) => {
-		
+		window.bms.default.state.bidding.cur.particulars.id = params.id
 		window.bms.default.changeDisplay(['div[name="/bids/forms/registration"]','div[name="/bids/forms/registration/3"]'],'block')
 		window.bms.default.changeDisplay(['div[name="/bids/initial"]','div[name="/bids/forms/registration/1"]','div[name="/bids/forms/registration/4"]','div[name="/bids/forms/registration/2"]'],'none')
 			
@@ -290,17 +328,19 @@ appRoute.on({
 		}
 
 		RegUtil.loadRegistrationItem()
-		window.bms.default.state.bidding.cur.particulars.id = params.id
-		window.bms.default.lazyLoad(['./assets/js_native/assets/js/modules/Bidding/Util/Forms/Registration/Requirements.js'],{once:true})
+		
+		window.bms.default.lazyLoad(['./assets/js_native/assets/js/modules/Bidding/Util/Forms/Registration/Requirements.js'])
 
 	},
 	'/bids/forms/registration/:id/steps/3/update': (params) => {
-
+		window.bms.default.state.bidding.cur.requirements.id = params.id
 		window.bms.bidding.requirements = window.bms.bidding.requirements || {}
 		window.bms.bidding.requirements.fundToRemove =  window.bms.bidding.requirements.fundToRemove || {}
+		window.bms.bidding.requirements.specsToRemove =  window.bms.bidding.requirements.specsToRemove || {}
 
 		window.bms.default.changeDisplay(['div[name="/bids/forms/registration"]','div[name="/bids/forms/registration/3"]'],'block')
 		window.bms.default.changeDisplay(['div[name="/bids/initial"]','div[name="/bids/forms/registration/1"]','div[name="/bids/forms/registration/4"]','div[name="/bids/forms/registration/2"]'],'none')
+		window.bms.default.spinner.show()
 			
 		//toggle list sidebar for medium and small devices
 		let lg = window.getComputedStyle(document.querySelector('.hidden-on-lg')).display
@@ -310,6 +350,69 @@ appRoute.on({
 		}
 
 		RegUtil.loadRegistrationItem().then(() => {
+			ReqServ.view({ id: params.id, token: window.localStorage.getItem('token')}).then(data => {
+				const parsedJson=JSON.parse(data)
+
+				// result
+				if (parsedJson[0]) {
+					const json = parsedJson[0]
+
+					window.bms.default.state.bidding.cur.bid.id = json.bidding_id
+
+					let particularID = json.particular_id
+
+					let nameField = document.querySelector('form[name="bidding-request-requirements"] input[name="name"]')
+					let quantityField = document.querySelector('form[name="bidding-request-requirements"] input[name="quantity"]')
+					let unitField = document.querySelector('form[name="bidding-request-requirements"] input[name="unit"]')
+					let currencyField = document.querySelector('form[name="bidding-request-requirements"] select[name="currency"]')
+					let amountField = document.querySelector('form[name="bidding-request-requirements"] input[name="amount"]')
+					let fundFields = document.querySelectorAll('form[name="bidding-request-requirements"] .funds-input-section')
+					//let excemptionField = document.querySelectorAll('form[name="bidding-request-requirements"] input[name="excemption"]')
+					let sourceOfFundSec = document.querySelector('.source_of_fund_section')
+
+					// reflect value
+					nameField.value = json.name
+					quantityField.value = json.quantity
+					unitField.value = json.unit
+					amountField.value = json.budget_amount
+
+					// source of fund
+					for (let  x = 0; x < json.funds.length; x++) { 
+						if (x == 0) document.querySelector('.source_of_fund_section').innerHTML = ''
+						addFundSelection({type:json.funds[x].fund_type, cost_center:json.funds[x].cost_center, line_item:json.funds[x].line_item, id:json.funds[x].id})
+					}
+
+					// for excemption ?
+					/*if (json.bidding_excemption_request == 1) {
+						excemptionField[0].setAttribute('checked', 'checked')
+					}else{
+						excemptionField[1].setAttribute('checked', 'checked')
+					}*/
+
+					//currency
+					currencyField.innerHTML = `<option value="${json.budget_currency}">${json.budget_currency}</option>` + currencyField.innerHTML
+
+					// specs
+					for (let  x = 0; x < json.specs.length; x++) { 
+						if (x == 0) document.querySelector('.specs-section').innerHTML = ''
+						addSpecsField({name:json.specs[x].name, value:json.specs[x].value, id:json.specs[x].id})
+					}
+
+				}
+
+				// specs
+				bindAddSpecsSection()
+				bindRemoveSpecsSection()
+				window.bms.default.spinner.hide()
+			}).catch(err => {
+				window.bms.default.spinner.hide()
+			})
+
+
+			window.bms.default.lazyLoad(['./assets/js_native/assets/js/modules/Bidding/Util/Forms/Registration/RequirementsUpdate.js'])
+		})
+
+		/*RegUtil.loadRegistrationItem().then(() => {
 			IDBReq.get(params.id).then((json) => {
 				if (json.id) {
 
@@ -361,9 +464,7 @@ appRoute.on({
 				// specs
 				bindAddSpecsSection()
 			})
-		})
-		window.bms.default.state.bidding.cur.requirements.id = params.id
-		window.bms.default.lazyLoad(['./assets/js_native/assets/js/modules/Bidding/Util/Forms/Registration/RequirementsUpdate.js'])
+		})*/
 
 	},
 	'/bids/forms/registration/:id/steps/4': (params) => {

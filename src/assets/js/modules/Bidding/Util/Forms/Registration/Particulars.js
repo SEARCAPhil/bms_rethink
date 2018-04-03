@@ -29,7 +29,7 @@ const register = (e) => {
 	let data = {
 		name: nameField.value,
 		deadline: deadlineField.value,
-		id: window.bms.bidding.selected.id,
+		id: window.bms.default.state.bidding.cur.id,
 		action: 'create',
 	}
 
@@ -38,7 +38,7 @@ const register = (e) => {
 		let res = JSON.parse(json)
 
 		if (res.data) {
-			window.location.hash = `#/bids/forms/registration/${res.data}/steps/3`
+			window.location.hash = `#/bids/${data.id}/info`
 			window.bms.default.spinner.hide()
 			//document.getElementById('bid-form-status').innerHTML = ''
 			return 0

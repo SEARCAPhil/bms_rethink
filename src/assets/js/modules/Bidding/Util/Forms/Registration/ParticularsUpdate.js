@@ -38,7 +38,7 @@ const update = (e) => {
 		let res = JSON.parse(json)
 
 		if (res.data) {
-			window.location.hash = `#/bids/forms/registration/${res.data}/steps/3`
+			window.location.hash = `#/bids/${window.bms.default.state.bidding.cur.bid.id}/info`
 			window.bms.default.spinner.hide()
 			//document.getElementById('bid-form-status').innerHTML = ''
 			return 0

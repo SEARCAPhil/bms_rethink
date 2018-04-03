@@ -98,25 +98,35 @@ const registerReq = (e) => {
 		action: 'create',
 	}
 	
-	if (errors > 0) return false;
+	setTimeout(() => {
+		if (document.querySelectorAll('.error').length != 0) return false
 
-	Reg.requirements(data).then(json => {
+		window.bms.default.spinner.show()		
 
-		let res = JSON.parse(json)
+		Reg.requirements(data).then(json => {
 
-		if (res.data) {
-			window.location.hash = `#/bids/requirements/${res.data}`
-			window.bms.default.spinner.hide()
-			document.getElementById('bid-form-status').innerHTML = ''
-			return 0
-		}
-		
-		// show error
-		showError()
-		
-	}).catch(() => {
-		showError()
-	})
+			let res = JSON.parse(json)
+
+			if (res.data) {
+				window.location.hash = `#/bids/requirements/${res.data}`
+				window.bms.default.spinner.hide()
+				document.getElementById('bid-form-status').innerHTML = ''
+				return 0
+			}
+			
+			// show error
+			showError()
+
+			window.bms.default.spinner.hide()		
+
+			
+		}).catch(() => {
+			showError()
+			window.bms.default.spinner.hide()		
+
+		})
+	},700)
+
 
 }
 

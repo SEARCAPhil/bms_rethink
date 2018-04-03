@@ -6,6 +6,7 @@ import IndexedDBReq from '../../modules/Bidding/Util/Storage/Requirements'
 import PopupES from '../../Components/PopupES/PopupES'
 import RequirementsUtilities from '../../modules/Bidding/Util/Requirements'
 
+
 const appRoute = new window.bms.exports.Router('http://127.0.0.1/bms_rethink/www/',true)
 const IDB = new IndexedDB()
 const IDBReq = new IndexedDBReq()
@@ -33,13 +34,13 @@ const loadCSS = (href) => {
 
 const appendReqAttachments = (data) => {
 	const attSec = document.getElementById('attachments-requirements-info-section')
-	attSec.innerHTML += `	<div class="col-lg-3 col-md-3" style="padding:5px;background:#e9ecef;border:1px solid #fefefe;">
+	attSec.innerHTML += `	<div class="col-lg-3 col-md-3" style="padding:5px;background:#505050;color:#fff;border:1px solid #fefefe;">
 								<div class="d-flex align-items-stretch">
-									<div class="col">
+									<div class="col-10">
 										<div class="file-icon file-icon-sm" data-type="${data.type}"></div> ${data.original_filename}
 									</div>
 
-									<div class="col-1">
+									<div class="col-2">
 										<i class="material-icons md-18 device-dropdown" data-device-dropdown="dropdown-req-${data.id}" data-resources="${data.id}">arrow_drop_down</i>
 										<div class="dropdown-section float-right" id="dropdown-req-${data.id}">
 											<ul class="list-group list-group-flush">
@@ -73,6 +74,12 @@ const appendReqRecepients = (data) => {
 							</div>`
 }
 
+const appendReqFunds = (data) => {
+	const recSection = document.querySelector('#funds-requirements-info-section')
+
+	recSection.innerHTML += `	<span class="badge badge-dark">${data.type} - ${data.cost_center}  - ${data.line_item}</span> &nbsp;`
+}
+
 const loadRequirementsDetails = (json) => {
 	const targ = document.querySelector('.specs-section-info')
 	const attTarg = document.getElementById('attacments-requirements-info-section')
@@ -101,6 +108,11 @@ const loadRequirementsDetails = (json) => {
 	// recepients
 	json.recepients.forEach((val, index) => {
 		appendReqRecepients({name: val.name, id: val.id })
+	})
+
+	// recepients
+	json.funds.forEach((val, index) => {
+		appendReqFunds({type: val.fund_type, cost_center:val.cost_center, line_item: val.line_item })
 	})
 
 	setTimeout(() => {
@@ -182,6 +194,8 @@ appRoute.on({
 		loadCSS('assets/css/fileicon.css')
 	},
 	'/bids/requirements/:id': (params) => {
+		window.bms.default.spinner.show()
+
 		window.bms.default.state.bidding.cur.requirements.id = params.id
 		window.bms.default.changeDisplay(['[name="/bids/info/particulars/details"]'],'block')
 		window.bms.default.changeDisplay(['div[name="/bids/initial"]','div[name="/bids/forms/registration/2"]','div[name="/bids/forms/registration"]', 'div[name="/bids/forms/registration/3"]', 'div[name="/bids/info"]', '[name="/bids/info/particulars/proposals/form"]'],'none')
@@ -194,6 +208,9 @@ appRoute.on({
 			if (json.id) {
 				loadRequirementsDetails(json)
 			}
+			window.bms.default.spinner.hide()
+		}).catch((err) => {
+			window.bms.default.spinner.hide()
 		})
 
 		// get requirements
@@ -250,6 +267,7 @@ appRoute.on({
 		loadCSS('assets/css/fileicon.css')
 	},
 	'/bids/requirements/:id/proposal/form': (params) => {
+		window.bms.default.spinner.show()
 		window.bms.default.changeDisplay(['div[name="/bids/initial"]','div[name="/bids/forms/registration/2"]', 'div[name="/bids/forms/registration"]', 'div[name="/bids/forms/registration/3"]', 'div[name="/bids/info"]', 'div[name="/bids/info"]','[name="/bids/info/particulars/details"]'],'none')
 		window.bms.default.changeDisplay(['[name="/bids/info/particulars"]', '[name="/bids/info/particulars/proposals/form"]'],'block')
 
@@ -258,6 +276,8 @@ appRoute.on({
 
 		ReqUtil.loadProposalForm().then(() => {
 			const section = document.querySelector('.specs-section-proposal')
+
+			window.bms.default.spinner.hide()
 			// get requirements
 			/*IDBReq.get(params.id).then((json) => {
 				if (json.id) {
