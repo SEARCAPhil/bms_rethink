@@ -65,9 +65,10 @@ export default class {
 
 				setTimeout(()=>{
 					window.bms.default.scriptLoader(el)
-				},10)
+					resolve(data)
+				},100)
 
-				resolve(data)
+				
 			})
 		}) 
 		

@@ -80,6 +80,24 @@ const appendReqFunds = (data) => {
 	recSection.innerHTML += `	<span class="badge badge-dark">${data.type} - ${data.cost_center}  - ${data.line_item}</span> &nbsp;`
 }
 
+
+const appendAwardees = (data) => {
+	const recSection = document.querySelector('#awardees-section-list')
+
+	recSection.innerHTML += `	<details class="text-success col-12 row">
+				    			<summary> <i class="material-icons md-18">card_membership</i> ${data.name}   </summary>
+				    			<br/>
+				    			
+				    				
+				    				<p class="col-12">
+				    					<a href="#" data-target="#bidding-requirements-modal" data-popup-toggle="open" class="text-danger" data-resources="${data.id}">Remove</a> &emsp;
+				    					<br/>
+				    					${data.remarks}
+				    				</p>
+				    			<br/>
+				    		</details>`
+}
+
 const loadRequirementsDetails = (json) => {
 	const targ = document.querySelector('.specs-section-info')
 	const attTarg = document.getElementById('attacments-requirements-info-section')
@@ -115,6 +133,12 @@ const loadRequirementsDetails = (json) => {
 		appendReqFunds({type: val.fund_type, cost_center:val.cost_center, line_item: val.line_item })
 	})
 
+
+	// recepients
+	json.awardees.forEach((val, index) => {
+		appendAwardees({name : val.name, id: val.id, remarks: val.remarks })
+	})
+
 	setTimeout(() => {
 			// dropdown
 			window.bms.default.dropdown('device-dropdown')
@@ -127,11 +151,35 @@ const loadRequirementsDetails = (json) => {
 			ReqUtil.bindSendRequirements()
 
 			// send
+			ReqUtil.bindAward()
+
+			// send
 			ReqUtil.bindRemoveRecepients()
 
 			// show proposals
 			ReqUtil.bindShowProposalSection(json.id)
+
 	},10)
+
+	console.log(json)
+
+		// show all menus ONLY for OPEN Bidding Request
+	setTimeout(() => {
+		window.bms.default.showAllMenuForOpen (json.bidding_status == 0) 
+		// for CBA Asst /APPROVE
+		window.bms.default.showAllMenuForOpen (json.bidding_status == 1 && window.bms.default.isCBAAsst()) 
+
+		// for both
+		// must change to send to resend
+		window.bms.default.showAllMenuForOpen (json.bidding_status == 2)
+
+		// GSU
+		window.bms.default.showAllMenuForOpen (json.bidding_status == 3 && window.bms.default.isGSU()) 
+
+			
+
+	},800)
+
 
 
 }

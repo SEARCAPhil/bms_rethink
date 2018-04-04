@@ -143,3 +143,8 @@ dialog > .content > a {
     vertical-align:  text-top;
 
 }
+
+/*visible if current status is open */
+.for-open {
+  display:none;
+}

@@ -24,7 +24,7 @@ export default class {
 
 				</small>
 				<small class="col-lg-11 offset-lg-1" id="detail-info-menu">
-					<ul class="nav">
+					<ul class="nav for-open">
 						<li class="nav-item row">
 							<a class="nav-link send-bidding-modal-btn"  href="#" data-target="#bidding-modal" data-popup-toggle="open">
 							 	<i class="material-icons md-18">send</i> Send 
@@ -184,7 +184,7 @@ export default class {
 				<section class="col-lg-11 offset-lg-1" style="margin-top:70px;">
 		    		<div class="row col">
 		    			<span class="float-left"><b>Particulars</b></span> 
-		    			<div class="btn-circle"><a href="#/bids/forms/registration/${id}/steps/2">+</a></div>
+		    			<div class="btn-circle for-open"><a href="#/bids/forms/registration/${id}/steps/2">+</a></div>
 		    		</div>
 		    		<hr/>
 		    		<div id="particulars-section"></div>		
@@ -199,7 +199,7 @@ export default class {
 
 	loadBiddingRequirementsInfo () {
 		let htm = `
-			<link rel="preload" as="style" href="../node_modules/popup-es/dist/src/css/popup-es.min.css" onload="this.rel='stylesheet'">
+			<link rel="preload" as="style" href="./assets/css/popup-es.css" onload="this.rel='stylesheet'">
 			<dialog id="bidding-requirements-modal" data-popup="fade">
 				<div class="content">
 					<!--close button-->
@@ -208,28 +208,49 @@ export default class {
 					<div class="body" id="modal-bidding-requirements-body"></div>
 				</div>	
 			</dialog>
-			<section class="row" style="background:#F4F9FD;padding:3px;margin-top:50px;margin-bottom:5px;">
-					<small class="col-lg-11 offset-lg-1">
-						<ul class="nav">
-							<li class="nav-item">
-								<a href="#" onclick="event.preventDefault()" class="nav-link send-requirements-modal-btn" data-target="#bidding-requirements-modal" data-popup-toggle="open">
-								 	<i class="material-icons md-18">insert_invitation</i> Send Invitation
-								</a>
-							</li>
-							<li class="nav-item">
-								<a class="nav-link file-attachment-requirement-dialog-btn">
-									<i class="material-icons md-18">attach_file</i> Attach
-								</a>
-							</li>
+			<section class="row" style="background:#F4F9FD;margin-top:50px;margin-bottom:5px;">
 
-							<li class="nav-item">
-								<a class="nav-link proposal-requirement-dialog-btn">
-									<i class="material-icons md-18">receipt</i> Proposals
-								</a>
-							</li>
+				<small class="col-12" id="detail-req-menu-status">
+					<center style="background:#464a4e;color:#fff;padding:5px;">
+						<p class="col-12">
+							<i class="material-icons" style="color:#ffb80c;">star</i> This has been awarded. Please review before making any changes.
+				        </p>
+				    </center>
+				</small>
 
-						</ul>
-					</small>
+				<small class="col-lg-11 offset-lg-1 for-open">
+					<ul class="nav">
+						<li class="nav-item">
+							<a href="#" onclick="event.preventDefault()" class="nav-link send-requirements-modal-btn hide" data-target="#bidding-requirements-modal" data-popup-toggle="open">
+							 	<i class="material-icons md-18">insert_invitation</i> Send Invitation
+							</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link file-attachment-requirement-dialog-btn">
+								<i class="material-icons md-18">attach_file</i> Attach
+							</a>
+						</li>
+
+						<li class="nav-item">
+							<a class="nav-link award-requirements-modal-btn" data-target="#bidding-requirements-modal" data-popup-toggle="open">
+								<i class="material-icons md-18">card_membership</i> Award
+							</a>
+						</li>
+
+						<li class="nav-item">
+							<a class="nav-link proposal-requirement-dialog-btn">
+								<i class="material-icons md-18">receipt</i> Proposals
+							</a>
+						</li>
+
+						<li class="nav-item">
+							<a class="nav-link proposal-requirement-dialog-btn text-danger">
+								<i class="material-icons md-18">date_range</i> Set deadline
+							</a>
+						</li>
+
+					</ul>
+				</small>
 			</section>
 
 			<section class="row" style="padding:3px;margin-bottom:40px;" id="detail-info-collaborator">
@@ -252,13 +273,21 @@ export default class {
 			    	</p>
 			    	<p><b>Quantity : </b> <span class="req-quantity"></span> <span class="req-unit"></span></p>
 			    	<p>
-			    		<b>Funding(s) : </b><span class="col-12 row" id="funds-requirements-info-section"></span>
+			    		<span class="col-12 row" id="funds-requirements-info-section"></span>
 			    	</p>
 
 			    	<p>
 			    		<b>Attachments</b>
 			    		<!--attachments section -->
 						<div class="row" id="attachments-requirements-info-section" style="padding:5px;"></div>
+			    	</p>
+
+			    	<p class="text-success" id="awardees-section">
+			    		<hr/>
+			    		<b>Awarded to</b>
+			    		<section class="row" id="awardees-section-list"></section>
+			    		
+			    		
 			    	</p>
 
 
@@ -279,7 +308,7 @@ export default class {
 		const targ=document.querySelector('div[name="/bids"]')
 		const oldElem = document.querySelector('.list-bids-container')
 		const htm = `
-			<link rel="preload" as="style" href="../node_modules/popup-es/dist/src/css/popup-es.min.css" onload="this.rel='stylesheet'">
+			<link rel="preload" as="style" href="./assets/css/popup-es.css" onload="this.rel='stylesheet'">
 			<dialog id="bidding-modal" data-popup="fade">
 				<div class="content">
 					<!--close button-->

@@ -122,6 +122,19 @@ gulp.task('copying twbs to www/node_modules',()=>{
 })
 
 
+
+gulp.task('copying msal to www/node_modules',()=>{
+	gulp.src(['../node_modules/msal/**/*.*'])
+	.pipe(gulp.dest('../www/node_modules/msal'))
+})
+
+
+gulp.task('copying msal to www/node_modules',()=>{
+	gulp.src(['../node_modules/msal/**/*.*'])
+	.pipe(gulp.dest('../www/node_modules/msal'))
+})
+
+
 //https://developers.google.com/web/tools/workbox/get-started/gulp
 /*gulp.task('bundle-sw', () => {
   return wbBuild.generateSW({
@@ -140,6 +153,6 @@ gulp.task('copying twbs to www/node_modules',()=>{
 
 
 gulp.task('default',(cb)=>{
-	runSequence('minifying html','minifying css','copying fonts','copying images','creating export classes','generating app shell','copying manifest','copying js to js_native folder','minifying modules and saving to js_es','copying other js files','copying twbs to www/node_modules')
+	runSequence('minifying html','minifying css','copying fonts','copying images','creating export classes','generating app shell','copying manifest','copying js to js_native folder','minifying modules and saving to js_es','copying other js files','copying twbs to www/node_modules', 'copying msal to www/node_modules')
 });
 

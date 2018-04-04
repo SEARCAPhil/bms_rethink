@@ -77,6 +77,22 @@ window.bms.default.changeDisplay=(selector=[],display="block")=>{
 }
 
 
+window.bms.default.toggleOpenClasses=(selector=[],display="block")=>{
+	selector.forEach((val,index)=>{
+
+		var el=document.querySelector(val)
+		if(el){
+			console.log(el)
+			if(display=='block'){
+				el.classList.remove('for-open')
+			}else{
+				el.classList.add('for-open')
+			}
+		} 
+	})
+}
+
+
 // for dropdown
 window.bms.default.dropdown = (className) => {
 	window.bms.default.modal = window.bms.default.modal || {}
@@ -121,6 +137,26 @@ window.bms.default.dropdown = (className) => {
 	})
 }
 
+window.bms.default.showAllMenuForOpen = (action = 0) => {
+	if (action) {
+		document.querySelectorAll('.for-open').forEach((el, index) => {
+			el.classList.remove('for-open')
+		}) 
+	}
+}
+
+/*Privilege*/
+window.bms.default.isCBAAsst = () => {
+	return window.localStorage.getItem('role') === 'cba_assistant'
+}
+
+window.bms.default.isAdmin = () => {
+	return window.localStorage.getItem('role') === 'admin'
+}
+
+window.bms.default.isGSU = () => {
+	return window.localStorage.getItem('role') === 'gsu'
+}
 
 var changeDisplay=window.bms.default.changeDisplay
 

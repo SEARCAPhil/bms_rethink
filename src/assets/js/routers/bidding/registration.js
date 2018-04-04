@@ -178,8 +178,10 @@ appRoute.on({
 			window.bms.default.changeDisplay(['div[name="/bids"]'],'none')	
 		}
 
-		RegUtil.loadRegistration()
-		window.bms.default.lazyLoad(['./assets/js_native/assets/js/modules/Bidding/Util/Forms/Registration/Registration.js'],{once:true})
+		RegUtil.loadRegistration().then(() => {
+			window.bms.default.lazyLoad(['./assets/js_native/assets/js/modules/Bidding/Util/Forms/Registration/Registration.js'])
+		})
+		
 
 	},
 	'/bids/forms/registration/:id/steps/1/update': (params) => {

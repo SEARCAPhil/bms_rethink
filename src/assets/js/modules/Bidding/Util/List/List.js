@@ -60,6 +60,7 @@ export default class {
 			if (opt.page ===1 && targ) {
 				this.showEmpty (targ)
 			}
+			window.bms.default.spinner.hide()
 		})
 	}
 

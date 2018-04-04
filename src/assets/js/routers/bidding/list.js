@@ -237,13 +237,7 @@ const showBiddingClosed = () => {
     </center>`
 }
 
-const isCBAAsst = () => {
-	return window.localStorage.getItem('role') === 'cba_assistant'
-}
 
-const isAdmin = () => {
-	return window.localStorage.getItem('role') === 'admin'
-}
 
 const changeSendToResend = () => {
 	const oldEl = document.querySelector('.send-bidding-modal-btn')
@@ -274,38 +268,53 @@ const changeSendToReturn = () => {
 	oldEl.replaceWith(newEl)
 }
 
+
 const changeBiddingInfo = (e) => {
 	const details = e.detail[0]
 	const collabsSec = document.getElementById('bidding-collaborators')
 	const attSec = document.getElementById('attacments-info-section')
 
 	// menu
-
+	if (details.status == 0) {
+		window.bms.default.toggleOpenClasses(['.for-open'], 'block')
+	} 
 	// for regular USER
-	if (details.status == 1 && !isCBAAsst()) {
+	if (details.status == 1 && !window.bms.default.isCBAAsst()) {
 		showBiddingReqSent()
 		// clear menu, this will prevent changes
 		document.getElementById('detail-info-menu').innerHTML = ''
 	}
 
 	// for CBA Asst /APPROVE
-	if (details.status == 1 && isCBAAsst()) {
+	if (details.status == 1 && window.bms.default.isCBAAsst()) {
 		showBiddingReqApprove()
 		changeSendToReturn()
+		window.bms.default.toggleOpenClasses(['.for-open'], 'block')
+
 	}
 	// for both
 	// must change to send to resend
 	if (details.status == 2) {
 		showBiddingReqReturned()
 		changeSendToResend()
+		window.bms.default.toggleOpenClasses(['.for-open'], 'block')
 
 	}
 
-	if (details.status == 3  && isCBAAsst()) {
+	if (details.status == 3  && window.bms.default.isCBAAsst()) {
 		showBiddingApprove()
 		changeSendToResend()
 		// prevent any changes
 		document.getElementById('detail-info-menu').innerHTML = ''
+
+	}
+
+	// for GSU
+	// enale all commands
+	if (details.status == 3  && window.bms.default.isGSU()) {
+		showBiddingApprove()
+		changeSendToResend()
+		window.bms.default.toggleOpenClasses(['.for-open'], 'block')
 
 	}
 
@@ -366,6 +375,26 @@ const changeBiddingInfo = (e) => {
 	}, 1000);
 
 
+
+	// show all menus ONLY for OPEN Bidding Request
+	setTimeout(() => {
+
+		// for CBA Asst /APPROVE
+		window.bms.default.showAllMenuForOpen (details.status == 0) 
+
+		// for CBA Asst /APPROVE
+		window.bms.default.showAllMenuForOpen (details.status == 1 && window.bms.default.isCBAAsst()) 
+
+		// for both
+		// must change to send to resend
+		window.bms.default.showAllMenuForOpen (details.status == 2) 
+		
+		// GSU
+		window.bms.default.showAllMenuForOpen (details.status == 3 && window.bms.default.isGSU()) 	
+
+	},1000)
+
+
 	
 }
 
@@ -382,8 +411,8 @@ const appendAttachments = (data) => {
 										<i class="material-icons md-18 device-dropdown" data-device-dropdown="dropdown-${data.id}" data-resources="${data.id}">arrow_drop_down</i>
 										<div class="dropdown-section float-right" id="dropdown-${data.id}">
 											<ul class="list-group list-group-flush">
-	  											<li class="list-group-item "><a href="#" onclick="event.preventDefault();window.open('http://192.168.80.56/bms_api/src/api/bidding/attachments/download.php?id=${data.id}')">Download</a></li>
-												<li class="list-group-item"><a data-target="#bidding-modal" data-popup-toggle="open" href="#" class="remove-attachments-modal">Remove</a></li>
+	  											<li class="list-group-item"><a href="#" onclick="event.preventDefault();window.open('http://192.168.80.56/bms_api/src/api/bidding/attachments/download.php?id=${data.id}')">Download</a></li>
+												<li class="list-group-item for-open"><a data-target="#bidding-modal" data-popup-toggle="open" href="#" class="remove-attachments-modal">Remove</a></li>
 											<ul>
 										</div>
 									</div>
@@ -403,7 +432,8 @@ const appendParticulars = (data) => {
 	    		<div class="col-lg-12" style="padding-top:5px;padding-bottom:5px;background:#f6f6f6;">
 	    			
 	    			<p>
-	    				<span class="badge badge-danger">${data.requirements.length}</span> <span class="text-danger">Requirements &emsp;<u><a href="#/bids/forms/registration/${data.id}/steps/3">Add New</a></u></spn>
+	    				<span class="badge badge-danger">${data.requirements.length}</span> <span class="text-danger">Requirements &emsp;
+	    				<u class="for-open"><a href="#/bids/forms/registration/${data.id}/steps/3">Add New</a></u></span>
 	    			</p>
 	    			`
 	// requirements
@@ -420,7 +450,7 @@ const appendParticulars = (data) => {
     					`
     				}
 
-    	html +=`	<span>
+    	html +=`	<span class="for-open">
     					<a href="#/bids/forms/registration/${data.requirements[x].id}/steps/3/update"><i class="material-icons md-12 text-muted">edit</i></a>
     					<a href="#" class="remove-requirements-modal-btn" data-target="#bidding-modal" data-popup-toggle="open" id="${data.requirements[x].id}"><i class="material-icons md-12 text-muted" id="${data.requirements[x].id}">remove_circle_outline</i></a>&emsp;
     				</span>
@@ -438,7 +468,7 @@ const appendParticulars = (data) => {
 		    	<span class="deadline">
 		    		<b>Deadline</b> : ${data.deadline}<br/>
 		    		<!--menu -->
-		    		<span class="particulars-menu" style="visibility:hidden;">
+		    		<span class="particulars-menu for-open" style="visibility:hidden;">
 	    				<a href="#" class="remove-particulars-modal" data-target="#bidding-modal" data-popup-toggle="open" id="${data.id}">Remove</a>&emsp;
 
 	    				<a href="#/bids/forms/registration/${data.id}/steps/2/update">Edit</a>&emsp;<br/>
@@ -469,11 +499,13 @@ appRoute.on({
 	},
 	'/bids/all': () => {
 		// listUtil.listsFromLocal({filter: 'all'})
+		window.bms.default.spinner.show()
 		listUtil.lists({token : window.localStorage.getItem('token')})
 		hideListFilter()
 	},
 	'/bids/drafts': () => {
 		// listUtil.listsFromLocal({filter: 'drafts'})
+		window.bms.default.spinner.show()
 		listUtil.lists({filter: 'drafts', token : window.localStorage.getItem('token')})
 		hideListFilter()
 	},

@@ -115,7 +115,7 @@ export class Attachments{
 		let request = new XMLHttpRequest();
 
 
-		request.open("POST", "http://127.0.0.1/bms_api/src/api/bidding/attachments/");
+		request.open("POST", `${window.bms.config.network}/bidding/attachments/`);
 
 		request.upload.addEventListener('progress', (e) => {
 			let targ = document.getElementById(`progress-bar-${index}`)

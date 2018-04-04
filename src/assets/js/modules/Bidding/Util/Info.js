@@ -75,6 +75,7 @@ export default class {
 
 			if(res.data.length === data.emails.length) {
 				this.showBiddingReqSent()
+				window.location.reload()
 
 				document.getElementById('bidding-modal').close()
 				//setBiddingStatusToSentFromLocal(data.id)

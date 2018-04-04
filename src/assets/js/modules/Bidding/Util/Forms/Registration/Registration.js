@@ -71,3 +71,4 @@ const register = (e) => {
 
 document.querySelector('form[name="bidding-request-registration"]').removeEventListener('submit', register)
 document.querySelector('form[name="bidding-request-registration"]').addEventListener('submit', register)
+
