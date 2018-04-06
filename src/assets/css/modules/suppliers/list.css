@@ -42,6 +42,10 @@
   background: rgba(240,240,240,0.3);
 }
 
+.list.active .suppliers-list-item-header {
+	font-weight: bold;
+}
+
 
 .suppliers-list-item-header{
 	color: #5b5b5b;

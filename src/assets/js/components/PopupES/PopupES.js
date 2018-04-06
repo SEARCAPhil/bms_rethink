@@ -42,7 +42,7 @@ export default class{
 		//change the zIndex property everytime you open the popup
 		//this ensures that popup will always stay at the top or bottom depending on the value of i 
 		let date=new Date()
-		return el.style.zIndex=(typeof i=='number')?1:(parseInt((window.getComputedStyle(el,null).getPropertyValue('z-index')))||1)+(date.getMinutes()+date.getSeconds())
+		return el.style.zIndex=(typeof i=='number')?1:2046+(date.getMinutes()+date.getSeconds())
 	}
 	_findPopups(selector){
 		return new Promise((resolve,reject)=>{

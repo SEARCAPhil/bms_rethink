@@ -75,38 +75,49 @@ const appendReqRecepients = (data) => {
 }
 
 const appendReqFunds = (data) => {
-	const recSection = document.querySelector('#funds-requirements-info-section')
+	let recSection = document.querySelector('#funds-requirements-info-section')
 
 	recSection.innerHTML += `	<span class="badge badge-dark">${data.type} - ${data.cost_center}  - ${data.line_item}</span> &nbsp;`
 }
 
 
 const appendAwardees = (data) => {
-	const recSection = document.querySelector('#awardees-section-list')
+	let recSection = document.querySelector('#awardees-section-list')
 
-	recSection.innerHTML += `	<details class="text-success col-12 row">
-				    			<summary> <i class="material-icons md-18">card_membership</i> ${data.name}   </summary>
+	recSection.innerHTML += `	<details class="col-12 row" open>
+				    			<summary class="text-success"> <i class="material-icons md-18">card_membership</i> ${data.name}   </summary>
 				    			<br/>
 				    			
 				    				
 				    				<p class="col-12">
-				    					<a href="#" data-target="#bidding-requirements-modal" data-popup-toggle="open" class="text-danger" data-resources="${data.id}">Remove</a> &emsp;
-				    					<br/>
-				    					${data.remarks}
+				    					<a href="#" data-target="#bidding-requirements-modal" data-popup-toggle="open" class="text-danger remove-awardees-modal" data-resources="${data.id}"> 
+				    						<i class="material-icons md-18">delete_forever</i> Remove</a> &emsp;
 				    				</p>
+
+				    				<p class="col-12 text-muted">${data.remarks}</p>
 				    			<br/>
 				    		</details>`
 }
 
+const showAwardedStatus = () => {
+	let targ = document.getElementById('detail-req-menu-status')
+	targ.innerHTML = `<center style="background:#464a4e;color:#fff;padding:5px;">
+						<p class="col-12">
+							<i class="material-icons" style="color:#ffb80c;">star</i> This has been awarded. Please review before making any changes.
+				        </p>
+				    </center>`
+}
+
 const loadRequirementsDetails = (json) => {
-	const targ = document.querySelector('.specs-section-info')
-	const attTarg = document.getElementById('attacments-requirements-info-section')
+	let targ = document.querySelector('.specs-section-info')
+	let attTarg = document.getElementById('attacments-requirements-info-section')
 
 	document.querySelector('.req-name').textContent = json.name
 	document.querySelector('.req-currency').textContent = json.budget_currency
 	document.querySelector('.req-amount').textContent = json.budget_amount
 	document.querySelector('.req-quantity').textContent = json.quantity
 	document.querySelector('.req-unit').textContent = json.unit
+	document.querySelector('.req-deadline').innerHTML = `<span class="text-danger">${json.deadline != '0000-00-00' ? json.deadline : 'Not Set'}</span>`
 
 	json.specs.forEach((val, index) => {
 		targ.innerHTML += `
@@ -139,6 +150,13 @@ const loadRequirementsDetails = (json) => {
 		appendAwardees({name : val.name, id: val.id, remarks: val.remarks })
 	})
 
+	// awrded banner
+	if (json.awardees.length > 0) {
+		document.getElementById('awardees-section').classList.remove('hide')
+		showAwardedStatus()
+	}
+
+
 	setTimeout(() => {
 			// dropdown
 			window.bms.default.dropdown('device-dropdown')
@@ -146,18 +164,18 @@ const loadRequirementsDetails = (json) => {
 			PopupInstance = new PopupES()
 			// remove attachments
 			AttUtil.bindRemoveAttachments()
-
 			// send
 			ReqUtil.bindSendRequirements()
-
-			// send
+			// award
 			ReqUtil.bindAward()
-
-			// send
+			// cancel invitation
 			ReqUtil.bindRemoveRecepients()
-
 			// show proposals
 			ReqUtil.bindShowProposalSection(json.id)
+			// awardees
+			ReqUtil.bindRemoveAwardee()
+			// deadline
+			ReqUtil.bindSetDeadline()
 
 	},10)
 
@@ -176,6 +194,13 @@ const loadRequirementsDetails = (json) => {
 		// GSU
 		window.bms.default.showAllMenuForOpen (json.bidding_status == 3 && window.bms.default.isGSU()) 
 
+		// supplier
+		if (window.bms.default.isGSU() && json.bidding_status == 3) {
+			document.querySelector('.send-requirements-modal-btn').classList.remove('hide')
+			document.querySelector('.award-requirements-modal-btn').classList.remove('hide')
+			document.querySelector('.set-deadline-modal-btn').classList.remove('hide')
+		}
+
 			
 
 	},800)
@@ -191,7 +216,14 @@ appRoute.on({
  	},
 	'/bids/*': () => {
 		IndexUtil.loadBiddingListSection()
-		IndexUtil.loadBiddingInitialPage()
+		// for all users except supplier
+		// supplier must only see a welcome page
+		//if (window.bms.default.isGSU() || window.bms.default.isCBAAsst() || window.bms.default.isStandard()) {
+			IndexUtil.loadBiddingInitialPage()
+		//} else {
+			//IndexUtil.loadBiddingInitialStandardPage()
+		//}
+		
 		loadCSS('assets/css/modules/suppliers/list.css')
 	},
 	'/bids/:id/info/': (params) => {

@@ -17,24 +17,24 @@ const showError = () => {
 
 const register = (e) => {
 	e.preventDefault()
-	let nameField = document.querySelector('form[name="bidding-request-registration"] input[name="name"]')
+	/*let nameField = document.querySelector('form[name="bidding-request-registration"] input[name="name"]')
 	let descField = document.querySelector('form[name="bidding-request-registration"] textarea[name="description"]')
-	let deadlineField = document.querySelector('form[name="bidding-request-registration"] input[name="deadline"]')
+	let deadlineField = document.querySelector('form[name="bidding-request-registration"] input[name="deadline"]')*/
 	let excemptionField = document.querySelector('form[name="bidding-request-registration"] input[name="forExcemption"]:checked')
 
-	if (nameField.value.length < 1) {
+	/*if (nameField.value.length < 1) {
 		nameField.classList.add('error')
 		return 0
-	}
+	}*/
 
 	window.bms.default.spinner.show()
-	nameField.classList.remove('error')
+	//nameField.classList.remove('error')
 
 	// data
 	let data = {
-		name: nameField.value,
-		desc: descField.value,
-		deadline: deadlineField.value,
+		//name: nameField.value,
+		//desc: descField.value,
+		//deadline: deadlineField.value,
 		excemption: parseInt(excemptionField.value),
 		action: 'create',
 		token: localStorage.getItem('token'),
@@ -55,7 +55,7 @@ const register = (e) => {
 				document.querySelector('.empty-list-message-section').remove()	
 			}
 
-			window.location.hash = `#/bids/${res.data}/info`
+			window.location.hash = `#/bids/forms/registration/${res.data}/steps/2`
 
 			return 0
 		}

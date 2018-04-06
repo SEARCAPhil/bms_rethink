@@ -158,6 +158,14 @@ window.bms.default.isGSU = () => {
 	return window.localStorage.getItem('role') === 'gsu'
 }
 
+window.bms.default.isSupplier = () => {
+	return window.localStorage.getItem('role') === 'supplier'
+}
+
+window.bms.default.isStandard = () => {
+	return window.localStorage.getItem('role') === 'supplier'
+}
+
 var changeDisplay=window.bms.default.changeDisplay
 
 const hideInit=()=>{
@@ -243,6 +251,19 @@ appRoute.on({
 		document.querySelector('.bids-router-section').classList.remove('hide')
 		window.bms.default.lazyLoad(['./assets/js_native/assets/js/routers/bidding/bidding.js'],{once:true})
 	}
+
+
+	,
+	'/inv/*':()=>{
+		activeMenu('inv-menu-list')
+		hideInit()
+		loadCommonSettings()
+		
+		changeDisplay(['.suppliers-router-section','.nav-top-menu','.bids-router-section'],'none')
+		document.querySelector('.inv-router-section').classList.remove('hide')
+		window.bms.default.lazyLoad(['./assets/js_native/assets/js/routers/invitation.js'],{once:true})
+	}
+
 }).resolve()
 
 var initH=(window.innerHeight)

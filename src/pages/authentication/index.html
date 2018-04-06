@@ -47,13 +47,74 @@
 
 <body>
     
-  <div style="margin-top: 8vh;">
+
+<style type="text/css">
+  #main-container{
+      height: 100vh;
+      overflow-y: auto;
+  }
+  .auth-main{
+      padding-top: 6vh;
+      background: #fff;
+  }
+  .auth-brand{
+      font-weight: bold;
+  }
+  .auth-error-section{
+      float: left;
+      padding:10px;
+      border:2px solid orangered;
+  }
+
+</style>
+<main class="auth-main container">
+
+    <section class="col-xs-12 col-lg-4 offset-lg-4 col-md-8 offset-md-2 col-sm-10 offset-sm-1">
+      <div class="col col-md-12 text-center"><img src="../../assets/img/searca-new.png" width="60%"></div>
+      <div class="col col-md-12">
+            <center><br/>
+              <h3 style="padding-right: 0px !important;"> Sign-in </h3>
+              <small><p href="#" class="text-muted"></p>SEARCA's Bidding Management System</small><br/>
+            </center>
+      </div>
+    </section>
+
+    <section class="col-xs-12 col-lg-4 offset-lg-4 col-md-8 offset-md-2 col-sm-10 offset-sm-1">
+        <form name="login" onsubmit="return false;">
+            <center>
+                <p><br/>
+                    <input type="text" placeholder="Username" id="username" class="text-center form-control" autofocus>
+                </p>
+                <p>
+                    <input type="password" placeholder="Password" id="password" class="text-center form-control hide">
+                </p>
+                <p class="login-status"></p>
+                <small>
+                    <span id="auth-status"></span>
+                    <center><small><p>By signing to BMS you agree to <a href="#">Users License agreement</a> and<br><a href="#">Data policy</a> settings of SEARCA</p></small></center>
+                    <p>
+                        <button class="btn btn-dark btn-block" id="loginBtn">Sign-In</button>
+                        <br/><br><br/>
+                        <p>
+                            <small class="text-muted">
+                                &copy;<a href="www.searca.org">www.searca.org</a> 
+                                v2.0 
+                            </small>
+                        </p>
+                    </p>
+                </small>
+            </center>
+        </form>
+    </section>
+</main>
+
+ <!-- <div style="margin-top: 8vh;">
     <div class="col-xs-12 col-lg-4 offset-lg-4 col-md-8 offset-md-2 col-sm-10 offset-sm-1">
       <div class="col col-md-12 text-center"><img src="../../assets/img/searca-new.png" width="60%"></div>
       <div class="col col-md-12">
             <center><br/>
-              <h3 style="padding-right: 0px !important;"> Sign In </h3>
-              <small><p href="#" class="text-muted">Bidding Management System</p></small>
+              <h3 style="padding-right: 0px !important;"> Sign-in </h3>
+              <small><p href="#" class="text-muted"></p>SEARCA's Bidding Management System</small><br/>
             </center>
       </div>
     </div>
@@ -65,11 +126,12 @@
 
                 <div class="col-md-12 auth-error auth-org">
                     <div class="form-group col col-md-12 ">
-                        <input type="text" class="form-control text-center" id="organization" placeholder="Enter Your Organization" name="org" data-role="none" autocomplete="off" required="">          
+                        <input type="text" class="form-control text-center" id="organization" placeholder="Organization" name="org" data-role="none" autocomplete="off" required="">          
                      </div> 
 
+                     <center><small><p>By signing to BMS you agree to <a href="#">Users License agreement</a> and<br><a href="#">Data policy</a> settings of SEARCA</p></small></center>
                       <div class="form-group col-md-12 ">
-                        <button class="btn btn-block btn-submit" id="loginOrgButton">Login</button>
+                        <button class="btn btn-dark btn-block btn-submit" id="loginOrgButton">Login</button>
                     </div>
                 </div>
 
@@ -80,7 +142,7 @@
 
 
 
-        <form method="POST" data-ajax="false" onsubmit="return false;" class="auth-default"> 
+        <form method="POST" data-ajax="false" onsubmit="return false;" class="auth-default" name="login"> 
              <div class="col-xs-12 col-lg-4 offset-lg-4 col-md-8 offset-md-2 col-sm-10 offset-sm-1">
                 <div class="col col-md-12 auth-error">              
                     <div class="form-group col col-md-12 ">
@@ -89,10 +151,12 @@
                      <div class="form-group col col-md-12">
                         <input type="password" class="form-control  text-center" placeholder="Password" id="password" name="password" data-role="none" required="">
                      </div>
+                     <div id="auth-status"></div>
+                     <center><small><p>By signing to BMS you agree to <a href="#">Users License agreement</a> and<br><a href="#">Data policy</a> settings of SEARCA</p></small></center>
 
-                    <!--submit-button-->
+                    
                     <div class="form-group col col-md-12 ">
-                        <button class="btn btn-block btn-submit" id="loginButton">Login</button>
+                        <button class="btn btn-dark btn-block btn-submit" id="loginButton">Login</button>
                     </div>
 
                     <center style="margin-top: 20%;">
@@ -102,7 +166,7 @@
                     </center>
 
 
-                  <!--end submit button-->
+                 
                   <div style="clear: both;"></div>
                </div>
             </div>
@@ -111,6 +175,9 @@
 
 </div>
   <script type="text/javascript" src="../../cordova.js"></script>
+   <script type="text/javascript" src="../../assets/js_native/assets/js/modules/Authentication/Authentication.js"></script>-->
+   <script type="text/javascript" src="../../assets/js_es/sha1.js"></script>
+    <script type="text/javascript" src="../../assets/js/exports.js"></script>
    <script type="text/javascript" src="../../assets/js_native/assets/js/modules/Authentication/Authentication.js"></script>
 </body>
 

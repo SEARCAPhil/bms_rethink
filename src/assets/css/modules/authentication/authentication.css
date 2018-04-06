@@ -9,12 +9,7 @@ input:focus,input:active,textarea:focus,textarea:active {
   box-shadow: none !important;
   outline: none !important;
 }
-.btn-submit{
-  background: rgb(148,4,123);
-  padding: 10px;
-  border-radius: 20px;
-  color:rgb(250,250,250) !important;
-}
+
 .auth-error{
   transition: all 0.3s ease-in-out;
   opacity: 0.9;
@@ -27,9 +22,7 @@ input:focus,input:active,textarea:focus,textarea:active {
   margin-top: 0px;
 }
 #organization,#username,#password{
-  border:none;
-  border-bottom: 1px solid rgba(200,200,200,0.9);
-}
-#loginOrgButton{
-  background: #94047b;
+  border: 1px solid rgba(200,200,200,0.9);
+  padding: 10px;
+  text-align: center;
 }

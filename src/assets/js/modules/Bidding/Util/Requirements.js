@@ -54,6 +54,28 @@ export default class {
 		})
 	}
 
+
+	removeAwardee (e) {
+		window.bms.default.spinner.show()
+		let data = {
+			id: e.target.el.id,
+			action: 'remove_awardee',
+		}
+
+		this.ReqServ.send(data).then((json) => {
+			let res = JSON.parse(json)
+
+			if( parseInt(res) > 0){
+				window.location.reload()
+			}
+
+			window.bms.default.spinner.hide()
+			
+		}).catch(err => {
+			window.bms.default.spinner.hide()
+		})
+	}
+
 	removeRecepients (e) { 
 		window.bms.default.spinner.show()
 		let data = {
@@ -68,14 +90,45 @@ export default class {
 				e.target.el.parentNode.parentNode.parentNode.parentNode.remove()
 				document.getElementById('bidding-modal').close()
 				// remove from DOM
-				document.getElementById(`requirements-recepients-list-${data.id}`).remove()
+				//document.getElementById(`requirements-recepients-list-${data.id}`).remove()
+				window.location.reload()
 				// remove from indexeedDB here
+			} else {
+				alert('Unable to cancel invitation. Please refresh the page and try again later.')
 			}
 
 			window.bms.default.spinner.hide()
 			
+		}).catch(err => {
+			window.bms.default.spinner.hide()
 		})
 	}
+
+
+	setDeadline (e) {
+		window.bms.default.spinner.show()
+		let data = {
+			id: window.bms.default.state.bidding.cur.requirements.id,
+			deadline: document.getElementById('deadline').value,
+			action: 'create',
+		}
+
+		this.ReqServ.deadline(data).then((json) => {
+			let res = JSON.parse(json)
+
+			if( parseInt(res) > 0){
+				window.location.reload()
+			} else {
+				alert('Unable to set deadline. Please try again later')
+			}
+
+			window.bms.default.spinner.hide()
+			
+		}).catch(err => {
+			window.bms.default.spinner.hide()
+		})
+	}
+
 
 	loadRemoveRequirements (e) {
 		const URL='pages/suppliers/modal/remove.html'
@@ -111,7 +164,7 @@ export default class {
 		const proto = Object.assign({ __proto__: this.__proto__ }, this)
 
 		// hide dropdown section
-		document.getElementById(`dropdown-req-recepients-${id}`).classList.remove('open')
+		// document.getElementById(`dropdown-req-recepients-${id}`).classList.remove('open')
 
 		return this.XHR.request({method:'GET',url:URL}).then(res=>{
 			let modalTarget=document.getElementById('modal-bidding-body')
@@ -188,6 +241,67 @@ export default class {
 	}
 
 
+
+	loadRemoveAwardee (e) {
+		const URL='pages/suppliers/modal/remove.html'
+		const id=e.target.getAttribute('data-resources')
+		const proto = Object.assign({ __proto__: this.__proto__ }, this)
+
+		return this.XHR.request({method:'GET',url:URL}).then(res=>{
+			let modalTarget=document.getElementById('modal-bidding-requirements-body')
+			modalTarget.innerHTML=res
+
+			setTimeout(()=>{
+				window.bms.default.scriptLoader(modalTarget)
+			},50)
+
+			setTimeout(()=>{
+				//remove cancel
+				document.getElementById('modal-dialog-close-button').addEventListener('click',()=>{
+		
+					document.getElementById('bidding-requirements-modal').close()
+					
+				})
+
+				let btn = document.getElementById('modal-dialog-remove-button')
+				e.target.id = id
+				btn.el =  e.target
+				btn.addEventListener('click', this.removeAwardee.bind(proto))
+			})
+		}).catch(e=>{})
+	}
+
+
+	loadSetDeadline (e) {
+		const URL='pages/bidding/modal/deadline.html'
+		const id=e.target.getAttribute('data-resources')
+		const proto = Object.assign({ __proto__: this.__proto__ }, this)
+
+		return this.XHR.request({method:'GET',url:URL}).then(res=>{
+			let modalTarget=document.getElementById('modal-bidding-requirements-body')
+			modalTarget.innerHTML=res
+
+			setTimeout(()=>{
+				window.bms.default.scriptLoader(modalTarget)
+			},50)
+
+			setTimeout(()=>{
+				//remove cancel
+				document.getElementById('modal-dialog-close-button').addEventListener('click',()=>{
+		
+					document.getElementById('bidding-requirements-modal').close()
+					
+				})
+
+				let btn = document.getElementById('modal-dialog-remove-button')
+				e.target.id = id
+				btn.el =  e.target
+				btn.addEventListener('click', this.setDeadline.bind(proto))
+			})
+		}).catch(e=>{})
+	}
+
+
 	bindRemoveRequirements () {
 		const proto = Object.assign({ __proto__: this.__proto__ }, this)
 		document.querySelectorAll('.remove-requirements-modal-btn').forEach((val, index) => {
@@ -248,7 +362,7 @@ export default class {
 											<i class="material-icons md-18 device-dropdown" data-device-dropdown="dropdown-req-recepients-${val}" data-resources="2">arrow_drop_down</i>
 											<div class="dropdown-section float-right" id="dropdown-req-recepients-${val}">
 												<ul class="list-group list-group-flush">
-													<li class="list-group-item"><a data-target="#bidding-modal" data-popup-toggle="open" href="#" class="remove-receipients-modal" data-resources="${val}">Cancel Invitation</a></li>
+													<li class="list-group-item"><a data-target="#bidding-modal" data-popup-toggle="open" href="#" class="remove-receipients-modal" data-resources="${res.data[val]}">Cancel Invitation</a></li>
 												<ul>
 											</ul></ul></div>
 										</div>
@@ -265,6 +379,7 @@ export default class {
 						window.bms.default.dropdown('device-dropdown')
 						// enable popup
 						const PopupInstance = new PopupES()
+						this.bindRemoveRecepients()
 				},1000)
 
 
@@ -397,6 +512,21 @@ export default class {
 		const proto = Object.assign({ __proto__: this.__proto__ }, this)
 		document.querySelectorAll('.award-requirements-modal-btn').forEach((val, index) => {
 			val.addEventListener('click',this.loadAwardRequirements.bind(proto))
+		})
+	}
+
+
+	bindRemoveAwardee () {
+		const proto = Object.assign({ __proto__: this.__proto__ }, this)
+		document.querySelectorAll('.remove-awardees-modal').forEach((val, index) => {
+			val.addEventListener('click',this.loadRemoveAwardee.bind(proto))
+		})
+	}
+
+	bindSetDeadline () {
+		const proto = Object.assign({ __proto__: this.__proto__ }, this)
+		document.querySelectorAll('.set-deadline-modal-btn').forEach((val, index) => {
+			val.addEventListener('click',this.loadSetDeadline.bind(proto))
 		})
 	}
 

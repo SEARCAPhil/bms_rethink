@@ -52,7 +52,7 @@
                         // O365 check
                         loginOnPremiseServer (data).then((json) => { 
 
-                            // account ot yet verified
+                            // account not yet verified
                             if (!json.role) {
                                 window.location = 'confirmation.html'
                                 return 0

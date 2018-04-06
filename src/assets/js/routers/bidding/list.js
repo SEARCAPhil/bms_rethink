@@ -329,10 +329,10 @@ const changeBiddingInfo = (e) => {
 
 	// info
 	document.getElementById('bidding-created-by-info').innerHTML = `${details.profile_name}`
-	document.getElementById('bidding-name').innerHTML = `${details.name}`
+	// document.getElementById('bidding-name').innerHTML = `${details.name}`
 	document.getElementById('bidding-number-info').innerHTML = `#${details.id}`
-	document.getElementById('bidding-description-info').innerHTML = `${details.description}`
-	document.getElementById('bidding-deadline-info').innerHTML = `${details.deadline !== '0000-00-00' ? details.deadline : 'N/A'}`
+	//document.getElementById('bidding-description-info').innerHTML = `${details.description}`
+	//document.getElementById('bidding-deadline-info').innerHTML = `${details.deadline !== '0000-00-00' ? details.deadline : 'N/A'}`
 	document.getElementById('bidding-excemption-info').innerHTML = `${details.excemption == 1 ? 'YES' : 'NO'}`
 	document.getElementById('bidding-date-created').innerHTML = `${details.date_created}`
 	document.getElementById('image-info-section').innerHTML = `${details.profile_name ? details.profile_name.substr(0,2).toUpperCase() : ''}`
@@ -411,7 +411,7 @@ const appendAttachments = (data) => {
 										<i class="material-icons md-18 device-dropdown" data-device-dropdown="dropdown-${data.id}" data-resources="${data.id}">arrow_drop_down</i>
 										<div class="dropdown-section float-right" id="dropdown-${data.id}">
 											<ul class="list-group list-group-flush">
-	  											<li class="list-group-item"><a href="#" onclick="event.preventDefault();window.open('http://192.168.80.56/bms_api/src/api/bidding/attachments/download.php?id=${data.id}')">Download</a></li>
+	  											<li class="list-group-item"><a href="#" onclick="event.preventDefault();window.open('${window.bms.config.network}/bidding/attachments/download.php?id=${data.id}')">Download</a></li>
 												<li class="list-group-item for-open"><a data-target="#bidding-modal" data-popup-toggle="open" href="#" class="remove-attachments-modal">Remove</a></li>
 											<ul>
 										</div>
@@ -422,7 +422,7 @@ const appendAttachments = (data) => {
 
 const appendParticulars = (data) => {
 	let html = `
-		<small class="particulars">
+		<div class="particulars" style="font-size:14px;">
 	    	<details>
 	    		<summary class="text-info">
 	    			${data.name}
@@ -450,15 +450,31 @@ const appendParticulars = (data) => {
     					`
     				}
 
-    	html +=`	<span class="for-open">
-    					<a href="#/bids/forms/registration/${data.requirements[x].id}/steps/3/update"><i class="material-icons md-12 text-muted">edit</i></a>
-    					<a href="#" class="remove-requirements-modal-btn" data-target="#bidding-modal" data-popup-toggle="open" id="${data.requirements[x].id}"><i class="material-icons md-12 text-muted" id="${data.requirements[x].id}">remove_circle_outline</i></a>&emsp;
-    				</span>
-    				<span class="float-right text-danger">${data.requirements[x].budget_currency} ${data.requirements[x].budget_amount}</span><br/>
-    				<span class="text-muted">${data.requirements[x].bidding_excemption_request ===1 ? 'For bidding excemption' : ''}</span>
-    			</p>
-    		</section>
-		`
+    	// not applicable for already awarded requirements
+    	if (data.requirements[x].awardees.length < 1) {
+	    	html +=`	<span class="for-open">
+	    					<a href="#/bids/forms/registration/${data.requirements[x].id}/steps/3/update"><i class="material-icons md-12 text-muted">edit</i></a>
+	    					<a href="#" class="remove-requirements-modal-btn" data-target="#bidding-modal" data-popup-toggle="open" id="${data.requirements[x].id}"><i class="material-icons md-12 text-muted" id="${data.requirements[x].id}">remove_circle_outline</i></a>&emsp;
+	    				</span>
+	    				<span class="float-right text-danger">${data.requirements[x].budget_currency} ${data.requirements[x].budget_amount}</span><br/>
+	    				<span class="text-muted">${data.requirements[x].bidding_excemption_request ===1 ? 'For bidding excemption' : ''}</span>
+	    			
+			`
+
+
+		} else {
+
+			html +=`<span class="" style="color:#ffb80c;">
+						<i class="material-icons md-18">star</i> 
+						<span>Awarded</span>
+					</span>
+					<span class="float-right text-danger">${data.requirements[x].budget_currency} ${data.requirements[x].budget_amount}</span>
+
+					`
+		}
+
+
+		html +=`</p></section>`
 	}
 
 	html +=`

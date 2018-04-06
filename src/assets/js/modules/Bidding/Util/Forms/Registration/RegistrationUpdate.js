@@ -53,24 +53,24 @@ const showError = () => {
 
 const register = (e) => {
 	e.preventDefault()
-	let nameField = document.querySelector('form[name="bidding-request-registration"] input[name="name"]')
-	let descField = document.querySelector('form[name="bidding-request-registration"] textarea[name="description"]')
-	let deadlineField = document.querySelector('form[name="bidding-request-registration"] input[name="deadline"]')
+	//let nameField = document.querySelector('form[name="bidding-request-registration"] input[name="name"]')
+	//let descField = document.querySelector('form[name="bidding-request-registration"] textarea[name="description"]')
+	//let deadlineField = document.querySelector('form[name="bidding-request-registration"] input[name="deadline"]')
 	let excemptionField = document.querySelector('form[name="bidding-request-registration"] input[name="forExcemption"]:checked')
 
-	if (nameField.value.length < 1) {
+	/*if (nameField.value.length < 1) {
 		nameField.classList.add('error')
 		return 0
-	}
+	}*/
 
 	window.bms.default.spinner.show()
-	nameField.classList.remove('error')
+	//nameField.classList.remove('error')
 
 	// data
 	let data = {
-		name: nameField.value,
-		desc: descField.value,
-		deadline: deadlineField.value,
+		//name: nameField.value,
+		//desc: descField.value,
+		//deadline: deadlineField.value,
 		id: window.bms.default.state.bidding.cur.bid.id,
 		excemption: parseInt(excemptionField.value),
 		action: 'update',

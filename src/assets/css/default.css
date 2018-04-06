@@ -46,10 +46,14 @@ summary{
 
 .main-menu li{
     padding: 10px 5px 10px 5px;
-    text-align: center;
     margin-bottom: 2px;
     cursor:pointer;
     font-size: 12px;
+}
+
+.main-menu li.sub {
+  padding-left: 30px;
+  color: #bbbbbb;
 }
 .main-menu li.active{
     background: rgb(255,184,12);

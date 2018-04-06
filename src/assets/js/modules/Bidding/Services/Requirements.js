@@ -37,6 +37,11 @@ export default class{
 		return XHR.request({method:'POST',url:url,body:JSON.stringify(opt)})
 	}
 
+	deadline(opt = {}){
+		const url=`${NetConf.get()}/bidding/requirements/deadline.php/`
+		return XHR.request({method:'POST',url:url,body:JSON.stringify(opt)})
+	}
+
 	removeRecepients(opt = {}){
 		const url=`${NetConf.get()}/bidding/requirements/recepients/`
 		return XHR.request({method:'POST',url:url,body:JSON.stringify(opt)})

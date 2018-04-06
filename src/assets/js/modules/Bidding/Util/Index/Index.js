@@ -15,6 +15,20 @@ export default class {
 		window.bms.default.changeDisplay(['div[name="/bids/initial"]'],'block')
 	}
 
+	loadBiddingInitialStandardPage () {
+		let htm = `
+			<div class="col-lg-6 offset-lg-2 d-lg-offset-2 text-center" style="margin-top:70px;">
+	    		<h2>Bidding Management</h2>
+			    <small><p class="text-muted">
+			    	"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, qui
+			    </p></small>
+				<img src="assets/img/bid.png" width="150px"><br/><br/>
+			</div>
+		`
+		document.querySelector('div[name="/bids/initial"]').innerHTML=htm	
+		window.bms.default.changeDisplay(['div[name="/bids/initial"]'],'block')
+	}
+
 
 	loadBiddingInfo (data = {}) {
 		return new Promise((resolve,reject) => {
@@ -113,18 +127,23 @@ export default class {
 						</div>
 						<hr/>
 					</small>
-		    		<h3 id="bidding-name"></h3>
-		    		<p class="text-muted">
+		    		<!--<h3 id="bidding-name"></h3>-->
+		    		<h3>Bidding Request <span id="bidding-number-info"></span> </h3>
+		    		<a href="${window.bms.config.network}/bidding/reports/bidding_request.php?id=${data.id}" target="_blank" class="btn btn-default btn-sm" style="border:1px solid #009688;">
+						<i class="material-icons md-18">print</i> PRINT
+					</a>
+					<br/>
+		    		<!--<p class="text-muted">
 		    			<span id="bidding-description-info"></span>
 		    			<span id="bidding-number-info" class="badge badge-sm badge-dark"></span> 
-		    		</p>
+		    		</p>-->
 				    <small>
 				    	
 						<br/>
-						<p class="deadline"><b>Deadline</b> : <span id="bidding-deadline-info">N/A</span></p>
-						<p class="bidding-excemption text-danger"><b>For Bidding Excemption</b> : <span id="bidding-excemption-info">N/A</span></p>
+						<!--<p class="deadline"><b>Deadline</b> : <span id="bidding-deadline-info">N/A</span></p>-->
+						<p class="bidding-excemption text-danger"><b>Requesting for Bidding Excemption ?</b>  <span id="bidding-excemption-info">N/A</span></p>
 						<p>
-							<b>Shared to : </b> <span id="bidding-collaborators"></span>
+							<b>Sent to : </b> <span id="bidding-collaborators"></span>
 						</p>
 				    	<p>
 				    		<!--attachments section -->
@@ -211,11 +230,7 @@ export default class {
 			<section class="row" style="background:#F4F9FD;margin-top:50px;margin-bottom:5px;">
 
 				<small class="col-12" id="detail-req-menu-status">
-					<center style="background:#464a4e;color:#fff;padding:5px;">
-						<p class="col-12">
-							<i class="material-icons" style="color:#ffb80c;">star</i> This has been awarded. Please review before making any changes.
-				        </p>
-				    </center>
+					
 				</small>
 
 				<small class="col-lg-11 offset-lg-1 for-open">
@@ -232,7 +247,7 @@ export default class {
 						</li>
 
 						<li class="nav-item">
-							<a class="nav-link award-requirements-modal-btn" data-target="#bidding-requirements-modal" data-popup-toggle="open">
+							<a class="nav-link award-requirements-modal-btn hide" data-target="#bidding-requirements-modal" data-popup-toggle="open">
 								<i class="material-icons md-18">card_membership</i> Award
 							</a>
 						</li>
@@ -244,7 +259,7 @@ export default class {
 						</li>
 
 						<li class="nav-item">
-							<a class="nav-link proposal-requirement-dialog-btn text-danger">
+							<a href="#" class="nav-link text-danger set-deadline-modal-btn hide" data-target="#bidding-requirements-modal" data-popup-toggle="open">
 								<i class="material-icons md-18">date_range</i> Set deadline
 							</a>
 						</li>
@@ -276,19 +291,21 @@ export default class {
 			    		<span class="col-12 row" id="funds-requirements-info-section"></span>
 			    	</p>
 
+			    	<p><b>Deadline: </b> <span class="req-deadline">Not Set</span></p>
+
 			    	<p>
-			    		<b>Attachments</b>
 			    		<!--attachments section -->
 						<div class="row" id="attachments-requirements-info-section" style="padding:5px;"></div>
 			    	</p>
 
-			    	<p class="text-success" id="awardees-section">
+			    	<div class="hide" id="awardees-section">
 			    		<hr/>
 			    		<b>Awarded to</b>
 			    		<section class="row" id="awardees-section-list"></section>
 			    		
-			    		
-			    	</p>
+			    	</div>
+
+
 
 
 			    </small>
@@ -308,15 +325,7 @@ export default class {
 		const targ=document.querySelector('div[name="/bids"]')
 		const oldElem = document.querySelector('.list-bids-container')
 		const htm = `
-			<link rel="preload" as="style" href="./assets/css/popup-es.css" onload="this.rel='stylesheet'">
-			<dialog id="bidding-modal" data-popup="fade">
-				<div class="content">
-					<!--close button-->
-					<a href="#" data-popup-toggle="close">x</a>
-					<div class="header"></div>
-					<div class="body" id="modal-bidding-body"></div>
-				</div>	
-			</dialog>
+
 			<article class="row list-bids-container">
 				<!--list-->
 			    <section class="col-md-12 col-lg-12 float-left list-sidebar" style="background:#fff;box-shadow:0 0 5px rgba(200,200,200,.7);min-height: 100vh">     

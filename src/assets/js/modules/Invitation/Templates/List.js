@@ -16,15 +16,13 @@ export default class{
 		this.element.setAttribute('class',`${this.properties.class}`+` ${this.properties.status}`)
 		this.element.setAttribute('data-list',`${this.properties.id}`)
 		this.element.innerHTML=`
-			<a href="#/bids/${this.properties.id}/info">
-				<h6 class="suppliers-list-item-header">#${this.properties.id}</h6>
-	            <!--<small>
-	           		<p style="font-size:smaller;">${this.properties.description}</p>
-	            </small>-->
+			<a href="#/inv/${this.properties.id}/info">
+				<h6 class="suppliers-list-item-header">${this.properties.name}</h6>
+				<p><span class="text-danger">Quantity : ${this.properties.quantity}</span> - ${this.properties.unit}</p>
+
 	            <small>
 	           		<p style="font-size:smaller;" class="text-muted">
-	           			${this.properties.profile_name} <br/>
-	           			${this.properties.date_created}
+	           			Deadline : ${this.properties.deadline} <br/>
 	           		</p>
 	            </small>
 	        </a>`

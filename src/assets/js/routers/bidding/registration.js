@@ -329,9 +329,11 @@ appRoute.on({
 			window.bms.default.changeDisplay(['div[name="/bids"]'],'none')	
 		}
 
-		RegUtil.loadRegistrationItem()
+		RegUtil.loadRegistrationItem().then(() => {
+			window.bms.default.lazyLoad(['./assets/js_native/assets/js/modules/Bidding/Util/Forms/Registration/Requirements.js'])
+		})
 		
-		window.bms.default.lazyLoad(['./assets/js_native/assets/js/modules/Bidding/Util/Forms/Registration/Requirements.js'])
+
 
 	},
 	'/bids/forms/registration/:id/steps/3/update': (params) => {
@@ -467,21 +469,6 @@ appRoute.on({
 				bindAddSpecsSection()
 			})
 		})*/
-
-	},
-	'/bids/forms/registration/:id/steps/4': (params) => {
-		window.bms.default.changeDisplay(['div[name="/bids/forms/registration"]','div[name="/bids/forms/registration/4"]'],'block')
-		window.bms.default.changeDisplay(['div[name="/bids/initial"]','div[name="/bids/forms/registration/1"]','div[name="/bids/forms/registration/2"]','div[name="/bids/forms/registration/3"]'],'none')
-			
-		//toggle list sidebar for medium and small devices
-		let lg = window.getComputedStyle(document.querySelector('.hidden-on-lg')).display
-
-		if(lg=='block'){
-			window.bms.default.changeDisplay(['div[name="/bids"]'],'none')	
-		}
-
-		RegUtil.loadRegistrationFileAttachment() 
-		window.bms.default.state.bidding.cur.requirements.id = params.id
 
 	}
 }).resolve()

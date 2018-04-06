@@ -115,10 +115,10 @@
         overflow-y: auto;
     }
 
-    [name="/bids/info/particulars"].show {
+    [name="/bids/info/particulars"].show, [name="/inv/info"].show {
         display: flex!important;
     }
-    [name="/bids/info/particulars/proposals"] {
+    [name="/bids/info/particulars/proposals"],  [name="/inv/info/proposals"] {
         padding-top:60px;
         background: #eeeeee;
         border-left: 1px solid #d3d3d3;
@@ -177,9 +177,9 @@
         <header>
             <nav class="navbar navbar-dark navbar-top fixed-top">
 
-                <a href="#/suppliers/all" class="back-to-list-button d-lg-none">
+                <!--<a href="#/suppliers/all" class="back-to-list-button d-lg-none">
                     <i class="material-icons">arrow_back</i> Back
-                </a>
+                </a>-->
 
                 <ul class="nav  ml-auto nav-top-menu">
                   <li class="nav-item" id="about-tab">
@@ -206,6 +206,23 @@
                     <span class="burger"></span>  
                 </span>
                 
+
+
+                <span class="navbar-brand hamburger d-none d-lg-block hidden" style="
+                    color: #d8d8d8;
+                    font-size: 14px;
+                ">SEARCA
+                </span>
+
+
+                 <span class="navbar-brand hamburger d-none d-lg-block hidden" style="
+                    color: #d8d8d8;
+                    font-size: 14px;
+                "> | Bidding Management System
+                </span>
+
+
+
                 <ul class="nav  ml-auto nav-top-menu d-none d-lg-block">
                   
                   <li class="nav-item" id="settings-tab" style="color: #fff;">
@@ -217,7 +234,7 @@
                 </ul>
                             
                       
-                      <!--bootstrap menu-->
+                <!--bootstrap menu-->
                 <span class="navbar-brand hamburger mb-0 h1 docker-menu d-lg-none" data-target=".docker">
                     <span class="burger"></span>
                     <span class="burger"></span>
@@ -252,10 +269,10 @@
         <!--sidebar-->
         <aside class="col col-lg-2 col-md-3 col-xs-12 docker docker-sm-fixed docker-md-fixed docker-sm-hidden docker-xs-hidden docker-md-hidden d-md-none d-lg-block docker-lg-visible docker-lg-fixed docker-lg-block row" id="docker-sidebar" data-role="none" data-enhance="false" style="background:rgba(0,0,0,0.7);min-width:100px;">
             <div class="content container-fluid" style="height: 1080px;background: none;">
-                <menu class="col col-md-12">
+                <menu class="col col-md-12 text-left">
 
                     <ul class="list-unstyled main-menu main-menu-list">
-                         <li data-status="home" 
+                        <!-- <li data-status="home" 
                             class="main-menu-list-item suppliers_main_menu" 
                             id="home_menu" 
                             data-menu="main-menu-list-item" 
@@ -263,6 +280,16 @@
 
                                 <i class="material-icons md-24" style="width: 24px;">home</i> 
                                 <br/>Home
+                        </li>-->
+
+                        <li data-status="home" 
+                            class="main-menu-list-item suppliers_main_menu" 
+                            id="home_menu" 
+                            data-menu="main-menu-list-item" 
+                            onclick="window.location.hash='#/home/'">
+
+                                <i class="material-icons md-18" style="width: 24px;">home</i> 
+                                Home
                         </li>
                         <!--
                         <li data-status="supplies" 
@@ -275,16 +302,73 @@
                                 <br/>Suppliers
                         </li>-->
 
-                        <li data-status="bids" 
+                        <!--<li data-status="bids" 
                             class="main-menu-list-item bids-menu-list" 
                             id="bids-menu-list"
                             data-menu="main-menu-list-item" 
                             data-role="none" onclick="window.location.hash='#/bids/all'">
                                 <i class="material-icons md-24" style="width: 24px;">trending_up</i> 
-                                <br/>Bids
+                                <br/>Bidding request
+                        </li>-->
+
+
+                         <li data-status="bids" 
+                            class="main-menu-list-item bids-menu-list" 
+                            id="bids-menu-list"
+                            data-menu="main-menu-list-item" 
+                            data-role="none" onclick="window.location.hash='#/bids/all'">
+                                <i class="material-icons md-18" style="width: 24px;">trending_up</i> 
+                                Bidding request
                         </li>
 
-                        <li data-status="open" 
+
+                        <li
+                            class="main-menu-list-item bids-menu-list sub" 
+                            
+                            data-menu="main-menu-list-item" 
+                            data-role="none" onclick="window.location.hash='#/bids/all'">
+                                <i class="material-icons md-18" style="width: 24px;">inbox</i> 
+                                All
+                        </li>
+
+                        <li
+                            class="main-menu-list-item bids-menu-list sub" 
+                            
+                            data-menu="main-menu-list-item" 
+                            data-role="none" onclick="window.location.hash='#/bids/drafts'">
+                                <i class="material-icons md-18" style="width: 24px;">drafts</i> 
+                                Drafts
+                        </li>
+
+
+                         <li
+                            class="main-menu-list-item bids-menu-list sub" 
+                            
+                            data-menu="main-menu-list-item" 
+                            data-role="none" onclick="window.location.hash='#/bids/forms/registration/steps/1'">
+                                <i class="material-icons md-18" style="width: 24px;">add_circle</i> 
+                                New
+                        </li>
+
+
+                        <!--<li data-status="inv" 
+                            class="main-menu-list-item inv-menu-list" 
+                            id="inv-menu-list"
+                            data-menu="main-menu-list-item" 
+                            data-role="none" onclick="window.location.hash='#/inv/all'">
+                                <i class="material-icons md-24" style="width: 24px;">mail</i> 
+                                <br/>Invitations
+                        </li>-->
+                        <li data-status="inv" 
+                            class="main-menu-list-item inv-menu-list" 
+                            id="inv-menu-list"
+                            data-menu="main-menu-list-item" 
+                            data-role="none" onclick="window.location.hash='#/inv/all'">
+                                <i class="material-icons md-18" style="width: 24px;">mail</i> 
+                                Invitations
+                        </li>
+
+                        <!--<li data-status="open" 
                             class="main-menu-list-item deactivated">
                                 <i class="material-icons md-24" style="width: 24px;">drafts</i>
                                 <br/>Proposals 
@@ -294,13 +378,13 @@
                             class="main-menu-list-item deactivated">
                                 <i class="material-icons md-24">account_circle</i>
                                 <br/>Account Settings 
-                        </li>
+                        </li>-->
                     </ul>
 
 
-                    <ul class="list-unstyled main-menu main-menu-list">
+                    <!--<ul class="list-unstyled main-menu main-menu-list">
                         <li id="new" class="deactivated">New <i class="material-icons">add</i></li>
-                    </ul>
+                    </ul>-->
 
                 </menu>
 
@@ -350,7 +434,7 @@
                 <div name="/bids/forms/registration/4"></div>   
              </div>
 
-             <div name="/bids/info" class="col-lg-8"  style="background: rgb(252, 252, 252);overflow-y: auto;max-height: 100vh;">
+             <div name="/bids/info" class="col-lg-8"  style="background: rgb(252, 252, 252);overflow-y: auto;max-height: 100vh;padding-bottom: 100px;">
                 <div name="/bids/info/details"></div> 
                 <div name="/bids/info/requirements"></div> 
              </div>
@@ -379,7 +463,7 @@
                                 <i class="material-icons md-48">insert_drive_file</i><br/>
                                 Submit a good propasal and stand above all other companies now!<br/>
                                 <br/>
-                                <a href="#/bids/requirements/proposal/form" class="requirements-proposal-link for-open">Submit <i class="material-icons md-18">add_circle</i></a>
+                                
                             </p>
                         </center>
 
@@ -391,12 +475,68 @@
 
         </router>
 
+        <!-- invitations -->
+
+        <router class="row inv-router-section" id="inv-router-section">
+            
+            <!--bids list-->
+            <div name="/inv"  class="col-md-12 col-lg-2 offset-lg-2 max-height-panel" style="z-index: 1;box-shadow: 0px 0px 4px rgba(180,180,180,0.6);"></div>
+
+            <div name="/inv/initial" class="col col-lg-8 col-sm-12 col-xs-12 max-height-panel" style="padding-top:70px;background: rgb(252,252,252);"></div>
+            <div name="/inv/info" class="col-lg-8 d-flex"  style="background: rgb(252, 252, 252);overflow-y: auto;max-height: 100vh;">
+                <div name="/inv/info/details" style="width:100%;"></div> 
+                <div name="/inv/info/proposals" class="col-6 col-sm-3 col-md-3 col-lg-3 row">
+
+                    <div class="col-12">
+                        <p>
+                            <b>Proposals</b>
+                            <span class="badge badge-info">0</span>
+                            <hr/>
+                        </p>
+                    </div>
+
+                    <div class="col-12">
+
+                        <center>
+                            <p class="text-muted">
+                                <i class="material-icons md-48">insert_drive_file</i><br/>
+                                Submit a good propasal and stand above all other companies now!<br/>
+                                <br/>
+                                <a href="#/bids/requirements/proposal/form" class="requirements-proposal-link">Submit <i class="material-icons md-18">add_circle</i></a>
+                            </p>
+                        </center>
+
+                            <hr/><br/>
+
+                        <section id="proposal-list-section">
+                            <ul class="nav">
+                                
+                            </ul>
+                        </section>
+
+                    </div>
+
+                </div> 
+                </div>
+            </router>
+
+
+
         <div class="d-none d-sm-block hidden-on-xs"></div>
         <div class="d-sm-none d-md-block hidden-on-sm"></div>
         <div class="d-md-none d-lg-block hidden-on-md"></div>
         <div class="d-lg-none hidden-on-lg"></div>
     </article>
 
+    <link rel="preload" as="style" href="./assets/css/popup-es.css" onload="this.rel='stylesheet'">
+    <dialog id="bidding-modal" data-popup="fade">
+        <div class="content">
+            <!--close button-->
+            <a href="#" data-popup-toggle="close">x</a>
+            <div class="header"></div>
+            <div class="body" id="modal-bidding-body"></div>
+        </div>  
+    </dialog>
 
     <script src="assets/js/exports.js"></script>
     <!--<script src="assets/js_es/default.js"></script>
