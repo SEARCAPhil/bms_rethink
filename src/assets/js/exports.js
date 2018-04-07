@@ -23,6 +23,9 @@ window.bms=window.bms||{
 					requirements: {},
 				},
 			},
+			proposals: {
+				cur: {},
+			}
 		},
 
 	},

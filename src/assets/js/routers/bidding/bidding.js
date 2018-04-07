@@ -4,7 +4,9 @@ import InfoUtilities from '../../modules/Bidding/Util/Info'
 import IndexedDB from '../../modules/Bidding/Util/Storage/Bidding'
 import IndexedDBReq from '../../modules/Bidding/Util/Storage/Requirements'
 import PopupES from '../../Components/PopupES/PopupES'
+import ProposalService from '../../modules/Invitation/Services/Proposal'
 import RequirementsUtilities from '../../modules/Bidding/Util/Requirements'
+
 
 
 const appRoute = new window.bms.exports.Router('http://127.0.0.1/bms_rethink/www/',true)
@@ -13,6 +15,7 @@ const IDBReq = new IndexedDBReq()
 const IndexUtil = new IndexUtilities()
 const InfoUtil = new InfoUtilities()
 const AttUtil = new AttachmentsReq()
+const PropServ = new ProposalService ()
 const ReqUtil = new RequirementsUtilities()
 
 window.bms.default.pages = []
@@ -286,7 +289,76 @@ appRoute.on({
 
 		ReqUtil.get(params.id).then(json => {
 			if (json.id) {
+
+				// requirements info
 				loadRequirementsDetails(json)
+				// proposals
+				PropServ.lists({id: params.id, token : window.localStorage.getItem('token'), id:params.id}).then((data) => {
+					const json = JSON.parse(data)
+					let targ = document.querySelectorAll('.proposal-list-section > ul')
+
+
+					targ.forEach((el, index) => {
+						// clear proposal list section
+						el.innerHTML =''
+					})
+
+					setTimeout(() => {
+
+						targ.forEach((el, index) => {
+
+							json.forEach((val, index) => {
+								let html = document.createElement('li')
+								let status = ''
+								html.classList.add('nav-item', 'col-12')
+								html.setAttribute('data-resources', val.id)
+								html.style = 'border-bottom:1px solid #ccc;padding-top:5px;padding-bottom: 5px;'
+								html.setAttribute('onclick','event.preventDefault();')
+								html.id = val.id
+
+								
+
+								if (val.status == 0) {
+									status = `<br/><span class="text-danger" data-resources="${val.id}"><i class="material-icons md-12">drafts</i> DRAFT</span>`
+								}
+
+								if (val.status == 1) {
+									status = `<br/><span class="text-success" data-resources="${val.id}"><i class="material-icons md-12">check</i> Sent</span>`
+								}
+
+								if (val.status == 2) {
+									status = `<br/><span class="text-danger" data-resources="${val.id}"><i class="material-icons md-12">warning</i> Requesting changes</span>`
+								}
+
+								if (val.status ==3) {
+									status = `<br/><span data-resources="${val.id}" style="color:#ffb80c;"><i class="material-icons">star</i> AWARDED</span>`
+								}
+
+								html.innerHTML = `
+				                                    <a href="#" class="proposal-dialog-btn" data-resources="${val.id}">
+				                                        <div class="col-3"  data-resources="${val.id}">
+				                                            <div class="text-center" data-resources="${val.id}" style="float:left;width:35px;height:35px;border-radius:50%;margin-right:10px;overflow:hidden;background:#42403c;color:#fff;padding-top:5px" id="image-header-section"  data-resources="${val.id}">${val.username.substr(0,2).toUpperCase()}</div>
+				                                        </div>
+				                                        <div class="col"  data-resources="${val.id}">
+				                                                <small data-resources="${val.id}">
+				                                                    <p data-resources="${val.id}">
+				                                                        ${val.username}<br/>
+				                                                        <span class="text-muted">${val.date_created}</span>
+				                                                        ${status}
+				                                                    </p>
+				                                                </small>
+				                                        </div>
+				                                    </a>
+				                           `
+				                // insert to DOM
+				                el.append(html)
+				               
+							})
+						})
+
+						window.bms.default.lazyLoad(['./assets/js_native/assets/js/modules/invitation/Util/ProposalModal.js'])
+					},600)
+				})
 			}
 			window.bms.default.spinner.hide()
 		}).catch((err) => {

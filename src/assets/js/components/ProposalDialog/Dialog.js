@@ -2,7 +2,7 @@ export default class {
 	constructor (opt = {}) {
 		this.class = opt.class
 		this.id = opt.id
-		this.targ = document.querySelector('.inv-router-section')
+		this.targ = document.querySelector('body')
 		this.XHR = new window.bms.exports.XHR()
 	}
 	dialog () {
@@ -22,6 +22,7 @@ export default class {
 					z-index: 2;
 					opacity: 0;
 					visibility:hidden;
+					top:0;
 				}
 				.inv-list-main-dialog .body{
 					transition:all 0.2s ease-in-out;
@@ -71,15 +72,16 @@ export default class {
                     <div class="col-9" style="padding-top: 60px;">
                         <div class="col-lg-12" style="height: 70vh;">
                             <p>Your Proposal <i class="material-icons">navigate_next</i> <span class="text-muted">Preview</span>
-                            <span id="file-attachment-main-dialog-cancel-btn-${this.id}" class="float-right text-muted"><u>close (x)</u></span>
+                            	<span id="file-attachment-main-dialog-cancel-btn-${this.id}" class="float-right text-muted"><u>close (x)</u></span>
                             </p>
        						
                             <!-- menu-->
+                            <small class="col-12" id="prop-info-menu-status"></small>
 
-                            <small class="col-lg-11 offset-lg-1 row" id="detail-info-menu">
+                            <small class="hide" id="prop-info-menu">
 								<ul class="nav">
 									<li class="nav-item row">
-										<a class="nav-link send-proposal-modal-btn" href="#" data-target="#bidding-modal" data-popup-toggle="open"><i class="material-icons md-18">send</i> Send </a>
+										<a class="nav-link send-prop-modal-btn" href="#" data-target="#bidding-modal" data-popup-toggle="open" data-resources="${window.bms.default.state.proposals.cur.id}"><i class="material-icons md-18">send</i> Send </a>
 									</li>
 									<li class="nav-item file-attachment-dialog-btn">
 										<a class="nav-link">
@@ -87,7 +89,7 @@ export default class {
 										</a>
 									</li>
 									<li class="nav-item">
-										<a class="nav-link nav-link remove-bidding-modal-btn" href="#" data-target="#bidding-modal" data-popup-toggle="open">
+										<a class="nav-link nav-link remove-prop-modal-btn" href="#" data-target="#bidding-modal" data-popup-toggle="open" data-resources="${window.bms.default.state.proposals.cur.id}">
 											<i class="material-icons md-18">remove_circle_outline</i> Remove
 										</a>
 									</li>
@@ -105,7 +107,11 @@ export default class {
                             <div class="recently-attached-section" id="recently-attached-section-${this.id}">
                             	<br/>
                                 <section class="col-12">
-	
+									<h2 class="text-danger"><span id="prop-info-currency">N/A</span>: <span id="prop-info-amount">00.00</span></h2
+									<small>
+										<p><b>DISCOUNT : <span id="prop-info-discount">N/A</span></b></p>
+									</small>
+									<hr/>
 								    <h5>
 								    	<span class="header-circle"><i class="material-icons md-24">add_shopping_cart</i></span>
 								    	Specification
@@ -114,7 +120,11 @@ export default class {
 										
 									</div>
 								</section>
-
+								<br/><br/>
+								<section class="col-12">
+									<p><b>Remarks</b></p><br/>
+									<p  id="prop-info-remarks" class="text-muted">N/A</p>	
+								</section>
 
                             </div> 
                         </div>

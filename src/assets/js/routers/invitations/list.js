@@ -70,17 +70,40 @@ appRoute.on({
 
 		PropServ.lists({id: params.id, token : window.localStorage.getItem('token'), id:params.id}).then((data) => {
 			const json = JSON.parse(data)
-			let targ = document.querySelector('#proposal-list-section > ul')
+			let targ = document.querySelectorAll('.proposal-list-section > ul')
 
-			// clear section
-			targ.inerHTML =''
+			targ.forEach((el, index) => {
+				// clear proposal list section
+				el.innerHTML =''
+			})
 
 			json.forEach((val, index) => {
 				let html = document.createElement('li')
+				let status = ''
 				html.classList.add('nav-item', 'col-12')
 				html.setAttribute('data-resources', val.id)
 				html.style = 'border-bottom:1px solid #ccc;padding-top:5px;padding-bottom: 5px;'
-				html.id = 
+				html.id = val.id
+
+				
+
+				if (val.status == 0) {
+					status = `<br/><span class="text-danger" data-resources="${val.id}"><i class="material-icons md-12">drafts</i> DRAFT</span>`
+				}
+
+				if (val.status == 1) {
+					status = `<br/><span class="text-success" data-resources="${val.id}"><i class="material-icons md-12">check</i> Sent</span>`
+				}
+
+
+				if (val.status == 2) {
+					status = `<br/><span class="text-danger" data-resources="${val.id}"><i class="material-icons md-12">check</i> Requesting changes</span>`
+				}
+
+				if (val.status ==3) {
+					status = `<br/><span class="text-danger" data-resources="${val.id}" style="color:#ffb80c;"><i class="material-icons">star</i> Requesting changes</span>`
+				}
+
 				html.innerHTML = `
                                     <a href="#" class="proposal-dialog-btn" data-resources="${val.id}">
                                         <div class="col-3"  data-resources="${val.id}">
@@ -91,12 +114,16 @@ appRoute.on({
                                                     <p data-resources="${val.id}">
                                                         ${val.username}<br/>
                                                         <span class="text-muted">${val.date_created}</span>
+                                                        ${status}
                                                     </p>
                                                 </small>
                                         </div>
                                     </a>
                            `
-                targ.append(html)
+                // insert to DOM
+                targ.forEach((el, index) => {
+                	el.append(html)
+                })
 			})
 
 			window.bms.default.lazyLoad(['./assets/js_native/assets/js/modules/invitation/Util/ProposalModal.js'])
