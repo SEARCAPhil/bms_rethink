@@ -57,16 +57,19 @@ const showAwarded = (remarks = '') => {
 
 const changeSendToReturn = () => {
 	const oldEl = document.querySelector('.send-prop-modal-btn')
-	const newEl = oldEl.cloneNode(false)
 
-	newEl.classList.remove('send-prop-modal-btn')
-	newEl.classList.add('resend-prop-modal-btn')
-	//newEl.addEventListener('click', loadReSendBidding)
+	if (oldEl) {
+		const newEl = oldEl.cloneNode(false)
 
-	newEl.innerHTML = '<i class="material-icons md-18">keyboard_return</i> Request for new quotation '
-	oldEl.replaceWith(newEl)
-	// request new
-	PropUtil.bindRequestNewProposal()
+		newEl.classList.remove('send-prop-modal-btn')
+		newEl.classList.add('resend-prop-modal-btn')
+		//newEl.addEventListener('click', loadReSendBidding)
+
+		newEl.innerHTML = '<i class="material-icons md-18">keyboard_return</i> Request for new quotation '
+		oldEl.replaceWith(newEl)
+		// request new
+		PropUtil.bindRequestNewProposal()
+	}
 }
 
 
@@ -85,99 +88,107 @@ document.querySelectorAll('.proposal-dialog-btn').forEach((val, index) => {
 			PropServ.view({id: e.target.getAttribute('data-resources'), token : window.localStorage.getItem('token')}).then((data) => {
 				const parsedData = JSON.parse(data)
 
+
+
 				if (parsedData[0]) {
 					const json = parsedData[0]
 					const targ = document.querySelector('.prop-specs-section-info')
 
-					let name = document.querySelector('#prop-info-name')
-					let quantity = document.querySelector('.prop-info-quantity')
-					let unit = document.querySelector('.prop-info-unit')
-					let username = document.querySelector('.prop-info-username')
-					let date_created = document.querySelector('.prop-info-date-created')
-					let currency = document.querySelector('#prop-info-currency')
-					let amount = document.querySelector('#prop-info-amount')
-					let discount = document.querySelector('#prop-info-discount')
-					let remarks= document.querySelector('#prop-info-remarks')
-					let usernameInitial = document.querySelector('#prop-info-name-header-section')
+					setTimeout(() => {
 
-					name.textContent = json.name
-					quantity.textContent = json.quantity
-					unit.textContent = json.unit
-					username.textContent = json.username
-					date_created.textContent = json.date_created
-					usernameInitial.textContent = json.username.substr(0,2).toUpperCase()
+						let name = document.querySelector('#prop-info-name')
+						let quantity = document.querySelector('.prop-info-quantity')
+						let unit = document.querySelector('.prop-info-unit')
+						let username = document.querySelector('.prop-info-username')
+						//let date_created = document.querySelector('.prop-info-date-created')
+						let currency = document.querySelector('#prop-info-currency')
+						let amount = document.querySelector('#prop-info-amount')
+						let discount = document.querySelector('#prop-info-discount')
+						let remarks= document.querySelector('#prop-info-remarks')
+						let usernameInitial = document.querySelector('#prop-info-name-header-section')
 
-					currency.textContent = json.currency
-					amount.textContent = json.amount
-					discount.textContent = json.discount
-					remarks.textContent = json.remarks
+						name.textContent = json.name
+						quantity.textContent = json.quantity
+						unit.textContent = json.unit
+						username.textContent = json.username
+						//date_created.textContent = json.date_created
+						usernameInitial.textContent = json.username.substr(0,2).toUpperCase()
 
+						console.log(amount)
+						currency.textContent = json.currency
+						amount.textContent = json.amount
+						discount.textContent = json.discount
+						remarks.textContent = json.remarks
 
-					json.specs.forEach((val, index) => {
-						let html = document.createElement('section')
-						html.classList.add('col-12', 'row')
+						// clear specs section first
+						targ.innerHTML = ''
+						json.specs.forEach((val, index) => {
+							let html = document.createElement('section')
+							html.classList.add('col-12', 'row')
 
-						// show old value
-						if (val.name != val.orig_name || val.value != val.orig_value ) {
+							// show old value
+							if (((val.name != val.orig_name) || (val.value != val.orig_value)) && (val.orig_value)) {
 
-							html.innerHTML = `<div class="col-2">
-					    		<b>${val.name}</b><br/>
-					    		<small class="text-danger">
-					    			${val.orig_name}
-					    		</small>
-					    	</div>
-					    	<div class="col-10">
-					    		<p>
-					    			${val.value}<br/>
+								html.innerHTML = `<div class="col-2">
+						    		<b>${val.name}</b><br/>
 						    		<small class="text-danger">
-						    			${val.orig_value}
+						    			${val.orig_name}
 						    		</small>
-					    		</p>
-					    	</div>`
+						    	</div>
+						    	<div class="col-10">
+						    		<p>
+						    			${val.value}<br/>
+							    		<small class="text-danger">
+							    			${val.orig_value}
+							    		</small>
+						    		</p>
+						    	</div>`
 
-						} else {
-							html.innerHTML = `<div class="col-2">
-					    		<b>${val.name}</b>
-					    	</div>
-					    	<div class="col-10">
-					    		<p>${val.value}</p>
-					    	</div>`
+							} else {
+								html.innerHTML = `<div class="col-2">
+						    		<b>${val.name}</b>
+						    	</div>
+						    	<div class="col-10">
+						    		<p>${val.value}</p>
+						    	</div>`
+							}
+
+							targ.append(html)
+						})
+
+						let propMenu = document.getElementById('prop-info-menu')
+						// status
+						if (json.status == 1 && (!window.bms.default.isCBAAsst())) {
+							
+							showSent()
 						}
 
-						targ.append(html)
-					})
+						if (json.status == 2) {
+							showNeedChanges(json.bidders_remarks)
+						}
 
-					let propMenu = document.getElementById('prop-info-menu')
-					// status
-					if (json.status == 1 && (!window.bms.default.isCBAAsst())) {
-						
-						showSent()
-					}
+						if (json.status == 3) {
+							showAwarded()
+						}
 
-					if (json.status == 2) {
-						showNeedChanges(json.bidders_remarks)
-					}
-
-					if (json.status == 3) {
-						showAwarded()
-					}
-
-					if ((window.bms.default.isCBAAsst() || window.bms.default.isGSU()) && json.status == 1) {
-						showReceived()
-						changeSendToReturn()
-						propMenu.classList.remove('hide')
-					}
+						if ((window.bms.default.isCBAAsst() || window.bms.default.isGSU()) && json.status == 1) {
+							showReceived()
+							changeSendToReturn()
+							propMenu.classList.remove('hide')
+						}
 
 
 
-					setTimeout(() => {
-						const popupInstance = new window.bms.exports.PopupES()
-						// remove
-						PropUtil.bindRemove()
-						// send
-						PropUtil.bindSend()
+						setTimeout(() => {
+							const popupInstance = new window.bms.exports.PopupES()
+							// remove
+							PropUtil.bindRemove()
+							// send
+							PropUtil.bindSend()
 
-					},400)
+						},400)
+
+					},50)
 
 
 				}

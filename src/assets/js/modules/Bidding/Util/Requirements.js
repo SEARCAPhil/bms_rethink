@@ -1,5 +1,6 @@
 import ListService from '../Services/List/List'
 import RequirementsService from '../Services/Requirements'
+import ProposalService from '../../Invitation/Services/Proposal'
 import IndexedDB from '../Util/Storage/Bidding'
 import PopupES from '../../../components/PopupES/PopupES'
 
@@ -8,6 +9,7 @@ export default class {
 		this.XHR = new window.bms.exports.XHR()
 		this.ListServ = new ListService()
 		this.ReqServ = new RequirementsService()
+		this.PropServ = new ProposalService()
 		this.IDB = new IndexedDB()
 	}
 
@@ -100,6 +102,60 @@ export default class {
 			window.bms.default.spinner.hide()
 			
 		}).catch(err => {
+			window.bms.default.spinner.hide()
+		})
+	}
+
+
+
+	saveProposal (e) { 
+		window.bms.default.spinner.show()
+
+		const amount = document.getElementById('proposal-form-amount').value
+		const discount = document.getElementById('proposal-form-discount').value
+		const remarks = document.getElementById('proposal-form-remarks').value
+
+		let original = []
+		let others = []
+
+		document.querySelectorAll('.specs-input-section-orig').forEach((el,index) => {
+			const val = el.querySelector('.specs-input-section-value')
+
+			if(val) {
+				const id = val.getAttribute('data-resources')
+				original.push({id, value: val.value })
+			}
+		})
+
+		document.querySelectorAll('.specs-input-section-others').forEach((el, index) => {
+			const name = el.querySelector('.specs-input-section-name')
+			const val = el.querySelector('.specs-input-section-value')
+
+			if (val && name) {
+				others.push({name: name.value, value: val.value})
+			}
+		})
+
+		let data = {
+			id: window.bms.default.state.bidding.cur.requirements.id,
+			amount,
+			discount,
+			remarks,
+			original,
+			others,
+			token : window.localStorage.getItem('token'),
+			action: 'create',
+		}
+
+		this.PropServ.send(data).then((res) => {
+
+			if (res > 0) {
+				window.location = `#/bids/requirements/${data.id}`
+				document.getElementById('bidding-modal').close()
+			} else {
+				alert('unable to save your proposal. Please try again later')
+			}
+
 			window.bms.default.spinner.hide()
 		})
 	}
@@ -236,6 +292,35 @@ export default class {
 				e.target.id = id
 				btn.el =  e.target
 				btn.addEventListener('click', this.removeRecepients.bind(proto))
+			})
+		}).catch(e=>{})
+	}
+
+
+
+	loadSaveProposal (e) {
+		const URL='pages/bidding/modal/send-proposals.html'
+		const id=1
+		const proto = Object.assign({ __proto__: this.__proto__ }, this)
+
+		return this.XHR.request({method:'GET',url:URL}).then(res=>{
+			let modalTarget=document.getElementById('modal-bidding-body')
+			modalTarget.innerHTML=res
+
+			setTimeout(()=>{
+				window.bms.default.scriptLoader(modalTarget)
+			},50)
+
+			setTimeout(()=>{
+				//remove cancel
+				document.getElementById('modal-dialog-close-button').addEventListener('click',()=>{
+		
+					document.getElementById('bidding-modal').close()
+					
+				})
+
+				let btn = document.getElementById('modal-dialog-send-button')
+				btn.addEventListener('click', this.saveProposal.bind(proto))
 			})
 		}).catch(e=>{})
 	}
@@ -504,6 +589,13 @@ export default class {
 		const proto = Object.assign({ __proto__: this.__proto__ }, this)
 		document.querySelectorAll('.send-bidding-modal-btn').forEach((val, index) => {
 			val.addEventListener('click',this.loadSendProposal.bind(proto))
+		})
+	}
+
+	bindSaveProposal () {
+		const proto = Object.assign({ __proto__: this.__proto__ }, this)
+		document.querySelectorAll('.save-bidding-modal-btn').forEach((val, index) => {
+			val.addEventListener('click',this.loadSaveProposal.bind(proto))
 		})
 	}
 

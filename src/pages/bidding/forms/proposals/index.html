@@ -18,7 +18,7 @@
 		<ul class="nav col-2 float-right">
 
 			<li class="nav-item float-right">
-				<a class="nav-link send-bidding-modal-btn" href="#" data-target="#bidding-modal" data-popup-toggle="open" onclick="event.preventDefault();">
+				<a class="nav-link save-bidding-modal-btn" href="#" data-target="#bidding-modal" data-popup-toggle="open" onclick="event.preventDefault();">
 				 	<i class="material-icons md-18">save</i> Save
 				</a>
 			</li>
@@ -35,16 +35,25 @@
 		<form class="form-horizontal row" name="bidding-request-registration" onsubmit="return false;">
 			<section class="col-md-12">
 				<br/><br/>
-				<h2 class="req-name">HP Pro One800 AIO Update</h2>
+				<h2 class="req-form-name">N/A</h2>
 				<small>
 			    	<p>
 			    		<b>Amount : </b>
 		    			<span class="req-currency">PHP</span>
 		    			<b><span class="req-amount text-danger">
-		    				<input type="text" placeholder="Enter Amount" class="form-control" autofocus="true">
+		    				<input type="text" placeholder="Enter Amount" class="form-control" autofocus="true" id="proposal-form-amount">
 		    			</span></b>
 			    		
 			    	</p>
+
+			    	<p>
+			    		<b>Discount : </b>
+		    			<b><span class="req-amount text-danger">
+		    				<input type="text" placeholder="Enter Amount" class="form-control" autofocus="true" id="proposal-form-discount">
+		    			</span></b>
+			    		
+			    	</p>
+
 			    	<p><b>Quantity : </b> <span class="req-quantity-reg"></span> <span class="req-unit-reg"></span></p>
 
 			    </small><br/>
@@ -69,7 +78,7 @@
 							<span class="text-info">Others 
 								<span class="text-muted">(optional)</span> 
 							</span>
-							<a href="#" onclick="event.preventDefault();">
+							<a href="#" onclick="event.preventDefault();" class="add-other-specs-btn"  id="add-other-specs-btn">
 								<i class="material-icons md-18 text-danger">add_circle</i>
 							</a>
 						</b><br/>
@@ -78,6 +87,8 @@
 						</small>
 
 					</p>
+
+					<div id="specs-other-section"></div>
 
 				</div>
 
@@ -95,7 +106,7 @@
 						</small>
 
 						
-						<textarea class="form-control" rows="10" style="border:1px solid #ccc !important;"></textarea>
+						<textarea class="form-control" rows="10" style="border:1px solid #ccc !important;" id="proposal-form-remarks"></textarea>
 
 					</p>
 

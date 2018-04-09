@@ -69,7 +69,7 @@ export default class {
                              </li>
                         </ul>
                     </div>
-                    <div class="col-9" style="padding-top: 60px;">
+                    <div class="col-9" style="padding-top: 60px;overflow-y:auto;">
                         <div class="col-lg-12" style="height: 70vh;">
                             <p>Your Proposal <i class="material-icons">navigate_next</i> <span class="text-muted">Preview</span>
                             	<span id="file-attachment-main-dialog-cancel-btn-${this.id}" class="float-right text-muted"><u>close (x)</u></span>
