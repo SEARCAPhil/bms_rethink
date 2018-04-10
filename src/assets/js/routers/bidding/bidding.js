@@ -379,7 +379,7 @@ appRoute.on({
 								html.classList.add('nav-item', 'col-12')
 								html.setAttribute('data-resources', val.id)
 								html.style = 'border-bottom:1px solid #ccc;padding-top:5px;padding-bottom: 5px;'
-								html.setAttribute('onclick','event.preventDefault();')
+								//html.setAttribute('onclick','event.preventDefault();')
 								html.id = val.id
 
 								
@@ -401,11 +401,13 @@ appRoute.on({
 								}
 
 								html.innerHTML = `
-				                                    <a href="#" class="proposal-dialog-btn" data-resources="${val.id}">
+													
+				                                    <a href="#" class="proposal-dialog-btn row" data-resources="${val.id}" onclick="event.preventDefault();">
+
 				                                        <div class="col-3"  data-resources="${val.id}">
 				                                            <div class="text-center" data-resources="${val.id}" style="float:left;width:35px;height:35px;border-radius:50%;margin-right:10px;overflow:hidden;background:#42403c;color:#fff;padding-top:5px" id="image-header-section"  data-resources="${val.id}">${val.username.substr(0,2).toUpperCase()}</div>
 				                                        </div>
-				                                        <div class="col"  data-resources="${val.id}">
+				                                        <div class="col-9"  data-resources="${val.id}">
 				                                                <small data-resources="${val.id}">
 				                                                    <p data-resources="${val.id}">
 				                                                        ${val.username}<br/>
@@ -415,11 +417,38 @@ appRoute.on({
 				                                                </small>
 				                                        </div>
 				                                    </a>
+				                                    <div class="row col-12"  data-resources="${val.id}">
+				                                    	<input type="checkbox" name="compare" class="compare-checkbox-list" data-resources="${val.id}"/> &nbsp; <small class="text-muted"> #${val.id}</small>
+				                                    </div>
+
 				                           `
 				                // insert to DOM
 				                el.append(html)
 				               
 							})
+						})
+
+						let checkbox = document.getElementById('compare-checkbox')
+
+						checkbox.addEventListener('click', (e) => {
+							document.querySelectorAll('.compare-checkbox-list').forEach((el, index) => {	
+								e.target.checked ? el.checked = true : el.checked = false
+							})
+						})
+
+						// compare
+						let compareBtn = document.getElementById('compare-btn')
+						
+						compareBtn.addEventListener('click' , () => {
+							// get all selected checkbox
+							let ids = []
+							document.querySelectorAll('.compare-checkbox-list:checked').forEach((el, index) => {
+								const atr = el.getAttribute('data-resources')
+								if (!ids[atr]) ids.push(atr)
+							})
+
+
+							window.open(`http://127.0.0.1/bms_api/src/api/bidding/reports/proposal_comparison.php?id=38&token=6170b5207b92e5a7445ee3f7de7247c4c1f1b8ef&prop=${ids.join(',')}`)
 						})
 
 						window.bms.default.lazyLoad(['./assets/js_native/assets/js/modules/invitation/Util/ProposalModal.js'])
@@ -493,7 +522,7 @@ appRoute.on({
 		const target = document.querySelector('[name="/bids/info/particulars/proposals/form"]')
 		
 
-		ReqUtil.loadProposalForm().then(() => {
+		/*ReqUtil.loadProposalForm().then(() => {
 			const section = document.querySelector('.specs-section-proposal')
 
 			window.bms.default.spinner.hide()
@@ -592,7 +621,7 @@ appRoute.on({
 
 				}
 			})*/
-		}) 
+		//}) 
 
 		// load list if not exists
 		IndexUtil.loadBiddingListSection()

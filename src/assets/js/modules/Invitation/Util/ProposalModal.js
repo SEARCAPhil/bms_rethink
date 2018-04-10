@@ -2,8 +2,10 @@ import ProposalDialog from '../../../components/ProposalDialog/Dialog'
 import ProposalService from '../../../modules/Invitation/Services/Proposal'
 import ProposalUtil from '../../../modules/Invitation/Util/Info'
 
+
 const PropServ = new ProposalService ()
 const PropUtil = new ProposalUtil ()
+
 
 
 const showSent = () => {
@@ -17,15 +19,25 @@ const showSent = () => {
 }
 
 
-const showReceived = () => {
+const showReceived = (id) => {
 	let targ = document.getElementById('prop-info-menu-status')
 
 	targ.innerHTML = `<center style="background:#464a4e;color:#fff;padding:5px;">
 								<p class="col-12">
 									<i class="material-icons">share</i> You have received this proposal. Please review all the details before doing any further actions.
-									<button class="btn btn-sm btn-danger">Award</button>
+
+									<a class="award-prop-modal-btn btn btn-sm btn-danger" data-resources="${id}" data-target="#bidding-requirements-modal" data-popup-toggle="open">
+										<i class="material-icons md-18">card_membership</i> Award
+									</a>
+
 						        </p>
 						    </center>`
+	setTimeout(() => {
+		const popupInstance = new window.bms.exports.PopupES()
+		// award
+		PropUtil.bindAward()
+
+	},400)
 }
 
 
@@ -107,6 +119,8 @@ document.querySelectorAll('.proposal-dialog-btn').forEach((val, index) => {
 						let remarks= document.querySelector('#prop-info-remarks')
 						let usernameInitial = document.querySelector('#prop-info-name-header-section')
 
+						let updateLink = document.querySelectorAll('.proposal-reg-dialog-btn-update')
+
 						name.textContent = json.name
 						quantity.textContent = json.quantity
 						unit.textContent = json.unit
@@ -114,14 +128,20 @@ document.querySelectorAll('.proposal-dialog-btn').forEach((val, index) => {
 						//date_created.textContent = json.date_created
 						usernameInitial.textContent = json.username.substr(0,2).toUpperCase()
 
-						console.log(amount)
+						
 						currency.textContent = json.currency
 						amount.textContent = json.amount
 						discount.textContent = json.discount
 						remarks.textContent = json.remarks
 
+						updateLink.forEach((val, index) => {
+							val.setAttribute('data-resources', json.id)
+						})
+
 						// clear specs section first
 						targ.innerHTML = ''
+
+
 						json.specs.forEach((val, index) => {
 							let html = document.createElement('section')
 							html.classList.add('col-12', 'row')
@@ -129,13 +149,13 @@ document.querySelectorAll('.proposal-dialog-btn').forEach((val, index) => {
 							// show old value
 							if (((val.name != val.orig_name) || (val.value != val.orig_value)) && (val.orig_value)) {
 
-								html.innerHTML = `<div class="col-2">
+								html.innerHTML = `<div class="col-3">
 						    		<b>${val.name}</b><br/>
 						    		<small class="text-danger">
 						    			${val.orig_name}
 						    		</small>
 						    	</div>
-						    	<div class="col-10">
+						    	<div class="col-9">
 						    		<p>
 						    			${val.value}<br/>
 							    		<small class="text-danger">
@@ -145,10 +165,10 @@ document.querySelectorAll('.proposal-dialog-btn').forEach((val, index) => {
 						    	</div>`
 
 							} else {
-								html.innerHTML = `<div class="col-2">
+								html.innerHTML = `<div class="col-3">
 						    		<b>${val.name}</b>
 						    	</div>
-						    	<div class="col-10">
+						    	<div class="col-9">
 						    		<p>${val.value}</p>
 						    	</div>`
 							}
@@ -157,9 +177,17 @@ document.querySelectorAll('.proposal-dialog-btn').forEach((val, index) => {
 						})
 
 						let propMenu = document.getElementById('prop-info-menu')
+						let statusSec= document.getElementById('prop-info-menu-status')
+
+						// clear status
+						statusSec.innerHTML = ''
 						// status
+
+						if (json.status ==0) {
+							propMenu.classList.remove('hide')
+						}
 						if (json.status == 1 && (!window.bms.default.isCBAAsst())) {
-							
+							propMenu.classList.add('hide')
 							showSent()
 						}
 
@@ -168,11 +196,12 @@ document.querySelectorAll('.proposal-dialog-btn').forEach((val, index) => {
 						}
 
 						if (json.status == 3) {
+							propMenu.classList.add('hide')
 							showAwarded()
 						}
 
 						if ((window.bms.default.isCBAAsst() || window.bms.default.isGSU()) && json.status == 1) {
-							showReceived()
+							showReceived(json.id)
 							changeSendToReturn()
 							propMenu.classList.remove('hide')
 						}
@@ -191,7 +220,12 @@ document.querySelectorAll('.proposal-dialog-btn').forEach((val, index) => {
 					},50)
 
 
+					// enable update
+					window.bms.default.lazyLoad(['./assets/js_native/assets/js/modules/invitation/Util/ProposalRegUpdateModal.js'])
+
 				}
+
+
 
 				window.bms.default.spinner.hide()
 			}).catch(err => {

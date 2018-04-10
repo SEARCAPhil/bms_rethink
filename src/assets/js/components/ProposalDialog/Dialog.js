@@ -96,7 +96,7 @@ export default class {
 
 
 									<li class="nav-item">
-										<a class="nav-link nav-link" href="#/bids/forms/registration/32/steps/1/update">
+										<a class="nav-link nav-link proposal-reg-dialog-btn-update" href="#" onclick="event.preventDefault();">
 											Update
 										</a>
 									</li>

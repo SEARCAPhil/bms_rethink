@@ -150,7 +150,65 @@ export default class {
 		this.PropServ.send(data).then((res) => {
 
 			if (res > 0) {
-				window.location = `#/bids/requirements/${data.id}`
+				window.location.reload()
+				document.getElementById('bidding-modal').close()
+			} else {
+				alert('unable to save your proposal. Please try again later')
+			}
+
+			window.bms.default.spinner.hide()
+		})
+	}
+
+
+
+	updateProposal (e) { 
+		console.log(e)
+		window.bms.default.spinner.show()
+		const id = e.target.id
+		const amount = document.getElementById('proposal-form-amount').value
+		const discount = document.getElementById('proposal-form-discount').value
+		const remarks = document.getElementById('proposal-form-remarks').value
+
+		let original = []
+		let others = []
+
+		document.querySelectorAll('.specs-input-section-orig').forEach((el,index) => {
+			const val = el.querySelector('.specs-input-section-value')
+
+			if(val) {
+				const id = val.getAttribute('data-resources')
+				original.push({id, value: val.value })
+			}
+		})
+
+		document.querySelectorAll('.specs-input-section-others').forEach((el, index) => {
+			const name = el.querySelector('.specs-input-section-name')
+			const val = el.querySelector('.specs-input-section-value')
+
+			if (val && name) {
+				const id = val.getAttribute('data-resources')
+				others.push({id, name: name.value, value: val.value})
+			}
+
+		})
+
+		let data = {
+			id,
+			amount,
+			discount,
+			remarks,
+			original,
+			others,
+			otherSpecsToBeRemoved: window.bms.default.state.proposals.cur.specsToRemove,
+			token : window.localStorage.getItem('token'),
+			action: 'update',
+		}
+
+		this.PropServ.send(data).then((res) => {
+
+			if (res > 0) {
+				window.location.reload()
 				document.getElementById('bidding-modal').close()
 			} else {
 				alert('unable to save your proposal. Please try again later')
@@ -299,7 +357,7 @@ export default class {
 
 
 	loadSaveProposal (e) {
-		const URL='pages/bidding/modal/send-proposals.html'
+		const URL='pages/bidding/modal/save-proposals.html'
 		const id=1
 		const proto = Object.assign({ __proto__: this.__proto__ }, this)
 
@@ -321,6 +379,35 @@ export default class {
 
 				let btn = document.getElementById('modal-dialog-send-button')
 				btn.addEventListener('click', this.saveProposal.bind(proto))
+			})
+		}).catch(e=>{})
+	}
+
+
+	loadUpdateProposal (e) {
+		const URL='pages/bidding/modal/save-proposals.html'
+		const id = e.target.getAttribute('data-resources')
+		const proto = Object.assign({ __proto__: this.__proto__ }, this)
+
+		return this.XHR.request({method:'GET',url:URL}).then(res=>{
+			let modalTarget=document.getElementById('modal-bidding-body')
+			modalTarget.innerHTML=res
+
+			setTimeout(()=>{
+				window.bms.default.scriptLoader(modalTarget)
+			},50)
+
+			setTimeout(()=>{
+				//remove cancel
+				document.getElementById('modal-dialog-close-button').addEventListener('click',()=>{
+		
+					document.getElementById('bidding-modal').close()
+					
+				})
+
+				let btn = document.getElementById('modal-dialog-send-button')
+				btn.id = id
+				btn.addEventListener('click', this.updateProposal.bind(proto))
 			})
 		}).catch(e=>{})
 	}
@@ -574,7 +661,7 @@ export default class {
 
 	bindShowProposalSection (id) {
 		// link to form
-		document.querySelector('.requirements-proposal-link').href = `#/bids/requirements/${id}/proposal/form`
+		/*document.querySelector('.requirements-proposal-link').href = `#/bids/requirements/${id}/proposal/form`
 		// handler
 		document.querySelectorAll('.proposal-requirement-dialog-btn').forEach((el, index) => {
 			el.addEventListener('click', () => {
@@ -582,7 +669,7 @@ export default class {
 				document.querySelector('[name="/bids/info/particulars/proposals"]').classList.toggle('hide')
 
 			})
-		})
+		})*/
 	}
 
 	bindSendProposal () {
@@ -596,6 +683,13 @@ export default class {
 		const proto = Object.assign({ __proto__: this.__proto__ }, this)
 		document.querySelectorAll('.save-bidding-modal-btn').forEach((val, index) => {
 			val.addEventListener('click',this.loadSaveProposal.bind(proto))
+		})
+	}
+
+	bindUpdateProposal () {
+		const proto = Object.assign({ __proto__: this.__proto__ }, this)
+		document.querySelectorAll('.save-bidding-modal-btn').forEach((val, index) => {
+			val.addEventListener('click',this.loadUpdateProposal.bind(proto))
 		})
 	}
 
