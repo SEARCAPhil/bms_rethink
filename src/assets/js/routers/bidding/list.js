@@ -143,6 +143,52 @@ const loadApproveBidding = (e) => {
 	}).catch(e=>{})
 }
 
+
+const loadDisapproveBidding = (e) => {
+	const URL='pages/bidding/modal/disapprove.html'
+	const id=e.target.id
+
+	return XHR.request({method:'GET',url:URL}).then(res=>{
+		let modalTarget=document.getElementById('modal-bidding-body')
+		modalTarget.innerHTML=res
+
+		setTimeout(()=>{
+			window.bms.default.scriptLoader(modalTarget)
+			//remove cancel
+			document.getElementById('modal-dialog-close-button').addEventListener('click',()=>{
+				document.getElementById('bidding-modal').close()
+			})
+
+			let btn = document.getElementById('modal-dialog-send-button')
+			btn.el =  e.target
+			btn.addEventListener('click', sendBidding)
+		},50)
+	}).catch(e=>{})
+}
+
+
+const loadFailedBidding = (e) => {
+	const URL='pages/bidding/modal/failed.html'
+	const id=e.target.id
+
+	return XHR.request({method:'GET',url:URL}).then(res=>{
+		let modalTarget=document.getElementById('modal-bidding-body')
+		modalTarget.innerHTML=res
+
+		setTimeout(()=>{
+			window.bms.default.scriptLoader(modalTarget)
+			//remove cancel
+			document.getElementById('modal-dialog-close-button').addEventListener('click',()=>{
+				document.getElementById('bidding-modal').close()
+			})
+
+			let btn = document.getElementById('modal-dialog-send-button')
+			btn.el =  e.target
+			btn.addEventListener('click', sendBidding)
+		},50)
+	}).catch(e=>{})
+}
+
 const loadCloseBidding = (e) => {
 	const URL='pages/bidding/modal/close.html'
 	const id=e.target.id
@@ -178,11 +224,14 @@ const showBiddingReqSent = () => {
 
 const showBiddingReqApprove = () => {
 	const targ = document.getElementById('detail-info-menu-status')
+
 	targ.innerHTML = `<center class="row" style="background:#495057;color:#fff;padding:5px;">
 		<p class="col-12">
-        	This Bidding request Is for approval. Make sure you review this request before making any further actions. <span id="approve-btn-section"></span> 
+        	This Bidding request Is for approval. Make sure you review this request before making any further actions.  <span id="disapprove-btn-section"></span> <span id="approve-btn-section"></span> 
         </p>
     </center>`
+
+
     const btn = document.createElement('button')
     btn.classList.add('btn', 'btn-danger', 'btn-sm', 'approve-btn')
     btn.setAttribute('data-target', '#bidding-modal')
@@ -190,9 +239,22 @@ const showBiddingReqApprove = () => {
 
     btn.textContent = 'Approve'
     btn.status = 3
-
     btn.addEventListener('click', loadApproveBidding)
+
+    const btn2 = document.createElement('button')
+    btn2.classList.add('btn', 'btn-dark', 'btn-sm', 'disapprove-btn')
+    btn2.setAttribute('data-target', '#bidding-modal')
+    btn2.setAttribute('data-popup-toggle', 'open')
+
+    btn2.textContent = 'Disapprove'
+    btn2.status = 6
+
+    btn2.addEventListener('click', loadDisapproveBidding)
+
+
+
     targ.querySelector('#approve-btn-section').append(btn)
+    targ.querySelector('#disapprove-btn-section').append(btn2)
     // enable popup
 	PopupInstance = new PopupES()
 }
@@ -202,7 +264,7 @@ const showBiddingApprove = () => {
 	const targ = document.getElementById('detail-info-menu-status')
 	targ.innerHTML = `<center class="row" style="background:#dee2e6;color:#6c757d;padding:5px;">
 		<p class="col-12">
-        	This Bidding request was approved. You may close this bidding request now <span id="close-btn-section"></span>
+        	This Bidding request was approved. You may close this bidding request now <span id="failed-btn-section"></span> <span id="close-btn-section"></span>
         </p>
     </center>`
 
@@ -213,9 +275,19 @@ const showBiddingApprove = () => {
 
     btn.textContent = 'Close'
     btn.status = 5
-
     btn.addEventListener('click', loadCloseBidding)
+
+    const btn2 = document.createElement('button')
+    btn2.classList.add('btn', 'btn-dark', 'btn-sm', 'approve-btn')
+    btn2.setAttribute('data-target', '#bidding-modal')
+    btn2.setAttribute('data-popup-toggle', 'open')
+
+    btn2.textContent = 'Failed'
+    btn2.status = 7
+
+    btn2.addEventListener('click', loadFailedBidding)
     targ.querySelector('#close-btn-section').append(btn)
+    targ.querySelector('#failed-btn-section').append(btn2)
 
 }
 
@@ -233,6 +305,28 @@ const showBiddingClosed = () => {
 	targ.innerHTML = `<center class="row" style="background:#0c5460;color:#fff;padding:5px;">
 		<p class="col-12">
         	This Bidding request is already closed. <i class="material-icons">lock</i>
+        </p>
+    </center>`
+}
+
+
+
+const showBiddingFailed = () => {
+	const targ = document.getElementById('detail-info-menu-status')
+	targ.innerHTML = `<center class="row" style="background:#dc3545;color:#fff;padding:5px;">
+		<p class="col-12">
+        	This bidding request has been closed due to failure of bidding. Fore more info. please contact the Administrator<i class="material-icons">lock</i>
+        </p>
+    </center>`
+}
+
+
+
+const showBiddingDisapproved = () => {
+	const targ = document.getElementById('detail-info-menu-status')
+	targ.innerHTML = `<center class="row" style="background:#dc3545;color:#fff;padding:5px;">
+		<p class="col-12">
+        	This Bidding has been disapproved! This bidding request is now closed <i class="material-icons">lock</i>
         </p>
     </center>`
 }
@@ -325,6 +419,26 @@ const changeBiddingInfo = (e) => {
 		document.getElementById('detail-info-menu').innerHTML = ''
 
 	}
+
+
+	// disapproved
+	if (details.status == 6) {
+		showBiddingDisapproved()
+		// prevent any changes
+		document.getElementById('detail-info-menu').innerHTML = ''
+
+	}
+
+
+	// failed
+	if (details.status == 6) {
+		showBiddingFailed()
+		// prevent any changes
+		document.getElementById('detail-info-menu').innerHTML = ''
+
+	}
+
+	
 
 
 	// info
@@ -518,12 +632,14 @@ appRoute.on({
 		window.bms.default.spinner.show()
 		listUtil.lists({token : window.localStorage.getItem('token')})
 		hideListFilter()
+		window.bms.default.activeMenu('bids-menu-list-all')
 	},
 	'/bids/drafts': () => {
 		// listUtil.listsFromLocal({filter: 'drafts'})
 		window.bms.default.spinner.show()
 		listUtil.lists({filter: 'drafts', token : window.localStorage.getItem('token')})
 		hideListFilter()
+		window.bms.default.activeMenu('bids-menu-list-drafts')
 	},
 	'/bids/:id/info/': (params) => {
 		window.bms.default.spinner.show()

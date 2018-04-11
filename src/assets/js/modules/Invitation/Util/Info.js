@@ -240,14 +240,20 @@ export default class {
 
 	bindRemove () {
 		const proto = Object.assign({ __proto__: this.__proto__ }, this)
-		let ob = document.querySelector('.remove-prop-modal-btn')
-		if (ob) ob.addEventListener('click',this.loadRemove.bind(proto))
+		let ob = document.querySelector('.remove-prop-modal-btn:not(.event-binded)')
+		if (ob) {
+			ob.classList.add('event-binded')
+			ob.addEventListener('click',this.loadRemove.bind(proto))
+		} 
 	}
 
 	bindSend () {
 		const proto = Object.assign({ __proto__: this.__proto__ }, this)
-		let ob = document.querySelector('.send-prop-modal-btn')
-		if (ob) ob.addEventListener('click',this.loadSend.bind(proto))
+		let ob = document.querySelector('.send-prop-modal-btn:not(.event-binded)')
+		if (ob) {
+			ob.classList.add('event-binded')
+			ob.addEventListener('click',this.loadSend.bind(proto))
+		} 
 	}
 
 	bindRequestNewProposal () {

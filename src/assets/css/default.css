@@ -57,6 +57,7 @@ summary{
 }
 .main-menu li.active{
     background: rgb(255,184,12);
+    color: #f0f0f0;
 }
 
 .main-menu li.deactivated{

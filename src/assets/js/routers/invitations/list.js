@@ -38,6 +38,34 @@ const changeInvInfo = () => {
 
 }
 
+const showWon = () => {
+	let targ = document.getElementById('detail-req-menu-status')
+	targ.parentNode.style.background = 'rgb(255, 169, 40)'
+	targ.parentNode.style.color = '#fff'
+	targ.parentNode.innerHTML = `<section class="col-lg-11 offset-lg-1">
+						<ul class="nav">
+							<li class="nav-item">
+								
+							</li>
+							<li class="nav-item">
+								<a class="nav-link row">
+									<i class="material-icons md-18">star</i> Congratulations! Your won on this bidding
+								</a>
+							</li>
+
+
+							<li class="nav-item">
+								<a class="nav-link proposal-requirement-dialog-btn">
+									
+								</a>
+							</li>
+
+						</ul>
+					</section>`
+}
+
+
+
 // hide menu dropdown
 const hideListFilter = () => {
 	document.getElementById('list-menu-drop').classList.remove('open')
@@ -97,19 +125,21 @@ appRoute.on({
 
 
 				if (val.status == 2) {
-					status = `<br/><span class="text-danger" data-resources="${val.id}"><i class="material-icons md-12">check</i> Requesting changes</span>`
+					status = `<br/><span class="text-danger" data-resources="${val.id}"><i class="material-icons md-12">warning</i> Requesting changes</span>`
 				}
 
 				if (val.status ==3) {
-					status = `<br/><span class="text-danger" data-resources="${val.id}" style="color:#ffb80c;"><i class="material-icons">star</i> Requesting changes</span>`
+					status = `<br/><span data-resources="${val.id}" style="color:#ffb80c;"><i class="material-icons">star</i> AWARDED</span>`
+					// show won status
+					showWon()
 				}
 
 				html.innerHTML = `
-                                    <a href="#" class="proposal-dialog-btn" data-resources="${val.id}">
+                                    <a href="#" class="proposal-dialog-btn row" data-resources="${val.id}">
                                         <div class="col-3"  data-resources="${val.id}">
                                             <div class="text-center" data-resources="${val.id}" style="float:left;width:35px;height:35px;border-radius:50%;margin-right:10px;overflow:hidden;background:#42403c;color:#fff;padding-top:5px" id="image-header-section"  data-resources="${val.id}">${val.username.substr(0,2).toUpperCase()}</div>
                                         </div>
-                                        <div class="col"  data-resources="${val.id}">
+                                        <div class="col-7"  data-resources="${val.id}">
                                                 <small data-resources="${val.id}">
                                                     <p data-resources="${val.id}">
                                                         ${val.username}<br/>

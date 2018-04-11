@@ -681,7 +681,8 @@ export default class {
 
 	bindSaveProposal () {
 		const proto = Object.assign({ __proto__: this.__proto__ }, this)
-		document.querySelectorAll('.save-bidding-modal-btn').forEach((val, index) => {
+		document.querySelectorAll('.save-bidding-modal-btn:not(.event-binded)').forEach((val, index) => {
+			val.classList.add('event-binded')
 			val.addEventListener('click',this.loadSaveProposal.bind(proto))
 		})
 	}

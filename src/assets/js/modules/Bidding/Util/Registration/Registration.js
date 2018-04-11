@@ -93,6 +93,24 @@ export default class {
 	}
 
 
+	loadRegistrationItemSuccess () {
+		return new Promise((resolve,reject)=>{
+			XHR.request({url:'./pages/bidding/forms/registration/success.html',method:'GET'}).then((data)=>{
+				var el=document.querySelector('div[name="/bids/forms/registration/3"]')
+
+				el.innerHTML=data
+
+				setTimeout(()=>{
+					window.bms.default.scriptLoader(el)
+				},10)
+
+				resolve(data)
+			})
+		}) 
+		
+	}
+
+
 	loadRegistrationParticulars () {
 		return new Promise((resolve,reject)=>{
 			XHR.request({url:'./pages/bidding/forms/registration/particulars.html',method:'GET'}).then((data)=>{

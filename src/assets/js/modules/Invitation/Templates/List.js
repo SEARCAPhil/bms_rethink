@@ -23,6 +23,7 @@ export default class{
 	            <small>
 	           		<p style="font-size:smaller;" class="text-muted">
 	           			Deadline : ${this.properties.deadline} <br/>
+	           			Reference # : ${this.properties.id}
 	           		</p>
 	            </small>
 	        </a>`

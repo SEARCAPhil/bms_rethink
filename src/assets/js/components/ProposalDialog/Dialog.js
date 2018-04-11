@@ -62,7 +62,7 @@ export default class {
                              				<div class="text-center" style="float:left;width:35px;height:35px;border-radius:50%;margin-left:30%;overflow:hidden;background:#42403c;color:#fff;padding-top:5px" id="prop-info-name-header-section">N/A</div>
                              			</div>
                          				<div class="col-12 text-center">
-                         					<small><p class="prop-info-username">admin@amti.com<br><span class="text-muted prop-info-date-created">N/A</span></p></small>
+                         					<small><p class="prop-info-username">N/A<br><span class="text-muted prop-info-date-created">N/A</span></p></small>
                          				</div>
                              	</li>
                              	
@@ -83,7 +83,7 @@ export default class {
 									<li class="nav-item row">
 										<a class="nav-link send-prop-modal-btn" href="#" data-target="#bidding-modal" data-popup-toggle="open" data-resources="${window.bms.default.state.proposals.cur.id}"><i class="material-icons md-18">send</i> Send </a>
 									</li>
-									<li class="nav-item file-attachment-dialog-btn">
+									<li class="nav-item file-prop-attachment-dialog-btn">
 										<a class="nav-link">
 											<i class="material-icons md-18">attach_file</i> Attach
 										</a>
@@ -104,7 +104,8 @@ export default class {
 								</ul>
 							</small>
 							<hr/>
-                            <div class="recently-attached-section" id="recently-attached-section-${this.id}">
+							<div class="recently-attached-prop-section" id="recently-attached-prop-section-${this.id}"></div>
+                            <div>
                             	<br/>
                                 <section class="col-12">
 									<h2 class="text-danger"><span id="prop-info-currency">N/A</span>: <span id="prop-info-amount">00.00</span></h2
@@ -116,9 +117,8 @@ export default class {
 								    	<span class="header-circle"><i class="material-icons md-24">add_shopping_cart</i></span>
 								    	Specification
 								    </h5><br>	
-									<div class="prop-specs-section-info d-flex row">
-										
-									</div>
+								    <div class="col-12 attachment-prop-pool-section" id="attachment-prop-pool-section"></div>
+									<div class="prop-specs-section-info d-flex row"></div>
 								</section>
 								<br/><br/>
 								<section class="col-12">

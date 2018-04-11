@@ -141,7 +141,7 @@ export default class {
 				    	
 						<br/>
 						<!--<p class="deadline"><b>Deadline</b> : <span id="bidding-deadline-info">N/A</span></p>-->
-						<p class="bidding-excemption text-danger"><b>Requesting for Bidding Excemption ?</b>  <span id="bidding-excemption-info">N/A</span></p>
+						<p class="bidding-excemption text-danger"><b>Requesting for Bidding Exemption ?</b>  <span id="bidding-excemption-info">N/A</span></p>
 						<p>
 							<b>Sent to : </b> <span id="bidding-collaborators"></span>
 						</p>
@@ -235,11 +235,19 @@ export default class {
 
 				<small class="col-lg-11 offset-lg-1 for-open">
 					<ul class="nav">
+
 						<li class="nav-item">
-							<a href="#" onclick="event.preventDefault()" class="nav-link send-requirements-modal-btn hide" data-target="#bidding-requirements-modal" data-popup-toggle="open">
-							 	<i class="material-icons md-18">insert_invitation</i> Send Invitation
+							<a class="nav-link back-to-bidding-btn">
+								<i class="material-icons md-18">keyboard_return</i> Back
 							</a>
 						</li>
+
+						<li class="nav-item">
+							<a href="#" onclick="event.preventDefault()" class="nav-link send-requirements-modal-btn hide" data-target="#bidding-requirements-modal" data-popup-toggle="open">
+							 	<i class="material-icons md-18">insert_invitation</i> Invite
+							</a>
+						</li>
+
 						<li class="nav-item">
 							<a class="nav-link file-attachment-requirement-dialog-btn">
 								<i class="material-icons md-18">attach_file</i> Attach
@@ -280,6 +288,7 @@ export default class {
 			<section class="col-lg-10 offset-lg-1">
 	    		<h2 class="req-name"></h2>
 			    <small>
+			    	<p><b>Reference # : </b> <span class="req-reference-number"></span></p>
 			    	<p>
 			    		<b>Amount : </b>
 		    			<span class="req-currency">PHP</span>

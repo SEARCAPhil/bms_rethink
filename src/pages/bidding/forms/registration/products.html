@@ -5,6 +5,8 @@
 
 		<section class="row col-md-12"><br/><br/><br/>
 			<h3><span class="header-circle"><i class="material-icons md-24">add_shopping_cart</i></span> Products / Services</h3>
+		</section>
+		<section class="col-md-12">
 			<p>Please complete all the fields below. Make sure that you checked all information before submitting. </p>
 		</section>
 
@@ -39,20 +41,46 @@
 					<div class="source_of_fund_section">
 						<span class="row  funds-input-section">
 							<div class="col-lg-3 col-md-3">
-						 		<select class="form-control" name="fund-type">
-						 			<option>Select Fund</option>
-						 			<option value="opf">Operating funds</option>
-						 			<option value="otf">Other funds</option>
-						 		</select>
+
+						 		<select class="form-control" id="fund-type" name="fund-type">
+									<option value="OpF">Select source of fund</option>
+									<option value="OpF">Operating Funds</option>
+									<option value="OtF" id="otf">Other Funds</option>
+									<option value="OP">Obligations Payable</option>
+									<option value="SF">Special Funds</option>
+									<option value="OpFs">Operating Funds(Scholar)</option>
+									<option value="OtFs">Other Funds(Scholar)</option>
+								</select>
 						    </div>
 						    <div class="col-lg-4 col-md-4">
 						    	<input type="text" class="form-control" name="cost-center" placeholder="Cost Center / Project Name">
 						    </div>
 						    <div class="col-lg-4 col-md-4">
-						    	<select class="form-control" name="line-item">
-						 			<option value="opf">Select Line Item</option>
-						 			<option value="otf">Other funds</option>
-						 		</select>
+
+						 		<select class="form-control" id="line_item" name="line-item">
+									<option value="">Select Line Item</option>
+									<option value="Capital Expenditures">Capital Expenditures</option>
+									<option value="Repairs and Maintenance">Repairs and Maintenance</option>
+									<option value="Seminars and Conferences">Seminars and Conferences</option>
+									<option value="Supplies">Supplies</option>
+									<option value="Communication">Communication</option>
+									<option value="Utilities">Utilities</option>
+									<option value="Fund Raising">Fund Raising</option>
+									<option value="Public Relations">Public Relations</option>
+									<option value="Representation">Representation</option>
+									<option value="Professional Services">Professional Services</option>
+									<option value="Publications">Publications</option>
+									<option value="Insurance">Insurance</option>
+									<option value="Grants and Awards">Grants and Awards</option>
+									<option value="Other Services">Other Services</option>
+									<option value="Staff Development">Staff Development</option>
+									<option value="Miscellaneous">Miscellaneous</option>
+									<option value="Scholarships">Scholarships</option>
+									<option value="Contingency">Contingency</option>
+									<option value="Travel">Travel</option>
+									<option value="Salaries and Wages">Salaries and Wages</option>
+									<option value="Staff Benefits">Staff Benefits</option>
+								</select>
 						    </div>
 						    <div class="col-lg-1 col-md-1">
 						 		<div class="btn-circle add-fund-btn"><i class="material-icons">add</i></div>

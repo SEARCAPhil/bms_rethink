@@ -131,10 +131,11 @@ export default class {
 				<section class="col-lg-10 offset-lg-1">
 		    		<h2 class="req-name"></h2>
 				    <small>
-				    	
+				    	<p><b>Reference #: </b> <span class="req-reference-number">Not Set</span></p>
 				    	<p class="text-danger"><b>Quantity : </b> <span class="req-quantity"></span> <span class="req-unit"></span></p>
 
 				    	<p><b>Deadline: </b> <span class="req-deadline">Not Set</span></p>
+
 
 				    	<p>
 				    		<!--attachments section -->

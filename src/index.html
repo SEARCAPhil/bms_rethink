@@ -208,17 +208,13 @@
                 
 
 
-                <span class="navbar-brand hamburger d-none d-lg-block hidden" style="
-                    color: #d8d8d8;
-                    font-size: 14px;
-                ">SEARCA
-                </span>
+
 
 
                  <span class="navbar-brand hamburger d-none d-lg-block hidden" style="
                     color: #d8d8d8;
                     font-size: 14px;
-                "> | Bidding Management System
+                ">  Bidding Management System
                 </span>
 
 
@@ -313,7 +309,7 @@
 
 
                          <li data-status="bids" 
-                            class="main-menu-list-item bids-menu-list" 
+                            class="main-menu-list-item bids-menu-list hide" 
                             id="bids-menu-list"
                             data-menu="main-menu-list-item" 
                             data-role="none" onclick="window.location.hash='#/bids/all'">
@@ -322,18 +318,19 @@
                         </li>
 
 
-                        <li
-                            class="main-menu-list-item bids-menu-list sub" 
+                        <li data-status="all" 
+                            class="main-menu-list-item bids-menu-list sub hide" 
                             
                             data-menu="main-menu-list-item" 
+                            id="bids-menu-list-all"
                             data-role="none" onclick="window.location.hash='#/bids/all'">
                                 <i class="material-icons md-18" style="width: 24px;">inbox</i> 
                                 All
                         </li>
 
-                        <li
-                            class="main-menu-list-item bids-menu-list sub" 
-                            
+                        <li data-status="drafts" 
+                            class="main-menu-list-item bids-menu-list sub hide" 
+                            id="bids-menu-list-drafts"
                             data-menu="main-menu-list-item" 
                             data-role="none" onclick="window.location.hash='#/bids/drafts'">
                                 <i class="material-icons md-18" style="width: 24px;">drafts</i> 
@@ -342,8 +339,8 @@
 
 
                          <li
-                            class="main-menu-list-item bids-menu-list sub" 
-                            
+                            class="main-menu-list-item bids-menu-list sub hide" 
+                             id="bids-menu-list-new"
                             data-menu="main-menu-list-item" 
                             data-role="none" onclick="window.location.hash='#/bids/forms/registration/steps/1'">
                                 <i class="material-icons md-18" style="width: 24px;">add_circle</i> 
@@ -360,7 +357,7 @@
                                 <br/>Invitations
                         </li>-->
                         <li data-status="inv" 
-                            class="main-menu-list-item inv-menu-list" 
+                            class="main-menu-list-item inv-menu-list hide" 
                             id="inv-menu-list"
                             data-menu="main-menu-list-item" 
                             data-role="none" onclick="window.location.hash='#/inv/all'">
@@ -391,10 +388,9 @@
                 <menu class="col col-md-12">
                     <ul class="list-unstyled main-menu">
                         <li data-role="none">
-                            <a href="pages/authentication/o365.html" 
+                            <a href="#/logout" 
                                 style="color:rgb(255,184,12);" 
                                 data-ajax="false" 
-                                onclick="signout();" 
                                 class="ui-link">Sign-out <i class="material-icons" style="width: 24px;">keyboard_backspace</i> 
                             </a>
                         </li>
@@ -451,25 +447,12 @@
                     <div class="col-12">
                         <p>
                             <b>Proposals</b>
-                            <span class="badge badge-info">0</span>
+                            <span class="badge badge-info req-proposal-count">0</span>
                             <hr/>
                         </p>
                     </div>
 
                     <div class="col-12">
-
-                        <center>
-                            <p class="text-muted">
-                                <i class="material-icons md-48">insert_drive_file</i><br/>
-                                Submit a good propasal and stand above all other companies now!<br/>
-                                <br/>
-                                
-                            </p>
-                        </center>
-
-
-                        <hr/><br/>
-
                         <section id="proposal-list-section" class="proposal-list-section">
 
                             <menu class="row col-12">

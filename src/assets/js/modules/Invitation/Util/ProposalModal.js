@@ -221,7 +221,8 @@ document.querySelectorAll('.proposal-dialog-btn').forEach((val, index) => {
 
 
 					// enable update
-					window.bms.default.lazyLoad(['./assets/js_native/assets/js/modules/invitation/Util/ProposalRegUpdateModal.js'])
+					window.bms.default.lazyLoad(['./assets/js_native/assets/js/modules/Invitation/Util/ProposalRegUpdateModal.js'])
+					window.bms.default.lazyLoad(['./assets/js_native/assets/js/modules/Invitation/Util/AttachmentsModal.js'])
 
 				}
 

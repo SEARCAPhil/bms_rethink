@@ -116,11 +116,13 @@ const loadRequirementsDetails = (json) => {
 	let attTarg = document.getElementById('attacments-requirements-info-section')
 
 	document.querySelector('.req-name').textContent = json.name
+	document.querySelector('.req-reference-number').textContent = json.id
 	document.querySelector('.req-currency').textContent = json.budget_currency
 	document.querySelector('.req-amount').textContent = json.budget_amount
 	document.querySelector('.req-quantity').textContent = json.quantity
 	document.querySelector('.req-unit').textContent = json.unit
 	document.querySelector('.req-deadline').innerHTML = `<span class="text-danger">${json.deadline != '0000-00-00' ? json.deadline : 'Not Set'}</span>`
+	document.querySelector('.back-to-bidding-btn').href = `#/bids/${json.bidding_id}/info`
 
 	json.specs.forEach((val, index) => {
 		targ.innerHTML += `
@@ -371,7 +373,12 @@ appRoute.on({
 
 					setTimeout(() => {
 
+						// number of proposals
+						document.querySelector('.req-proposal-count').textContent = json.length
+
 						targ.forEach((el, index) => {
+
+							
 
 							json.forEach((val, index) => {
 								let html = document.createElement('li')
@@ -418,7 +425,7 @@ appRoute.on({
 				                                        </div>
 				                                    </a>
 				                                    <div class="row col-12"  data-resources="${val.id}">
-				                                    	<input type="checkbox" name="compare" class="compare-checkbox-list" data-resources="${val.id}"/> &nbsp; <small class="text-muted"> #${val.id}</small>
+				                                    	<input type="checkbox" name="compare" class="compare-checkbox-list ${val.status}" data-resources="${val.id}"/> &nbsp; <small class="text-muted"> #${val.id}</small>
 				                                    </div>
 
 				                           `
@@ -431,8 +438,11 @@ appRoute.on({
 						let checkbox = document.getElementById('compare-checkbox')
 
 						checkbox.addEventListener('click', (e) => {
-							document.querySelectorAll('.compare-checkbox-list').forEach((el, index) => {	
-								e.target.checked ? el.checked = true : el.checked = false
+							document.querySelectorAll('.compare-checkbox-list').forEach((el, index) => {
+								// exclude proposals that need changes
+								if (!el.classList.contains('2')) {	
+									e.target.checked ? el.checked = true : el.checked = false
+								}
 							})
 						})
 
@@ -442,13 +452,13 @@ appRoute.on({
 						compareBtn.addEventListener('click' , () => {
 							// get all selected checkbox
 							let ids = []
-							document.querySelectorAll('.compare-checkbox-list:checked').forEach((el, index) => {
+							document.querySelectorAll(`.compare-checkbox-list:checked`).forEach((el, index) => {
 								const atr = el.getAttribute('data-resources')
 								if (!ids[atr]) ids.push(atr)
 							})
 
 
-							window.open(`http://127.0.0.1/bms_api/src/api/bidding/reports/proposal_comparison.php?id=38&token=6170b5207b92e5a7445ee3f7de7247c4c1f1b8ef&prop=${ids.join(',')}`)
+							window.open(`${window.bms.config.network}/bidding/reports/proposal_comparison.php?id=${params.id}&token=6170b5207b92e5a7445ee3f7de7247c4c1f1b8ef&prop=${ids.join(',')}`)
 						})
 
 						window.bms.default.lazyLoad(['./assets/js_native/assets/js/modules/invitation/Util/ProposalModal.js'])

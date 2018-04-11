@@ -134,8 +134,12 @@ document.querySelectorAll('.proposal-reg-dialog-btn').forEach((val, index) => {
 						})
 
 						// bind other specs
-						const otherSpecsBtn = document.querySelector('.add-other-specs-btn')
-						otherSpecsBtn.addEventListener('click', addOtherSpecsField)
+						const otherSpecsBtn = document.querySelector('.add-other-specs-btn:not(.event-binded)')
+						if (otherSpecsBtn) {
+							otherSpecsBtn.classList.add('event-binded')
+							otherSpecsBtn.addEventListener('click', addOtherSpecsField)
+						}
+						
 
 						setTimeout(() => {
 							// enable popup

@@ -35,6 +35,35 @@ const loadCSS = (href) => {
 	document.body.append(css)
 }
 
+
+const showDeadline = () => {
+	let targ = document.getElementById('detail-req-menu-status')
+	targ.parentNode.style.background = '#dc3545'
+	targ.parentNode.style.color = '#fff'
+	targ.parentNode.innerHTML = `<section class="col-lg-11 offset-lg-1">
+						<ul class="nav">
+							<li class="nav-item">
+								
+							</li>
+							<li class="nav-item">
+								<a class="nav-link row">
+									<i class="material-icons md-18">lock</i> Sorry ! Bidding for this item is already closed.
+								</a>
+							</li>
+
+
+							<li class="nav-item">
+								<a class="nav-link proposal-requirement-dialog-btn">
+									
+								</a>
+							</li>
+
+						</ul>
+					</section>`
+}
+
+
+
 const appendReqAttachments = (data) => {
 	const attSec = document.getElementById('attachments-requirements-info-section')
 	attSec.innerHTML += `	<div class="col-lg-3 col-md-3" style="padding:5px;background:#505050;color:#fff;border:1px solid #fefefe;">
@@ -58,12 +87,29 @@ const appendReqAttachments = (data) => {
 
 const loadRequirementsDetails = (json) => { 
 	let targ = document.querySelector('.specs-section-info')
+	let addBtn = document.querySelector('.proposal-reg-dialog-btn')
 	let attTarg = document.getElementById('attacments-requirements-info-section')
+
+	const date = new Date()
+	const curMonth = (date.getMonth()+1) < 10 ? `0${date.getMonth()+1}` : (date.getMonth()+1)
+	const currentDate = `${date.getFullYear()}-${curMonth}-${date.getDate()}`
 
 	document.querySelector('.req-name').textContent = json.name
 	document.querySelector('.req-quantity').textContent = json.quantity
 	document.querySelector('.req-unit').textContent = json.unit
+	document.querySelector('.req-reference-number').textContent = json.id
 	document.querySelector('.req-deadline').innerHTML = `<span class="text-danger">${json.deadline != '0000-00-00' ? json.deadline : 'Not Set'}</span>`
+
+	// show deadline status
+	if(currentDate > json.deadline) {
+		showDeadline()
+		// hide btn
+		if (addBtn) addBtn.classList.add('hide')
+	} else {
+		// remove add btn
+		if (addBtn) addBtn.classList.remove('hide')
+	}
+
 
 	json.specs.forEach((val, index) => {
 		targ.innerHTML += `
@@ -95,7 +141,21 @@ const loadRequirementsDetails = (json) => {
 
 }
 
+const activateInvItem = (params) => {
+	let targ = document.querySelectorAll(`.list-inv-section .list`)
+	targ.forEach((el, index) => { 
 
+		if (el) {
+			if (el.getAttribute('data-list') == params.id) {
+				targ.classList.add('active')
+			} else {
+				targ.classList.remove('active')
+			}
+		}
+
+		
+	})
+}
 
 appRoute.on({
  	'/*': () => {
@@ -127,7 +187,19 @@ appRoute.on({
 			})
 		})
 
-		IndexUtil.loadListSection()
+		// load list only once
+		if (!document.querySelector('.list')) {
+			IndexUtil.loadListSection()
+			
+			setTimeout(() => {
+				activateInvItem(params)
+			},2000)
+			
+			
+		} else {
+			activateInvItem(params)
+		}
+		
 		loadCSS('assets/css/modules/suppliers/list.css')
 		loadCSS('assets/css/fileicon.css')
 	},

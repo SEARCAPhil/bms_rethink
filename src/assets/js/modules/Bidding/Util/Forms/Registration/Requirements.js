@@ -108,7 +108,7 @@ const registerReq = (e) => {
 			let res = JSON.parse(json)
 
 			if (res.data) {
-				window.location.hash = `#/bids/requirements/${res.data}`
+				window.location.hash = `/bids/forms/registration/${data.id}/steps/4/${res.data}`
 				window.bms.default.spinner.hide()
 				document.getElementById('bid-form-status').innerHTML = ''
 				return 0

@@ -2,7 +2,7 @@ export default class {
 	constructor (opt = {}) {
 		this.class = opt.class
 		this.id = opt.id
-		this.targ = document.querySelector('.bids-router-section')
+		this.targ = document.querySelector('body')
 		this.XHR = new window.bms.exports.XHR()
 	}
 	dialog () {
@@ -22,6 +22,7 @@ export default class {
 					z-index: 2;
 					opacity: 0;
 					visibility:hidden;
+					top:0;
 				}
 				.file-attachment-main-dialog .body{
 					transition:all 0.2s ease-in-out;

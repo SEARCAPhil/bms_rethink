@@ -185,7 +185,7 @@ const loadHome=()=>{
 	}) 
 }
 
-const activeMenu=(id)=>{
+window.bms.default.activeMenu=(id)=>{
 	document.querySelectorAll('.main-menu-list-item').forEach((el,index)=>{
 		if(el.getAttribute('id')==id){
 			el.classList.add('active')
@@ -195,6 +195,23 @@ const activeMenu=(id)=>{
 	})
 }
 
+const showStandardMenu = () => {
+	document.querySelectorAll('.inv-menu-list').forEach((el, index) => {
+		el.classList.remove('hide')
+	})
+}
+
+const showExtendedMenu = () => {
+	document.querySelectorAll('.bids-menu-list').forEach((el, index) => {
+		el.classList.remove('hide')
+	})
+
+	document.querySelectorAll('.inv-menu-list').forEach((el, index) => {
+		el.remove()
+	})
+
+}
+
 const loadCommonSettings = () => {
 	setTimeout(() => {
 		document.getElementById('givenName-header-section').innerHTML = window.localStorage.getItem('givenName')
@@ -202,7 +219,15 @@ const loadCommonSettings = () => {
 
 		window.bms.default.dropdown('device-dropdown')	
 
-	},2000)
+		// show menu per role
+		if (window.bms.default.isGSU() || window.bms.default.isCBAAsst()) {
+			showExtendedMenu()
+			
+		} else {
+			showStandardMenu()
+		}
+
+	},1000)
 
 }
 
@@ -221,7 +246,7 @@ appRoute.on({
 		window.location.hash = '/home'
 	},
 	'/home':(e)=>{ 
-		activeMenu('home_menu')
+		window.bms.default.activeMenu('home_menu')
 		loadHome().then(()=>{
 			loadCommonSettings()
 			hideInit()
@@ -231,7 +256,7 @@ appRoute.on({
 		})
 	},
 	'/suppliers/*':()=>{
-		activeMenu('suppliers_main_menu')
+		window.bms.default.activeMenu('suppliers_main_menu')
 		hideInit()
 		loadCommonSettings()
 		//changeDisplay(['.nav-top-menu'],'block')
@@ -243,7 +268,7 @@ appRoute.on({
 
 	},
 	'/bids/*':()=>{
-		activeMenu('bids-menu-list')
+		window.bms.default.activeMenu('bids-menu-list')
 		hideInit()
 		loadCommonSettings()
 
@@ -255,14 +280,25 @@ appRoute.on({
 
 	,
 	'/inv/*':()=>{
-		activeMenu('inv-menu-list')
+		window.bms.default.activeMenu('inv-menu-list')
 		hideInit()
 		loadCommonSettings()
 		
 		changeDisplay(['.suppliers-router-section','.nav-top-menu','.bids-router-section'],'none')
 		document.querySelector('.inv-router-section').classList.remove('hide')
 		window.bms.default.lazyLoad(['./assets/js_native/assets/js/routers/invitation.js'],{once:true})
-	}
+	},
+	'/logout':()=>{
+		window.document.body.innerHTML = '<center><br/>loging out . . .</center>'
+
+		if (window.bms.default.isSupplier()) {
+			window.localStorage.clear()
+			window.location = 'pages/authentication/'
+		} else {
+			window.localStorage.clear()
+			window.location = 'pages/authentication/o365.html'
+		}
+	},
 
 }).resolve()
 

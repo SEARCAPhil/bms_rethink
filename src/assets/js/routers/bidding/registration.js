@@ -170,7 +170,9 @@ appRoute.on({
 
 		window.bms.default.changeDisplay(['div[name="/bids/forms/registration"]','div[name="/bids/forms/registration/1"]'],'block')
 		window.bms.default.changeDisplay(['div[name="/bids/initial"]','div[name="/bids/forms/registration/2"]','div[name="/bids/forms/registration/3"]'],'none')
-			
+		
+		window.bms.default.activeMenu('bids-menu-list-new')
+
 		//toggle list sidebar for medium and small devices
 		let lg = window.getComputedStyle(document.querySelector('.hidden-on-lg')).display
 
@@ -470,5 +472,26 @@ appRoute.on({
 			})
 		})*/
 
+	},
+	'/bids/forms/registration/:parent/steps/4/:id': (params) => {
+		window.bms.default.state.bidding.cur.requirements.id = params.id
+		window.bms.default.changeDisplay(['div[name="/bids/forms/registration"]','div[name="/bids/forms/registration/3"]'],'block')
+		window.bms.default.changeDisplay(['div[name="/bids/initial"]','div[name="/bids/forms/registration/1"]','div[name="/bids/forms/registration/4"]','div[name="/bids/forms/registration/2"]'],'none')
+			
+		//toggle list sidebar for medium and small devices
+		let lg = window.getComputedStyle(document.querySelector('.hidden-on-lg')).display
+
+		if(lg=='block'){
+			window.bms.default.changeDisplay(['div[name="/bids"]'],'none')	
+		}
+
+		RegUtil.loadRegistrationItemSuccess().then(() => {
+			let menu = document.querySelector('.success-menu')
+			menu.innerHTML = `
+				<br/>	
+				<a href="#/bids/forms/registration/${params.parent}/steps/3" class="btn btn-dark btn-md add-supplier-button">Add more</a>&nbsp;
+				<a href="#/bids/requirements/${params.id}" class="btn btn-success btn-md add-supplier-button">Done</a>
+			`
+		})
 	}
 }).resolve()
