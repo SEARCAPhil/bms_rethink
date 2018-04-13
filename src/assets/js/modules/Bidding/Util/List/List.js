@@ -22,6 +22,72 @@ export default class {
 		`
 	}
 
+	showEmptySearch () {
+		const targ = document.querySelector('.list-search-bidding-section')
+		targ.innerHTML = `
+			<center class="col text-muted empty-list-message-section" style="margin-top:50px;">
+				<i class="material-icons md-48">search</i>
+				<p>
+			        <small>No matches found. <br/>Please try another keyword</small>
+			    </p>
+									
+			</center>
+		`
+	}
+
+	search (e) {
+		const targ = document.querySelector('.list-search-bidding-section')
+
+		let opt = {
+			token : window.localStorage.getItem('token'),
+			param: e.target.value,
+			page: 1, 
+		}
+
+		if (e.target.value.length > 0) {
+
+			// hide list and show search results
+			document.querySelector('.list-bidding-section').classList.add('hide')
+			targ.classList.remove('hide')
+
+			// clear area
+			if (opt.page === 1) targ.innerHTML = ' <div class="col text-muted text-center">searching . . . </div>'
+
+			// search
+			clearTimeout(this.timeout)
+			this.timeout = setTimeout(() => {
+				// search
+				this.ListServ.search(opt).then(data => {
+					const json = JSON.parse(data)
+					// clear area
+					targ.innerHTML = ' '
+					for (let x = 0; x < json.length; x++) {
+						// str to int
+						json[x].id = parseInt(json[x].id)
+						json[x].status = parseInt(json[x].status)
+
+						targ.appendChild(this.List.render({id:json[x].id, name:json[x].name, description:json[x].description, profile_name:json[x].profile_name, date_created:json[x].date_created, class:`col-xs-12 col-md-12 col-sm-12 list ${window.bms.default.state.bidding.cur.bid.id==json[x].id ? 'active' : ''}`}))
+					}
+
+					// empty result
+					if (opt.page === 1 && json.length === 0) {
+						this.showEmptySearch()		
+					} 
+
+				}).catch(err => {
+					this.showEmptySearch()	
+				})
+
+			},500)
+
+		} else {
+			// revert to normal
+			document.querySelector('.list-bidding-section').classList.remove('hide')
+			document.querySelector('.list-search-bidding-section').classList.add('hide')
+		}
+
+	}
+
 	lists (opt = {}) {
 		this.ListServ.lists(opt).then(data => {
 			const json=JSON.parse(data)
@@ -49,6 +115,14 @@ export default class {
 
 				if (json.length < 1 && opt.page ===1) {
 					this.showEmpty (targ)	
+				}
+
+				// allow searching
+				const searchBtn = document.querySelector('#search')
+				if (searchBtn) {
+					this.timeout = 0
+					const proto = Object.assign({ __proto__: this.__proto__ }, this)
+					searchBtn.addEventListener('keyup', this.search.bind(proto))
 				}
 				
 			},100)

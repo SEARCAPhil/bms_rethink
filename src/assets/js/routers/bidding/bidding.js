@@ -86,25 +86,50 @@ const appendReqFunds = (data) => {
 
 const appendAwardees = (data) => {
 	let recSection = document.querySelector('#awardees-section-list')
-
-	recSection.innerHTML += `	<details class="col-12 row" open>
+	let html =	`<details class="col-12 row" open>
 				    			<summary class="text-success"> <i class="material-icons md-18">card_membership</i> ${data.name}   </summary>
-				    			<br/>
+				    			<br/>`
 				    			
-				    				
-				    				<p class="col-12">
+		if (data.proposal_id) {				
+			html += `<p class="col-12">
+				    					<a href="#" data-target="#bidding-requirements-modal" data-popup-toggle="open" class="btn btn-danger btn-sm pr-awardees-modal" data-resources="${data.id}"> 
+				    						<i class="material-icons md-18">receipt</i> Submit PR</a> &emsp;
+				    				</p>`
+		} else {
+			html += `<p class="col-12">
 				    					<a href="#" data-target="#bidding-requirements-modal" data-popup-toggle="open" class="text-danger remove-awardees-modal" data-resources="${data.id}"> 
 				    						<i class="material-icons md-18">delete_forever</i> Remove</a> &emsp;
-				    				</p>
+				    				</p>`
+		}
 
-				    				<p class="col-12 text-muted">${data.remarks}</p>
+	html += `		<p class="col-12 text-muted">${data.remarks}</p>
 				    			<br/>
 				    		</details>`
+	recSection.innerHTML = html
 }
 
 const showAwardedStatus = () => {
 	let targ = document.getElementById('detail-req-menu-status')
-	targ.innerHTML = `<center style="background:#464a4e;color:#fff;padding:5px;">
+	targ.innerHTML = `
+	<style>
+		.congrats-banner {
+   			display: block;
+			position:relative;
+			z-index:0;
+		}
+		.congrats-banner:after {
+			content: '';
+			position: absolute;
+			top: 0;
+			right: 0;
+			bottom:0;
+			left: 0;
+			background:url('assets/img/confetti.png') repeat center;
+			z-index:-1;
+			opacity:0.15;
+		}
+	</style>
+	<center style="background:#464a4e;color:#fff;padding:5px;" class="congrats-banner">
 						<p class="col-12">
 							<i class="material-icons" style="color:#ffb80c;">star</i> This has been awarded. Please review before making any changes.
 				        </p>
@@ -150,9 +175,9 @@ const loadRequirementsDetails = (json) => {
 	})
 
 
-	// recepients
+	// awardees
 	json.awardees.forEach((val, index) => {
-		appendAwardees({name : val.name, id: val.id, remarks: val.remarks })
+		appendAwardees({name : val.name, id: val.id, remarks: val.remarks, proposal_id: val.proposal_id })
 	})
 
 	// awrded banner
@@ -182,13 +207,16 @@ const loadRequirementsDetails = (json) => {
 			// deadline
 			ReqUtil.bindSetDeadline()
 
+
 	},10)
 
-	console.log(json)
+	
 
 		// show all menus ONLY for OPEN Bidding Request
 	setTimeout(() => {
+
 		window.bms.default.showAllMenuForOpen (json.bidding_status == 0) 
+
 		// for CBA Asst /APPROVE
 		window.bms.default.showAllMenuForOpen (json.bidding_status == 1 && window.bms.default.isCBAAsst()) 
 
@@ -196,14 +224,17 @@ const loadRequirementsDetails = (json) => {
 		// must change to send to resend
 		window.bms.default.showAllMenuForOpen (json.bidding_status == 2)
 
-		// GSU
-		window.bms.default.showAllMenuForOpen (json.bidding_status == 3 && window.bms.default.isGSU()) 
+		// if Approved
+		window.bms.default.showAllMenuForOpen (json.bidding_status == 3) 
 
 		// supplier
 		if (window.bms.default.isGSU() && json.bidding_status == 3) {
 			document.querySelector('.send-requirements-modal-btn').classList.remove('hide')
-			document.querySelector('.award-requirements-modal-btn').classList.remove('hide')
 			document.querySelector('.set-deadline-modal-btn').classList.remove('hide')
+		}
+
+		if (window.bms.default.isCBAAsst() && json.bidding_status == 3) {
+			document.querySelector('.award-requirements-modal-btn').classList.remove('hide')
 		}
 
 			
@@ -307,6 +338,7 @@ appRoute.on({
 				InfoUtil.bindRemoveBidding()
 				InfoUtil.bindSendBidding()
 				InfoUtil.bindSetStatus()
+				InfoUtil.bindChangeSignatories()
 			},600)
 		})
 
@@ -339,6 +371,7 @@ appRoute.on({
 		// show particulars
 		IndexUtil.loadBiddingParticulars(params.id)
 		IndexUtil.loadBiddingListSection()
+
 
 		// load external css
 		loadCSS('assets/css/modules/suppliers/list.css')

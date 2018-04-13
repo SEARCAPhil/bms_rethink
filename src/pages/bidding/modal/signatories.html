@@ -1,0 +1,67 @@
+<style type="text/css">
+	#bidding-modal .content {
+		min-width: 400px;
+		width : 30%;
+		left:35%;
+
+	}
+	.deadline-modal-section{
+		padding: 20px;
+	}
+
+	.deadline-modal-section input{
+		border: 1px solid #ccc !important;
+		background: #f9f9f9 !important;
+	}
+
+
+</style><section class="deadline-modal-section">
+	<main>
+		<h3>Change Signatories</h3>
+		<small><p class="text-muted">Please review the original bidding request bidding report before doing any changes.</p></small>
+		<hr/>
+
+		<p><b>Certified By</b></p>
+		<small><p class="text-danger">Leave blank to use the default value</p></small>
+
+		<p><input type="text" class="form-control" placeholder="Name (default)" id="certified" list="name"/></p>
+		<p><input type="text" class="form-control" placeholder="position (default)" id="certified_position" list="position"/></p><br/>
+
+
+		<p><b>Recommended By</b></p>
+		<small><p class="text-danger">Leave blank to use the default value</p></small>
+
+		<p><input type="text" class="form-control" placeholder="Name (default" id="recommending" list="name"/></p>
+		<p><input type="text" class="form-control" placeholder="position (default)" id="recommending_position" list="position"/></p><br/>
+
+
+
+		<p><b>Approved By</b></p>
+		<small><p class="text-danger">Leave blank to use the default value</p></small>
+
+		<p><input type="text" class="form-control" placeholder="name (default)" id="approved" list="name"/></p>
+		<p><input type="text" class="form-control" placeholder="position (default)" id="approving_position" list="position"/></p><br/>
+
+
+
+		<datalist id="name">
+		  <option value="Adoracion T. Robles">
+		  <option value="Gil C. Saguiguit Jr.">
+		</datalist>
+
+
+		<datalist id="position">
+			<option value="Chair, CBA">
+			<option value="Director">
+		 	<option value="Unit Head, Management Services and Executive Coordinator, Office of the Director">
+		 	<option value="Vice Chair, CBA">	
+
+		</datalist>
+
+
+		<br/>
+
+		<button class="btn btn-danger" id="modal-dialog-send-button">SAVE</button> 
+		<button class="btn btn-secondary" id="modal-dialog-close-button">CANCEL</button>
+	</main>
+</section>

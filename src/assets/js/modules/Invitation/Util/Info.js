@@ -79,7 +79,7 @@ export default class {
 
 		let data = {
 			id,
-			token : window.localStorage.getItem('token'),
+			token: window.localStorage.getItem('token'),
 			remarks: document.getElementById('award-remarks').value ,
 			action: 'award',
 		}
@@ -89,6 +89,31 @@ export default class {
 
 			if( parseInt(res) > 0){
 				window.location.reload()
+			}
+
+			window.bms.default.spinner.hide()
+			
+		}).catch(err => {
+			window.bms.default.spinner.hide()
+		})
+	}
+
+	setReferenceNo (e) {
+		window.bms.default.spinner.show()
+		let data = {
+			id: window.bms.default.state.proposals.cur.id,
+			token: window.localStorage.getItem('token'),
+			ref: document.getElementById('form-ref-no').value,
+			action: 'create',
+		}
+
+		this.PropServ.reference(data).then((json) => {
+			let res = JSON.parse(json)
+
+			if( parseInt(res) > 0){
+				window.location.reload()
+			} else {
+				alert('Unable to set PR/PO number. Please try again later')
 			}
 
 			window.bms.default.spinner.hide()
@@ -235,6 +260,34 @@ export default class {
 
 	}
 
+	loadSetRefNo (e) {
+		const URL='pages/bidding/modal/set-reference.html'
+		const id=e.target.id
+		const proto = Object.assign({ __proto__: this.__proto__ }, this)
+
+		return this.XHR.request({method:'GET',url:URL}).then(res=>{
+			let modalTarget=document.getElementById('modal-bidding-requirements-body')
+			modalTarget.innerHTML=res
+
+			setTimeout(()=>{
+				window.bms.default.scriptLoader(modalTarget)
+			},50)
+
+			setTimeout(()=>{
+				//remove cancel
+				document.getElementById('modal-dialog-close-button').addEventListener('click',()=>{
+		
+					document.getElementById('bidding-requirements-modal').close()
+					
+				})
+
+				let btn = document.getElementById('modal-dialog-send-button')
+				btn.el =  e.target
+				btn.addEventListener('click', this.setReferenceNo.bind(proto))
+			})
+		}).catch(e=>{})
+	}
+
 
 
 
@@ -269,6 +322,16 @@ export default class {
 			val.addEventListener('click',this.loadAwardRequirements.bind(proto))
 		})
 	}
+
+
+	bindSetReferenceNo () {
+		const proto = Object.assign({ __proto__: this.__proto__ }, this)
+		document.querySelectorAll('.proposal-ref-dialog-btn').forEach((val, index) => {
+			val.addEventListener('click',this.loadSetRefNo.bind(proto))
+		})
+	}
+
+
 
 
 

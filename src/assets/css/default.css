@@ -134,6 +134,21 @@ summary{
   color: #009688;
 }
 
+/* Demonstrate a "mostly customized" scrollbar
+ * (won't be visible otherwise if width/height is specified) */
+[name="/inv"]::-webkit-scrollbar, [name="/bids"]::-webkit-scrollbar {
+  width: 5px;
+  height: 8px;
+  background-color: #fff; /* or add it to the track */
+}
+/* Add a thumb */
+[name="/inv"]::-webkit-scrollbar-thumb, [name="/bids"]::-webkit-scrollbar-thumb {
+    background: #fff; 
+}
+[name="/inv"]:hover::-webkit-scrollbar-thumb, [name="/bids"]:hover::-webkit-scrollbar-thumb {
+  background:#818182;
+}
+
 /*Popup close button*/
 dialog > .content > a {
 

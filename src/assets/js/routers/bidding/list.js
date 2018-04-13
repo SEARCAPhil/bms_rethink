@@ -291,6 +291,17 @@ const showBiddingApprove = () => {
 
 }
 
+
+const showBiddingApproveReadOnly = () => {
+	const targ = document.getElementById('detail-info-menu-status')
+	targ.innerHTML = `<center class="row" style="background:#495057;color:#e6e6e6;padding:5px;">
+		<p class="col-12">
+        	This Bidding request was approved. You may now invite suppliers to bid on this request
+        </p>
+    </center>`
+
+}
+
 const showBiddingReqReturned = () => {
 	const targ = document.getElementById('detail-info-menu-status')
 	targ.innerHTML = `<center class="row" style="background:#0c5460;color:#fff;padding:5px;">
@@ -398,17 +409,28 @@ const changeBiddingInfo = (e) => {
 	if (details.status == 3  && window.bms.default.isCBAAsst()) {
 		showBiddingApprove()
 		changeSendToResend()
-		// prevent any changes
-		document.getElementById('detail-info-menu').innerHTML = ''
+		// change menu
+		document.querySelector('#detail-info-menu ul.for-open').classList.remove('for-open')
+		document.querySelector('.remove-bidding-modal-btn').remove()
+		document.querySelector('.update-bidding-modal-btn').remove()
+
+
 
 	}
 
 	// for GSU
 	// enale all commands
 	if (details.status == 3  && window.bms.default.isGSU()) {
-		showBiddingApprove()
-		changeSendToResend()
-		window.bms.default.toggleOpenClasses(['.for-open'], 'block')
+		showBiddingApproveReadOnly()
+		// changeSendToResend()
+		//window.bms.default.toggleOpenClasses(['.for-open'], 'block')
+		// prevent any changes
+		//document.getElementById('detail-info-menu').innerHTML = ''
+		// disable other menus
+		document.querySelector('#detail-info-menu >ul.for-open').classList.remove('for-open')
+		document.querySelector('.send-bidding-modal-btn').remove()
+		document.querySelector('.remove-bidding-modal-btn').remove()
+		document.querySelector('.update-bidding-modal-btn').remove()
 
 	}
 
@@ -504,7 +526,7 @@ const changeBiddingInfo = (e) => {
 		window.bms.default.showAllMenuForOpen (details.status == 2) 
 		
 		// GSU
-		window.bms.default.showAllMenuForOpen (details.status == 3 && window.bms.default.isGSU()) 	
+		//window.bms.default.showAllMenuForOpen (details.status == 3 && window.bms.default.isCBAAsst()) 	
 
 	},1000)
 

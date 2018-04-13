@@ -114,6 +114,45 @@ export default class {
 		})
 	}
 
+	setSignatories (e) {
+		window.bms.default.spinner.show()
+		// values
+		const certified = document.querySelector('input#certified').value
+		const certified_position = document.querySelector('input#certified_position').value
+		const recommended = document.querySelector('input#recommending').value
+		const recommended_position = document.querySelector('input#recommending_position').value
+		const approved = document.querySelector('input#approved').value
+		const approving_position = document.querySelector('input#approving_position').value
+
+		let data = {
+			certified,
+			certified_position,
+			recommended,
+			recommended_position,
+			approved,
+			approving_position,
+			id: window.bms.default.state.bidding.cur.bid.id,
+		}
+
+		this.ListServ.signatories(data).then((json) => {
+			let res = JSON.parse(json)
+
+			if(res){
+				document.getElementById('bidding-modal').close()
+			} else {
+				alert('Unable to process request. Please try again later.')
+			}
+
+			window.bms.default.spinner.hide()
+			
+
+		}).catch((err) => {
+			window.bms.default.spinner.hide()
+			// document.getElementById('bidding-modal').close()
+			alert('Unable to process request. Please try again later.')
+		})
+	}
+
 	loadRemoveBidding (e) {
 		const URL='pages/suppliers/modal/remove.html'
 		const id=e.target.id
@@ -191,6 +230,32 @@ export default class {
 	}
 
 
+
+	loadSetSignatories (e) {
+		const URL='pages/bidding/modal/signatories.html'
+		const id=e.target.id
+		const proto = Object.assign({ __proto__: this.__proto__ }, this)
+
+		return this.XHR.request({method:'GET',url:URL}).then(res=>{
+			let modalTarget=document.getElementById('modal-bidding-body')
+			modalTarget.innerHTML=res
+
+			setTimeout(()=>{
+				window.bms.default.scriptLoader(modalTarget)
+				//remove cancel
+				document.getElementById('modal-dialog-close-button').addEventListener('click',()=>{
+					document.getElementById('bidding-modal').close()
+				})
+
+				let btn = document.getElementById('modal-dialog-send-button')
+				btn.el =  e.target
+				btn.resources = e.target.getAttribute('data-resources')
+				btn.addEventListener('click', this.setSignatories.bind(proto))
+			},50)
+		}).catch(e=>{})
+	}
+
+
 	bindRemoveBidding () {
 		const proto = Object.assign({ __proto__: this.__proto__ }, this)
 		document.querySelector('.remove-bidding-modal-btn').addEventListener('click',this.loadRemoveBidding.bind(proto))
@@ -199,7 +264,8 @@ export default class {
 
 	bindSendBidding () {
 		const proto = Object.assign({ __proto__: this.__proto__ }, this)
-		document.querySelector('.send-bidding-modal-btn').addEventListener('click',this.loadSendBidding.bind(proto))
+		const el = document.querySelector('.send-bidding-modal-btn')
+		if (el) el.addEventListener('click',this.loadSendBidding.bind(proto))
 	}
 
 	bindSetStatus () {
@@ -207,6 +273,14 @@ export default class {
 		const el = document.querySelectorAll('.set-bidding-modal-btn')
 		el.forEach((els, index) => {
 			els.addEventListener('click',this.loadSetStatus.bind(proto))
+		})
+	}
+
+	bindChangeSignatories () {
+		const proto = Object.assign({ __proto__: this.__proto__ }, this)
+		const el = document.querySelectorAll('.signatories-bidding-modal-btn')
+		el.forEach((els, index) => {
+			els.addEventListener('click',this.loadSetSignatories.bind(proto))
 		})
 	}
 

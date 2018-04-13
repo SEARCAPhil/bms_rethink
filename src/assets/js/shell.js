@@ -254,6 +254,10 @@ appRoute.on({
 			changeDisplay(['div[name="/home"]'],'block')
 			document.querySelector('.suppliers-router-section').classList.remove('hide')
 		})
+
+		if (!window.localStorage.getItem('role')) {
+			window.location.hash = '#/logout'
+		}
 	},
 	'/suppliers/*':()=>{
 		window.bms.default.activeMenu('suppliers_main_menu')

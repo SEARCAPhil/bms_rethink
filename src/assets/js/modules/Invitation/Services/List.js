@@ -21,6 +21,18 @@ export default class{
 	view(opt = {}){
 		return XHR.request({method:'GET',url:`${NetConf.get()}/bidding/invitations/?id=${opt.id}&token=${opt.token}`})	
 	}
+
+	search(options={}){
+		let opt=options||{}
+		opt.page=opt.page||1
+
+		const url=`${NetConf.get()}/bidding/invitations/search.php?param=${opt.param}&${opt.page}&token=${opt.token}`
+		//require exports.js
+		const XHR=new window.bms.exports.XHR()
+
+		return XHR.request({method:'GET',url:url})
+
+	}
 	
 	status(opt = {}){
 		var url=`${NetConf.get()}/bidding/status.php`

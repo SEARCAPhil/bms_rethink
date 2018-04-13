@@ -1,10 +1,12 @@
 import ProposalDialog from '../../../components/ProposalDialog/Dialog'
 import ProposalService from '../../../modules/Invitation/Services/Proposal'
 import ProposalUtil from '../../../modules/Invitation/Util/Info'
+import { Attachments } from '../../../modules/Invitation/Util/Attachments'
 
 
 const PropServ = new ProposalService ()
 const PropUtil = new ProposalUtil ()
+const AttUtil = new Attachments()
 
 
 
@@ -84,6 +86,12 @@ const changeSendToReturn = () => {
 	}
 }
 
+// remove all remove btn in attahments
+const disableRemoveAttLink = () => {
+	document.querySelectorAll('.remove-prop-attachments-modal').forEach((el, index) => {
+		el.parentNode.remove()
+	})
+}
 
 const dial= new ProposalDialog({id: 'bidding'})
 document.querySelectorAll('.proposal-dialog-btn').forEach((val, index) => {
@@ -120,11 +128,15 @@ document.querySelectorAll('.proposal-dialog-btn').forEach((val, index) => {
 						let usernameInitial = document.querySelector('#prop-info-name-header-section')
 
 						let updateLink = document.querySelectorAll('.proposal-reg-dialog-btn-update')
+						let attachmentSec = document.getElementById('attachment-prop-pool-section')
+
+						
 
 						name.textContent = json.name
 						quantity.textContent = json.quantity
 						unit.textContent = json.unit
 						username.textContent = json.username
+
 						//date_created.textContent = json.date_created
 						usernameInitial.textContent = json.username.substr(0,2).toUpperCase()
 
@@ -140,6 +152,7 @@ document.querySelectorAll('.proposal-dialog-btn').forEach((val, index) => {
 
 						// clear specs section first
 						targ.innerHTML = ''
+						attachmentSec.innerHTML = ''
 
 
 						json.specs.forEach((val, index) => {
@@ -176,6 +189,10 @@ document.querySelectorAll('.proposal-dialog-btn').forEach((val, index) => {
 							targ.append(html)
 						})
 
+						json.attachments.forEach((val, index) => {
+							AttUtil.appendAttachments(val);
+						})
+
 						let propMenu = document.getElementById('prop-info-menu')
 						let statusSec= document.getElementById('prop-info-menu-status')
 
@@ -188,6 +205,7 @@ document.querySelectorAll('.proposal-dialog-btn').forEach((val, index) => {
 						}
 						if (json.status == 1 && (!window.bms.default.isCBAAsst())) {
 							propMenu.classList.add('hide')
+							disableRemoveAttLink()
 							showSent()
 						}
 
@@ -197,25 +215,38 @@ document.querySelectorAll('.proposal-dialog-btn').forEach((val, index) => {
 
 						if (json.status == 3) {
 							propMenu.classList.add('hide')
+							disableRemoveAttLink()
 							showAwarded()
+
+							
 						}
 
-						if ((window.bms.default.isCBAAsst() || window.bms.default.isGSU()) && json.status == 1) {
+						if (window.bms.default.isCBAAsst() && json.status == 1) {
 							showReceived(json.id)
 							changeSendToReturn()
 							propMenu.classList.remove('hide')
+							disableRemoveAttLink()
 						}
 
 
 
 						setTimeout(() => {
 							const popupInstance = new window.bms.exports.PopupES()
+							// dropdown
+							window.bms.default.dropdown('device-dropdown')	
 							// remove
 							PropUtil.bindRemove()
 							// send
 							PropUtil.bindSend()
+							// attachments
+							AttUtil.bindRemoveAttachments()
+							// PR/PO
+							PropUtil.bindSetReferenceNo()
 
 						},400)
+
+						// more settings
+				
 
 					},50)
 

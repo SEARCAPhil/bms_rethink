@@ -57,7 +57,7 @@ export default class {
 
 
 						<li class="nav-item">
-							<a class="nav-link nav-link" href="#/bids/forms/registration/${data.id}/steps/1/update">
+							<a class="nav-link nav-link update-bidding-modal-btn" href="#/bids/forms/registration/${data.id}/steps/1/update">
 								Update
 							</a>
 						</li>
@@ -129,9 +129,26 @@ export default class {
 					</small>
 		    		<!--<h3 id="bidding-name"></h3>-->
 		    		<h3>Bidding Request <span id="bidding-number-info"></span> </h3>
-		    		<a href="${window.bms.config.network}/bidding/reports/bidding_request.php?id=${data.id}" target="_blank" class="btn btn-default btn-sm" style="border:1px solid #009688;">
-						<i class="material-icons md-18">print</i> PRINT
-					</a>
+
+		    		<div class="btn-group btn-group-md" role="group">
+						<a href="${window.bms.config.network}/bidding/reports/bidding_request.php?id=${data.id}" target="_blank" class="btn btn-default btn-sm" style="border:1px solid #009688;">
+							<i class="material-icons md-18">print</i> PRINT
+						</a>
+					 	<button type="button" class="btn btn-default device-dropdown for-open" style="border:1px solid #009688;background:#e9ecef;" data-device-dropdown="print-menu-drop" onclick="event.preventDefault();">
+					 		<i class="material-icons md-18">expand_more</i>
+					 		<div class="dropdown-section float-right" id="print-menu-drop" style="right:0px;">
+								<ul class="list-group list-group-flush text-left">
+									<li class="list-group-item">
+										<span class="menuList allNav">
+											<i class="material-icons md-18 text-muted">contacts</i>
+											<a class="signatories-bidding-modal-btn" data-target="#bidding-modal" data-popup-toggle="open">Signatories</a>
+										</span>
+									</li>
+								</ul>
+							</div>
+					 	</button>
+					</div>
+		    		
 					<br/>
 		    		<!--<p class="text-muted">
 		    			<span id="bidding-description-info"></span>
@@ -260,11 +277,11 @@ export default class {
 							</a>
 						</li>
 
-						<li class="nav-item">
+						<!--<li class="nav-item">
 							<a class="nav-link proposal-requirement-dialog-btn">
 								<i class="material-icons md-18">receipt</i> Proposals
 							</a>
-						</li>
+						</li>-->
 
 						<li class="nav-item">
 							<a href="#" class="nav-link text-danger set-deadline-modal-btn hide" data-target="#bidding-requirements-modal" data-popup-toggle="open">
@@ -334,18 +351,42 @@ export default class {
 		const targ=document.querySelector('div[name="/bids"]')
 		const oldElem = document.querySelector('.list-bids-container')
 		const htm = `
+			<style>
+				.search-button-group .btn {
+					background:#f4f9fd;
+					color:#3c3c3c;
+				}
 
+				.search-button-group #search {
+					border:none !important;
+				} 
+
+				.search-button-group .btn:nth-child(2) {
+					border-left:1px solid #efefef;
+				}
+			</style>
 			<article class="row list-bids-container">
 				<!--list-->
 			    <section class="col-md-12 col-lg-12 float-left list-sidebar" style="background:#fff;box-shadow:0 0 5px rgba(200,200,200,.7);min-height: 100vh">     
-					<section style="margin-top:55px;">
+					<section style="margin-top:50px;">
 						<!--<div class="row">
 							<span class="search-list-section-icon"><i class="material-icons">search</i></span>
 							<span class="search-list-section hide"><input class="form-control" type="text" style="padding:4px;border:none;background:#fcfcfc;" placeholder="Search"></span>
 						</div>-->
 					</section>
 					<section>
-						<div class="col col-md-12" data-role="none" style="margin-bottom: 5px;border-bottom:1px solid rgba(240,240,240,0.4);">
+						<div class="row" style="border:1px solid #efefef;margin-bottom:5px;background:#f4f9fd;">
+							<div class="btn-group btn-group-sm search-button-group" role="group" aria-label="Basic example">
+							  <button type="button" class="btn">
+							  	<i class="material-icons md-18">search</i>
+							  </button>
+							  <button type="button" class="btn">
+							  	<input type="text" placeholder="Search" class="form-control bidding-search-input" id="search"/>
+							  </button>
+							  
+							</div>
+						</div>
+						<div class="col col-md-12" data-role="none" style="margin-bottom: 5px;padding:8px;">
 							<a href="#" class="device-dropdown" data-device-dropdown="list-menu-drop" onclick="event.preventDefault();">
 								Filter <i class="material-icons md-18">expand_more</i>
 							</a>
@@ -382,6 +423,8 @@ export default class {
 					<section>
 						<!--list-->
 						<div class="row list-bidding-section"></div>
+						<!--search results -->
+						<div class="row list-search-bidding-section hide"></div>
 					</section>	
 			    </section>
 			</article>

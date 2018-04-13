@@ -17,6 +17,19 @@ export default class{
 		return XHR.request({method:'GET',url:url})
 
 	}
+
+	search(options={}){
+		let opt=options||{}
+		opt.page=opt.page||1
+
+		const url=`${NetConf.get()}/bidding/search.php?param=${opt.param}&${opt.page}&token=${opt.token}`
+		//require exports.js
+		const XHR=new window.bms.exports.XHR()
+
+		return XHR.request({method:'GET',url:url})
+
+	}
+
 	view(opt = {}){
 		return XHR.request({method:'GET',url:`${NetConf.get()}/bidding/?id=${opt.id}&token=${opt.token}`})	
 	}
@@ -30,6 +43,10 @@ export default class{
 	}
 	send(opt = {}){
 		var url=`${NetConf.get()}/bidding/collaborators/`
+		return XHR.request({method:'POST',url:url,body:JSON.stringify(opt)})
+	}
+	signatories(opt = {}){
+		var url=`${NetConf.get()}/bidding/signatories.php/`
 		return XHR.request({method:'POST',url:url,body:JSON.stringify(opt)})
 	}
 	removeParticulars(opt = {}){

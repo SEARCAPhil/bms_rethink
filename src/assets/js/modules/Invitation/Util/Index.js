@@ -23,18 +23,44 @@ export default class {
 		const targ=document.querySelector('div[name="/inv"]')
 		const oldElem = document.querySelector('.list-inv-container')
 		const htm = `
+			<style>
+				.search-button-group .btn {
+					background:#f4f9fd;
+					color:#3c3c3c;
+				}
 
+				.search-button-group #search {
+					border:none !important;
+				} 
+
+				.search-button-group .btn:nth-child(2) {
+					border-left:1px solid #efefef;
+				}
+			</style>
 			<article class="row list-bids-container">
 				<!--list-->
 			    <section class="col-md-12 col-lg-12 float-left list-sidebar" style="background:#fff;box-shadow:0 0 5px rgba(200,200,200,.7);min-height: 100vh">     
-					<section style="margin-top:55px;">
+					<section style="margin-top:50px;">
 						<!--<div class="row">
 							<span class="search-list-section-icon"><i class="material-icons">search</i></span>
 							<span class="search-list-section hide"><input class="form-control" type="text" style="padding:4px;border:none;background:#fcfcfc;" placeholder="Search"></span>
 						</div>-->
 					</section>
 					<section>
-						<div class="col col-md-12" data-role="none" style="margin-bottom: 5px;border-bottom:1px solid rgba(240,240,240,0.4);">
+
+						<div class="row" style="border:1px solid #efefef;margin-bottom:5px;background:#f4f9fd;">
+							<div class="btn-group btn-group-sm search-button-group" role="group>
+							  <button type="button" class="btn">
+							  	<i class="material-icons md-18">search</i>
+							  </button>
+							  <button type="button" class="btn">
+							  	<input type="text" placeholder="Search" class="form-control bidding-search-input" id="search"/>
+							  </button>
+							  
+							</div>
+						</div>
+
+						<div class="col col-md-12" data-role="none" style="margin-bottom: 5px;padding:8px;">
 							<a href="#" class="device-dropdown" data-device-dropdown="list-menu-drop" onclick="event.preventDefault();">
 								Filter <i class="material-icons md-18">expand_more</i>
 							</a>
@@ -65,6 +91,8 @@ export default class {
 					<section>
 						<!--list-->
 						<div class="row list-inv-section"></div>
+						<!--search results -->
+						<div class="row list-search-inv-section hide"></div>
 					</section>	
 			    </section>
 			</article>

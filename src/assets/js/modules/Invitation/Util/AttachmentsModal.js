@@ -1,4 +1,4 @@
-import AttachmentsDialog from '../../../components/FileDialog/Dialog'
+import AttachmentsDialog from '../../../components/FileDialogMini/Dialog'
 import { Attachments } from './Attachments'
 
 

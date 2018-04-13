@@ -40,5 +40,11 @@ export default class{
 		const url=`${NetConf.get()}/bidding/proposals/`
 		return XHR.request({method:'POST',url:url,body:JSON.stringify(opt)})
 	}
+
+
+	reference(opt = {}){
+		const url=`${NetConf.get()}/bidding/proposals/reference.php/`
+		return XHR.request({method:'POST',url:url,body:JSON.stringify(opt)})
+	}
 	
 }

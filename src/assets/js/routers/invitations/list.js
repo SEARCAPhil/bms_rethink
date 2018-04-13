@@ -40,27 +40,29 @@ const changeInvInfo = () => {
 
 const showWon = () => {
 	let targ = document.getElementById('detail-req-menu-status')
-	targ.parentNode.style.background = 'rgb(255, 169, 40)'
+	targ.parentNode.style.background = '#007bff'
 	targ.parentNode.style.color = '#fff'
-	targ.parentNode.innerHTML = `<section class="col-lg-11 offset-lg-1">
-						<ul class="nav">
-							<li class="nav-item">
-								
-							</li>
-							<li class="nav-item">
-								<a class="nav-link row">
-									<i class="material-icons md-18">star</i> Congratulations! Your won on this bidding
-								</a>
-							</li>
-
-
-							<li class="nav-item">
-								<a class="nav-link proposal-requirement-dialog-btn">
-									
-								</a>
-							</li>
-
-						</ul>
+	targ.parentNode.innerHTML = `
+	<style>
+		.congrats-banner {
+   			display: block;
+			position:relative;
+			z-index:0;
+		}
+		.congrats-banner:after {
+			content: '';
+			position: absolute;
+			top: 0;
+			right: 0;
+			bottom:0;
+			left: 0;
+			background:url('assets/img/confetti.png') repeat center;
+			z-index:-1;
+			opacity:0.7;
+		}
+	</style>
+	<section class="col-lg-12 text-center congrats-banner" style="padding:  20px;">
+    					<p><img src="assets/img/medal.png" width="50px"/> Congratulations! You have won on this bidding</p>
 					</section>`
 }
 
@@ -132,6 +134,11 @@ appRoute.on({
 					status = `<br/><span data-resources="${val.id}" style="color:#ffb80c;"><i class="material-icons">star</i> AWARDED</span>`
 					// show won status
 					showWon()
+					// add medal icon
+					//const img = document.createElement('img')
+					//img.src = 'assets/img/trophy.png'
+					//img.style.width = '30px'
+					//document.querySelector('.req-name').append(img)
 				}
 
 				html.innerHTML = `

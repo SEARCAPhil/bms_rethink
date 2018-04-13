@@ -101,6 +101,7 @@ export default class {
 										</a>
 									</li>
 
+
 								</ul>
 							</small>
 							<hr/>
@@ -112,12 +113,14 @@ export default class {
 									<small>
 										<p><b>DISCOUNT : <span id="prop-info-discount">N/A</span></b></p>
 									</small>
+
+									<div class="col-12 attachment-prop-pool-section row" id="attachment-prop-pool-section"></div>
 									<hr/>
 								    <h5>
 								    	<span class="header-circle"><i class="material-icons md-24">add_shopping_cart</i></span>
 								    	Specification
 								    </h5><br>	
-								    <div class="col-12 attachment-prop-pool-section" id="attachment-prop-pool-section"></div>
+
 									<div class="prop-specs-section-info d-flex row"></div>
 								</section>
 								<br/><br/>
