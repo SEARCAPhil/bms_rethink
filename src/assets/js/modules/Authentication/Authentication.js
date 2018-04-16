@@ -48,6 +48,7 @@ const login = (e) => {
                 localStorage.setItem('role', json.role)
                 window.localStorage.setItem('id', json.id)
                 window.localStorage.setItem('givenName', usernameField.value)
+                localStorage.setItem('username', usernameField.value)
 
                 window.location = '../../#/home/'
 			}else{

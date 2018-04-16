@@ -227,7 +227,7 @@ const loadRequirementsDetails = (json) => {
 		// if Approved
 		window.bms.default.showAllMenuForOpen (json.bidding_status == 3) 
 
-		// supplier
+		// GSU
 		if (window.bms.default.isGSU() && json.bidding_status == 3) {
 			document.querySelector('.send-requirements-modal-btn').classList.remove('hide')
 			document.querySelector('.set-deadline-modal-btn').classList.remove('hide')
@@ -386,7 +386,7 @@ appRoute.on({
 		IndexUtil.loadBiddingRequirementsInfo()
 		IndexUtil.loadBiddingListSection()
 
-		window.bms.default.lazyLoad(['./assets/js_native/assets/js/modules/bidding/Util/Attachments/RequirementsModal.js'])
+		window.bms.default.lazyLoad(['./assets/js_native/assets/js/modules/Bidding/Util/Attachments/RequirementsModal.js'])
 
 		ReqUtil.get(params.id).then(json => {
 			if (json.id) {
@@ -494,7 +494,7 @@ appRoute.on({
 							window.open(`${window.bms.config.network}/bidding/reports/proposal_comparison.php?id=${params.id}&token=6170b5207b92e5a7445ee3f7de7247c4c1f1b8ef&prop=${ids.join(',')}`)
 						})
 
-						window.bms.default.lazyLoad(['./assets/js_native/assets/js/modules/invitation/Util/ProposalModal.js'])
+						window.bms.default.lazyLoad(['./assets/js_native/assets/js/modules/Invitation/Util/ProposalModal.js'])
 					},600)
 				})
 			}

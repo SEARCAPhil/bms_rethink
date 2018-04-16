@@ -163,7 +163,7 @@ window.bms.default.isSupplier = () => {
 }
 
 window.bms.default.isStandard = () => {
-	return window.localStorage.getItem('role') === 'supplier'
+	return window.localStorage.getItem('role') === 'standard'
 }
 
 var changeDisplay=window.bms.default.changeDisplay
@@ -209,7 +209,6 @@ const showExtendedMenu = () => {
 	document.querySelectorAll('.inv-menu-list').forEach((el, index) => {
 		el.remove()
 	})
-
 }
 
 const loadCommonSettings = () => {
@@ -220,7 +219,7 @@ const loadCommonSettings = () => {
 		window.bms.default.dropdown('device-dropdown')	
 
 		// show menu per role
-		if (window.bms.default.isGSU() || window.bms.default.isCBAAsst()) {
+		if (window.bms.default.isGSU() || window.bms.default.isCBAAsst() || window.bms.default.isStandard() ) {
 			showExtendedMenu()
 			
 		} else {
@@ -269,6 +268,9 @@ appRoute.on({
 
 		changeDisplay(['div[name="/home"]','.bids-router-section'],'none')
 		window.bms.default.lazyLoad(['./assets/js_native/assets/js/routers/suppliers/suppliers.js'],{once:true})
+		setTimeout(() => {
+			window.bms.default.lazyLoad(['./assets/js_native/assets/js/modules/Bidding/Util/AccountSidebar.js'],{once:true})
+		},1000)
 
 	},
 	'/bids/*':()=>{
@@ -279,6 +281,11 @@ appRoute.on({
 		changeDisplay(['.suppliers-router-section','.nav-top-menu'],'none')
 		document.querySelector('.bids-router-section').classList.remove('hide')
 		window.bms.default.lazyLoad(['./assets/js_native/assets/js/routers/bidding/bidding.js'],{once:true})
+
+		setTimeout(() => {
+			window.bms.default.lazyLoad(['./assets/js_native/assets/js/modules/Bidding/Util/AccountSidebar.js'],{once:true})
+		},1000)
+		
 	}
 
 
@@ -291,6 +298,18 @@ appRoute.on({
 		changeDisplay(['.suppliers-router-section','.nav-top-menu','.bids-router-section'],'none')
 		document.querySelector('.inv-router-section').classList.remove('hide')
 		window.bms.default.lazyLoad(['./assets/js_native/assets/js/routers/invitation.js'],{once:true})
+		setTimeout(() => {
+			window.bms.default.lazyLoad(['./assets/js_native/assets/js/modules/Bidding/Util/AccountSidebar.js'],{once:true})
+		},1000)
+	},
+	'/feedback/form':()=>{
+		window.bms.default.activeMenu('feedback-menu-list')
+		hideInit()
+		loadCommonSettings()
+		
+		changeDisplay(['.suppliers-router-section','.nav-top-menu','.bids-router-section','.inv-router-section'],'none')
+		document.querySelector('.feedback-router-section').classList.remove('hide')
+		window.bms.default.lazyLoad(['./assets/js_native/assets/js/routers/feedback/feedback.js'],{once:true})
 	},
 	'/logout':()=>{
 		window.document.body.innerHTML = '<center><br/>loging out . . .</center>'

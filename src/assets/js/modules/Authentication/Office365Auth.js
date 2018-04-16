@@ -62,6 +62,7 @@
 
                             localStorage.setItem('token', json.token)
                             localStorage.setItem('role', json.role)
+                            localStorage.setItem('username', data.mail)
                             window.localStorage.setItem('id', data.id)
                             window.localStorage.setItem('givenName', data.displayName)
 

@@ -51,7 +51,7 @@ export class Attachments{
 					this.bindRemoveAttachments()
 					const pop = new window.bms.exports.PopupES()
 
-				},600)
+				},1000)
 			}
 
 			e.target.removeAttribute('disabled')

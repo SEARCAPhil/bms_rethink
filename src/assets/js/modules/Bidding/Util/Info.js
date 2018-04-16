@@ -299,7 +299,7 @@ export default class {
 									<i class="material-icons md-18 device-dropdown" data-device-dropdown="dropdown-req-${data.id}" data-resources="${data.id}">arrow_drop_down</i>
 									<div class="dropdown-section float-right" id="dropdown-req-${data.id}">
 										<ul class="list-group list-group-flush">
-  											<li class="list-group-item "><a href="#" onclick="event.preventDefault();window.open('${window.bms.config.network}/bidding/attachments/download.php?id=${data.id}')">Download</a></li>
+  											<li class="list-group-item "><a href="${window.bms.config.network}/bidding/attachments/download.php?id=${data.id}" target="_blank" onclick="event.preventDefault();window.open('${window.bms.config.network}/bidding/attachments/download.php?id=${data.id}')">Download</a></li>
 											<li class="list-group-item"><a data-target="#bidding-modal" data-popup-toggle="open" href="#" class="remove-attachments-modal">Remove</a></li>
 										<ul>
 									</div>

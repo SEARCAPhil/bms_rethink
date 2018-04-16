@@ -163,8 +163,8 @@ appRoute.on({
                 })
 			})
 
-			window.bms.default.lazyLoad(['./assets/js_native/assets/js/modules/invitation/Util/ProposalModal.js'])
-			window.bms.default.lazyLoad(['./assets/js_native/assets/js/modules/invitation/Util/ProposalRegModal.js'])
+			window.bms.default.lazyLoad(['./assets/js_native/assets/js/modules/Invitation/Util/ProposalModal.js'])
+			window.bms.default.lazyLoad(['./assets/js_native/assets/js/modules/Invitation/Util/ProposalRegModal.js'])
 		})
 		// more settings
 		/*setTimeout(() => {

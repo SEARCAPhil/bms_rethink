@@ -2,13 +2,14 @@ export default class {
 	constructor () {}
 	loadBiddingInitialPage () {
 		let htm = `
-			<div class="col-lg-6 offset-lg-2 d-lg-offset-2 text-center" style="margin-top:70px;">
-	    		<h2>Bidding Management</h2>
+			<div class="col-lg-7 offset-lg-2 d-lg-offset-2 text-center" style="margin-top:70px;">
+	    		
+				<img src="assets/img/laptop.png" width="70%"><br/><br/>
+				<h2>Bidding Management System</h2>
 			    <small><p class="text-muted">
-			    	"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, qui
+			    	Compare supplier's price easier , faster and better than before! Be the first to use the new and advanced bidding management system 
 			    </p></small>
-				<img src="assets/img/bid.png" width="150px"><br/><br/>
-				<button class="btn btn-dark" onclick="window.location='#/bids/forms/registration/steps/1'"> REQUEST NEW BIDDING +</button>
+				<button class="btn btn-dark" onclick="window.location='#/bids/forms/registration/steps/1'"> GETTING STARTED</button>
 			</div>
 		`
 		document.querySelector('div[name="/bids/initial"]').innerHTML=htm	
