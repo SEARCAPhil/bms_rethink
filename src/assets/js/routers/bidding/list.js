@@ -302,6 +302,8 @@ const showBiddingApproveReadOnly = () => {
 
 }
 
+
+
 const showBiddingReqReturned = () => {
 	const targ = document.getElementById('detail-info-menu-status')
 	targ.innerHTML = `<center class="row" style="background:#0c5460;color:#fff;padding:5px;">
@@ -342,6 +344,25 @@ const showBiddingDisapproved = () => {
     </center>`
 }
 
+
+const showBiddingExemption = () => {
+	const targ = document.getElementById('detail-info-menu-status')
+	if(!document.getElementById('detail-info-menu-bidding-exemption')) {
+		const status = document.createElement('center')
+		status.classList.add('row')
+		status.id = 'detail-info-menu-bidding-exemption'
+		status.setAttribute('style', 'background:#fae4c0;color:#2b2417;padding:5px;')
+		status.innerHTML = `
+			<p class="col-12">
+	        	<i class="material-icons md-36">touch_app</i> FOR BIDDING EXEMPTION<br/>
+	        	<small>This request is not intended for all suppliers. Please DO NOT send an invitation twice if possible. </small>
+	        </p>
+	   `
+		targ.prepend(status)
+	}
+
+
+}
 
 
 const changeSendToResend = () => {
@@ -460,7 +481,10 @@ const changeBiddingInfo = (e) => {
 
 	}
 
-	
+	// show exemption status
+	if (details.excemption ==1 ) {
+		showBiddingExemption()
+	}
 
 
 	// info

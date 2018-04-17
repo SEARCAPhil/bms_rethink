@@ -507,7 +507,8 @@ export default class {
 		let data = {
 			id: window.bms.default.state.bidding.cur.requirements.id,
 			suppliers: window.bms.bidding.suppliersSendingList,
-			action: 'send',
+			items: window.bms.bidding.suppliersSendingListItems,
+			action: Object.keys(window.bms.bidding.suppliersSendingListItems).length > 0 ? 'send_items' : 'send',
 		}
 
 		const br = Object.values(window.bms.bidding.suppliersSendingList)
@@ -565,6 +566,34 @@ export default class {
 
 	loadSendRequirements (e) {
 		const URL='pages/bidding/modal/send-requirements.html'
+		const id=e.target.id
+		const proto = Object.assign({ __proto__: this.__proto__ }, this)
+
+		return this.XHR.request({method:'GET',url:URL}).then(res=>{
+			let modalTarget=document.getElementById('modal-bidding-requirements-body')
+			modalTarget.innerHTML=res
+
+			setTimeout(()=>{
+				window.bms.default.scriptLoader(modalTarget)
+			},50)
+
+			setTimeout(()=>{
+				//remove cancel
+				document.getElementById('modal-dialog-close-button').addEventListener('click',()=>{
+		
+					document.getElementById('bidding-requirements-modal').close()
+					
+				})
+
+				let btn = document.getElementById('modal-dialog-send-button')
+				btn.el =  e.target
+				btn.addEventListener('click', this.sendRequirements.bind(proto))
+			})
+		}).catch(e=>{})
+	}
+
+	loadSendRequirementsSelected (e) {
+		const URL='pages/bidding/modal/send-requirements-item.html'
 		const id=e.target.id
 		const proto = Object.assign({ __proto__: this.__proto__ }, this)
 
@@ -649,6 +678,13 @@ export default class {
 		const proto = Object.assign({ __proto__: this.__proto__ }, this)
 		document.querySelectorAll('.send-requirements-modal-btn').forEach((val, index) => {
 			val.addEventListener('click',this.loadSendRequirements.bind(proto))
+		})
+	}
+
+	bindSendRequirementsPerItem () {
+		const proto = Object.assign({ __proto__: this.__proto__ }, this)
+		document.querySelectorAll('.send-requirements-selected-modal-btn').forEach((val, index) => {
+			val.addEventListener('click',this.loadSendRequirementsSelected.bind(proto))
 		})
 	}
 

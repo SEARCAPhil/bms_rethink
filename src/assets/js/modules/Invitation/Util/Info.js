@@ -1,11 +1,34 @@
 import PropService from '../Services/Proposal'
+import ListService from '../Services/List'
 
 
 export default class {
 	constructor () {
 		this.XHR = new window.bms.exports.XHR()
 		this.PropServ = new PropService()
+		this.ListServ = new ListService()
 
+	}
+
+	get (id) { 
+		//window.bms.default.spinner.show()
+		let data = {
+			id,
+			token: window.localStorage.getItem('token'),
+		}
+
+		return new Promise((resolve, reject) => {
+			this.ListServ.view(data).then((json) => {
+				let res = JSON.parse(json)
+			
+				if(res[0]){
+					window.bms.default.spinner.hide()
+					resolve(res[0])
+				}
+
+
+			})
+		})
 	}
 
 	setStatus (e) {

@@ -23,6 +23,7 @@ export class Invitations{
 		})
 	}
 }
+
 const Inv = new Invitations()
 let page = 1
 window.bms.bidding.suppliersSendingList = {}

@@ -159,7 +159,7 @@ export default class {
 				    	
 						<br/>
 						<!--<p class="deadline"><b>Deadline</b> : <span id="bidding-deadline-info">N/A</span></p>-->
-						<p class="bidding-excemption text-danger"><b>Requesting for Bidding Exemption ?</b>  <span id="bidding-excemption-info">N/A</span></p>
+						<p class="bidding-excemption text-danger"><b>Bidding Exemption :</b>  <span id="bidding-excemption-info">N/A</span></p>
 						<p>
 							<b>Sent to : </b> <span id="bidding-collaborators"></span>
 						</p>
@@ -235,117 +235,139 @@ export default class {
 	}
 
 	loadBiddingRequirementsInfo () {
-		let htm = `
-			<link rel="preload" as="style" href="./assets/css/popup-es.css" onload="this.rel='stylesheet'">
-			<dialog id="bidding-requirements-modal" data-popup="fade">
-				<div class="content">
-					<!--close button-->
-					<a href="#" data-popup-toggle="close">x</a>
-					<div class="header"></div>
-					<div class="body" id="modal-bidding-requirements-body"></div>
-				</div>	
-			</dialog>
-			<section class="row" style="background:#F4F9FD;margin-top:50px;margin-bottom:5px;">
+		return new Promise((resolve, reject) => {
+			let htm = `
+				<link rel="preload" as="style" href="./assets/css/popup-es.css" onload="this.rel='stylesheet'">
+				<dialog id="bidding-requirements-modal" data-popup="fade">
+					<div class="content">
+						<!--close button-->
+						<a href="#" data-popup-toggle="close">x</a>
+						<div class="header"></div>
+						<div class="body" id="modal-bidding-requirements-body"></div>
+					</div>	
+				</dialog>
+				<section class="row" style="background:#F4F9FD;margin-top:50px;margin-bottom:5px;">
 
-				<small class="col-12" id="detail-req-menu-status">
-					
-				</small>
+					<small class="col-12" id="detail-req-menu-status">
+						
+					</small>
 
-				<small class="col-lg-11 offset-lg-1 for-open">
-					<ul class="nav">
+					<small class="col-lg-11 offset-lg-1 for-open">
+						<ul class="nav">
 
-						<li class="nav-item">
-							<a class="nav-link back-to-bidding-btn">
-								<i class="material-icons md-18">keyboard_return</i> Back
-							</a>
-						</li>
-
-						<li class="nav-item">
-							<a href="#" onclick="event.preventDefault()" class="nav-link send-requirements-modal-btn hide" data-target="#bidding-requirements-modal" data-popup-toggle="open">
-							 	<i class="material-icons md-18">insert_invitation</i> Invite
-							</a>
-						</li>
-
-						<li class="nav-item">
-							<a class="nav-link file-attachment-requirement-dialog-btn">
-								<i class="material-icons md-18">attach_file</i> Attach
-							</a>
-						</li>
-
-						<li class="nav-item">
-							<a class="nav-link award-requirements-modal-btn hide" data-target="#bidding-requirements-modal" data-popup-toggle="open">
-								<i class="material-icons md-18">card_membership</i> Award
-							</a>
-						</li>
-
-						<!--<li class="nav-item">
-							<a class="nav-link proposal-requirement-dialog-btn">
-								<i class="material-icons md-18">receipt</i> Proposals
-							</a>
-						</li>-->
-
-						<li class="nav-item">
-							<a href="#" class="nav-link text-danger set-deadline-modal-btn hide" data-target="#bidding-requirements-modal" data-popup-toggle="open">
-								<i class="material-icons md-18">date_range</i> Set deadline
-							</a>
-						</li>
-
-					</ul>
-				</small>
-			</section>
-
-			<section class="row" style="padding:3px;margin-bottom:40px;" id="detail-info-collaborator">
-				<!--recepients-->
-				<div class="col-lg-11 col-sm-12 offset-lg-1 row attachment-recepients-section" style="padding-top:10px;"></div>
-
-				<!--attachments-->
-				<div class="col-lg-11 col-sm-12 offset-lg-1 row attachment-requirements-pool-section"></div>
-
-			</section>
-
-			<section class="col-lg-10 offset-lg-1">
-	    		<h2 class="req-name"></h2>
-			    <small>
-			    	<p><b>Reference # : </b> <span class="req-reference-number"></span></p>
-			    	<p>
-			    		<b>Amount : </b>
-		    			<span class="req-currency">PHP</span>
-		    			<b><span class="req-amount text-danger">.00</span></b>
-			    		
-			    	</p>
-			    	<p><b>Quantity : </b> <span class="req-quantity"></span> <span class="req-unit"></span></p>
-			    	<p>
-			    		<span class="col-12 row" id="funds-requirements-info-section"></span>
-			    	</p>
-
-			    	<p><b>Deadline: </b> <span class="req-deadline">Not Set</span></p>
-
-			    	<p>
-			    		<!--attachments section -->
-						<div class="row" id="attachments-requirements-info-section" style="padding:5px;"></div>
-			    	</p>
-
-			    	<div class="hide" id="awardees-section">
-			    		<hr/>
-			    		<b>Awarded to</b>
-			    		<section class="row" id="awardees-section-list"></section>
-			    		
-			    	</div>
+							<li class="nav-item">
+								<a class="nav-link back-to-bidding-btn">
+									<i class="material-icons md-18">keyboard_return</i> Back
+								</a>
+							</li>
 
 
+							<li class="nav-item send-requirements-group hide" style="position:relative;">
+								
+								<a href="#" class="device-dropdown nav-link " data-device-dropdown="invite-menu-drop" onclick="event.preventDefault();">
+									<i class="material-icons md-18">insert_invitation</i> Invite <i class="material-icons md-18">expand_more</i>
+								</a>
+
+								<div class="dropdown-section float-right" id="invite-menu-drop" style="right:0px;width:200px;">
+									<ul class="list-group list-group-flush">
+
+										<li class="list-group-item">
+											<a href="#" onclick="event.preventDefault()" class="nav-link send-requirements-modal-btn" data-target="#bidding-requirements-modal" data-popup-toggle="open">
+											 	Current<br/><small>(Send invitation for this item only)</small>	
+											</a>
+										</li>
+										<li class="list-group-item">
+											<a href="#" onclick="event.preventDefault()" class="nav-link send-requirements-selected-modal-btn" data-target="#bidding-requirements-modal" data-popup-toggle="open">
+											 	Select Item
+											</a>
+										</li>
+									<ul>
+								</div>
+
+							</li>
+
+							<li class="nav-item">
+								<a class="nav-link file-attachment-requirement-dialog-btn">
+									<i class="material-icons md-18">attach_file</i> Attach
+								</a>
+							</li>
+
+							<li class="nav-item">
+								<a class="nav-link award-requirements-modal-btn hide" data-target="#bidding-requirements-modal" data-popup-toggle="open">
+									<i class="material-icons md-18">card_membership</i> Award
+								</a>
+							</li>
+
+							<!--<li class="nav-item">
+								<a class="nav-link proposal-requirement-dialog-btn">
+									<i class="material-icons md-18">receipt</i> Proposals
+								</a>
+							</li>-->
+
+							<li class="nav-item">
+								<a href="#" class="nav-link text-danger set-deadline-modal-btn hide" data-target="#bidding-requirements-modal" data-popup-toggle="open">
+									<i class="material-icons md-18">date_range</i> Set deadline
+								</a>
+							</li>
+
+						</ul>
+					</small>
+				</section>
+
+				<section class="row" style="padding:3px;margin-bottom:40px;" id="detail-info-collaborator">
+					<!--recepients-->
+					<div class="col-lg-11 col-sm-12 offset-lg-1 row attachment-recepients-section" style="padding-top:10px;"></div>
+
+					<!--attachments-->
+					<div class="col-lg-11 col-sm-12 offset-lg-1 row attachment-requirements-pool-section"></div>
+
+				</section>
+
+				<section class="col-lg-10 offset-lg-1">
+		    		<h2 class="req-name"></h2>
+				    <small>
+				    	<p><b>Reference # : </b> <span class="req-reference-number"></span></p>
+				    	<p>
+				    		<b>Amount : </b>
+			    			<span class="req-currency">PHP</span>
+			    			<b><span class="req-amount text-danger">.00</span></b>
+				    		
+				    	</p>
+				    	<p><b>Quantity : </b> <span class="req-quantity"></span> <span class="req-unit"></span></p>
+				    	<p>
+				    		<span class="col-12 row" id="funds-requirements-info-section"></span>
+				    	</p>
+
+				    	<p><b>Deadline: </b> <span class="req-deadline">Not Set</span></p>
+
+				    	<p>
+				    		<!--attachments section -->
+							<div class="row" id="attachments-requirements-info-section" style="padding:5px;"></div>
+				    	</p>
+
+				    	<div class="hide" id="awardees-section">
+				    		<hr/>
+				    		<b>Awarded to</b>
+				    		<section class="row" id="awardees-section-list"></section>
+				    		
+				    	</div>
 
 
-			    </small>
-			    <hr/>	
-			    <h5>
-			    	<span class="header-circle"><i class="material-icons md-24">add_shopping_cart</i></span>
-			    	Specification
-			    </h5><br/>	
-			    <div class="specs-section-info d-flex row"></div>
-			</section>
-		`
-		document.querySelector('div[name="/bids/info/particulars/details"]').innerHTML=htm	
-		window.bms.default.changeDisplay(['div[name="/bids/info/particulars"]'],'block')
+
+
+				    </small>
+				    <hr/>	
+				    <h5>
+				    	<span class="header-circle"><i class="material-icons md-24">add_shopping_cart</i></span>
+				    	Specification
+				    </h5><br/>	
+				    <div class="specs-section-info d-flex row"></div>
+				</section>
+			`
+			document.querySelector('div[name="/bids/info/particulars/details"]').innerHTML=htm	
+			window.bms.default.changeDisplay(['div[name="/bids/info/particulars"]'],'block')
+			resolve()
+		})
 	}
 
 	loadBiddingListSection () {

@@ -16,7 +16,7 @@ export default class{
 		this.element.setAttribute('class',`${this.properties.class}`+` ${this.properties.status}`)
 		this.element.setAttribute('data-list',`${this.properties.id}`)
 		this.element.innerHTML=`
-			<a href="#/inv/${this.properties.bidding_requirements_id}/info">
+			<a href="#/inv/${this.properties.id}/info">
 				<h6 class="suppliers-list-item-header">${this.properties.name}</h6>
 				<p><span class="text-danger">Quantity : ${this.properties.quantity}</span> - ${this.properties.unit}</p>
 

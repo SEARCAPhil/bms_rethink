@@ -1,8 +1,9 @@
 import { AttachmentsReq } from '../modules/Bidding/Util/Attachments/Requirements'
 import IndexUtilities from '../modules/Invitation/Util/Index'
-import InfoUtilities from '../modules/Bidding/Util/Info'
+import InfoUtilities from '../modules/Invitation/Util/Info'
 import PopupES from '../Components/PopupES/PopupES'
 import RequirementsUtilities from '../modules/Bidding/Util/Requirements'
+import ProposalService from '../modules/Invitation/Services/Proposal'
 
 
 const appRoute = new window.bms.exports.Router('http://127.0.0.1/bms_rethink/www/',true)
@@ -11,6 +12,7 @@ const appRoute = new window.bms.exports.Router('http://127.0.0.1/bms_rethink/www
 const InfoUtil = new InfoUtilities()
 const AttUtil = new AttachmentsReq()
 const ReqUtil = new RequirementsUtilities()
+const PropServ = new ProposalService ()
 
 
 
@@ -63,6 +65,34 @@ const showDeadline = () => {
 }
 
 
+const showWon = () => {
+	let targ = document.getElementById('detail-req-menu-status')
+	targ.parentNode.style.background = '#007bff'
+	targ.parentNode.style.color = '#fff'
+	targ.parentNode.innerHTML = `
+	<style>
+		.congrats-banner {
+   			display: block;
+			position:relative;
+			z-index:0;
+		}
+		.congrats-banner:after {
+			content: '';
+			position: absolute;
+			top: 0;
+			right: 0;
+			bottom:0;
+			left: 0;
+			background:url('assets/img/confetti.png') repeat center;
+			z-index:-1;
+			opacity:0.7;
+		}
+	</style>
+	<section class="col-lg-12 text-center congrats-banner" style="padding:  20px;">
+    					<p><img src="assets/img/medal.png" width="50px"/> Congratulations! You have won on this bidding</p>
+					</section>`
+}
+
 
 const appendReqAttachments = (data) => {
 	const attSec = document.getElementById('attachments-requirements-info-section')
@@ -89,6 +119,8 @@ const loadRequirementsDetails = (json) => {
 	let targ = document.querySelector('.specs-section-info')
 	let addBtn = document.querySelector('.proposal-reg-dialog-btn')
 	let attTarg = document.getElementById('attacments-requirements-info-section')
+	let printBtn = document.querySelector('.price-inquiry-btn')
+	let printCurrentBtn = document.querySelector('.price-inquiry-current-btn')
 
 	const date = new Date()
 	const curMonth = (date.getMonth()+1) < 10 ? `0${date.getMonth()+1}` : (date.getMonth()+1)
@@ -98,6 +130,7 @@ const loadRequirementsDetails = (json) => {
 	document.querySelector('.req-quantity').textContent = json.quantity
 	document.querySelector('.req-unit').textContent = json.unit
 	document.querySelector('.req-reference-number').textContent = json.id
+	document.querySelector('.req-bidding-number').textContent = json.id
 	document.querySelector('.req-deadline').innerHTML = `<span class="text-danger">${json.deadline != '0000-00-00' ? json.deadline : 'Not Set'}</span>`
 
 	// show deadline status
@@ -110,7 +143,20 @@ const loadRequirementsDetails = (json) => {
 		if (addBtn) addBtn.classList.remove('hide')
 	}
 
+	// print buttons
+	printBtn.href = `${window.bms.config.network}/bidding/reports/price_inquiry.php?id=${json.bidding_requirements_invitation_id}&token=${window.localStorage.getItem('token')}`
+	printCurrentBtn.href = `${window.bms.config.network}/bidding/reports/price_inquiry_per_item.php?id=${json.bidding_requirements_invitation_id}&token=${window.localStorage.getItem('token')}`
 
+	printBtn.addEventListener('click',function(){
+		window.open(this.href)
+	})
+
+	printCurrentBtn.addEventListener('click',function(){
+		window.open(this.href)
+	})
+
+
+	// Specifications
 	json.specs.forEach((val, index) => {
 		targ.innerHTML += `
 			<div class="col-2">
@@ -157,6 +203,78 @@ const activateInvItem = (params) => {
 	})
 }
 
+const showProposals = (params) => {
+
+		PropServ.lists({id: params.id, token : window.localStorage.getItem('token')}).then((data) => {
+			const json = JSON.parse(data)
+			let targ = document.querySelectorAll('.proposal-list-section > ul')
+
+			targ.forEach((el, index) => {
+				// clear proposal list section
+				el.innerHTML =''
+			})
+
+			json.forEach((val, index) => {
+				let html = document.createElement('li')
+				let status = ''
+				html.classList.add('nav-item', 'col-12')
+				html.setAttribute('data-resources', val.id)
+				html.style = 'border-bottom:1px solid #ccc;padding-top:5px;padding-bottom: 5px;'
+				html.id = val.id
+
+				
+
+				if (val.status == 0) {
+					status = `<br/><span class="text-danger" data-resources="${val.id}"><i class="material-icons md-12">drafts</i> DRAFT</span>`
+				}
+
+				if (val.status == 1) {
+					status = `<br/><span class="text-success" data-resources="${val.id}"><i class="material-icons md-12">check</i> Sent</span>`
+				}
+
+
+				if (val.status == 2) {
+					status = `<br/><span class="text-danger" data-resources="${val.id}"><i class="material-icons md-12">warning</i> Requesting changes</span>`
+				}
+
+				if (val.status ==3) {
+					status = `<br/><span data-resources="${val.id}" style="color:#ffb80c;"><i class="material-icons">star</i> AWARDED</span>`
+					// show won status
+					showWon()
+					// add medal icon
+					//const img = document.createElement('img')
+					//img.src = 'assets/img/trophy.png'
+					//img.style.width = '30px'
+					//document.querySelector('.req-name').append(img)
+				}
+
+				html.innerHTML = `
+                                    <a href="#" class="proposal-dialog-btn row" data-resources="${val.id}">
+                                        <div class="col-3"  data-resources="${val.id}">
+                                            <div class="text-center" data-resources="${val.id}" style="float:left;width:35px;height:35px;border-radius:50%;margin-right:10px;overflow:hidden;background:#42403c;color:#fff;padding-top:5px" id="image-header-section"  data-resources="${val.id}">${val.username.substr(0,2).toUpperCase()}</div>
+                                        </div>
+                                        <div class="col-7"  data-resources="${val.id}">
+                                                <small data-resources="${val.id}">
+                                                    <p data-resources="${val.id}">
+                                                        ${val.username}<br/>
+                                                        <span class="text-muted">${val.date_created}</span>
+                                                        ${status}
+                                                    </p>
+                                                </small>
+                                        </div>
+                                    </a>
+                           `
+                // insert to DOM
+                targ.forEach((el, index) => {
+                	el.append(html)
+                })
+			})
+
+			window.bms.default.lazyLoad(['./assets/js_native/assets/js/modules/Invitation/Util/ProposalModal.js'])
+			window.bms.default.lazyLoad(['./assets/js_native/assets/js/modules/Invitation/Util/ProposalRegModal.js'])
+		})
+}
+
 appRoute.on({
  	'/*': () => {
  		// this is required to always treat suppliers as separate route
@@ -169,7 +287,7 @@ appRoute.on({
 		loadCSS('assets/css/modules/suppliers/list.css')
 	},
 	'/inv/:id/info/': (params) => {
-		window.bms.default.state.bidding.cur.requirements.id = params.id
+		window.bms.default.state.bidding.cur.invitations.id = params.id
 		window.bms.default.changeDisplay(['div[name="/inv/initial"]'],'none')
 		window.bms.default.changeDisplay(['div[name="/inv/info"]'],'block')
 
@@ -177,14 +295,30 @@ appRoute.on({
 
 		IndexUtil.loadInfo({id: params.id, status: 1}).then(() => {
 
-			ReqUtil.get(params.id).then(json => {
+			//get ivitation info
+			InfoUtil.get(params.id).then((json) => {
+				if (json.id) {
+					window.bms.default.state.bidding.cur.requirements.id = json.bidding_requirements_id
+					json.bidding_requirements_invitation_id = params.id
+					loadRequirementsDetails(json)
+				}
+				window.bms.default.spinner.hide()
+
+				// show proposals for this bidding requirement
+				showProposals(json)
+
+			}).catch((err) => {
+				window.bms.default.spinner.hide()
+			})
+
+			/*ReqUtil.get(params.id).then(json => {
 				if (json.id) {
 					loadRequirementsDetails(json)
 				}
 				window.bms.default.spinner.hide()
 			}).catch((err) => {
 				window.bms.default.spinner.hide()
-			})
+			})*/
 		})
 
 		// load list only once

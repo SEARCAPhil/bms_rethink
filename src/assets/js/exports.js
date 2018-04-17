@@ -21,6 +21,7 @@ window.bms=window.bms||{
 					bid: {},
 					particulars: {},
 					requirements: {},
+					invitations: {},
 				},
 			},
 			proposals: {

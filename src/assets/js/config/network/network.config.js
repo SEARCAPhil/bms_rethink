@@ -3,9 +3,9 @@ export default class Network{
 	constructor(){
 		this.config = {
 			protocol: 'http',
-			host: 'searcabackup.org',
+			host: 'localhost',
 			port: null,
-			domain:'bms/bms_api/src/api'
+			domain:'bms_api/src/api'
 		}
 	}
 	__generateUrl(){

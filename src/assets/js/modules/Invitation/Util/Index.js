@@ -158,11 +158,40 @@ export default class {
 
 				<section class="col-lg-10 offset-lg-1">
 		    		<h2 class="req-name"></h2>
+		    		<div class="btn-group btn-group-md" role="group">
+						<button class="btn btn-default btn-sm" style="border:1px solid #009688;background:#e9ecef;">
+							<i class="material-icons md-18">print</i> PRINT
+						</button>
+					 	<button type="button" class="btn btn-default device-dropdown" style="border:1px solid #009688;background:#e9ecef;" data-device-dropdown="print-inv-menu-drop">
+					 		<i class="material-icons md-18">expand_more</i>
+					 		<div class="dropdown-section float-right" id="print-inv-menu-drop" style="right:0px;">
+								<ul class="list-group list-group-flush text-left">
+									<li class="list-group-item">
+										<a href="#" target="_blank" class="price-inquiry-btn text-secondary">
+											<i class="material-icons md-18">print</i> All Items
+										</a>
+									</li>
+									<li class="list-group-item">
+										<a href="#" target="_blank" class="price-inquiry-current-btn text-secondary">
+											<i class="material-icons md-18">print</i> Current
+										</a>
+									</li>
+								</ul>
+							</div>
+					 	</button>
+					</div>
+
 				    <small>
-				    	<p><b>Reference #: </b> <span class="req-reference-number">Not Set</span></p>
+				    	<p>
+				    		<b>Bidding Item #: </b> <span class="req-bidding-number">Not Set</span>
+				    	</p>
+				    	<p>
+				    		<b>Reference #: </b> <span class="req-reference-number">Not Set</span>
+				    	</p>
 				    	<p class="text-danger"><b>Quantity : </b> <span class="req-quantity"></span> <span class="req-unit"></span></p>
 
 				    	<p><b>Deadline: </b> <span class="req-deadline">Not Set</span></p>
+
 
 
 				    	<p>

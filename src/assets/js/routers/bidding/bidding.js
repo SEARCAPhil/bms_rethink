@@ -196,6 +196,8 @@ const loadRequirementsDetails = (json) => {
 			AttUtil.bindRemoveAttachments()
 			// send
 			ReqUtil.bindSendRequirements()
+			// send
+			ReqUtil.bindSendRequirementsPerItem()
 			// award
 			ReqUtil.bindAward()
 			// cancel invitation
@@ -229,7 +231,7 @@ const loadRequirementsDetails = (json) => {
 
 		// GSU
 		if (window.bms.default.isGSU() && json.bidding_status == 3) {
-			document.querySelector('.send-requirements-modal-btn').classList.remove('hide')
+			document.querySelector('.send-requirements-group').classList.remove('hide')
 			document.querySelector('.set-deadline-modal-btn').classList.remove('hide')
 		}
 
@@ -383,14 +385,19 @@ appRoute.on({
 		window.bms.default.state.bidding.cur.requirements.id = params.id
 		window.bms.default.changeDisplay(['[name="/bids/info/particulars/details"]'],'block')
 		window.bms.default.changeDisplay(['div[name="/bids/initial"]','div[name="/bids/forms/registration/2"]','div[name="/bids/forms/registration"]', 'div[name="/bids/forms/registration/3"]', 'div[name="/bids/info"]', '[name="/bids/info/particulars/proposals/form"]'],'none')
-		IndexUtil.loadBiddingRequirementsInfo()
+		IndexUtil.loadBiddingRequirementsInfo().then(() => {
+			// dropdown
+			window.bms.default.dropdown('device-dropdown')
+		})
+
 		IndexUtil.loadBiddingListSection()
 
 		window.bms.default.lazyLoad(['./assets/js_native/assets/js/modules/Bidding/Util/Attachments/RequirementsModal.js'])
 
 		ReqUtil.get(params.id).then(json => {
 			if (json.id) {
-
+				// bidding info
+				window.bms.default.state.bidding.cur.bid.id = json.bidding_id
 				// requirements info
 				loadRequirementsDetails(json)
 				// proposals
@@ -497,6 +504,7 @@ appRoute.on({
 						window.bms.default.lazyLoad(['./assets/js_native/assets/js/modules/Invitation/Util/ProposalModal.js'])
 					},600)
 				})
+
 			}
 			window.bms.default.spinner.hide()
 		}).catch((err) => {
