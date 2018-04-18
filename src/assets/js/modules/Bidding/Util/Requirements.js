@@ -41,6 +41,7 @@ export default class {
 		let data = {
 			id: e.target.el.id,
 			action: 'remove',
+			token: window.localStorage.getItem('token'),
 		}
 
 		this.ListServ.removeRequirements(data).then((json) => {
@@ -62,6 +63,7 @@ export default class {
 		let data = {
 			id: e.target.el.id,
 			action: 'remove_awardee',
+			token: window.localStorage.getItem('token'),
 		}
 
 		this.ReqServ.send(data).then((json) => {
@@ -83,6 +85,7 @@ export default class {
 		let data = {
 			id: e.target.el.id,
 			action: 'remove',
+			token: window.localStorage.getItem('token'),
 		}
 
 		this.ReqServ.removeRecepients(data).then((json) => {
@@ -225,6 +228,7 @@ export default class {
 			id: window.bms.default.state.bidding.cur.requirements.id,
 			deadline: document.getElementById('deadline').value,
 			action: 'create',
+			token: window.localStorage.getItem('token'),
 		}
 
 		this.ReqServ.deadline(data).then((json) => {
@@ -504,11 +508,14 @@ export default class {
 
 	sendRequirements (e) {
 		window.bms.default.spinner.show()
+		if (!window.bms.bidding.suppliersSendingListItems) window.bms.bidding.suppliersSendingListItems = {}
+			
 		let data = {
 			id: window.bms.default.state.bidding.cur.requirements.id,
 			suppliers: window.bms.bidding.suppliersSendingList,
 			items: window.bms.bidding.suppliersSendingListItems,
 			action: Object.keys(window.bms.bidding.suppliersSendingListItems).length > 0 ? 'send_items' : 'send',
+			token: window.localStorage.getItem('token'),
 		}
 
 		const br = Object.values(window.bms.bidding.suppliersSendingList)
@@ -629,6 +636,7 @@ export default class {
 			suppliers: window.bms.bidding.suppliersSendingList,
 			remarks: document.getElementById('remarks').value ,
 			action: 'award',
+			token: window.localStorage.getItem('token'),
 		}
 
 		this.ReqServ.send(data).then((json) => {

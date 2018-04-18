@@ -54,7 +54,7 @@
 
                             // account not yet verified
                             if (!json.role) {
-                                window.location = 'confirmation.html'
+                                window.location = 'authentication/confirmation.html'
                                 return 0
                             }
                             
@@ -66,7 +66,7 @@
                             window.localStorage.setItem('id', data.id)
                             window.localStorage.setItem('givenName', data.displayName)
 
-                            window.location = '../../#/home/'
+                            window.location = '../#/home/'
                            
                         }).catch((err) => {
                             alert('Unable to authenticate. Please try again later.')

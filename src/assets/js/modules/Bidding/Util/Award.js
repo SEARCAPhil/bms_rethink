@@ -26,6 +26,7 @@ export class Invitations{
 const Inv = new Invitations()
 let page = 1
 window.bms.bidding.suppliersSendingList = {}
+window.bms.bidding.suppliersSendingListItems = {}
 
 const removeFromSendingList = (e) => {
 	const resources = e.target.getAttribute('data-resources')

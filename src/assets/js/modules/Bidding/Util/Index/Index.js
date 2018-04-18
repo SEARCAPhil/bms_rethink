@@ -273,12 +273,12 @@ export default class {
 
 										<li class="list-group-item">
 											<a href="#" onclick="event.preventDefault()" class="nav-link send-requirements-modal-btn" data-target="#bidding-requirements-modal" data-popup-toggle="open">
-											 	Current<br/><small>(Send invitation for this item only)</small>	
+											 	Quick<br/><small>(Send invitation for this item only)</small>	
 											</a>
 										</li>
 										<li class="list-group-item">
 											<a href="#" onclick="event.preventDefault()" class="nav-link send-requirements-selected-modal-btn" data-target="#bidding-requirements-modal" data-popup-toggle="open">
-											 	Select Item
+											 	Advanced
 											</a>
 										</li>
 									<ul>

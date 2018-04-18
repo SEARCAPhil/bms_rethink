@@ -117,16 +117,16 @@ export default class {
 	setSignatories (e) {
 		window.bms.default.spinner.show()
 		// values
-		//const certified = document.querySelector('input#certified').value
-		//const certified_position = document.querySelector('input#certified_position').value
+		const requested = document.querySelector('input#requested').value
+		const requested_position = document.querySelector('input#requested_position').value
 		const recommended = document.querySelector('input#recommending').value
 		const recommended_position = document.querySelector('input#recommending_position').value
 		const approved = document.querySelector('input#approved').value
 		const approving_position = document.querySelector('input#approving_position').value
 
 		let data = {
-			//certified,
-			//certified_position,
+			requested,
+			requested_position,
 			recommended,
 			recommended_position,
 			approved,

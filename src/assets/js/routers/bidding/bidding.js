@@ -487,19 +487,20 @@ appRoute.on({
 						})
 
 						// compare
-						let compareBtn = document.getElementById('compare-btn')
-						
-						compareBtn.addEventListener('click' , () => {
-							// get all selected checkbox
-							let ids = []
-							document.querySelectorAll(`.compare-checkbox-list:checked`).forEach((el, index) => {
-								const atr = el.getAttribute('data-resources')
-								if (!ids[atr]) ids.push(atr)
+						let compareBtn = document.querySelector('#compare-btn:not(.event-binded)')
+
+						if (compareBtn) {
+							compareBtn.classList.add('event-binded')
+							compareBtn.addEventListener('click' , () => {
+								// get all selected checkbox
+								let ids = []
+								document.querySelectorAll(`.compare-checkbox-list:checked`).forEach((el, index) => {
+									const atr = el.getAttribute('data-resources')
+									if (!ids[atr]) ids.push(atr)
+								})
+								window.open(`${window.bms.config.network}/bidding/reports/proposal_comparison.php?id=${params.id}&token=6170b5207b92e5a7445ee3f7de7247c4c1f1b8ef&prop=${ids.join(',')}`)
 							})
-
-
-							window.open(`${window.bms.config.network}/bidding/reports/proposal_comparison.php?id=${params.id}&token=6170b5207b92e5a7445ee3f7de7247c4c1f1b8ef&prop=${ids.join(',')}`)
-						})
+						}
 
 						window.bms.default.lazyLoad(['./assets/js_native/assets/js/modules/Invitation/Util/ProposalModal.js'])
 					},600)

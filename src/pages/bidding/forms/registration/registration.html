@@ -1,11 +1,42 @@
+<style type="text/css">
+	 .throbbing {
+	 	position: absolute;
+	 	width: 20%;
+	 	left: 40%;
+	  	animation: throb 1.2s ease .0s infinite;
+	}
+      @keyframes throb {
+        0%   { top: 0;      }
+        50%  { top: -30px;   }
+        100% { top: 0;     o }
+      }
+</style>
 <div class="row">
 	<article class="col-xs-12 col-md-12 col-lg-10 offset-lg-1 col-xs-12" style="margin-top: 150px;overflow:auto;padding-bottom: 30px;">
 		<section id="reg-notif-area"></section>
 
-		<section class="row col-md-12">
+		<section class="col-md-12 text-center throbbing-section">
 			<p>
-				<h3>One moment please . . .</h3>
-				<p>We always like to make everything easier for you. Simply answer the question below and we are good to go!</p>
+				<h2>One moment please . . .</h2>
+				<p>
+					We always like to make everything easier for you. <br/>Simply answer the question below and we are good to go!
+				</p>
+
+				<p>
+					<img src="assets/img/coffee.png" width="130px">
+				</p>
+
+				<p>
+					<br/><br/>
+					<section class="col-12" style="position: relative;">
+						<h3 class="throbbing fill-up-button">
+							<a href="#" onclick="event.preventDefault();document.querySelector('[name=`bidding-request-registration`]').classList.remove('hide');">
+								Answer<br/>
+								<i class="material-icons md-36">expand_more</i>
+							</a>
+						</h3>
+					</section>
+				</p>
 			</p>
 			<br/><br/><br/>
 		</section>
@@ -31,18 +62,20 @@
 					</p>-->
 			
 					
-						<p>
+						<center>
 							<small>
-								<b><span class="text-green">Do you PREFER bidding exemption ?</span></b>
-								<p class="text-muted">This will allow CBA assistant to know if you want a bidding exemption. Please keep in mind that the final decision is still under CBA Assistant's control</p>
+								<b><span>Do you PREFER bidding exemption ?</span></b>
+								<p>This will allow CBA assistant to know if you want a bidding exemption. <br/>Please keep in mind that the final decision is still under CBA Assistant's control</p>
 							</small>
 
-							<p><input type="radio" name="forExcemption"  id="excemption" value="0" checked="checked"> No <span class="text-muted">(Normal Bidding Process)</span></p>
-							<p><input type="radio" name="forExcemption"  id="excemption" value="1"> Yes</p>
-						</p>
+							<p>
+								<input type="radio" name="forExcemption"  id="excemption" value="0" checked="checked"> No <span class="text-muted">(Normal Bidding Process)</span> &emsp;
+								<input type="radio" name="forExcemption"  id="excemption" value="1"> Yes</p>
+								<button class="btn btn-dark btn-md add-bidding-button" style="width:300px;">Next</button>
+						</center>
 
 				
-						<button class="btn btn-danger btn-md add-bidding-button">Continue</button>
+						
 		
 					
 

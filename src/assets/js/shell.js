@@ -314,13 +314,9 @@ appRoute.on({
 	'/logout':()=>{
 		window.document.body.innerHTML = '<center><br/>loging out . . .</center>'
 
-		if (window.bms.default.isSupplier()) {
-			window.localStorage.clear()
-			window.location = 'pages/authentication/'
-		} else {
-			window.localStorage.clear()
-			window.location = 'pages/authentication/o365.html'
-		}
+		window.localStorage.clear()
+		window.location = 'pages/'
+		
 	},
 
 }).resolve()
