@@ -34,7 +34,7 @@ export default class {
 	loadBiddingInfo (data = {}) {
 		return new Promise((resolve,reject) => {
 			let htm = `
-			<section class="row" style="background:#F4F9FD;margin-top:50px;position:relative;">
+			<section class="row" style="background:#fff;margin-top:50px;position:relative;box-shadow:0px 0px 10px rgba(200,200,200,0.4);">
 				<small class="col-12" id="detail-info-menu-status">
 
 				</small>
@@ -376,8 +376,9 @@ export default class {
 		const htm = `
 			<style>
 				.search-button-group .btn {
-					background:#f4f9fd;
+					background:#fff;
 					color:#3c3c3c;
+
 				}
 
 				.search-button-group #search {
@@ -398,13 +399,13 @@ export default class {
 						</div>-->
 					</section>
 					<section>
-						<div class="row" style="border:1px solid #efefef;margin-bottom:5px;background:#f4f9fd;">
+						<div class="row" style="border:1px solid rgba(200,200,200,0.3);margin-bottom:5px;background:#fff;">
 							<div class="btn-group btn-group-sm search-button-group" role="group" aria-label="Basic example">
 							  <button type="button" class="btn">
 							  	<i class="material-icons md-18">search</i>
 							  </button>
 							  <button type="button" class="btn">
-							  	<input type="text" placeholder="Search" class="form-control bidding-search-input" id="search"/>
+							  	<input type="text" placeholder="Search" class="form-control bidding-search-input" id="search" style="margin-bottom:5px;"/>
 							  </button>
 							  
 							</div>
