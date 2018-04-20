@@ -1,12 +1,12 @@
 <style type="text/css">
 	#bidding-requirements-modal .content {
-		min-width: 400px;
-		width : 30%;
-		left:35%;
+		min-width: 300px;
+		width : 25%;
+		left:32.5%;
 
 	}
 	.send-req-modal-section{
-		padding: 20px;
+		/*padding: 20px;*/
 	}
 	.send-req-modal-section input#search-supplier , #remarks{
 		border: 1px solid #ccc !important;
@@ -23,36 +23,47 @@
 	}
 </style>
 <section class="send-req-modal-section">
-	<center>
+	<center style="background: #007bff;color: #fff;padding: 10px;margin-bottom: 10px;">
 		<h2>Award</h2>
 		<img src="./assets/img/trophy.png" width="100px">
-		<p class="text-muted">Grant this to selected supplier</p>
+		<p>Grant this to selected supplier</p>
 	</center>
 
-	<input type="text" class="form-control" placeholder="Search" id="search-supplier">
+	<section class="col-12">
 
-	<div class="suppliers-invitation-sending-list-section  d-flex flex-wrap"></div>
-	
-	<div class="col-12"><br/>
-		<b>Suppliers</b>
-	</div>
+		<input type="text" class="form-control" placeholder="Search" id="search-supplier">
 
-	<div class="suppliers-invitation-check-list-search-section hide">
-	</div>
-	<div class="suppliers-invitation-check-list-section">
-	</div>
+		<div class="suppliers-invitation-sending-list-section  d-flex flex-wrap"></div>
+		
+		<div class="col-12"><br/>
+			<b>Suppliers</b><br/>
+			<small>Please select one supplier from the list below</small>
+		</div>
 
-	<br/><br/>
-	<div class="col-12">
-		<textarea class="form-control" id="remarks" placeholder="Remarks(Optional)"></textarea>
-	</div>
+		<div class="col-12 suppliers-invitation-check-list-search-section hide">
+		</div>
+		<div class="col-12 suppliers-invitation-check-list-section">
+		</div>
+		<br/>
+		<details>
+			<summary>
+				<b>Remarks <span class="text-muted">(optional)</span></b><br/>
+				<small>Click to write message</small>
+			</summary>
+			<div class="col-12">
+				<textarea class="form-control" id="remarks" placeholder="(Optional)"></textarea>
+			</div>
+		</details>
+		
 
 
-	<br/><br/>
+		<br/><br/>
+	</section>
 	<center>
 		<p class="text-default">Are you sure you want to continue?</p>
 		<button class="btn btn-danger" id="modal-dialog-send-button" disabled="disabled">YES</button> 
 		<button class="btn btn-secondary" id="modal-dialog-close-button">NO</button>
+		<br/><br/>
 	</center>
 </section>
 

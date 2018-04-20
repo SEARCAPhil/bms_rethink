@@ -37,7 +37,7 @@
     * Create your own at http://cspisawesome.com
     -->
     <!-- <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: 'unsafe-inline' https://ssl.gstatic.com; style-src 'self' 'unsafe-inline'; media-src *" /> -->
-    <link rel="stylesheet" type="text/css" href="../../node_modules/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="../node_modules/bootstrap/dist/css/bootstrap.min.css">
     <style>
     @import url('https://fonts.googleapis.com/css?family=Roboto:100');
     </style>
@@ -90,13 +90,15 @@
       }
       .backdrop-content {
         position: fixed;
-        top:0;
+        top:0vh;
         left: 0;
         width: 100%;
         height: 100%;
         z-index: 2;
         color: #fff;
         padding-top:15vh;
+        opacity: 1;
+        animation: goUp 1.2s ease 0s;
       }
       .backdrop-header {
         z-index: 3;
@@ -106,6 +108,18 @@
         width: 100%;
         height: 100px;
       }
+
+      @keyframes goUp{
+        0%{
+          opacity: 0.3;
+          top:30vh;
+        }
+
+        100%{
+          opacity: 1;
+          top:0;
+        }
+      }
     </style>
 </head>
 
@@ -114,13 +128,12 @@
     <div class="backdrop-header"></div>
     <div class="backdrop-content text-center">
         
-        <h1>
-            <span style="border-bottom: 2px solid #dc3545;">SEARCA</span>
-             <br/>Bidding Management System</h1>
+        <h1><span style="border-bottom: 2px solid #dc3545;">SEARCA</span></h1>
+        <h1><br/>Bidding Management System</h1>
         <div class="col-12 col-lg-6 offset-lg-3" style="padding: 100px;padding-top: 10px;">
             <br/>
             <p style="color:#cacaca;">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+               Compare supplier's price easier , faster and better than before! Be the first to use the new and advanced bidding management system
 
               
 

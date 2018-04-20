@@ -142,8 +142,8 @@ document.querySelectorAll('.proposal-dialog-btn').forEach((val, index) => {
 
 						
 						currency.textContent = json.currency
-						amount.textContent = json.amount
-						discount.textContent = json.discount
+						amount.textContent = new Intl.NumberFormat('en-us', {maximumSignificantDigits:3}).format(json.amount)
+						discount.textContent = new Intl.NumberFormat('en-us', {maximumSignificantDigits:3}).format(json.discount)
 						remarks.textContent = json.remarks
 
 						updateLink.forEach((val, index) => {
@@ -217,8 +217,19 @@ document.querySelectorAll('.proposal-dialog-btn').forEach((val, index) => {
 							propMenu.classList.add('hide')
 							disableRemoveAttLink()
 							showAwarded()
-
 							
+						}
+
+						// allow attachment if CBA assts.
+
+						if (json.status == 3 && window.bms.default.isCBAAsst()) {
+							// show menu
+							let targ = document.getElementById('prop-info-menu')
+							targ.classList.remove('hide')
+							// remove other buttons
+							document.querySelector('.send-prop-modal-btn').remove()
+							document.querySelector('.proposal-reg-dialog-btn-update').remove()
+							document.querySelector('.remove-prop-modal-btn').remove()
 						}
 
 						if (window.bms.default.isCBAAsst() && json.status == 1) {

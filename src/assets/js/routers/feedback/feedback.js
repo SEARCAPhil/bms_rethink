@@ -45,6 +45,10 @@ const loadFeedbackForm = (params) => {
 		return XHR.request({method:'GET',url:URL}).then(res=>{
 			let modalTarget=document.querySelector('[name="/feedback/form"]')
 			modalTarget.innerHTML=res
+
+			setTimeout(()=>{
+				window.bms.default.scriptLoader(modalTarget)
+			},100)
 			resolve()
 
 		}).catch(e=>{

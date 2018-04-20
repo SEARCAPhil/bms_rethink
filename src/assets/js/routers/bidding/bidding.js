@@ -47,7 +47,7 @@ const appendReqAttachments = (data) => {
 										<i class="material-icons md-18 device-dropdown" data-device-dropdown="dropdown-req-${data.id}" data-resources="${data.id}">arrow_drop_down</i>
 										<div class="dropdown-section float-right" id="dropdown-req-${data.id}">
 											<ul class="list-group list-group-flush">
-	  											<li class="list-group-item "><a href="#" onclick="event.preventDefault();window.open('http://192.168.80.56/bms_api/src/api/bidding/requirements/attachments/download.php?id=${data.id}')">Download</a></li>
+	  											<li class="list-group-item "><a href="#" onclick="event.preventDefault();window.open('${window.bms.config.network}/bidding/requirements/attachments/download.php?id=${data.id}')">Download</a></li>
 												<li class="list-group-item"><a data-target="#bidding-modal" data-popup-toggle="open" href="#" class="remove-attachments-modal">Remove</a></li>
 											<ul>
 										</div>
@@ -70,6 +70,8 @@ const appendReqRecepients = (data) => {
 										<div class="dropdown-section float-right" id="dropdown-req-recepients-${data.id}">
 											<ul class="list-group list-group-flush">
 												<li class="list-group-item"><a data-target="#bidding-modal" data-popup-toggle="open" href="#" class="remove-receipients-modal" data-resources="${data.id}">Cancel Invitation</a></li>
+												<li class="list-group-item"><a href="${window.bms.config.network}/bidding/reports/price_inquiry_per_item.php?id=${data.id}&token=${window.localStorage.getItem('token')}" target="_blank" data-resources="${data.id}"><i class="material-icons md-18">print</i> Price Inquiry</a></li>
+												<li class="list-group-item"><a href="${window.bms.config.network}/bidding/reports/price_inquiry.php?id=${data.id}&token=${window.localStorage.getItem('token')}" target="_blank" data-resources="${data.id}"><i class="material-icons md-18">print</i> Price Inquiry (All)</a></li>
 											<ul>
 										</div>
 									</div>
@@ -92,7 +94,7 @@ const appendAwardees = (data) => {
 				    			
 		if (data.proposal_id) {				
 			html += `<p class="col-12">
-				    					<a href="#" data-target="#bidding-requirements-modal" data-popup-toggle="open" class="btn btn-danger btn-sm pr-awardees-modal" data-resources="${data.id}"> 
+				    					<a href="#" data-target="#bidding-requirements-modal" data-popup-toggle="open" class="btn btn-danger btn-sm pr-awardees-modal" data-proposal-id="${data.proposal_id}" data-resources="${data.id}"> 
 				    						<i class="material-icons md-18">receipt</i> Submit PR</a> &emsp;
 				    				</p>`
 		} else {
@@ -131,7 +133,7 @@ const showAwardedStatus = () => {
 	</style>
 	<center style="background:#464a4e;color:#fff;padding:5px;" class="congrats-banner">
 						<p class="col-12">
-							<i class="material-icons" style="color:#ffb80c;">star</i> This has been awarded. Please review before making any changes.
+							<img src="assets/img/medal.png" width="50px"> This has been awarded. Please review before making any changes.
 				        </p>
 				    </center>`
 }
@@ -143,7 +145,7 @@ const loadRequirementsDetails = (json) => {
 	document.querySelector('.req-name').textContent = json.name
 	document.querySelector('.req-reference-number').textContent = json.id
 	document.querySelector('.req-currency').textContent = json.budget_currency
-	document.querySelector('.req-amount').textContent = json.budget_amount
+	document.querySelector('.req-amount').textContent = new Intl.NumberFormat('en-us', {maximumSignificantDigits:3}).format(json.budget_amount)
 	document.querySelector('.req-quantity').textContent = json.quantity
 	document.querySelector('.req-unit').textContent = json.unit
 	document.querySelector('.req-deadline').innerHTML = `<span class="text-danger">${json.deadline != '0000-00-00' ? json.deadline : 'Not Set'}</span>`
@@ -208,6 +210,8 @@ const loadRequirementsDetails = (json) => {
 			ReqUtil.bindRemoveAwardee()
 			// deadline
 			ReqUtil.bindSetDeadline()
+			// send PR
+			ReqUtil.bindSetPR()
 
 
 	},10)

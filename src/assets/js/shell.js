@@ -41,11 +41,22 @@ window.bms.default.lazyLoad=(src=[],opts={})=>{
 window.bms.default.scriptLoader=(scope)=>{
 	
 	scope.querySelectorAll(`script`).forEach((sc,index)=>{
+		// external JS
+		if(sc.getAttribute('src')) {
+			let el=document.createElement('script')
+			el.src=sc.getAttribute('src')
+			if(sc.async) el.setAttribute('async','')
+			sc.replaceWith(el)	
+		} else {
+			// internal script
+			let el=document.createElement('script')
+  			let textNode = document.createTextNode(sc.innerHTML); 
+			el.appendChild(textNode)
+			if(!sc.async) el.setAttribute('async',false)
+			const head = document.getElementsByTagName("head")[0];
+			head.appendChild(el)
+		}
 
-		let el=document.createElement('script')
-		el.src=sc.getAttribute('src')
-		if(sc.async) el.setAttribute('async','')
-		sc.replaceWith(el)
 	})
 
 	scope.querySelectorAll(`link`).forEach((sc,index)=>{

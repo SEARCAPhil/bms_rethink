@@ -46,7 +46,7 @@ export default class {
                                   <i class="material-icons md-48 text-muted">computer</i>
                                 </h5>
                                 <p class="text-center">
-	                                <h2 id="prop-info-name">Product name</h2>
+	                                <h2 id="prop-info-name" class="text-center">Product name</h2>
 
 	                                <small>
 					    				<p class="text-danger"><b>Quantity : </b> <span class="prop-info-quantity">0</span> <span class="prop-info-unit">N/A</span></p>

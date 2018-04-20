@@ -22,12 +22,23 @@
 				<br/><br/>
 				<h2 class="req-form-name">N/A</h2>
 				<small>
-			    	<p>
+
+					<p>
 			    		<b>Amount : </b>
 		    			<span class="req-currency">PHP</span>
 		    			<b><span class="req-amount text-danger">
-		    				<input type="text" placeholder="Enter Amount" class="form-control" autofocus="true" id="proposal-form-amount">
+		    				<input type="text" placeholder="Enter Amount (Per Item)" class="form-control" autofocus="true" id="proposal-form-amount-per-item">
 		    			</span></b>
+			    		
+			    	</p>
+
+			    	<p class="text-muted">
+			    		<b>Total Amount : </b><br/>
+		    			<b><span class="req-amount text-danger">
+		    				<input type="text" placeholder="Enter Amount" class="form-control" autofocus="true" id="proposal-form-amount" readonly="readonly">
+		    			</span>
+		    			<small class="text-danger">This will be automatically filled out</small>
+		    			</b>
 			    		
 			    	</p>
 

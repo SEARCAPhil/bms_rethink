@@ -168,9 +168,11 @@ const loadRequirementsDetails = (json) => {
 		`
 	})
 
+	// Disable attachments viewing for supplier
+	/*
 	json.attachments.forEach((val, index) => {
 		appendReqAttachments({type: val.type, original_filename: val.original_filename, id: val.id })
-	})
+	})*/
 
 
 	setTimeout(() => {
@@ -298,7 +300,7 @@ appRoute.on({
 			//get ivitation info
 			InfoUtil.get(params.id).then((json) => {
 				if (json.id) {
-					window.bms.default.state.bidding.cur.requirements.id = json.bidding_requirements_id
+					window.bms.default.state.bidding.cur.requirements.id = json.id
 					json.bidding_requirements_invitation_id = params.id
 					loadRequirementsDetails(json)
 				}

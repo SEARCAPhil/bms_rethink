@@ -9,6 +9,18 @@ const PropUtil = new ProposalUtil ()
 const ReqUtil = new RequirementsUtilities()
 const dial= new ProposalRegDialog({id: 'prop'})
 
+const autoComputeTotalAmount = (quantity) => {
+	const targ = document.querySelector('#proposal-form-amount-per-item:not(.event-binded)')
+	const totalTarg = document.querySelector('#proposal-form-amount')
+
+	if (targ) {
+		targ.classList.add('event-binded')
+		targ.addEventListener('keyup', () => {
+			const total = (targ.value*quantity)
+			totalTarg.value = total
+		})
+	} 
+}
 
 
 const addOtherSpecsField = () => {
@@ -102,6 +114,9 @@ document.querySelectorAll('.proposal-reg-dialog-btn').forEach((val, index) => {
 						// clear
 						section.innerHTML = ''
 
+						// autocompute total
+						autoComputeTotalAmount(json.quantity)
+
 						// specs
 						json.specs.forEach((val, index) => {
 							let html = document.createElement('span')
@@ -148,6 +163,7 @@ document.querySelectorAll('.proposal-reg-dialog-btn').forEach((val, index) => {
 							// show proposals
 							ReqUtil.bindSendProposal()
 							ReqUtil.bindSaveProposal()
+
 						},10)
 					}
 				})

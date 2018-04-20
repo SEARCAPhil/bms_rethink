@@ -616,7 +616,7 @@ const appendParticulars = (data) => {
 	    					<a href="#/bids/forms/registration/${data.requirements[x].id}/steps/3/update"><i class="material-icons md-12 text-muted">edit</i></a>
 	    					<a href="#" class="remove-requirements-modal-btn" data-target="#bidding-modal" data-popup-toggle="open" id="${data.requirements[x].id}"><i class="material-icons md-12 text-muted" id="${data.requirements[x].id}">remove_circle_outline</i></a>&emsp;
 	    				</span>
-	    				<span class="float-right text-danger">${data.requirements[x].budget_currency} ${data.requirements[x].budget_amount}</span><br/>
+	    				<span class="float-right text-danger">${data.requirements[x].budget_currency} ${new Intl.NumberFormat('en-us', {maximumSignificantDigits:3}).format(data.requirements[x].budget_amount)}</span><br/>
 	    				<span class="text-muted">${data.requirements[x].bidding_excemption_request ===1 ? 'For bidding excemption' : ''}</span>
 	    			
 			`
@@ -628,7 +628,7 @@ const appendParticulars = (data) => {
 						<i class="material-icons md-18">star</i> 
 						<span>Awarded</span>
 					</span>
-					<span class="float-right text-danger">${data.requirements[x].budget_currency} ${data.requirements[x].budget_amount}</span>
+					<span class="float-right text-danger">${data.requirements[x].budget_currency} ${new Intl.NumberFormat('en-us', {maximumSignificantDigits:3}).format(data.requirements[x].budget_amount)}</span>
 
 					`
 		}

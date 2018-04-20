@@ -246,7 +246,7 @@ export default class {
 						<div class="body" id="modal-bidding-requirements-body"></div>
 					</div>	
 				</dialog>
-				<section class="row" style="background:#F4F9FD;margin-top:50px;margin-bottom:5px;">
+				<section class="row" style="background:#fff;margin-top:50px;position:relative;box-shadow:0px 0px 10px rgba(200,200,200,0.4);">
 
 					<small class="col-12" id="detail-req-menu-status">
 						
@@ -294,7 +294,7 @@ export default class {
 
 							<li class="nav-item">
 								<a class="nav-link award-requirements-modal-btn hide" data-target="#bidding-requirements-modal" data-popup-toggle="open">
-									<i class="material-icons md-18">card_membership</i> Award
+									<i class="material-icons md-18">card_membership</i> Award <small>(*bidding exemption)</small>
 								</a>
 							</li>
 

@@ -75,7 +75,7 @@ const show = (e) => {
 
 			data.data.forEach((val, index) => {	
 				let html = document.createElement('div')
-				html.classList.add('col-12','row')
+				html.classList.add('row')
 
 				// checkbutton
 				const checkBtn = document.createElement('input')
@@ -165,7 +165,7 @@ const searchSupplier = (e) => {
 
 					data.data.forEach((val, index) => {	
 						let html = document.createElement('div')
-						html.classList.add('col-12','row')
+						html.classList.add('row')
 
 						// checkbutton
 						const checkBtn = document.createElement('input')

@@ -9,6 +9,19 @@ const PropUtil = new ProposalUtil ()
 const ReqUtil = new RequirementsUtilities()
 const dial= new ProposalRegDialog({id: 'prop'})
 
+const autoComputeTotalAmount = (quantity) => {
+	const targ = document.querySelector('#proposal-form-amount-per-item:not(.event-binded)')
+	const totalTarg = document.querySelector('#proposal-form-amount')
+
+	if (targ) {
+		targ.classList.add('event-binded')
+		targ.addEventListener('keyup', () => {
+			const total = (targ.value*quantity)
+			totalTarg.value = total
+
+		})
+	} 
+}
 
 
 const addOtherSpecsField = () => {
@@ -110,7 +123,7 @@ document.querySelectorAll('.proposal-reg-dialog-btn-update:not(.data-event-binde
 							let quantity = document.querySelector('.req-quantity-reg')
 							let unit = document.querySelector('.req-unit-reg')
 			
-				
+							const amountPerItem = document.querySelector('#proposal-form-amount-per-item')
 							let amount = document.querySelector('#proposal-form-amount')
 							let discount = document.querySelector('#proposal-form-discount')
 							let remarks= document.querySelector('#proposal-form-remarks')
@@ -121,10 +134,13 @@ document.querySelectorAll('.proposal-reg-dialog-btn-update:not(.data-event-binde
 							quantity.textContent = json.quantity
 							unit.textContent = json.unit
 							remarks.value = json.remarks
-
+							amountPerItem.value = (json.amount / json.quantity)
 
 							// clear specs section first
 							section.innerHTML = ''
+
+							// autocompute total
+							autoComputeTotalAmount(json.quantity)
 
 							// specs
 							json.orig_specs.forEach((val, index) => {
