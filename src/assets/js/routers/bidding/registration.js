@@ -81,9 +81,9 @@ const addFundSelection = (param = {}) => {
 						 		</select>
 						    </div>
 						    <div class="col-lg-1 col-md-1">
+						    	<div class="btn-circle remove-fund-btn" ${param.id ? ('data-resources="'+param.id+'"') : ''}><i class="material-icons" ${param.id ? ('data-resources="'+param.id+'"') : ''}>remove</i></div>
 						 		<div class="btn-circle add-fund-btn"><i class="material-icons">add</i></div>
-						 		<div class="btn-circle remove-fund-btn" ${param.id ? ('data-resources="'+param.id+'"') : ''}><i class="material-icons" ${param.id ? ('data-resources="'+param.id+'"') : ''}>remove</i></div>
-						    </div>
+						 	</div>
 						`
 
 	document.querySelector('.source_of_fund_section').append(sel)
@@ -136,9 +136,9 @@ const addSpecsField = (param = {}) => {
 						    <div class="col-lg-7 col-md-7">
 						    	<input type="text" name="specs-value" class="form-control specs-field" placeholder="Value" ${(param.value?'value="'+param.value+'"':'')}>
 						    </div>
-							 <div class="col-lg-1 col-md-1">
-								<div class="btn-circle add-specs-btn"><i class="material-icons">add</i></div>
+							<div class="col-lg-1 col-md-1">
 								<div class="btn-circle remove-specs-btn" ${param.id ? ('data-resources="'+param.id+'"') : ''}><i class="material-icons" ${param.id ? ('data-resources="'+param.id+'"') : ''}>remove</i></div>
+								<div class="btn-circle add-specs-btn"><i class="material-icons">add</i></div>
 							</div>
 						`
 

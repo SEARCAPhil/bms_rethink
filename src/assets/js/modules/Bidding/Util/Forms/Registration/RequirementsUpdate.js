@@ -124,7 +124,7 @@ const updateReq = (e) => {
 			funds[index][v.name] = v.value
 		})
 	})
-console.log(window.bms.bidding.requirements.specsToRemove)
+
 
 	// data
 	let data = {

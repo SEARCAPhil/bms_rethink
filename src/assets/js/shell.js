@@ -217,6 +217,10 @@ const showExtendedMenu = () => {
 		el.classList.remove('hide')
 	})
 
+	document.querySelectorAll('.bids-menu-list').forEach((el, index) => {
+		el.classList.remove('hide')
+	})
+
 	document.querySelectorAll('.inv-menu-list').forEach((el, index) => {
 		el.remove()
 	})

@@ -19,12 +19,13 @@
 
 		<form class="form-horizontal row" name="bidding-request-registration" onsubmit="return false;">
 			<section class="col-md-12">
+				<section class="recently-attached-prop-section"></section>
 				<br/><br/>
 				<h2 class="req-form-name">N/A</h2>
 				<small>
 
 					<p>
-			    		<b>Amount : </b>
+			    		<b>Unit Price : </b>
 		    			<span class="req-currency">PHP</span>
 		    			<b><span class="req-amount text-danger">
 		    				<input type="text" placeholder="Enter Amount (Per Item)" class="form-control" autofocus="true" id="proposal-form-amount-per-item">
@@ -33,7 +34,7 @@
 			    	</p>
 
 			    	<p class="text-muted">
-			    		<b>Total Amount : </b><br/>
+			    		<b>Total Amount <small>(Unit Price X Quantity)</small> : </b><br/>
 		    			<b><span class="req-amount text-danger">
 		    				<input type="text" placeholder="Enter Amount" class="form-control" autofocus="true" id="proposal-form-amount" readonly="readonly">
 		    			</span>
@@ -43,7 +44,7 @@
 			    	</p>
 
 			    	<p>
-			    		<b>Discount : </b>
+			    		<b>Discount (for all items) : </b>
 		    			<b><span class="req-amount text-danger">
 		    				<input type="text" placeholder="Enter Amount" class="form-control" autofocus="true" id="proposal-form-discount">
 		    			</span></b>

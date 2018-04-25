@@ -96,6 +96,49 @@ export default class {
 
 	}
 
+
+	loadAwardRequirementsAttachmentsNotice (e) {
+
+		const URL='pages/bidding/modal/award-attachments-notice.html'
+		const proto = Object.assign({ __proto__: this.__proto__ }, this)
+		const stat = document.querySelector('#prop-info-menu-status')
+
+		// show reload status
+		stat.innerHTML = '<center style="background:#007bff;color:#fff;padding:15px;">This bidding requirement has been modified. Please reload this page to see changes <u><a href="#" class="text-danger" onclick="event.preventDefault();window.location.reload();">reload</a><u></center>'
+		// remove menu
+		document.querySelector('#prop-info-menu').classList.add('hide')
+
+		return this.XHR.request({method:'GET',url:URL}).then(res=>{
+			let modalTarget=document.getElementById('modal-bidding-requirements-body')
+			modalTarget.innerHTML=res
+
+			setTimeout(()=>{
+				window.bms.default.scriptLoader(modalTarget)
+			},50)
+
+			setTimeout(()=>{
+				//remove cancel
+				document.getElementById('modal-dialog-close-button').addEventListener('click',()=>{
+		
+					document.getElementById('bidding-requirements-modal').close()
+					
+				})
+
+				let btn = document.getElementById('modal-dialog-send-button')
+
+				btn.addEventListener('click', () => {
+					// close modal then open the attachment sidebar
+					document.getElementById('bidding-requirements-modal').close()
+					document.querySelector('.file-prop-attachment-dialog-btn').click()
+				})
+			})
+
+
+		}).catch(err=>{
+			console.log(err)
+		})
+	}
+
 	award (e) {
 		const id =(e.target.el.getAttribute('data-resources'))
 		window.bms.default.spinner.show()
@@ -111,7 +154,9 @@ export default class {
 			let res = JSON.parse(json)
 
 			if( parseInt(res) > 0){
-				window.location.reload()
+				//window.location.reload()
+				// notify user to upload attachmet
+				this.loadAwardRequirementsAttachmentsNotice().bind(proto)
 			}
 
 			window.bms.default.spinner.hide()

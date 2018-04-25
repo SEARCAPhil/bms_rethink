@@ -241,6 +241,10 @@ const showBiddingReqApprove = () => {
     btn.status = 3
     btn.addEventListener('click', loadApproveBidding)
 
+	targ.querySelector('#approve-btn-section').append(btn)
+
+    // REMOVED as listed in Pre-release update [#25]
+    /*
     const btn2 = document.createElement('button')
     btn2.classList.add('btn', 'btn-dark', 'btn-sm', 'disapprove-btn')
     btn2.setAttribute('data-target', '#bidding-modal')
@@ -250,11 +254,8 @@ const showBiddingReqApprove = () => {
     btn2.status = 6
 
     btn2.addEventListener('click', loadDisapproveBidding)
-
-
-
-    targ.querySelector('#approve-btn-section').append(btn)
-    targ.querySelector('#disapprove-btn-section').append(btn2)
+    targ.querySelector('#disapprove-btn-section').append(btn2)*/
+    
     // enable popup
 	PopupInstance = new PopupES()
 }

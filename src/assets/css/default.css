@@ -48,16 +48,20 @@ summary{
     padding: 10px 5px 10px 5px;
     margin-bottom: 2px;
     cursor:pointer;
-    font-size: 12px;
+    font-size: 13px;
 }
 
 .main-menu li.sub {
-  padding-left: 30px;
   color: #bbbbbb;
 }
+
+.main-menu li.sub .material-icons {
+ font-size: 20px !important;
+}
+
 .main-menu li.active{
     background: rgb(255,184,12);
-    color: #f0f0f0;
+    color: #000;
 }
 
 .main-menu li.deactivated{

@@ -107,69 +107,55 @@ export default class {
 			</section>
 
 			<section class="row" style="padding:3px;margin-bottom:40px;" id="detail-info-collaborator">
-
-				<!--collaborators-->
-				<!--<div class="col-lg-11 col-sm-12 offset-lg-1 row">
-					<span class="text-muted col-lg-1 col-sm-2 col-2 float-left row"> To <i class="material-icons md-18">add_circle_outline</i> </span>
-					<span class="col text-muted float-left" style="width:200px;border:1px solid #ccc;background:#f1f1f1ee;" contenteditable="true" id="bidding-collaborator-email"></span>
-				</div>-->
-
 				<!--attachments-->
 				<div class="col-lg-11 col-sm-12 offset-lg-1 row attachment-pool-section" style="padding-top:10px;"></div>
 			</section>
-				<section class="col-lg-11 offset-lg-1">
-					<small>
-						<div>
-							<div class="text-center" style="float:left;width: 55px;height: 55px;border-radius:50%;margin-right:10px;overflow:hidden;background: #6c757d;color:#fff;padding-top:5px;font-size: 2em;" id="image-info-section"></div>
-							<p>
-								<span><b id="bidding-created-by-info"></b></span><br>
-								<span class="text-muted" id="bidding-date-created"></span>
-							</p><br/>
-						</div>
-						<hr/>
-					</small>
-		    		<!--<h3 id="bidding-name"></h3>-->
-		    		<h3>Bidding Request <span id="bidding-number-info"></span> </h3>
 
-		    		<div class="btn-group btn-group-md" role="group">
-						<a href="${window.bms.config.network}/bidding/reports/bidding_request.php?id=${data.id}" target="_blank" class="btn btn-default btn-sm" style="border:1px solid #009688;">
-							<i class="material-icons md-18">print</i> PRINT
-						</a>
-					 	<button type="button" class="btn btn-default device-dropdown for-open" style="border:1px solid #009688;background:#e9ecef;" data-device-dropdown="print-menu-drop" onclick="event.preventDefault();">
-					 		<i class="material-icons md-18">expand_more</i>
-					 		<div class="dropdown-section float-right" id="print-menu-drop" style="right:0px;">
-								<ul class="list-group list-group-flush text-left">
-									<li class="list-group-item">
-										<span class="menuList allNav">
-											<i class="material-icons md-18 text-muted">contacts</i>
-											<a class="signatories-bidding-modal-btn" data-target="#bidding-modal" data-popup-toggle="open">Signatories</a>
-										</span>
-									</li>
-								</ul>
-							</div>
-					 	</button>
-					</div>
-		    		
-					<br/>
-		    		<!--<p class="text-muted">
-		    			<span id="bidding-description-info"></span>
-		    			<span id="bidding-number-info" class="badge badge-sm badge-dark"></span> 
-		    		</p>-->
-				    <small>
-				    	
-						<br/>
-						<!--<p class="deadline"><b>Deadline</b> : <span id="bidding-deadline-info">N/A</span></p>-->
-						<p class="bidding-excemption text-danger"><b>Bidding Exemption :</b>  <span id="bidding-excemption-info">N/A</span></p>
+			<section class="col-lg-11 offset-lg-1">
+				<small>
+					<div>
+						<div class="text-center" style="float:left;width: 55px;height: 55px;border-radius:50%;margin-right:10px;overflow:hidden;background: #6c757d;color:#fff;padding-top:5px;font-size: 2em;" id="image-info-section"></div>
 						<p>
-							<b>Sent to : </b> <span id="bidding-collaborators"></span>
-						</p>
-				    	<p>
-				    		<!--attachments section -->
-							<div class="row" id="attacments-info-section" style="padding:5px;"></div>
-				    	</p>
-				    </small>
-				    <hr/>		
-				</section>
+							<span><b id="bidding-created-by-info"></b></span><br>
+							<span class="text-muted" id="bidding-date-created"></span>
+						</p><br/>
+					</div>
+					<hr/>
+				</small>
+	    		<!--<h3 id="bidding-name"></h3>-->
+	    		<h3>Bidding Request <span id="bidding-number-info"></span> </h3>
+
+	    		<div class="btn-group btn-group-md" role="group">
+					<a href="${window.bms.config.network}/bidding/reports/bidding_request.php?id=${data.id}" target="_blank" class="btn btn-default btn-sm" style="border:1px solid #009688;">
+						<i class="material-icons md-18">print</i> PRINT
+					</a>
+				 	<button type="button" class="btn btn-default device-dropdown for-open" style="border:1px solid #009688;background:#e9ecef;" data-device-dropdown="print-menu-drop" onclick="event.preventDefault();">
+				 		<i class="material-icons md-18">expand_more</i>
+				 		<div class="dropdown-section float-right" id="print-menu-drop" style="right:0px;">
+							<ul class="list-group list-group-flush text-left">
+								<li class="list-group-item">
+									<span class="menuList allNav">
+										<i class="material-icons md-18 text-muted">contacts</i>
+										<a class="signatories-bidding-modal-btn" data-target="#bidding-modal" data-popup-toggle="open">Signatories</a>
+									</span>
+								</li>
+							</ul>
+						</div>
+				 	</button>
+				</div>
+	    		
+				<br/>
+
+			    <small>
+					<p class="bidding-excemption">
+						<b class="text-danger">Bidding Exemption :</b>  <span id="bidding-excemption-info">N/A</span><br/>
+						<b>Sent to : </b> <span id="bidding-collaborators"></span><br/>
+
+			    		<!--attachments section -->
+						<div class="row" id="attacments-info-section" style="padding:5px;"></div>
+			    	</p>
+			    </small>
+			</section>
 			`
 			document.querySelector('div[name="/bids/info/details"]').innerHTML=htm	
 			window.bms.default.changeDisplay(['div[name="/bids/info"]'],'block')
@@ -326,19 +312,16 @@ export default class {
 				<section class="col-lg-10 offset-lg-1">
 		    		<h2 class="req-name"></h2>
 				    <small>
-				    	<p><b>Reference # : </b> <span class="req-reference-number"></span></p>
+
 				    	<p>
+				    		<b>Reference # : </b> <span class="req-reference-number"></span><br/>
 				    		<b>Amount : </b>
 			    			<span class="req-currency">PHP</span>
-			    			<b><span class="req-amount text-danger">.00</span></b>
-				    		
+			    			<b><span class="req-amount text-danger">.00</span></b><br/>
+				    		<b>Quantity : </b> <span class="req-quantity"></span> <span class="req-unit"></span><br/><br/>
+				    		<span class="col-12 row" id="funds-requirements-info-section"></span><br/>
+				    		<b>Deadline: </b> <span class="req-deadline">Not Set</span>
 				    	</p>
-				    	<p><b>Quantity : </b> <span class="req-quantity"></span> <span class="req-unit"></span></p>
-				    	<p>
-				    		<span class="col-12 row" id="funds-requirements-info-section"></span>
-				    	</p>
-
-				    	<p><b>Deadline: </b> <span class="req-deadline">Not Set</span></p>
 
 				    	<p>
 				    		<!--attachments section -->

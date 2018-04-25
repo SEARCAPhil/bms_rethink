@@ -118,6 +118,7 @@ export default class {
 		const discount = document.getElementById('proposal-form-discount').value
 		const remarks = document.getElementById('proposal-form-remarks').value
 
+
 		let original = []
 		let others = []
 
@@ -152,9 +153,17 @@ export default class {
 
 		this.PropServ.send(data).then((res) => {
 
+			const proto = Object.assign({ __proto__: this.__proto__ }, this)
+
+
+
 			if (res > 0) {
-				window.location.reload()
+				// update current state
+				window.bms.default.state.proposals.cur.id = res
+				//window.location.reload()
 				document.getElementById('bidding-modal').close()
+				// Notify bidders to upload formal quotation letter
+				this.loadProposalAttachmentsNotice.bind(proto)()
 			} else {
 				alert('unable to save your proposal. Please try again later')
 			}
@@ -410,6 +419,58 @@ export default class {
 	}
 
 
+	loadProposalAttachmentsNotice (e) {
+
+		const URL='pages/bidding/modal/proposal-attachments-notice.html'
+		const proto = Object.assign({ __proto__: this.__proto__ }, this)
+		const stat = document.querySelector('#detail-req-menu-status')
+
+		// show reload status
+		stat.innerHTML = '<center style="background:#007bff;color:#fff;padding:15px;">This bidding requirement has been modified. Please reload this page to see changes <u><a href="#" class="text-danger" onclick="event.preventDefault();window.location.reload();">reload</a><u></center>'
+
+		// close form
+		document.querySelector('.prop-reg-main-dialog').classList.remove('open')
+
+		// load notice
+		return this.XHR.request({method:'GET',url:URL}).then(res=>{
+			let modalTarget=document.getElementById('modal-bidding-body')
+			modalTarget.innerHTML=res
+
+			setTimeout(()=>{
+				window.bms.default.scriptLoader(modalTarget)
+			},50)
+
+			// show modal with an updated content
+			document.getElementById('bidding-modal').show()
+
+			setTimeout(()=>{
+				//remove cancel
+				document.getElementById('modal-dialog-close-button').addEventListener('click',()=>{
+		
+					document.getElementById('bidding-modal').close()
+					
+				})
+
+				// allow attachment
+				let btn = document.getElementById('modal-dialog-send-button')
+				if (!document.querySelector('.file-prop-attachment-dialog-btn')) {
+					btn.classList.add('file-prop-attachment-dialog-btn')
+				}
+				// autoclose modal
+				btn.addEventListener('click', () => {
+					document.getElementById('bidding-modal').close()
+				})
+
+				window.bms.default.lazyLoad(['./assets/js_native/assets/js/modules/Invitation/Util/AttachmentsModal.js'])
+			})
+
+
+		}).catch(err=>{
+			console.log(err)
+		})
+	}
+
+
 	loadSendProposal (e) {
 		const URL='pages/bidding/modal/send-proposals.html'
 		const id=1
@@ -442,8 +503,8 @@ export default class {
 
 
 	loadSaveProposal (e) {
-		const URL='pages/bidding/modal/save-proposals.html'
-		const id=1
+		const URL = 'pages/bidding/modal/save-proposals.html'
+		const id = 1
 		const proto = Object.assign({ __proto__: this.__proto__ }, this)
 
 		return this.XHR.request({method:'GET',url:URL}).then(res=>{

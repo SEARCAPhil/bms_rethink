@@ -172,8 +172,9 @@ const addFundSelection = () => {
 						 		</select>
 						    </div>
 						    <div class="col-lg-1 col-md-1">
+						    	<div class="btn-circle remove-fund-btn"><i class="material-icons">remove</i></div>
 						 		<div class="btn-circle add-fund-btn"><i class="material-icons">add</i></div>
-						 		<div class="btn-circle remove-fund-btn"><i class="material-icons">remove</i></div>
+						 		
 						    </div>
 						`
 
@@ -217,8 +218,8 @@ const addSpecsField = () => {
 						    	<input type="text" name="specs-value" class="form-control specs-field" placeholder="Value">
 						    </div>
 							 <div class="col-lg-1 col-md-1">
+							 	<div class="btn-circle remove-specs-btn"><i class="material-icons">remove</i></div>
 								<div class="btn-circle add-specs-btn"><i class="material-icons">add</i></div>
-								<div class="btn-circle remove-specs-btn"><i class="material-icons">remove</i></div>
 							</div>
 						`
 
