@@ -227,7 +227,15 @@ const showExtendedMenu = () => {
 }
 
 const loadCommonSettings = () => {
+	// save to global
+	window.bms.account = {
+		name:  window.localStorage.getItem('givenName'),
+		alias: window.localStorage.getItem('givenName').substr(0,2).toUpperCase(),
+		department: window.localStorage.getItem('department'),
+	}
+
 	setTimeout(() => {
+
 		document.getElementById('givenName-header-section').innerHTML = window.localStorage.getItem('givenName')
 		document.getElementById('image-header-section').innerText = window.localStorage.getItem('givenName').substr(0,2).toUpperCase()
 

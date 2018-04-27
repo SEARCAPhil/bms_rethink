@@ -7,6 +7,7 @@ export default class {
 		this.XHR = new window.bms.exports.XHR()
 		this.PropServ = new PropService()
 		this.ListServ = new ListService()
+		this.timestamp = new Date().getTime()
 
 	}
 
@@ -32,8 +33,11 @@ export default class {
 	}
 
 	setStatus (e) {
-		const id =(e.target.el.getAttribute('data-resources'))
+		const id = window.bms.default.state.proposals.cur.id
 		const action =(e.target.el.action)
+
+		// disable button
+		e.target.setAttribute('disabled','disabled')
 
 		const data = {
 			id,
@@ -55,6 +59,7 @@ export default class {
 
 			}else{
 				alert('Unable to process request. Please try again later')
+				e.target.removeAttribute('disabled')
 			}
 
 			window.bms.default.spinner.hide()
@@ -193,7 +198,7 @@ export default class {
 
 
 	loadRemove (e) {
-		const URL='pages/suppliers/modal/remove.html'
+		const URL=`pages/suppliers/modal/remove.html?timestamp=${this.timestamp}`
 		const id=e.target.id
 		const proto = Object.assign({ __proto__: this.__proto__ }, this)
 
@@ -222,9 +227,12 @@ export default class {
 	}
 
 	loadSend (e) {
-		const URL='pages/bidding/modal/send-proposals.html'
+		window.bms.default.spinner.show()
+		const URL=`pages/bidding/modal/send-proposals.html?timestamp=${this.timestamp}`
 		const id=e.target.id
 		const proto = Object.assign({ __proto__: this.__proto__ }, this)
+		// disable button
+		
 
 		return this.XHR.request({method:'GET',url:URL}).then(res=>{
 			let modalTarget=document.getElementById('modal-bidding-body')
@@ -247,7 +255,13 @@ export default class {
 
 			},50)
 
-		}).catch(e=>{})
+			window.bms.default.spinner.hide()
+
+		}).catch(e=>{
+			window.bms.default.spinner.hide()
+		})
+
+
 	}
 
 	loadResend (e) {

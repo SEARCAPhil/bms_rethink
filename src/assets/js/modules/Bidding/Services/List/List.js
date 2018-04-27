@@ -4,7 +4,10 @@ const NetConf = new Network()
 const XHR=new window.bms.exports.XHR()
 
 export default class{
-	constructor(){}
+	constructor(){
+		this.timestamp = new Date().getTime()
+	}
+	
 	lists(options={}){
 		let opt=options||{}
 		opt.page=opt.page||1
@@ -38,11 +41,11 @@ export default class{
 		return XHR.request({method:'POST',url:url,body:JSON.stringify(opt)})
 	}
 	status(opt = {}){
-		var url=`${NetConf.get()}/bidding/status.php`
+		var url=`${NetConf.get()}/bidding/status.php/?timestamp=${this.timestamp}`
 		return XHR.request({method:'POST',url:url,body:JSON.stringify(opt)})
 	}
 	send(opt = {}){
-		var url=`${NetConf.get()}/bidding/collaborators/`
+		var url=`${NetConf.get()}/bidding/collaborators/?timestamp=${this.timestamp}`
 		return XHR.request({method:'POST',url:url,body:JSON.stringify(opt)})
 	}
 	signatories(opt = {}){
@@ -50,11 +53,11 @@ export default class{
 		return XHR.request({method:'POST',url:url,body:JSON.stringify(opt)})
 	}
 	removeParticulars(opt = {}){
-		var url=`${NetConf.get()}/bidding/particulars/`
+		var url=`${NetConf.get()}/bidding/particulars/?timestamp=${this.timestamp}`
 		return XHR.request({method:'POST',url:url,body:JSON.stringify(opt)})
 	}
 	removeRequirements(opt = {}){
-		var url=`${NetConf.get()}/bidding/requirements/`
+		var url=`${NetConf.get()}/bidding/requirements/?timestamp=${this.timestamp}`
 		return XHR.request({method:'POST',url:url,body:JSON.stringify(opt)})
 	}
 }

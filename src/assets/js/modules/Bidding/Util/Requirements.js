@@ -337,6 +337,9 @@ export default class {
 		}
 	}
 
+	feedback (payload) {
+		return this.ReqServ.feedback(payload)
+	}
 
 	loadRemoveRequirements (e) {
 		const URL='pages/suppliers/modal/remove.html'

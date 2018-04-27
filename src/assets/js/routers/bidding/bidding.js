@@ -18,6 +18,22 @@ const AttUtil = new AttachmentsReq()
 const PropServ = new ProposalService ()
 const ReqUtil = new RequirementsUtilities()
 
+// ratings criteria
+const criteria = [{
+	name: 'price',
+	alias: 'Price'
+},{
+	name: 'quality',
+	alias: 'Goods/ Service Quality'
+},{
+	name: 'time',
+	alias: 'Delivery Time'
+}]
+
+// save to global state
+window.bms.default.state.bidding.cur.requirements.criteria = criteria
+
+
 window.bms.default.pages = []
 window.bms.default.spinner = new window.bms.exports.Spinner({
 	target:'body',
@@ -33,6 +49,55 @@ const loadCSS = (href) => {
 	css.rel = 'stylesheet'
 	css.href = href
 	document.body.append(css)
+}
+
+
+const rate = (e) => {
+	// copy element
+	const newEl = e.target.cloneNode()
+	newEl.textContent = 'star'
+	newEl.classList.add('active')
+
+	e.target.parentNode.querySelectorAll(`.star-${e.target.criteria}`).forEach((el, index) => {
+		if (el.position > e.target.position) {
+			el.textContent = 'star_border'
+			el.classList.remove('active')
+		} else {
+			el.textContent = 'star'
+			el.classList.add('active')
+			window.bms.default.state.bidding.cur.requirements.criteriaToBeSaved[e.target.criteria] = e.target.position+1
+		}
+	})	
+}
+
+const saveRatings = (e) => {
+	// ctrl + enter
+	if (e.ctrlKey && e.target.value.length > 3) {
+		// all criteria must be rated
+		if(Object.keys(window.bms.default.state.bidding.cur.requirements.criteriaToBeSaved).length != window.bms.default.state.bidding.cur.requirements.criteria.length) return 0
+		// disable form
+		e.target.disabled = 'disabled'
+		window.bms.default.spinner.show()
+		// payload
+		const payload = {
+			id: window.bms.default.state.bidding.cur.requirements.id,
+			supplier_id: e.target.supplierId,
+			feedback: e.target.value,
+			ratings: window.bms.default.state.bidding.cur.requirements.criteriaToBeSaved,
+			token: window.localStorage.getItem('token'),
+			action: 'create'
+		}
+		// save feedback
+		ReqUtil.feedback(payload).then((res) => {
+			if(res > 0) {
+				window.location.reload()
+			}
+		}).catch(err => {
+			alert('Unable to save feedback. Please try again later')
+		})
+
+
+	}
 }
 
 const appendReqAttachments = (data) => {
@@ -87,16 +152,28 @@ const appendReqFunds = (data) => {
 
 
 const appendAwardees = (data) => {
+
+
+	// group identification
+	const uniqueId = new Date().getTime()
+
+
+
+	window.bms.default.state.bidding.cur.requirements.criteriaToBeSaved = {}
+
 	let recSection = document.querySelector('#awardees-section-list')
+
+
+
 	let html =	`<details class="col-12 row" open>
 				    			<summary class="text-success"> <i class="material-icons md-18">card_membership</i> ${data.name}   </summary>
 				    			<br/>`
 				    			
 		if (data.proposal_id) {				
-			html += `<p class="col-12">
-				    					<a href="#" data-target="#bidding-requirements-modal" data-popup-toggle="open" class="btn btn-danger btn-sm pr-awardees-modal" data-proposal-id="${data.proposal_id}" data-resources="${data.id}"> 
+			html += `<!--<p class="col-12">
+				    					<a href="#" data-target="#bidding-requirements-modal" data-popup-toggle="open" class="pr-awardees-modal" data-proposal-id="${data.proposal_id}" data-resources="${data.id}"> 
 				    						<i class="material-icons md-18">receipt</i> Submit PR</a> &emsp;
-				    				</p>`
+				    				</p>-->`
 		} else {
 			html += `<p class="col-12">
 				    					<a href="#" data-target="#bidding-requirements-modal" data-popup-toggle="open" class="text-danger remove-awardees-modal" data-resources="${data.id}"> 
@@ -104,10 +181,143 @@ const appendAwardees = (data) => {
 				    				</p>`
 		}
 
-	html += `		<p class="col-12 text-muted">${data.remarks}</p>
+			html += `<p class="col-12 text-muted">${data.remarks}</p>
 				    			<br/>
-				    		</details>`
+
+				    <p class="col-12" style="border-bottom:1px solid rgba(200,200,200,0.3);padding-bottom:10px;margin-top: 60px;"><b>What other say about this supplier</b> <i class="material-icons md-18 float-right text-muted">expand_more</i></p>
+
+				    <article class="row col-12">
+					    <section class="col-12 col-lg-7">
+					    	
+					    	<div class="media">
+							  <div class="text-center mr-3" style="float:left;width:35px;height:35px;overflow:hidden;background:#ffb80c;color:#fff;padding-top:5px" id="image-header-section">JO</div>
+							  <div class="media-body">
+							    <p class="mt-0"><b>John Kenneth G. Abella</b><br>
+									Information Technology Services Unit
+							    </p>
+							  </div>
+							</div>
+
+							<p class="text-muted">Where does it come from? Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin
+					</p>
+					    </section>
+
+						<section class="col-12 col-lg-5"><span>Price<i class="material-icons md-18 star-ratings star-price star-group-1524819708425">star_border</i><i class="material-icons md-18 star-ratings star-price star-group-1524819708425">star_border</i><i class="material-icons md-18 star-ratings star-price star-group-1524819708425">star_border</i><i class="material-icons md-18 star-ratings star-price star-group-1524819708425">star_border</i><br></span><span>Goods/ Service Quality<i class="material-icons md-18 star-ratings star-quality star-group-1524819708425">star_border</i><i class="material-icons md-18 star-ratings star-quality star-group-1524819708425">star_border</i><i class="material-icons md-18 star-ratings star-quality star-group-1524819708425">star_border</i><i class="material-icons md-18 star-ratings star-quality star-group-1524819708425">star_border</i><br></span><span>Delivery Time<i class="material-icons md-18 star-ratings star-time star-group-1524819708425">star_border</i><i class="material-icons md-18 star-ratings star-time star-group-1524819708425">star_border</i><i class="material-icons md-18 star-ratings star-time star-group-1524819708425">star_border</i><i class="material-icons md-18 star-ratings star-time star-group-1524819708425">star_border</i><br></span></section>				    
+					
+					</article><br/><br/>
+
+
+					 <article class="row col-12" style="background:#e9ecef;padding:20px;">
+					    <section class="col-12 col-lg-7">
+					    	
+					    	<div class="media">
+							  <div class="text-center mr-3" style="float:left;width:35px;height:35px;overflow:hidden;background:#ffb80c;color:#fff;padding-top:5px" id="image-header-section">JO</div>
+							  <div class="media-body">
+							    <p class="mt-0"><b>John Kenneth G. Abella</b><br>
+									Information Technology Services Unit
+							    </p>
+							  </div>
+							</div>
+
+							<p class="text-muted">Where does it come from? Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin
+					</p>
+					    </section>
+
+						<section class="col-12 col-lg-5"><span>Price<i class="material-icons md-18 star-ratings star-price star-group-1524819708425">star_border</i><i class="material-icons md-18 star-ratings star-price star-group-1524819708425">star_border</i><i class="material-icons md-18 star-ratings star-price star-group-1524819708425">star_border</i><i class="material-icons md-18 star-ratings star-price star-group-1524819708425">star_border</i><br></span><span>Goods/ Service Quality<i class="material-icons md-18 star-ratings star-quality star-group-1524819708425">star_border</i><i class="material-icons md-18 star-ratings star-quality star-group-1524819708425">star_border</i><i class="material-icons md-18 star-ratings star-quality star-group-1524819708425">star_border</i><i class="material-icons md-18 star-ratings star-quality star-group-1524819708425">star_border</i><br></span><span>Delivery Time<i class="material-icons md-18 star-ratings star-time star-group-1524819708425">star_border</i><i class="material-icons md-18 star-ratings star-time star-group-1524819708425">star_border</i><i class="material-icons md-18 star-ratings star-time star-group-1524819708425">star_border</i><i class="material-icons md-18 star-ratings star-time star-group-1524819708425">star_border</i><br></span></section>				    
+					
+					</article><br/><br/>
+
+
+					 <article class="row col-12">
+					    <section class="col-12 col-lg-7">
+					    	
+					    	<div class="media">
+							  <div class="text-center mr-3" style="float:left;width:35px;height:35px;overflow:hidden;background:#ffb80c;color:#fff;padding-top:5px" id="image-header-section">JO</div>
+							  <div class="media-body">
+							    <p class="mt-0"><b>John Kenneth G. Abella</b><br>
+									Information Technology Services Unit
+							    </p>
+							  </div>
+							</div>
+
+							<p class="text-muted">Where does it come from? Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin
+					</p>
+					    </section>
+
+						<section class="col-12 col-lg-5"><span>Price<i class="material-icons md-18 star-ratings star-price star-group-1524819708425">star_border</i><i class="material-icons md-18 star-ratings star-price star-group-1524819708425">star_border</i><i class="material-icons md-18 star-ratings star-price star-group-1524819708425">star_border</i><i class="material-icons md-18 star-ratings star-price star-group-1524819708425">star_border</i><br></span><span>Goods/ Service Quality<i class="material-icons md-18 star-ratings star-quality star-group-1524819708425">star_border</i><i class="material-icons md-18 star-ratings star-quality star-group-1524819708425">star_border</i><i class="material-icons md-18 star-ratings star-quality star-group-1524819708425">star_border</i><i class="material-icons md-18 star-ratings star-quality star-group-1524819708425">star_border</i><br></span><span>Delivery Time<i class="material-icons md-18 star-ratings star-time star-group-1524819708425">star_border</i><i class="material-icons md-18 star-ratings star-time star-group-1524819708425">star_border</i><i class="material-icons md-18 star-ratings star-time star-group-1524819708425">star_border</i><i class="material-icons md-18 star-ratings star-time star-group-1524819708425">star_border</i><br></span></section>				    
+					
+					</article><br/><br/>
+
+
+
+
+
+				    <!--<p class="col-12" style="background:#ccc;"><i class="material-icons md-18">rate_review</i> Rating <i class="material-icons md-18 float-right text-muted">expand_more</i></p>-->
+
+				    <p class="col-12" style="border-bottom:1px solid rgba(200,200,200,0.3);padding-bottom:10px;"><b>How wil you rate this supplier ?</b> <i class="material-icons md-18 float-right text-muted">expand_more</i></p>
+
+				    <article class="row col-12">
+					    <section class="col-12 col-lg-7">
+					    	
+					    	<div class="media">
+							  <div class="text-center mr-3" style="float:left;width:35px;height:35px;overflow:hidden;background:#ffb80c;color:#fff;padding-top:5px" id="image-header-section">${window.bms.account.alias}</div>
+							  <div class="media-body">
+							    <p class="mt-0"><b>${window.bms.account.name}</b><br/>
+									${window.bms.account.department}
+							    </p>
+							  </div>
+							</div>
+
+					    </section>
+
+						<section class="col-12 col-lg-5 rating-section"></section>`
+
+			html+=`				    
+					</article>
+
+  						<!--<p class="col-12" style="background:#ccc;"><i class="material-icons md-18">feedback</i> Feedback <i class="material-icons md-18 float-right text-muted">expand_more</i></p>-->
+				
+
+				    	<p class="col-12  rating-feedback-section"><br/></p>
+				    </details>`
 	recSection.innerHTML = html
+
+	// rating's criteria
+	criteria.forEach((val, index) => {
+			const span = document.createElement('span')
+			span.innerHTML = `${val.alias}`
+
+			for (let  x = 0; x < 4; x++) {
+				const star = document.createElement('i')
+				star.classList.add('material-icons', 'md-18', 'star-ratings', `star-${val.name}`, `star-group-${uniqueId}`)
+				star.textContent = 'star_border'
+				star.position = x
+				star.criteria = val.name
+				star.addEventListener('click', rate)
+				span.append(star)	
+			}
+
+			span.append(document.createElement('br'))
+
+			recSection.querySelector('.rating-section').append(span)
+	})
+
+
+	// feedback form
+	const textArea = document.createElement('textArea')
+	textArea.classList.add('form-control')
+	textArea.groupId = uniqueId
+	textArea.supplierId = data.id
+	textArea.placeholder = 'Say something about your experience with this supplier'
+	textArea.setAttribute('style', 'border:1px solid #ccc !important;')
+	textArea.addEventListener('keyup', saveRatings)
+
+	const saveProcedure = document.createElement('small')
+	saveProcedure.innerHTML = 'Press <span class="badge badge-dark">CTRL</span> key + <span class="badge badge-dark">ENTER</span> to save'
+
+	// Insert to DOM
+	document.querySelector('.rating-feedback-section').append(textArea)
+	document.querySelector('.rating-feedback-section').append(saveProcedure)
 }
 
 const showAwardedStatus = () => {
@@ -177,41 +387,44 @@ const loadRequirementsDetails = (json) => {
 	})
 
 
-	// awardees
-	json.awardees.forEach((val, index) => {
-		appendAwardees({name : val.name, id: val.id, remarks: val.remarks, proposal_id: val.proposal_id })
-	})
+	// avoid conflct in reading localStorage
+	setTimeout(() => {
+		// awardees
+		json.awardees.forEach((val, index) => {
+			appendAwardees({name : val.name, id: val.id, remarks: val.remarks, proposal_id: val.proposal_id })
+		})
 
-	// awrded banner
-	if (json.awardees.length > 0) {
-		document.getElementById('awardees-section').classList.remove('hide')
-		showAwardedStatus()
-	}
+		// awrded banner
+		if (json.awardees.length > 0) {
+			document.getElementById('awardees-section').classList.remove('hide')
+			showAwardedStatus()
+		}
+	},600)
 
 
 	setTimeout(() => {
-			// dropdown
-			window.bms.default.dropdown('device-dropdown')
-			// enable popup
-			PopupInstance = new PopupES()
-			// remove attachments
-			AttUtil.bindRemoveAttachments()
-			// send
-			ReqUtil.bindSendRequirements()
-			// send
-			ReqUtil.bindSendRequirementsPerItem()
-			// award
-			ReqUtil.bindAward()
-			// cancel invitation
-			ReqUtil.bindRemoveRecepients()
-			// show proposals
-			ReqUtil.bindShowProposalSection(json.id)
-			// awardees
-			ReqUtil.bindRemoveAwardee()
-			// deadline
-			ReqUtil.bindSetDeadline()
-			// send PR
-			ReqUtil.bindSetPR()
+		// dropdown
+		window.bms.default.dropdown('device-dropdown')
+		// enable popup
+		PopupInstance = new PopupES()
+		// remove attachments
+		AttUtil.bindRemoveAttachments()
+		// send
+		ReqUtil.bindSendRequirements()
+		// send
+		ReqUtil.bindSendRequirementsPerItem()
+		// award
+		ReqUtil.bindAward()
+		// cancel invitation
+		ReqUtil.bindRemoveRecepients()
+		// show proposals
+		ReqUtil.bindShowProposalSection(json.id)
+		// awardees
+		ReqUtil.bindRemoveAwardee()
+		// deadline
+		ReqUtil.bindSetDeadline()
+		// send PR
+		ReqUtil.bindSetPR()
 
 
 	},10)

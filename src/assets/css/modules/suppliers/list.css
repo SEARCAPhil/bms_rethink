@@ -178,3 +178,10 @@
 #detail-info-menu {
 	padding: 5px;
 }
+
+.star-ratings {
+	cursor: pointer;
+}
+.star-ratings.active {
+	color: #ffb80c;
+}

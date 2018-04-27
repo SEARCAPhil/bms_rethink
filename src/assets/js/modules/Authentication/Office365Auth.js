@@ -65,6 +65,8 @@
                             localStorage.setItem('username', data.mail)
                             window.localStorage.setItem('id', data.id)
                             window.localStorage.setItem('givenName', data.displayName)
+                            window.localStorage.setItem('department', data.department)
+                            window.localStorage.setItem('position', data.jobTitle)
 
                             window.location = '../#/home/'
                            

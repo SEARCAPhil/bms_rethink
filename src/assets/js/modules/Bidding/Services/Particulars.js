@@ -8,5 +8,4 @@ export default class{
 	view(opt = {}){
 		return XHR.request({method:'GET',url:`${NetConf.get()}/bidding/particulars/?id=${opt.id}&token=${opt.token}`})	
 	}
-	
 }
