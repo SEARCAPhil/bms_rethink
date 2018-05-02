@@ -39,12 +39,6 @@ export default class{
 		return XHR.request({method:'POST',url:url,body:JSON.stringify(opt)})
 	}
 
-	feedback(opt = {}){
-		const url=`${NetConf.get()}/bidding/requirements/feedback.php/?timestamp=${this.timestamp}`
-		return XHR.request({method:'POST',url:url,body:JSON.stringify(opt)})
-	}
-
-
 	deadline(opt = {}){
 		const url=`${NetConf.get()}/bidding/requirements/deadline.php/?timestamp=${this.timestamp}`
 		return XHR.request({method:'POST',url:url,body:JSON.stringify(opt)})

@@ -6,6 +6,7 @@ import IndexedDBReq from '../../modules/Bidding/Util/Storage/Requirements'
 import PopupES from '../../Components/PopupES/PopupES'
 import ProposalService from '../../modules/Invitation/Services/Proposal'
 import RequirementsUtilities from '../../modules/Bidding/Util/Requirements'
+import FeedbackService from '../../modules/Bidding/Services/Feedback'
 
 
 
@@ -17,6 +18,7 @@ const InfoUtil = new InfoUtilities()
 const AttUtil = new AttachmentsReq()
 const PropServ = new ProposalService ()
 const ReqUtil = new RequirementsUtilities()
+const FeedServ = new FeedbackService()
 
 // ratings criteria
 const criteria = [{
@@ -32,6 +34,11 @@ const criteria = [{
 
 // save to global state
 window.bms.default.state.bidding.cur.requirements.criteria = criteria
+// convert to array for later use
+window.bms.default.state.bidding.cur.requirements.criteriaArray = []
+criteria.forEach((val, index) => {
+	window.bms.default.state.bidding.cur.requirements.criteriaArray[val.name] = val.alias
+})
 
 
 window.bms.default.pages = []
@@ -88,7 +95,7 @@ const saveRatings = (e) => {
 			action: 'create'
 		}
 		// save feedback
-		ReqUtil.feedback(payload).then((res) => {
+		FeedServ.create(payload).then((res) => {
 			if(res > 0) {
 				window.location.reload()
 			}
@@ -182,79 +189,14 @@ const appendAwardees = (data) => {
 		}
 
 			html += `<p class="col-12 text-muted">${data.remarks}</p>
-				    			<br/>
+				    			
 
-				    <p class="col-12" style="border-bottom:1px solid rgba(200,200,200,0.3);padding-bottom:10px;margin-top: 60px;"><b>What other say about this supplier</b> <i class="material-icons md-18 float-right text-muted">expand_more</i></p>
+				    <article class="feedback-list-section" id="${data.id}"></article><br/><br/>
 
-				    <article class="row col-12">
-					    <section class="col-12 col-lg-7">
-					    	
-					    	<div class="media">
-							  <div class="text-center mr-3" style="float:left;width:35px;height:35px;overflow:hidden;background:#ffb80c;color:#fff;padding-top:5px" id="image-header-section">JO</div>
-							  <div class="media-body">
-							    <p class="mt-0"><b>John Kenneth G. Abella</b><br>
-									Information Technology Services Unit
-							    </p>
-							  </div>
-							</div>
-
-							<p class="text-muted">Where does it come from? Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin
-					</p>
-					    </section>
-
-						<section class="col-12 col-lg-5"><span>Price<i class="material-icons md-18 star-ratings star-price star-group-1524819708425">star_border</i><i class="material-icons md-18 star-ratings star-price star-group-1524819708425">star_border</i><i class="material-icons md-18 star-ratings star-price star-group-1524819708425">star_border</i><i class="material-icons md-18 star-ratings star-price star-group-1524819708425">star_border</i><br></span><span>Goods/ Service Quality<i class="material-icons md-18 star-ratings star-quality star-group-1524819708425">star_border</i><i class="material-icons md-18 star-ratings star-quality star-group-1524819708425">star_border</i><i class="material-icons md-18 star-ratings star-quality star-group-1524819708425">star_border</i><i class="material-icons md-18 star-ratings star-quality star-group-1524819708425">star_border</i><br></span><span>Delivery Time<i class="material-icons md-18 star-ratings star-time star-group-1524819708425">star_border</i><i class="material-icons md-18 star-ratings star-time star-group-1524819708425">star_border</i><i class="material-icons md-18 star-ratings star-time star-group-1524819708425">star_border</i><i class="material-icons md-18 star-ratings star-time star-group-1524819708425">star_border</i><br></span></section>				    
-					
-					</article><br/><br/>
-
-
-					 <article class="row col-12" style="background:#e9ecef;padding:20px;">
-					    <section class="col-12 col-lg-7">
-					    	
-					    	<div class="media">
-							  <div class="text-center mr-3" style="float:left;width:35px;height:35px;overflow:hidden;background:#ffb80c;color:#fff;padding-top:5px" id="image-header-section">JO</div>
-							  <div class="media-body">
-							    <p class="mt-0"><b>John Kenneth G. Abella</b><br>
-									Information Technology Services Unit
-							    </p>
-							  </div>
-							</div>
-
-							<p class="text-muted">Where does it come from? Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin
-					</p>
-					    </section>
-
-						<section class="col-12 col-lg-5"><span>Price<i class="material-icons md-18 star-ratings star-price star-group-1524819708425">star_border</i><i class="material-icons md-18 star-ratings star-price star-group-1524819708425">star_border</i><i class="material-icons md-18 star-ratings star-price star-group-1524819708425">star_border</i><i class="material-icons md-18 star-ratings star-price star-group-1524819708425">star_border</i><br></span><span>Goods/ Service Quality<i class="material-icons md-18 star-ratings star-quality star-group-1524819708425">star_border</i><i class="material-icons md-18 star-ratings star-quality star-group-1524819708425">star_border</i><i class="material-icons md-18 star-ratings star-quality star-group-1524819708425">star_border</i><i class="material-icons md-18 star-ratings star-quality star-group-1524819708425">star_border</i><br></span><span>Delivery Time<i class="material-icons md-18 star-ratings star-time star-group-1524819708425">star_border</i><i class="material-icons md-18 star-ratings star-time star-group-1524819708425">star_border</i><i class="material-icons md-18 star-ratings star-time star-group-1524819708425">star_border</i><i class="material-icons md-18 star-ratings star-time star-group-1524819708425">star_border</i><br></span></section>				    
-					
-					</article><br/><br/>
-
-
-					 <article class="row col-12">
-					    <section class="col-12 col-lg-7">
-					    	
-					    	<div class="media">
-							  <div class="text-center mr-3" style="float:left;width:35px;height:35px;overflow:hidden;background:#ffb80c;color:#fff;padding-top:5px" id="image-header-section">JO</div>
-							  <div class="media-body">
-							    <p class="mt-0"><b>John Kenneth G. Abella</b><br>
-									Information Technology Services Unit
-							    </p>
-							  </div>
-							</div>
-
-							<p class="text-muted">Where does it come from? Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin
-					</p>
-					    </section>
-
-						<section class="col-12 col-lg-5"><span>Price<i class="material-icons md-18 star-ratings star-price star-group-1524819708425">star_border</i><i class="material-icons md-18 star-ratings star-price star-group-1524819708425">star_border</i><i class="material-icons md-18 star-ratings star-price star-group-1524819708425">star_border</i><i class="material-icons md-18 star-ratings star-price star-group-1524819708425">star_border</i><br></span><span>Goods/ Service Quality<i class="material-icons md-18 star-ratings star-quality star-group-1524819708425">star_border</i><i class="material-icons md-18 star-ratings star-quality star-group-1524819708425">star_border</i><i class="material-icons md-18 star-ratings star-quality star-group-1524819708425">star_border</i><i class="material-icons md-18 star-ratings star-quality star-group-1524819708425">star_border</i><br></span><span>Delivery Time<i class="material-icons md-18 star-ratings star-time star-group-1524819708425">star_border</i><i class="material-icons md-18 star-ratings star-time star-group-1524819708425">star_border</i><i class="material-icons md-18 star-ratings star-time star-group-1524819708425">star_border</i><i class="material-icons md-18 star-ratings star-time star-group-1524819708425">star_border</i><br></span></section>				    
-					
-					</article><br/><br/>
-
-
-
-
-
+	
 				    <!--<p class="col-12" style="background:#ccc;"><i class="material-icons md-18">rate_review</i> Rating <i class="material-icons md-18 float-right text-muted">expand_more</i></p>-->
 
-				    <p class="col-12" style="border-bottom:1px solid rgba(200,200,200,0.3);padding-bottom:10px;"><b>How wil you rate this supplier ?</b> <i class="material-icons md-18 float-right text-muted">expand_more</i></p>
+				    <p class="col-12" style="border-bottom:1px solid rgba(200,200,200,0.3);padding-bottom:10px;"><b>How will you rate this supplier ?</b> <i class="material-icons md-18 float-right text-muted">expand_more</i></p>
 
 				    <article class="row col-12">
 					    <section class="col-12 col-lg-7">
@@ -398,6 +340,10 @@ const loadRequirementsDetails = (json) => {
 		if (json.awardees.length > 0) {
 			document.getElementById('awardees-section').classList.remove('hide')
 			showAwardedStatus()
+			// show feedback
+			setTimeout(() => {
+				window.bms.default.lazyLoad(['./assets/js_native/assets/js/modules/Bidding/Util/Feedback.js'])
+			},1000)
 		}
 	},600)
 
@@ -568,33 +514,17 @@ appRoute.on({
 				el.classList.remove('active')
 			}
 		})
-		/*IDB.get(params.id).then((json) => {	
-		
-			// get bidding information
-			IndexUtil.loadBiddingInfo({id: params.id, status: json.status}).then(() => {
-				
-				document.dispatchEvent(new CustomEvent('biddingInfoChange', {detail: [json]}))
-				// TODO : include script in other js to lessen file size
-				// however additional XHR is required
-				setTimeout(() => {
-					InfoUtil.bindRemoveBidding()
-					InfoUtil.bindSendBidding()
-					InfoUtil.bindSetStatus()
-				},600)
-			}).catch((err) => {
-				console.log(err)
-			})
-		}).catch(err => {
 
-		})*/
 		// show particulars
 		IndexUtil.loadBiddingParticulars(params.id)
 		IndexUtil.loadBiddingListSection()
-
-
 		// load external css
 		loadCSS('assets/css/modules/suppliers/list.css')
 		loadCSS('assets/css/fileicon.css')
+		// load external JS
+		setTimeout(() => {
+			window.bms.default.lazyLoad(['./assets/js_native/assets/js/modules/Bidding/Util/Feedback/Bidding.js'])
+		},1000)
 	},
 	'/bids/requirements/:id': (params) => {
 		window.bms.default.spinner.show()

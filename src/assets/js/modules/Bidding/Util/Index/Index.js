@@ -212,6 +212,12 @@ export default class {
 		    		<hr/>
 		    		<div id="particulars-section"></div>		
 				</section>
+
+				<!--feedback-->
+				<small>
+					<article class="col-lg-11 offset-lg-1 feedback-bidding-list-section" id="${id}"></article><br/><br/>
+				</small>
+
 			`
 			document.querySelector('div[name="/bids/info/requirements"]').innerHTML=htm	
 			window.bms.default.changeDisplay(['div[name="/bids/info"]'],'block')
@@ -219,6 +225,8 @@ export default class {
 			resolve()
 		})
 	}
+
+
 
 	loadBiddingRequirementsInfo () {
 		return new Promise((resolve, reject) => {
