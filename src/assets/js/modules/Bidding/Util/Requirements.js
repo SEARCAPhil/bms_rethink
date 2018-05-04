@@ -932,6 +932,9 @@ export default class {
 	}
 
 
+	
+
+
 	bindSendRequirements () {
 		const proto = Object.assign({ __proto__: this.__proto__ }, this)
 		document.querySelectorAll('.send-requirements-modal-btn').forEach((val, index) => {

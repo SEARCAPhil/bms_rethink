@@ -29,18 +29,24 @@ const showReceived = (id) => {
 									<i class="material-icons">share</i> You have received this proposal. Please review all the details before doing any further actions.
 
 									<a class="award-prop-modal-btn btn btn-sm btn-danger" data-resources="${id}" data-target="#bidding-requirements-modal" data-popup-toggle="open">
-										<i class="material-icons md-18">card_membership</i> Award
+										<i class="material-icons md-18">star</i> Set as Winner
 									</a>
+									<br/>
+
+									<small class="text-muted">Note: Supplier will not received any notification. General Services should 'award' the supplier manualy.</small>
 
 						        </p>
 						    </center>`
 	setTimeout(() => {
 		const popupInstance = new window.bms.exports.PopupES()
 		// award
-		PropUtil.bindAward()
+		PropUtil.bindSetWinner()
 
 	},400)
 }
+
+
+
 
 
 const showNeedChanges = (remarks = '') => {
@@ -66,6 +72,33 @@ const showAwarded = (remarks = '') => {
 								<i class="material-icons">star</i> AWARDED
 					        </p>
 						    </center>`
+}
+
+
+
+const showWinner = (id) => {
+	let targ = document.getElementById('prop-info-menu-status')
+
+	targ.innerHTML = `<section style="background:#464a4e;color:#fff;padding:5px;">
+						<div class="media">
+							<img src="./assets/img/trophy.png" width="40px" class="mr-3 ml-3 mt-0">
+							<div class="media-body">
+								<h5 class="mt-0"  style="color:#ffb80c;">Winner</h5>
+								This bidding proposal won the competition. You can now congratuate the supplier and officialy award them.&emsp; 
+								<a class="award-prop-modal-btn btn btn-xs btn-danger" data-resources="${id}" data-target="#bidding-requirements-modal" data-popup-toggle="open">
+									<i class="material-icons md-18">card_membership</i> Award
+								</a>
+								<br/>
+							</div>
+						</div>
+					</section>`
+
+	setTimeout(() => {
+		const popupInstance = new window.bms.exports.PopupES()
+		// award
+		PropUtil.bindAward()
+
+	},400)
 }
 
 
@@ -198,21 +231,26 @@ document.querySelectorAll('.proposal-dialog-btn').forEach((val, index) => {
 
 						// clear status
 						statusSec.innerHTML = ''
-						// status
 
+						// status
+						// draft
 						if (json.status ==0) {
 							propMenu.classList.remove('hide')
 						}
-						if (json.status == 1 && (!window.bms.default.isCBAAsst())) {
+
+						//sent
+						// This is for regular users
+						if ((json.status == 1 || json.status == 5) && (!window.bms.default.isCBAAsst())) {
 							propMenu.classList.add('hide')
 							disableRemoveAttLink()
 							showSent()
 						}
-
+						// requesting for changes
 						if (json.status == 2) {
 							showNeedChanges(json.bidders_remarks)
 						}
 
+						// awarded by General Services
 						if (json.status == 3) {
 							propMenu.classList.add('hide')
 							disableRemoveAttLink()
@@ -220,9 +258,19 @@ document.querySelectorAll('.proposal-dialog-btn').forEach((val, index) => {
 							
 						}
 
-						// allow attachment if CBA assts.
 
-						if (json.status == 3 && window.bms.default.isCBAAsst()) {
+						// winner
+						// only allow CBA assts. to select a winner
+						if (json.status == 5 && (window.bms.default.isCBAAsst() || window.bms.default.isGSU())) {
+							propMenu.classList.add('hide')
+							disableRemoveAttLink()
+							showWinner(json.id)
+							
+						}
+
+						// awarded by General Services OR SET as Winner by CBA
+						// but only allow CBA assts. to attach files
+						if ((json.status == 3 || json.status == 5) && window.bms.default.isCBAAsst()) {
 							// show menu
 							let targ = document.getElementById('prop-info-menu')
 							targ.classList.remove('hide')
@@ -232,6 +280,8 @@ document.querySelectorAll('.proposal-dialog-btn').forEach((val, index) => {
 							document.querySelector('.remove-prop-modal-btn').remove()
 						}
 
+						// sent
+						// * FOR CBA ASSTS. ONLY
 						if (window.bms.default.isCBAAsst() && json.status == 1) {
 							showReceived(json.id)
 							changeSendToReturn()

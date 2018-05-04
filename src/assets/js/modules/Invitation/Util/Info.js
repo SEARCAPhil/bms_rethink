@@ -151,8 +151,34 @@ export default class {
 		let data = {
 			id,
 			token: window.localStorage.getItem('token'),
-			remarks: document.getElementById('award-remarks').value ,
 			action: 'award',
+		}
+
+		this.PropServ.send(data).then((json) => {
+			let res = JSON.parse(json)
+
+			if( parseInt(res) > 0){
+				window.location.reload()
+			}
+
+			window.bms.default.spinner.hide()
+			
+		}).catch(err => {
+			window.bms.default.spinner.hide()
+		})
+	}
+
+
+
+	winner (e) {
+		const id =(e.target.el.getAttribute('data-resources'))
+		window.bms.default.spinner.show()
+
+		let data = {
+			id,
+			token: window.localStorage.getItem('token'),
+			remarks: document.getElementById('award-remarks').value ,
+			action: 'winner',
 		}
 
 		this.PropServ.send(data).then((json) => {
@@ -170,6 +196,7 @@ export default class {
 			window.bms.default.spinner.hide()
 		})
 	}
+
 
 	setReferenceNo (e) {
 		window.bms.default.spinner.show()
@@ -322,6 +349,35 @@ export default class {
 	}
 
 
+	loadWinnerRequirements (e) {
+		const URL='pages/bidding/modal/winner-proposal.html'
+		const id=e.target.id
+		const proto = Object.assign({ __proto__: this.__proto__ }, this)
+
+		return this.XHR.request({method:'GET',url:URL}).then(res=>{
+			let modalTarget=document.getElementById('modal-bidding-requirements-body')
+			modalTarget.innerHTML=res
+
+			setTimeout(()=>{
+				window.bms.default.scriptLoader(modalTarget)
+			},50)
+
+			setTimeout(()=>{
+				//remove cancel
+				document.getElementById('modal-dialog-close-button').addEventListener('click',()=>{
+		
+					document.getElementById('bidding-requirements-modal').close()
+					
+				})
+
+				let btn = document.getElementById('modal-dialog-send-button')
+				btn.el =  e.target
+				btn.addEventListener('click', this.winner.bind(proto))
+			})
+		}).catch(e=>{})
+	}
+
+
 	loadProposalForm (e) {
 		const URL='pages/bidding/forms/proposals/index.html'
 		const target = document.getElementById('reg-prop-dialog-section')
@@ -402,6 +458,14 @@ export default class {
 		const proto = Object.assign({ __proto__: this.__proto__ }, this)
 		document.querySelectorAll('.award-prop-modal-btn').forEach((val, index) => {
 			val.addEventListener('click',this.loadAwardRequirements.bind(proto))
+		})
+	}
+
+
+	bindSetWinner () {
+		const proto = Object.assign({ __proto__: this.__proto__ }, this)
+		document.querySelectorAll('.award-prop-modal-btn').forEach((val, index) => {
+			val.addEventListener('click',this.loadWinnerRequirements.bind(proto))
 		})
 	}
 

@@ -230,7 +230,7 @@ const showProposals = (params) => {
 					status = `<br/><span class="text-danger" data-resources="${val.id}"><i class="material-icons md-12">drafts</i> DRAFT</span>`
 				}
 
-				if (val.status == 1) {
+				if (val.status == 1 || val.status == 5) {
 					status = `<br/><span class="text-success" data-resources="${val.id}"><i class="material-icons md-12">check</i> Sent</span>`
 				}
 

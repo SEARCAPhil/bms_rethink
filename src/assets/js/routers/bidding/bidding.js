@@ -170,10 +170,14 @@ const appendAwardees = (data) => {
 
 	let recSection = document.querySelector('#awardees-section-list')
 
+	let stat = ''
+	if (data.status != 3 && data.status) {
+		stat = '<span class="text-danger float-right">(Not awarded)</span>'
+	}
 
 
 	let html =	`<details class="col-12 row" open>
-				    			<summary class="text-success"> <i class="material-icons md-18">card_membership</i> ${data.name}   </summary>
+				    			<summary class="text-success"> ${data.name} ${stat}   </summary>
 				    			<br/>`
 				    			
 		if (data.proposal_id) {				
@@ -332,19 +336,26 @@ const loadRequirementsDetails = (json) => {
 	// avoid conflct in reading localStorage
 	setTimeout(() => {
 		// awardees
+		let awardedCounted = false
 		json.awardees.forEach((val, index) => {
-			appendAwardees({name : val.name, id: val.id, remarks: val.remarks, proposal_id: val.proposal_id })
+			appendAwardees({name : val.name, id: val.id, remarks: val.remarks, proposal_id: val.proposal_id, status: val.proposal_status })
+
+			// change banner once there is an awarded supplier
+			if (val.proposal_status == 3 && !awardedCounted) {
+				awardedCounted = true
+				showAwardedStatus()
+			}
 		})
 
 		// awrded banner
 		if (json.awardees.length > 0) {
 			document.getElementById('awardees-section').classList.remove('hide')
-			showAwardedStatus()
 			// show feedback
 			setTimeout(() => {
 				window.bms.default.lazyLoad(['./assets/js_native/assets/js/modules/Bidding/Util/Feedback.js'])
 			},1000)
 		}
+
 	},600)
 
 
@@ -590,8 +601,12 @@ appRoute.on({
 									status = `<br/><span class="text-danger" data-resources="${val.id}"><i class="material-icons md-12">warning</i> Requesting changes</span>`
 								}
 
-								if (val.status ==3) {
+								if (val.status == 3) {
 									status = `<br/><span data-resources="${val.id}" style="color:#ffb80c;"><i class="material-icons">star</i> AWARDED</span>`
+								}
+
+								if (val.status == 5) {
+									status = `<br/><span data-resources="${val.id}" style="color:#ffb80c;"><i class="material-icons">star</i> Winner</span>`
 								}
 
 								html.innerHTML = `

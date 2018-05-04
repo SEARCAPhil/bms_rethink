@@ -288,7 +288,7 @@ export default class {
 
 							<li class="nav-item">
 								<a class="nav-link award-requirements-modal-btn hide" data-target="#bidding-requirements-modal" data-popup-toggle="open">
-									<i class="material-icons md-18">card_membership</i> Award <small>(*bidding exemption)</small>
+									<i class="material-icons md-18">card_membership</i> Select Winner <small>(*bidding exemption)</small>
 								</a>
 							</li>
 
@@ -338,7 +338,7 @@ export default class {
 
 				    	<div class="hide" id="awardees-section">
 				    		<hr/>
-				    		<b>Awarded to</b>
+				    		<b>Winning Bidder(s)</b>
 				    		<section class="row" id="awardees-section-list"></section>
 				    		
 				    	</div>
