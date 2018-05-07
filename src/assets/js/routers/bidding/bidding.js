@@ -171,13 +171,19 @@ const appendAwardees = (data) => {
 	let recSection = document.querySelector('#awardees-section-list')
 
 	let stat = ''
-	if (data.status != 3 && data.status) {
-		stat = '<span class="text-danger float-right">(Not awarded)</span>'
+	if (data.status != 2 && data.status) {
+		stat = `<span class="float-right" data-resources="${data.id}" id="${data.id}">
+			<a class="award-list-modal-btn text-danger" id="${data.id}" data-resources="${data.id}" data-target="#bidding-requirements-modal" data-popup-toggle="open">
+				<i class="material-icons md-18">card_membership</i> Click to Award
+			</a>
+		</span>`
+	} else {
+		stat = `<span class="float-right" style="color:#ffb80c;" data-resources="${data.id}" id="${data.id}"><i class="material-icons md-18">star</i> Awarded</span>`
 	}
 
 
 	let html =	`<details class="col-12 row" open>
-				    			<summary class="text-success"> ${data.name} ${stat}   </summary>
+				    			<summary> <span class="text-success">${data.name}</span> ${stat}   </summary>
 				    			<br/>`
 				    			
 		if (data.proposal_id) {				
@@ -338,10 +344,10 @@ const loadRequirementsDetails = (json) => {
 		// awardees
 		let awardedCounted = false
 		json.awardees.forEach((val, index) => {
-			appendAwardees({name : val.name, id: val.id, remarks: val.remarks, proposal_id: val.proposal_id, status: val.proposal_status })
+			appendAwardees({name : val.name, id: val.id, remarks: val.remarks, proposal_id: val.proposal_id, status: val.status })
 
 			// change banner once there is an awarded supplier
-			if (val.proposal_status == 3 && !awardedCounted) {
+			if (val.status == 2 && !awardedCounted) {
 				awardedCounted = true
 				showAwardedStatus()
 			}
@@ -353,8 +359,13 @@ const loadRequirementsDetails = (json) => {
 			// show feedback
 			setTimeout(() => {
 				window.bms.default.lazyLoad(['./assets/js_native/assets/js/modules/Bidding/Util/Feedback.js'])
+				// award
+				ReqUtil.bindAward()
 			},1000)
 		}
+
+		// enable popup
+		PopupInstance = new PopupES()
 
 	},600)
 
@@ -370,8 +381,8 @@ const loadRequirementsDetails = (json) => {
 		ReqUtil.bindSendRequirements()
 		// send
 		ReqUtil.bindSendRequirementsPerItem()
-		// award
-		ReqUtil.bindAward()
+		// winner
+		ReqUtil.bindSetWinner()
 		// cancel invitation
 		ReqUtil.bindRemoveRecepients()
 		// show proposals
@@ -412,8 +423,6 @@ const loadRequirementsDetails = (json) => {
 		if (window.bms.default.isCBAAsst() && json.bidding_status == 3) {
 			document.querySelector('.award-requirements-modal-btn').classList.remove('hide')
 		}
-
-			
 
 	},800)
 
@@ -656,11 +665,12 @@ appRoute.on({
 							compareBtn.addEventListener('click' , () => {
 								// get all selected checkbox
 								let ids = []
+								const isSignatoriesIncluded = document.querySelector('#compare-sign-checkbox').checked ? '&signatories=true' : ''
 								document.querySelectorAll(`.compare-checkbox-list:checked`).forEach((el, index) => {
 									const atr = el.getAttribute('data-resources')
 									if (!ids[atr]) ids.push(atr)
 								})
-								window.open(`${window.bms.config.network}/bidding/reports/proposal_comparison.php?id=${params.id}&token=6170b5207b92e5a7445ee3f7de7247c4c1f1b8ef&prop=${ids.join(',')}`)
+								window.open(`${window.bms.config.network}/bidding/reports/proposal_comparison.php?id=${params.id}&token=6170b5207b92e5a7445ee3f7de7247c4c1f1b8ef&prop=${ids.join(',')}${isSignatoriesIncluded}`)
 							})
 						}
 
