@@ -13,6 +13,7 @@ export default class {
 		const data = {
 			id: window.bms.default.state.bidding.cur.bid.id,
 			action: 'remove',
+			token : window.localStorage.getItem('token'),
 		}
 
 		this.ListServ.remove(data).then((json) => {
@@ -33,7 +34,9 @@ export default class {
 				// this.IDB.delete(data.id)
 
 			}else{
-
+				alert('Unable to remove this bidding request! Please try again later')
+				// close popup
+				document.getElementById('bidding-modal').close()
 			}
 
 			window.bms.default.spinner.hide()

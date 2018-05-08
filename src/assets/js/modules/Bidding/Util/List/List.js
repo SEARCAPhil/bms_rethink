@@ -88,7 +88,25 @@ export default class {
 
 	}
 
+	// load more bidding from database
+	loadMoreBiddingRequests (e) {
+		// get new page
+		let page = e.target.page		
+		page ++
+		// remove more button
+		event.target.parentNode.remove()
+		// retrieve from DB
+		this.lists({
+			token : window.localStorage.getItem('token'),
+			page,
+		})
+	}
+
+
 	lists (opt = {}) {
+		const proto = Object.assign({ __proto__: this.__proto__ }, this)
+		opt. page = opt.page || 1
+		// retrieve from DB
 		this.ListServ.lists(opt).then(data => {
 			const json=JSON.parse(data)
 			const targ = document.querySelector('.list-bidding-section')
@@ -97,8 +115,10 @@ export default class {
 				// open DB
 				// let trans = DB.open('bidding')
 
-				// clear area
-				targ.innerHTML = ' '
+				// clear area for the very first request
+				if (opt.page == 1) {
+					targ.innerHTML = ' '
+				}
 				for (let x = 0; x < json.length; x++) {
 					// str to int
 					json[x].id = parseInt(json[x].id)
@@ -107,6 +127,18 @@ export default class {
 					// trans.add(json[x])
 					// add to DOM
 					targ.appendChild(this.List.render({id:json[x].id, name:json[x].name, description:json[x].description, profile_name:json[x].profile_name, date_created:json[x].date_created, class:`col-xs-12 col-md-12 col-sm-12 list ${window.bms.default.state.bidding.cur.bid.id==json[x].id ? 'active' : ''}`}))
+					if (x+1 == json.length) {
+						const p = document.createElement('p')
+						const moreBtn = document.createElement('a')
+						moreBtn.textContent = 'show more'
+						moreBtn.href = '#'
+						moreBtn.page = opt.page
+						moreBtn.setAttribute('onclick','event.preventDefault();')
+						moreBtn.addEventListener('click', this.loadMoreBiddingRequests.bind(proto))
+						p.classList.add('text-center', 'col-12')
+						p.appendChild(moreBtn)
+						targ.appendChild(p)
+					}
 				}
 
 				window.bms.default.spinner.hide()

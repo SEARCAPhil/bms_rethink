@@ -738,10 +738,10 @@ export default class {
 										<div class="col-1">
 											<i class="material-icons md-18 device-dropdown" data-device-dropdown="dropdown-req-recepients-${val}" data-resources="2">arrow_drop_down</i>
 											<div class="dropdown-section float-right" id="dropdown-req-recepients-${val}">
-												<ul class="list-group list-group-flush">
+												<ul class="list-group list-group-flush" style="font-size:14px;">
 													<li class="list-group-item"><a data-target="#bidding-modal" data-popup-toggle="open" href="#" class="remove-receipients-modal" data-resources="${res.data[val]}">Cancel Invitation</a></li>
 													<li class="list-group-item"><a href="${window.bms.config.network}/bidding/reports/price_inquiry_per_item.php?id=${res.data[val]}&token=${data.token}" target="_blank" data-resources="${res.data[val]}"><i class="material-icons md-18">print</i> Price Inquiry</a></li>
-													<li class="list-group-item"><a href="${window.bms.config.network}/bidding/reports/price_inquiry_per_item.php?id=${res.data[val]}&token=${data.token}" target="_blank" data-resources="${res.data[val]}"><i class="material-icons md-18">print</i> Price Inquiry (All)</a></li>
+													<li class="list-group-item"><a href="${window.bms.config.network}/bidding/reports/price_inquiry_per_item.php?id=${res.data[val]}&token=${data.token}" target="_blank" data-resources="${res.data[val]}"><i class="material-icons md-18">print</i> Related Items</a></li>
 						
 												<ul>
 											</div>

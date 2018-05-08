@@ -140,10 +140,10 @@ const appendReqRecepients = (data) => {
 									<div class="col-1">
 										<i class="material-icons md-18 device-dropdown" data-device-dropdown="dropdown-req-recepients-${data.id}" data-resources="${data.id}">arrow_drop_down</i>
 										<div class="dropdown-section float-right" id="dropdown-req-recepients-${data.id}">
-											<ul class="list-group list-group-flush">
+											<ul class="list-group list-group-flush" style="font-size:14px;">
 												<li class="list-group-item"><a data-target="#bidding-modal" data-popup-toggle="open" href="#" class="remove-receipients-modal" data-resources="${data.id}">Cancel Invitation</a></li>
-												<li class="list-group-item"><a href="${window.bms.config.network}/bidding/reports/price_inquiry_per_item.php?id=${data.id}&token=${window.localStorage.getItem('token')}" target="_blank" data-resources="${data.id}"><i class="material-icons md-18">print</i> Price Inquiry</a></li>
-												<li class="list-group-item"><a href="${window.bms.config.network}/bidding/reports/price_inquiry.php?id=${data.id}&token=${window.localStorage.getItem('token')}" target="_blank" data-resources="${data.id}"><i class="material-icons md-18">print</i> Price Inquiry (All)</a></li>
+												<li class="list-group-item"><a href="${window.bms.config.network}/bidding/reports/price_inquiry_per_item.php?id=${data.id}&token=${window.localStorage.getItem('token')}" target="_blank" data-resources="${data.id}"><div class="file-icon file-icon-sm" data-type="pdf"></div> Price Inquiry</a></li>
+												<li class="list-group-item"><a href="${window.bms.config.network}/bidding/reports/price_inquiry.php?id=${data.id}&token=${window.localStorage.getItem('token')}" target="_blank" data-resources="${data.id}"><div class="file-icon file-icon-sm" data-type="pdf"></div> See Related</a></li>
 											<ul>
 										</div>
 									</div>
@@ -212,10 +212,10 @@ const appendAwardees = (data) => {
 					    <section class="col-12 col-lg-7">
 					    	
 					    	<div class="media">
-							  <div class="text-center mr-3" style="float:left;width:35px;height:35px;overflow:hidden;background:#ffb80c;color:#fff;padding-top:5px" id="image-header-section">${window.bms.account.alias}</div>
+							  <div class="text-center mr-3" style="float:left;width:35px;height:35px;overflow:hidden;background:#495057;color:#fff;padding-top:5px" id="image-header-section">${window.bms.account.alias}</div>
 							  <div class="media-body">
 							    <p class="mt-0"><b>${window.bms.account.name}</b><br/>
-									${window.bms.account.department}
+									${window.bms.account.department || ''}
 							    </p>
 							  </div>
 							</div>
@@ -684,56 +684,6 @@ appRoute.on({
 			window.bms.default.spinner.hide()
 		})
 
-		// get requirements
-		/*IDBReq.get(params.id).then((json) => {
-			if (json.id) {
-				document.querySelector('.req-name').textContent = json.name
-				document.querySelector('.req-currency').textContent = json.budget_currency
-				document.querySelector('.req-amount').textContent = json.budget_amount
-				document.querySelector('.req-quantity').textContent = json.quantity
-				document.querySelector('.req-unit').textContent = json.unit
-
-				json.specs.forEach((val, index) => {
-					targ.innerHTML += `
-						<div class="col-2">
-				    		<b>${val.name}</b>
-				    	</div>
-				    	<div class="col-10">
-				    		<p>${val.value}</p>
-				    	</div>
-					`
-				})
-
-				json.attachments.forEach((val, index) => {
-					appendReqAttachments({type: val.type, original_filename: val.original_filename, id: val.id })
-				})
-
-				// recepients
-				json.recepients.forEach((val, index) => {
-					appendReqRecepients({name: val.name, id: val.id })
-				})
-
-				setTimeout(() => {
-						// dropdown
-						window.bms.default.dropdown('device-dropdown')
-						// enable popup
-						PopupInstance = new PopupES()
-						// remove attachments
-						AttUtil.bindRemoveAttachments()
-
-						// send
-						ReqUtil.bindSendRequirements()
-
-						// send
-						ReqUtil.bindRemoveRecepients()
-
-						// show proposals
-						ReqUtil.bindShowProposalSection(params.id)
-				},10)
-
-			}
-		})*/
-
 		loadCSS('assets/css/modules/suppliers/list.css')
 		loadCSS('assets/css/fileicon.css')
 	},
@@ -743,120 +693,13 @@ appRoute.on({
 		window.bms.default.changeDisplay(['div[name="/bids/initial"]','div[name="/bids/forms/registration/2"]', 'div[name="/bids/forms/registration"]', 'div[name="/bids/forms/registration/3"]', 'div[name="/bids/info"]', 'div[name="/bids/info"]','[name="/bids/info/particulars/details"]'],'none')
 		window.bms.default.changeDisplay(['[name="/bids/info/particulars"]', '[name="/bids/info/particulars/proposals/form"]'],'block')
 
-		const target = document.querySelector('[name="/bids/info/particulars/proposals/form"]')
-		
-
-		/*ReqUtil.loadProposalForm().then(() => {
-			const section = document.querySelector('.specs-section-proposal')
-
-			window.bms.default.spinner.hide()
-
-				ReqUtil.get(params.id).then(json => {
-					if (json.id) {
-						document.querySelector('.req-form-name').textContent = json.name
-						// change unit & quantity
-						document.querySelector('.req-quantity-reg').textContent = json.quantity
-						document.querySelector('.req-unit-reg').textContent = json.unit
-
-						// clear
-						section.innerHTML = ''
-
-						// specs
-						json.specs.forEach((val, index) => {
-							let html = document.createElement('span')
-							html.classList.add('row', 'specs-input-section', 'specs-input-section-orig')
-							html.setAttribute('data-resources', json.id)
-							html.setAttribute('style', 'margin-top: 15px;')
-							html.innerHTML = `
-								 <div class="col-lg-3 col-md-3" id="orig-req-name-${val.id}" class="orig-req-name">
-							    	<b>${val.name}</b>
-							    </div>
-							    <div class="col-lg-9 col-md-9">
-							    	<span id="orig-req-val-${val.id}" class="orig-req-val" data-resources-val="${val.value}">${val.value}</span>
-							    	<small class="orig-req-menu"></small>
-							    </div>
-
-							`
-
-							// change link
-							let btn = document.createElement('a')
-							btn.href = '#'
-							btn.setAttribute('onclick', 'event.preventDefault()')
-							btn.setAttribute('data-resources', val.id)
-							btn.setAttribute('data-resources-val', val.value)
-							btn.textContent = 'change'
-							btn.addEventListener('click', changeEventSpecsInput)
-
-							html.querySelector('.orig-req-menu').append(btn)
-
-							section.append(html)
-						})
-
-						// bind other specs
-						const otherSpecsBtn = document.querySelector('.add-other-specs-btn')
-						otherSpecsBtn.addEventListener('click', addOtherSpecsField)
-
-						setTimeout(() => {
-							// enable popup
-							const pop = new window.bms.exports.PopupES()
-						
-							// show proposals
-							ReqUtil.bindSendProposal()
-							ReqUtil.bindSaveProposal()
-						},10)
-					}
-				})
-			// get requirements
-			/*IDBReq.get(params.id).then((json) => {
-				if (json.id) {
-					// change unit & quantity
-					document.querySelector('.req-quantity-reg').textContent = json.quantity
-					document.querySelector('.req-unit-reg').textContent = json.unit
-
-					// clear
-					section.innerHTML = ''
-
-					// specs
-					json.specs.forEach((val, index) => {
-						let html = document.createElement('span')
-						html.classList.add('row', 'specs-input-section')
-						html.setAttribute('data-resources', json.id)
-						html.setAttribute('style', 'margin-top: 15px;')
-						html.innerHTML = `
-							 <div class="col-lg-3 col-md-3">
-						    	<b>${val.name}</b>
-						    </div>
-						    <div class="col-lg-9 col-md-9">
-						    	<span>${val.value}</span>
-						    	<small><a href="#" onclick="event.preventDefault()">change</a></small>
-						    </div>
-
-						`
-						section.append(html)
-					})
-
-					setTimeout(() => {
-						// enable popup
-						const pop = new window.bms.exports.PopupES()
-					
-						// show proposals
-						ReqUtil.bindSendProposal()
-					},10)
-
-				}
-			})*/
-		//}) 
-
 		// load list if not exists
 		IndexUtil.loadBiddingListSection()
-		loadCSS('assets/css/modules/suppliers/list.css')
-
-		
+		loadCSS('assets/css/modules/suppliers/list.css')	
 	},
 	'/bids/forms/registration/*': (params) => {
 		IndexUtil.loadBiddingListSection()
 		window.bms.default.lazyLoad(['./assets/js_native/assets/js/routers/bidding/registration.js'],{once:true})
 		loadCSS('assets/css/modules/suppliers/list.css')
-
 	}
 }).resolve()

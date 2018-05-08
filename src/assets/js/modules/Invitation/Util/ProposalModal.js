@@ -67,9 +67,9 @@ const showNeedChanges = (remarks = '') => {
 const showAwarded = (remarks = '') => {
 	let targ = document.getElementById('prop-info-menu-status')
 
-	targ.innerHTML = `<center style="background:#464a4e;color:#fff;padding:5px;">
-							<p class="col-12" style="color:#ffb80c;">
-								<i class="material-icons">star</i> AWARDED
+	targ.innerHTML = `<center style="background:#464a4e;color:#fff;padding:5px;" class="congrats-banner">
+							<p class="col-12">
+								<img src="assets/img/medal.png" width="50px"><br/> <span  style="color:#ffb80c;font-size:1.3em;">Congratulations!</span><br/> This proposal stands out among others
 					        </p>
 						    </center>`
 }

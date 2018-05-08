@@ -13,7 +13,7 @@ export default class{
 		opt.page=opt.page||1
 		opt.filter=opt.filter||'all'
 
-		const url=`${NetConf.get()}/bidding/?status=${opt.filter}&${opt.page}&token=${opt.token}`
+		const url=`${NetConf.get()}/bidding/?status=${opt.filter}&page=${opt.page}&token=${opt.token}`
 		//require exports.js
 		const XHR=new window.bms.exports.XHR()
 
@@ -25,7 +25,7 @@ export default class{
 		let opt=options||{}
 		opt.page=opt.page||1
 
-		const url=`${NetConf.get()}/bidding/search.php?param=${opt.param}&${opt.page}&token=${opt.token}`
+		const url=`${NetConf.get()}/bidding/search.php?param=${opt.param}&page=${opt.page}&token=${opt.token}`
 		//require exports.js
 		const XHR=new window.bms.exports.XHR()
 

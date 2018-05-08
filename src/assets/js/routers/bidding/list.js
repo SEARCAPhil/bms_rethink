@@ -120,6 +120,14 @@ const loadReSendBidding = (e) => {
 	}).catch(e=>{})
 }
 
+const loadCSS = (href) => {
+	let css = document.createElement('link')
+	css.type= 'text/css'
+	css.rel = 'stylesheet'
+	css.href = href
+	document.body.append(css)
+}
+
 
 const loadApproveBidding = (e) => {
 	const URL='pages/bidding/modal/approve.html'
@@ -728,5 +736,17 @@ appRoute.on({
 			//listUtil.listsFromLocal({filter: 'all'})
 			listUtil.lists({ token : window.localStorage.getItem('token') })
 		}
+	},
+	'/bids/reports/': (params) => {
+		window.bms.default.changeDisplay(['.inv-router-section', '.bids-router-section'],'none')
+		window.bms.default.activeMenu('bids-menu-list-reports')
+		
+		var url=`pages/bidding/reports/index.html`
+		return XHR.request({method:'GET',url:url}).then(res => {
+			let targ = document.getElementById('bids-router-reports-section')
+			targ.innerHTML = res
+			window.bms.default.scriptLoader(targ)
+		})
+		loadCSS('assets/css/fileicon.css')
 	},
 }).resolve()

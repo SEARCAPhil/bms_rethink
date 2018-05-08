@@ -1,0 +1,39 @@
+<article class="col-md-12 col-lg-6 offset-lg-4" style="margin-top: 90px;">
+    <h2>Reports</h2>
+    <section>
+        <details>
+            <summary>Summary of Bidding request</summary>
+            <br/><br/>
+            <p><b>Please select date range below :</b> <button class="btn btn-dark btn-sm" id="generate-summary-btn"><div class="file-icon file-icon-sm" data-type="pdf"></div>Generate</button> </p>
+            <section class="row">
+                <div class="form-group col-lg-2">
+                    <label>From</label>
+                </div>
+                <div class="form-group col-lg-10">
+                    <input type="date" class="form-control" id="generate-summary-from">
+                </div>
+            </section>
+            <section class="row">
+                <div class="form-group col-lg-2">
+                    <label>To</label>
+                </div>
+                <div class="form-group col-lg-10">
+                    <input type="date" class="form-control" id="generate-summary-to">
+                </div>
+            </section>
+        </details>
+    </section>
+</article>
+<script>
+    (()=> {
+        let btn = document.getElementById('generate-summary-btn')
+        btn.addEventListener('click', () => {
+            const from = document.getElementById('generate-summary-from')
+            const to = document.getElementById('generate-summary-to')
+
+            if(from.value.length && to.value.length) {
+                window.open(`${window.bms.config.network}/bidding/reports/bidding_summary.php?from=${from.value}&to=${to.value}`)
+            }
+        })
+    })(window)
+</script>

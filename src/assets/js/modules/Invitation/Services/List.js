@@ -10,7 +10,7 @@ export default class{
 		opt.page=opt.page||1
 		opt.filter=opt.filter||'all'
 
-		const url=`${NetConf.get()}/bidding/invitations/?status=${opt.filter}&${opt.page}&token=${opt.token}`
+		const url=`${NetConf.get()}/bidding/invitations/?status=${opt.filter}&page=${opt.page}&token=${opt.token}`
 
 		//require exports.js
 		const XHR=new window.bms.exports.XHR()

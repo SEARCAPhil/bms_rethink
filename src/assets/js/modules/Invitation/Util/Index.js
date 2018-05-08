@@ -158,9 +158,9 @@ export default class {
 
 				<section class="col-lg-10 offset-lg-1">
 		    		<h2 class="req-name"></h2>
-		    		<div class="btn-group btn-group-md" role="group">
+		    		<div class="btn-group btn-group-sm" role="group">
 						<button class="btn btn-default btn-sm" style="border:1px solid #009688;background:#e9ecef;">
-							<i class="material-icons md-18">print</i> PRINT
+							<i class="material-icons md-18">print</i> Price Inquiry
 						</button>
 					 	<button type="button" class="btn btn-default device-dropdown" style="border:1px solid #009688;background:#e9ecef;" data-device-dropdown="print-inv-menu-drop">
 					 		<i class="material-icons md-18">expand_more</i>
@@ -168,12 +168,12 @@ export default class {
 								<ul class="list-group list-group-flush text-left">
 									<li class="list-group-item">
 										<a href="#" target="_blank" class="price-inquiry-btn text-secondary">
-											<i class="material-icons md-18">print</i> All Items
+											<i class="material-icons md-18">print</i> Current
 										</a>
 									</li>
 									<li class="list-group-item">
 										<a href="#" target="_blank" class="price-inquiry-current-btn text-secondary">
-											<i class="material-icons md-18">print</i> Current
+											<i class="material-icons md-18">print</i> Related Items
 										</a>
 									</li>
 								</ul>

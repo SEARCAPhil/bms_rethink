@@ -42,6 +42,7 @@ const showDeadline = () => {
 	let targ = document.getElementById('detail-req-menu-status')
 	targ.parentNode.style.background = '#dc3545'
 	targ.parentNode.style.color = '#fff'
+	targ.parentNode.style.padding = '4px'
 	targ.parentNode.innerHTML = `<section class="col-lg-11 offset-lg-1">
 						<ul class="nav">
 							<li class="nav-item">
@@ -67,7 +68,7 @@ const showDeadline = () => {
 
 const showWon = () => {
 	let targ = document.getElementById('detail-req-menu-status')
-	targ.parentNode.style.background = '#007bff'
+	targ.parentNode.style.background = '#464a4e'
 	targ.parentNode.style.color = '#fff'
 	targ.parentNode.innerHTML = `
 	<style>

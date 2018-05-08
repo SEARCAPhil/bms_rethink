@@ -49,10 +49,9 @@ export default class {
 	                                <h2 id="prop-info-name" class="text-center">Product name</h2>
 
 	                                <small>
-					    				<p class="text-danger"><b>Quantity : </b> <span class="prop-info-quantity">0</span> <span class="prop-info-unit">N/A</span></p>
+					    				<p class="text-danger text-center"><b>Quantity : </b> <span class="prop-info-quantity">0</span> <span class="prop-info-unit">N/A</span></p>
 					    			</small>
 					    		</p>
-                                <hr/>
                              </li>
                              
                              <li>

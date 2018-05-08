@@ -341,14 +341,23 @@
                         </li>
 
 
-                         <li
-                            class="main-menu-list-item bids-menu-list sub hide" 
-                             id="bids-menu-list-new"
-                            data-menu="main-menu-list-item" 
-                            data-role="none" onclick="window.location.hash='#/bids/forms/registration/steps/1'">
-                                <i class="material-icons md-18" style="width: 24px;">add_circle</i> 
-                                New
-                        </li>
+                        <li
+                        class="main-menu-list-item bids-menu-list sub hide" 
+                         id="bids-menu-list-new"
+                        data-menu="main-menu-list-item" 
+                        data-role="none" onclick="window.location.hash='#/bids/forms/registration/steps/1'">
+                            <i class="material-icons md-18" style="width: 24px;">add_circle</i> 
+                            New
+                    </li>
+
+                    <li
+                        class="main-menu-list-item bids-menu-list sub hide" 
+                        id="bids-menu-list-reports"
+                        data-menu="main-menu-list-item" 
+                        data-role="none" onclick="window.location.hash='#/bids/reports/'">
+                            <i class="material-icons md-18" style="width: 24px;">trending_up</i> 
+                            Reports
+                    </li>
 
 
                         <!--<li data-status="inv" 
@@ -558,10 +567,12 @@
                 </div>
             </router>
 
-
+            <router class="row bids-router-reports-section" id="bids-router-reports-section" style="height:100vh;background:#fff"></router>
             <router class="row feedback-router-section" id="feedback-router-section" style="height:100vh;background: #fff;">
                 <div name="/feedback/form" class="col-md-12 col-lg-8 offset-lg-3"></div> 
             </router>
+
+            
 
 
 
