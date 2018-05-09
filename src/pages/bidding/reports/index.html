@@ -1,6 +1,45 @@
-<article class="col-md-12 col-lg-6 offset-lg-4" style="margin-top: 90px;">
-    <h2>Reports</h2>
-    <section>
+<article class="col-md-12 col-lg-10 offset-lg-2" style="margin-top: 90px;">
+    <section class="col-lg-6">
+        <div id="container" style="width:100%; height:400px;"></div>
+    </section>
+
+    <section class="col-lg-6 d-flex align-items-stretch">
+        <div class="col-2"><b>Results</b></div>
+        <div class="col-10">
+            <div class="col-12" id="analysis-section"></div>
+            <div class="col-12">
+                <span  style="position:relative;">
+                    <button class="btn btn-sm btn-dark device-dropdown" data-device-dropdown="dropdown-export">Export</button>
+                    <div class="dropdown-section float-right" id="dropdown-export">
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item">
+                                    <a href="#" onclick="event.preventDefault();" id="print-pdf-href">
+                                        PDF
+                                    </a>
+                                </li>
+                            <ul>
+                    </div>
+                </span>
+                &emsp;
+                <a href="#" onclick="event.preventDefault();" class="text-success change-date-modal-btn" data-target="#bidding-modal" data-popup-toggle="open">Change</a>&nbsp;
+                <b id="from-section">10/2018</b> - <b id="to-section">10/2018</b>
+            </div>
+            <div class="col-12"><br/>
+                <p class="text-danger">
+                    <span id="total-count-section">0</span> Total number of bidding requests
+                </p>
+
+                <p>
+                    <span style="color:#F2994A;" id="normal-count-section">0</span> Normal
+                </p>
+                <p>
+                    <span style="color:#F2994A;" id="exempted-count-section">0</span> Exempted
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!--<section>
         <details>
             <summary>Summary of Bidding request</summary>
             <br/><br/>
@@ -22,11 +61,11 @@
                 </div>
             </section>
         </details>
-    </section>
+    </section>-->
 </article>
 <script>
     (()=> {
-        let btn = document.getElementById('generate-summary-btn')
+        /*let btn = document.getElementById('generate-summary-btn')
         btn.addEventListener('click', () => {
             const from = document.getElementById('generate-summary-from')
             const to = document.getElementById('generate-summary-to')
@@ -34,6 +73,12 @@
             if(from.value.length && to.value.length) {
                 window.open(`${window.bms.config.network}/bidding/reports/bidding_summary.php?from=${from.value}&to=${to.value}`)
             }
-        })
+        })*/
+
+        // enable dropdown
+        window.bms.default.dropdown('device-dropdown')
+        // enable popup
+		const PopupInstance = new window.bms.exports.PopupES()
     })(window)
 </script>
+<script async src="./assets/js_native/assets/js/modules/Bidding/Util/Reports/Summary.js"></script>
