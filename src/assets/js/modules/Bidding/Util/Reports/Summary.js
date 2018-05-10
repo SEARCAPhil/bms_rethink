@@ -183,6 +183,35 @@ const changeGraphDisplay = (json) => {
             <p> <span class="${classA}">[${val.severity}]</span> ${val.message}</p>
         `
     })
+
+    // utilization per department
+    const deptTarg = document.getElementById('utilization-per-department-section')
+    deptTarg.innerHTML ='';
+    for (let val in json.department) {
+       
+        deptTarg.innerHTML+= `
+                <div class="card">
+                <div class="card-body">
+                    <div class="media">
+                        <h3 class="mr-3 text-success">${json.department[val].engagement}</h3>
+                        <div class="media-body">
+                            <p class="mt-0"><b>${json.department[val].alias}</b> <br/>
+                                <span class="text-muted">${json.department[val].name}</span><br/>
+                                <span class="text-success">${json.department[val].total}</span> <b>Total</b> &emsp;
+                                <span class="text-success">${json.department[val].normal}</span> Normal &emsp;
+                                <span class="text-danger">${json.department[val].exempted}</span> Exempted<br/>
+                                <span class="text-success">${json.department[val].closed}</span> Closed &emsp;
+                                <span class="text-warning">${json.department[val].in_progress}</span> In Progress &emsp;
+                                <span class="text-warning">${json.department[val].in_review}</span> In Review &emsp;
+                                <span class="text-danger">${json.department[val].failed}</span> Failed &emsp;
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div><br/>
+        `
+    }
+ 
 }
 
 // Initialize

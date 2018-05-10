@@ -281,7 +281,7 @@ const showBiddingApprove = () => {
     btn.classList.add('btn', 'btn-danger', 'btn-sm', 'approve-btn')
     btn.setAttribute('data-target', '#bidding-modal')
     btn.setAttribute('data-popup-toggle', 'open')
-
+	// closed status
     btn.textContent = 'Close'
     btn.status = 5
     btn.addEventListener('click', loadCloseBidding)
@@ -290,9 +290,9 @@ const showBiddingApprove = () => {
     btn2.classList.add('btn', 'btn-dark', 'btn-sm', 'approve-btn')
     btn2.setAttribute('data-target', '#bidding-modal')
     btn2.setAttribute('data-popup-toggle', 'open')
-
+	// failed status
     btn2.textContent = 'Failed'
-    btn2.status = 7
+    btn2.status = 6
 
     btn2.addEventListener('click', loadFailedBidding)
     targ.querySelector('#close-btn-section').append(btn)
@@ -738,7 +738,8 @@ appRoute.on({
 		}
 	},
 	'/bids/reports/': (params) => {
-		window.bms.default.changeDisplay(['.inv-router-section', '.bids-router-section'],'none')
+		window.bms.default.changeDisplay(['.inv-router-section', '.bids-router-section', '.feedback-router-section'],'none')
+		window.bms.default.changeDisplay(['.bids-router-reports-section'],'block')
 		window.bms.default.activeMenu('bids-menu-list-reports')
 		
 		var url=`pages/bidding/reports/index.html`
