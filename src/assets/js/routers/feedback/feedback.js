@@ -1,33 +1,7 @@
-import { AttachmentsReq } from '../../modules/Bidding/Util/Attachments/Requirements'
-import IndexUtilities from '../../modules/Bidding/Util/Index/Index'
-import InfoUtilities from '../../modules/Bidding/Util/Info'
-import IndexedDB from '../../modules/Bidding/Util/Storage/Bidding'
-import IndexedDBReq from '../../modules/Bidding/Util/Storage/Requirements'
 import PopupES from '../../Components/PopupES/PopupES'
-import ProposalService from '../../modules/Invitation/Services/Proposal'
-import RequirementsUtilities from '../../modules/Bidding/Util/Requirements'
-
-
+import Quill from 'Quill'
 
 const appRoute = new window.bms.exports.Router('http://127.0.0.1/bms_rethink/www/',true)
-const IDB = new IndexedDB()
-const IDBReq = new IndexedDBReq()
-const IndexUtil = new IndexUtilities()
-const InfoUtil = new InfoUtilities()
-const AttUtil = new AttachmentsReq()
-const PropServ = new ProposalService ()
-const ReqUtil = new RequirementsUtilities()
-
-window.bms.default.pages = []
-window.bms.default.spinner = new window.bms.exports.Spinner({
-	target:'body',
-	class:'spinner'
-})
-
-let PopupInstance = {}
-let XHR = new window.bms.exports.XHR()
-
-
 const loadCSS = (href) => {
 	let css = document.createElement('link')
 	css.type= 'text/css'
@@ -36,6 +10,15 @@ const loadCSS = (href) => {
 	document.body.append(css)
 }
 
+let PopupInstance = {}
+let XHR = new window.bms.exports.XHR()
+let quill = ''
+
+window.bms.default.pages = []
+window.bms.default.spinner = new window.bms.exports.Spinner({
+	target:'body',
+	class:'spinner'
+})
 
 
 const loadFeedbackForm = (params) => {
@@ -72,6 +55,20 @@ const sendFeedback = (payload) => {
 	})
 }
 
+const loadQuill = () => {
+	quill = new Quill(document.getElementById('editor'), {
+		modules: {
+		  toolbar: [
+			[{ header: [1, 2, false] }],
+			['bold', 'italic', 'underline', 'link'],
+			['code-block'],
+			[{ 'list': 'ordered'}, { 'list': 'bullet' }],
+		  ]
+		},
+		placeholder: 'Compose an epic...',
+		theme: 'snow'  // or 'bubble'
+	  });
+}
 //main entry point
 appRoute.on({
 	'*': () => {
@@ -79,25 +76,27 @@ appRoute.on({
 	},
 	'/feedback/form':()=>{
 		loadFeedbackForm().then(() => {
-
+			// load editor
+			loadQuill()
+			// submit btn
 			const btn = document.querySelector('.add-feedback-button').addEventListener('click', () => {
-				const textarea = document.getElementById('feedback-textarea')
+				const content = quill.root.innerHTML
 				const payload = {
 					token: window.localStorage.getItem('token'),
-					feedback: textarea.value,
+					feedback: content,
 					action: 'create'
 				}
-
-				if (textarea.value.length > 5) {
+				const quillCount = quill.getText().length > 5
+				if (quillCount) {
 					window.bms.default.spinner.show()
-
+					
 					sendFeedback(payload).then((data) => {
 
 						if (data > 0) {
 							// show success
 							const sec = document.querySelector('[name="/feedback/form"]')
 							sec.innerHTML = `
-								<article class="col-xs-12 col-md-12 col-lg-10 offset-lg-1 col-xs-12" style="margin-top:150px;overflow:auto;padding-bottom:30px">
+								<article class="col-12  col-lg-6 offset-lg-4" style="margin-top:150px;overflow:auto;padding-bottom:30px">
 									<div class="alert alert-success text-center">
 										<i class="material-icons md-18">tag_faces</i> Thank you for sharing your experience with us. Your feedback matters!
 									</div>
@@ -109,6 +108,8 @@ appRoute.on({
 					})
 				}
 			})
+			loadCSS('https://cdn.quilljs.com/1.3.6/quill.snow.css')
+
 		}).catch(() => {
 			alert('Unable to submit feedback. Please try again later.')
 			window.bms.default.spinner.hide()
