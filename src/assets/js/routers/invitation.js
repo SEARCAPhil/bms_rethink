@@ -5,20 +5,12 @@ import PopupES from '../Components/PopupES/PopupES'
 import RequirementsUtilities from '../modules/Bidding/Util/Requirements'
 import ProposalService from '../modules/Invitation/Services/Proposal'
 
-
 const appRoute = new window.bms.exports.Router('http://127.0.0.1/bms_rethink/www/',true)
-
-
 const InfoUtil = new InfoUtilities()
 const AttUtil = new AttachmentsReq()
 const ReqUtil = new RequirementsUtilities()
 const PropServ = new ProposalService ()
-
-
-
 const IndexUtil = new IndexUtilities()
-
-
 
 window.bms.default.pages = []
 window.bms.default.spinner = new window.bms.exports.Spinner({

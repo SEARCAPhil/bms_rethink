@@ -2,8 +2,6 @@ import AttachmentsService from '../../Services/Requirements'
 import AttachmentsDialog from '../../../../components/FileDialog/Dialog'
 import ReqUtilities from '../Requirements'
 
-
-
 export class AttachmentsReq{
 	constructor () {
 		this.AttServ = new AttachmentsService()

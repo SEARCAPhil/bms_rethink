@@ -17,31 +17,17 @@ const showError = () => {
 
 const register = (e) => {
 	e.preventDefault()
-	/*let nameField = document.querySelector('form[name="bidding-request-registration"] input[name="name"]')
-	let descField = document.querySelector('form[name="bidding-request-registration"] textarea[name="description"]')
-	let deadlineField = document.querySelector('form[name="bidding-request-registration"] input[name="deadline"]')*/
 	let excemptionField = document.querySelector('form[name="bidding-request-registration"] input[name="forExcemption"]:checked')
-
-	/*if (nameField.value.length < 1) {
-		nameField.classList.add('error')
-		return 0
-	}*/
-
 	window.bms.default.spinner.show()
-	//nameField.classList.remove('error')
 
 	// data
 	let data = {
-		//name: nameField.value,
-		//desc: descField.value,
-		//deadline: deadlineField.value,
 		excemption: parseInt(excemptionField.value),
 		action: 'create',
 		token: localStorage.getItem('token'),
 	}
 
 	Reg.create(data).then(json => {
-
 		let res = JSON.parse(json)
 
 		if (res.data) {
@@ -56,7 +42,6 @@ const register = (e) => {
 			}
 
 			window.location.hash = `#/bids/forms/registration/${res.data}/steps/2`
-
 			return 0
 		}
 		

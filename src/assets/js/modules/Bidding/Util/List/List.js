@@ -1,12 +1,16 @@
 import ListService from '../../Services/List/List'
 import ListTemplate from '../../Templates/List/List'
 
-const DB = new window.bms.exports.IndexedDB()
+const XHR = new window.bms.exports.XHR()
 
 export default class {
 	constructor () {
 		this.List = new ListTemplate()
 		this.ListServ = new ListService()
+	}
+
+	view (id) {
+		return this.ListServ.view({id: id, token : window.localStorage.getItem('token')})
 	}
 
 	showEmpty (targ) {
@@ -180,7 +184,7 @@ export default class {
 		setTimeout(() => {
 			
 			// open DB
-			let trans = DB.open('bidding')
+			/*let trans = DB.open('bidding')
 
 			const myIndex = trans.index('status'); 
 
@@ -209,11 +213,72 @@ export default class {
 					targ.appendChild(this.List.render({id:cursor.value.id,name:cursor.value.name,description:cursor.value.description,class:'col-xs-12 col-md-12 col-sm-12 list'}))
 					cursor.continue()
 				}
-			}
+			}*/
 
 			
 		},90)
 
 	}
+
+	loadBiddingInitialPage () {
+		let htm = `
+			<div class="col-lg-7 offset-lg-2 d-lg-offset-2 text-center" style="margin-top:70px;">
+				<div style="float:left;width:100%;height:200px;background:url('assets/img/laptop.png') no-repeat center;background-size:contain;"></div>
+				<br/><br/>
+				<h2>Bidding Management System</h2>
+				<small><p class="text-muted">
+					Compare supplier's price easier , faster and better than before! Be the first to use the new and advanced bidding management system 
+				</p></small>
+				<button class="btn btn-dark" onclick="window.location='#/bids/forms/registration/steps/1'"> GETTING STARTED</button>
+			</div>
+		`
+		document.querySelector('div[name="/bids/initial"]').innerHTML = htm	
+		window.bms.default.changeDisplay(['div[name="/bids/initial"]'], 'block')
+	}
+	
+	loadListSec () {
+		// new XHR instance to avoid conflict
+		const XHR = new window.bms.exports.XHR()
+		return new Promise((resolve,reject)=>{
+			XHR.request({url:'./pages/bidding/list.html',method:'GET'}).then((data)=>{
+				const targ = document.querySelector('div[name="/bids"]')
+				const oldElem = document.querySelector('.list-bids-container')
+				// avoid readding to DOM if already exists
+				//if (!oldElem) {
+				  targ.innerHTML = data  
+				 // window.bms.default.lazyLoad(['./assets/js_native/assets/js/routers/bidding/list.js'])
+				//}
+				resolve(data)
+			}).catch(err => {
+				console.log(err)
+			})
+		}) 
+	}
+
+	loadBiddingParticulars (id) {
+		return new Promise((resolve, reject) => {
+			let htm = `
+				<section class="col-lg-11 offset-lg-1" style="margin-top:70px;">
+		    		<div class="row col">
+		    			<span class="float-left"><b>Particulars</b></span> 
+		    			<div class="btn-circle for-open"><a href="#/bids/forms/registration/${id}/steps/2">+</a></div>
+		    		</div>
+		    		<hr/>
+		    		<div id="particulars-section"></div>		
+				</section>
+
+				<!--feedback-->
+				<small>
+					<article class="col-lg-11 offset-lg-1 feedback-bidding-list-section" id="${id}"></article><br/><br/>
+				</small>
+
+			`
+			document.querySelector('div[name="/bids/info/requirements"]').innerHTML=htm	
+			window.bms.default.changeDisplay(['div[name="/bids/info"]'],'block')
+
+			resolve()
+		})
+	}
+
 	
 }

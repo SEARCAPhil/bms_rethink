@@ -15,7 +15,6 @@ const removeFromSendingList = (e) => {
 
 }
 
-
 const checkCBA = (e) => {
 	const targ = document.querySelector('.cba-invitation-sending-list-section')
 	const name = e.target.cbaName
@@ -32,7 +31,6 @@ const checkCBA = (e) => {
 				</div>
 
 		`
-
 		const removeBtn = document.createElement('span')
 		removeBtn.setAttribute('style', 'position:absolute;right:10px;top:0px;color:rgb(90,90,90);cursor:pointer;')
 		removeBtn.setAttribute('data-resources', e.target.value)
@@ -48,7 +46,6 @@ const checkCBA = (e) => {
 		// remove
 		delete window.bms.bidding.CBASendingList[e.target.value]
 		document.querySelector(`.list-${e.target.value}`).remove()
-		
 	}
 
 	setTimeout(() => {
@@ -58,8 +55,6 @@ const checkCBA = (e) => {
 		}
 
 	}, 10)
-
-
 }
 
 
@@ -87,7 +82,6 @@ Acc.lists({page:1, token: window.localStorage.getItem('token')}).then(json => {
 		checkBtn.name = 'cba-send-check-list'
 		checkBtn.addEventListener('click', checkCBA)
 		checkBtn.cbaName = val.profile_name
-
 
 		html.querySelector('.checkBtn-section').append(checkBtn)
 		targ.append(html)

@@ -2,6 +2,11 @@ import SuppService from '../../Suppliers/Components/List/List'
 import ListService from '../../Bidding/Services/List/List'
 import RequirementsService from './Requirements'
 
+const Inv = new InvitationItems()
+
+window.bms.bidding.suppliersSendingListItems = {}
+
+
 export class InvitationItems{
 	constructor () {
 		this.ListServ = new ListService()
@@ -18,10 +23,6 @@ export class InvitationItems{
 	}
 }
 
-const Inv = new InvitationItems()
-
-window.bms.bidding.suppliersSendingListItems = {}
-
 
 const checkItem = (e) => {
 	const targ = document.querySelector('.item-sending-list-section')
@@ -29,18 +30,16 @@ const checkItem = (e) => {
 
 	// add
 	if (e.target.checked) {
-		// ad to virtual list
+		// ad dto virtual list
 		window.bms.bidding.suppliersSendingListItems[e.target.value] = name
 	} else {
 		// remove
 		delete window.bms.bidding.suppliersSendingListItems[e.target.value]
-		
 	}
-
 }
 
+
 const showItems = (e) => {
-	
 	Inv.get(window.bms.default.state.bidding.cur.bid.id).then(json => {
 		const data = JSON.parse(json)
 		const targ = document.querySelector('.item-sending-list-section')
@@ -83,39 +82,8 @@ const showItems = (e) => {
 
 				targ.append(html)
 			})
-
-			/*data.data.forEach((val, index) => {	
-				let html = document.createElement('div')
-				html.classList.add('col-12','row')
-
-				// checkbutton
-				const checkBtn = document.createElement('input')
-				checkBtn.classList.add(`items-send-check-list-${val.id}`)
-				checkBtn.type = 'checkbox'
-				checkBtn.value = val.id
-				checkBtn.name = 'items-send-check-list'
-				checkBtn.addEventListener('click', checkItem)
-				checkBtn.itemName = val.name
-
-
-				html.innerHTML = `	
-					<div class="col-1 checkBtn-section">
-						
-					</div>
-					<div class="col-11 text-muted">
-						${val.name}
-
-					</div>`
-
-				html.querySelector('.checkBtn-section').append(checkBtn)
-
-				targ.append(html)
-			})*/
-
 		}
-
 	})
-
 }
 
 

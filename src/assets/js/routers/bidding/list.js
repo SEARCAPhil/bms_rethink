@@ -1,7 +1,4 @@
 import { Attachments } from '../../modules/Bidding/Util/Attachments.js'
-import IndexedDB from '../../modules/Bidding/Util/Storage/Bidding'
-import IndexedDBReq from '../../modules/Bidding/Util/Storage/Requirements'
-import IndexedDBPart from '../../modules/Bidding/Util/Storage/Particulars'
 import ListTemplate from '../../modules/Bidding/Templates/List/List'
 import ListService from '../../modules/Bidding/Services/List/List'
 import ListUtilities from '../../modules/Bidding/Util/List/List.js'
@@ -10,12 +7,7 @@ import RequirementsUtilities from '../../modules/Bidding/Util/Requirements.js'
 import PopupES from '../../Components/PopupES/PopupES.js'
 
 const appRoute = new window.bms.exports.Router('http://127.0.0.1/bms_rethink/www/',true)
-const IDB = new IndexedDB()
-const IDBReq = new IndexedDBReq()
-const IDBPart = new IndexedDBPart()
-
 const XHR = new window.bms.exports.XHR()
-let DB = new window.bms.exports.IndexedDB()
 
 window.bms.templates=window.bms.templates||{}
 window.bms.templates.biddingList=ListTemplate
@@ -33,9 +25,7 @@ let PopupInstance = {}
 
 const viewBiddingInfo = (id) => {
 	ListServ.view({id: id, token : window.localStorage.getItem('token')}).then(data => {
-
 		window.bms.default.spinner.hide()
-
 		const parsedData=JSON.parse(data)
 		const json=parsedData.data
 		json[0].id = parseInt(json[0].id)
@@ -44,22 +34,16 @@ const viewBiddingInfo = (id) => {
 		var e = new CustomEvent('biddingInfoChange', {detail: json})
 		document.dispatchEvent(e)
 
-		// save to storage
-		IDB.set(json[0])
-
 		// save particulars to storage
 		json[0].particulars.forEach((val, index) => {
 			// return an int
 			val.id = parseInt(val.id)
 			val.bidding_id = parseInt(val.bidding_id)
-			// save 
-			IDBPart.set(val)
 
 			// requirements
 			val.requirements.forEach((res, i) => {
 				res.id = parseInt(res.id)
 				res.particular_id = parseInt(res.particular_id)
-				IDBReq.set(res)
 			})
 		})
 		

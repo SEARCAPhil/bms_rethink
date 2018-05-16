@@ -3,38 +3,6 @@ import ListTemplate from '../../../Templates/List/List'
 
 const Reg = new Registration()
 const List=new ListTemplate()
-let DB = new window.bms.exports.IndexedDB()
-
-const getReqInfoFromLocal = (id) => {
-	return new Promise((resolve, reject) => {
-		setTimeout(() => {
-			let trans = DB.open('requirements')
-			const local = trans.get(parseInt(id))
-			local.onsuccess = () => { 
-				resolve(local.result)
-			}
-			local.onerror = (err) => {
-				reject(err)
-			}
-		},100)	
-	})
-
-}
-
-const setReqInfoToLocal = (data) => {
-	return new Promise((resolve, reject) => {
-		setTimeout(() => {
-			let trans = DB.open('requirements')
-			
-			trans.put(data)
-
-			resolve(data)
-			
-		},100)	
-	})
-
-}
-
 
 const showError = () => {
 	let stat = document.getElementById('bid-form-requirement-status')
@@ -143,23 +111,17 @@ const updateReq = (e) => {
 	}
 	
 	setTimeout(() => {
-
 		if (document.querySelectorAll('form[name="bidding-request-requirements"] .error').length != 0) return false
-
 		window.bms.default.spinner.show()	
 
 		Reg.requirements(data).then(json => {
-
 			let res = JSON.parse(json)
 
-			if (res.data == 1) {
-
-				
+			if (res.data == 1) {			
 				window.location.hash = `#/bids/${window.bms.default.state.bidding.cur.bid.id}/info`
 				window.bms.default.spinner.hide()
 				document.getElementById('bid-form-status').innerHTML = ''
 				return 0
-
 			}
 			
 			// show error

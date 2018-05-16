@@ -1,11 +1,11 @@
 import ListService from '../Services/List/List'
-import IndexedDB from '../Util/Storage/Bidding'
+
 
 export default class {
 	constructor () {
 		this.XHR = new window.bms.exports.XHR()
 		this.ListServ = new ListService()
-		this.IDB = new IndexedDB()
+
 	}
 
 	removeBidding (e) {

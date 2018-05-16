@@ -1,18 +1,14 @@
 import { AttachmentsReq } from '../../modules/Bidding/Util/Attachments/Requirements'
 import IndexUtilities from '../../modules/Bidding/Util/Index/Index'
 import InfoUtilities from '../../modules/Bidding/Util/Info'
-import IndexedDB from '../../modules/Bidding/Util/Storage/Bidding'
-import IndexedDBReq from '../../modules/Bidding/Util/Storage/Requirements'
+
 import PopupES from '../../Components/PopupES/PopupES'
 import ProposalService from '../../modules/Invitation/Services/Proposal'
 import RequirementsUtilities from '../../modules/Bidding/Util/Requirements'
 import FeedbackService from '../../modules/Bidding/Services/Feedback'
 
 
-
 const appRoute = new window.bms.exports.Router('http://127.0.0.1/bms_rethink/www/',true)
-const IDB = new IndexedDB()
-const IDBReq = new IndexedDBReq()
 const IndexUtil = new IndexUtilities()
 const InfoUtil = new InfoUtilities()
 const AttUtil = new AttachmentsReq()
@@ -36,10 +32,6 @@ const criteria = [{
 window.bms.default.state.bidding.cur.requirements.criteria = criteria
 // convert to array for later use
 window.bms.default.state.bidding.cur.requirements.criteriaArray = []
-criteria.forEach((val, index) => {
-	window.bms.default.state.bidding.cur.requirements.criteriaArray[val.name] = val.alias
-})
-
 
 window.bms.default.pages = []
 window.bms.default.spinner = new window.bms.exports.Spinner({
@@ -48,6 +40,12 @@ window.bms.default.spinner = new window.bms.exports.Spinner({
 })
 
 let PopupInstance = {}
+
+
+
+criteria.forEach((val, index) => {
+	window.bms.default.state.bidding.cur.requirements.criteriaArray[val.name] = val.alias
+})
 
 
 const loadCSS = (href) => {

@@ -4,7 +4,6 @@ export class FeedList {
 	constructor () {
 		this.XHR = new window.bms.exports.XHR()
 		this.FeedServ = new FeedService()
-
 	}
 
 	get (id) { 
@@ -19,7 +18,6 @@ export class FeedList {
 				if(res[0]){
 					resolve(res)
 				}
-
 			})
 		})
 	}
