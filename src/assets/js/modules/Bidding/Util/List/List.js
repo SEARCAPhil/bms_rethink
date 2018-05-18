@@ -271,13 +271,24 @@ export default class {
 				<small>
 					<article class="col-lg-11 offset-lg-1 feedback-bidding-list-section" id="${id}"></article><br/><br/>
 				</small>
-
 			`
 			document.querySelector('div[name="/bids/info/requirements"]').innerHTML=htm	
 			window.bms.default.changeDisplay(['div[name="/bids/info"]'],'block')
 
 			resolve()
 		})
+	}
+
+	loadBiddingRequirementsInfo () {
+		return new Promise((resolve,reject)=>{
+			XHR.request({url:'./pages/bidding/requirements.html',method:'GET'}).then((data)=>{
+				document.querySelector('div[name="/bids/info/particulars/details"]').innerHTML = data	
+				window.bms.default.changeDisplay(['div[name="/bids/info/particulars"]'], 'block')
+				resolve(data)
+			}).catch(err => {
+				console.log(err)
+			})
+		}) 
 	}
 
 	

@@ -427,9 +427,6 @@ const changeBiddingInfo = (e) => {
 		document.querySelector('#detail-info-menu ul.for-open').classList.remove('for-open')
 		document.querySelector('.remove-bidding-modal-btn').remove()
 		document.querySelector('.update-bidding-modal-btn').remove()
-
-
-
 	}
 
 	// for GSU
@@ -445,7 +442,6 @@ const changeBiddingInfo = (e) => {
 		document.querySelector('.send-bidding-modal-btn').remove()
 		document.querySelector('.remove-bidding-modal-btn').remove()
 		document.querySelector('.update-bidding-modal-btn').remove()
-
 	}
 
 	// close

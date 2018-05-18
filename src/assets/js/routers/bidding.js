@@ -1,7 +1,13 @@
 import ListUtilities from '../modules/Bidding/Util/List/List.js'
-import IndexUtilities from '../modules/Bidding/Util/Index/Index'
-const IndexUtil = new IndexUtilities()
+import InfoUtilities from '../modules/Bidding/Util/Info'
+import RequirementsUtilities from '../modules/Bidding/Util/Requirements.js'
+import ParticularUtilities from '../modules/Bidding/Util/Particulars.js'
+
 const ListUtil = new ListUtilities()
+const InfoUtil = new InfoUtilities()
+const ReqUtil = new RequirementsUtilities()
+const PartUtil = new ParticularUtilities()
+
 const XHR = new window.bms.exports.XHR()
 const appRoute = new window.bms.exports.Router('http://127.0.0.1/bms_rethink/www/',true)
 const appRoute2 = new window.bms.exports.Router('http://127.0.0.1/bms_rethink/www/',true)
@@ -208,11 +214,124 @@ const changeSendToReturn = () => {
 }
 
 
+
+
+const appendAttachments = (data) => {
+	const attSec = document.getElementById('attacments-info-section')
+	attSec.innerHTML += `	<div class="col-lg-3 col-md-3" style="padding:5px;background:#505050;border:1px solid #fefefe;position:relative;color:#fff;">
+								<div class="d-flex align-items-stretch">
+
+									<div class="col-10">
+										<div class="file-icon file-icon-sm" data-type="${data.type}"></div> ${data.original_filename}
+									</div>
+
+									<div class="col-2">
+										<i class="material-icons md-18 device-dropdown" data-device-dropdown="dropdown-${data.id}" data-resources="${data.id}">arrow_drop_down</i>
+										<div class="dropdown-section float-right" id="dropdown-${data.id}">
+											<ul class="list-group list-group-flush">
+	  											<li class="list-group-item"><a href="#" onclick="event.preventDefault();window.open('${window.bms.config.network}/bidding/attachments/download.php?id=${data.id}')">Download</a></li>
+												<li class="list-group-item for-open"><a data-target="#bidding-modal" data-popup-toggle="open" href="#" class="remove-attachments-modal">Remove</a></li>
+											<ul>
+										</div>
+									</div>
+								</div>
+							</div>`
+}
+
+const appendParticulars = (data) => {
+	let html = `
+		<div class="particulars" style="font-size:14px;">
+	    	<details>
+	    		<summary class="text-info">
+	    			${data.name}
+	    			<span class="float-right text-danger"></span>
+
+	    		</summary>
+	    		<div class="col-lg-12" style="padding-top:5px;padding-bottom:5px;background:#f6f6f6;">
+	    			
+	    			<p>
+	    				<span class="badge badge-danger">${data.requirements.length}</span> <span class="text-danger">Requirements &emsp;
+	    				<u class="for-open"><a href="#/bids/forms/registration/${data.id}/steps/3">Add New</a></u></span>
+	    			</p>
+	    			`
+	// requirements
+	for (let x = 0; x < data.requirements.length; x++) {
+		html +=`
+			<section>
+				
+    			<p style="border-left:2px solid green;padding-left:10px;"><b><a href="#/bids/requirements/${data.requirements[x].id}"><u>${data.requirements[x].name}</u></a></b> 
+    				<span>(${data.requirements[x].quantity} ${data.requirements[x].unit})</span>`
+
+    				for (let y = 0; y < data.requirements[x].funds.length; y++) {
+    					html +=`
+    						<span class="badge badge-dark">${data.requirements[x].funds[y].fund_type} - ${data.requirements[x].funds[y].cost_center} - ${data.requirements[x].funds[y].line_item}</span>
+    					`
+    				}
+
+    	// not applicable for already awarded requirements
+    	if (data.requirements[x].awardees.length < 1) {
+	    	html +=`	<span class="for-open">
+	    					<a href="#/bids/forms/registration/${data.requirements[x].id}/steps/3/update"><i class="material-icons md-12 text-muted">edit</i></a>
+	    					<a href="#" class="remove-requirements-modal-btn" data-target="#bidding-modal" data-popup-toggle="open" id="${data.requirements[x].id}"><i class="material-icons md-12 text-muted" id="${data.requirements[x].id}">remove_circle_outline</i></a>&emsp;
+	    				</span>
+	    				<span class="float-right text-danger">${data.requirements[x].budget_currency} ${new Intl.NumberFormat('en-us', {maximumSignificantDigits:3}).format(data.requirements[x].budget_amount)}</span><br/>
+	    				<span class="text-muted">${data.requirements[x].bidding_excemption_request ===1 ? 'For bidding excemption' : ''}</span>
+	    			
+			`
+
+
+		} else {
+
+			html +=`<span class="" style="color:#ffb80c;">
+						<i class="material-icons md-18">star</i> 
+						<span>Awarded</span>
+					</span>
+					<span class="float-right text-danger">${data.requirements[x].budget_currency} ${new Intl.NumberFormat('en-us', {maximumSignificantDigits:3}).format(data.requirements[x].budget_amount)}</span>
+
+					`
+		}
+
+
+		html +=`</p></section>`
+	}
+
+	html +=`
+	    		</div>
+	    	</details>
+	    	<div class="col-lg-12">
+		    	<span class="deadline">
+		    		<b>Deadline</b> : ${data.deadline}<br/>
+		    		<!--menu -->
+		    		<span class="particulars-menu for-open" style="visibility:hidden;">
+	    				<a href="#" class="remove-particulars-modal" data-target="#bidding-modal" data-popup-toggle="open" id="${data.id}">Remove</a>&emsp;
+
+	    				<a href="#/bids/forms/registration/${data.id}/steps/2/update">Edit</a>&emsp;<br/>
+
+	    			</span>
+		    	</span>
+		    </div>
+	    </small>
+	`
+	document.getElementById('particulars-section').innerHTML += html
+
+	PopupInstance = new window.bms.exports.PopupES()
+
+	// remove particulars
+	PartUtil.bindRemoveParticulars()
+	// remove requirements
+	ReqUtil.bindRemoveRequirements()
+}
+
+
 const changeBiddingInfo = (e) => {
 	const details = e.detail[0]
 	const collabsSec = document.getElementById('bidding-collaborators')
 	const attSec = document.getElementById('attacments-info-section')
 
+	// print buttons
+	document.querySelectorAll('.print-btn').forEach((el, index) => {
+		el.href = `${window.bms.config.network}/bidding/reports/bidding_request.php?id=${details.id}`
+	})
 	// menu
 	if (details.status == 0) {
 		window.bms.default.toggleOpenClasses(['.for-open'], 'block')
@@ -302,10 +421,7 @@ const changeBiddingInfo = (e) => {
 
 	// info
 	document.getElementById('bidding-created-by-info').innerHTML = `${details.profile_name}`
-	// document.getElementById('bidding-name').innerHTML = `${details.name}`
 	document.getElementById('bidding-number-info').innerHTML = `#${details.id}`
-	//document.getElementById('bidding-description-info').innerHTML = `${details.description}`
-	//document.getElementById('bidding-deadline-info').innerHTML = `${details.deadline !== '0000-00-00' ? details.deadline : 'N/A'}`
 	document.getElementById('bidding-excemption-info').innerHTML = `${details.excemption == 1 ? 'YES' : 'NO'}`
 	document.getElementById('bidding-date-created').innerHTML = `${details.date_created}`
 	document.getElementById('image-info-section').innerHTML = `${details.profile_name ? details.profile_name.substr(0,2).toUpperCase() : ''}`
@@ -315,12 +431,11 @@ const changeBiddingInfo = (e) => {
 	collabsSec.innerHTML = ''
 	attSec.innerHTML = ''
 
-
+	// particulars
 	if (details.particulars) {
 		for (let x = 0; x < details.particulars.length; x++) {
 			// particulars
-			/////appendParticulars(details.particulars[x])
-			
+			appendParticulars(details.particulars[x])	
 		}
 	}
 
@@ -331,10 +446,9 @@ const changeBiddingInfo = (e) => {
 		}	
 	}
 
-
 	// attachments
 	for (var i = 0; i < details.attachments.length; i++) {
-		///////appendAttachments(details.attachments[i])	
+		appendAttachments(details.attachments[i])	
 	}
 
 
@@ -351,24 +465,20 @@ const changeBiddingInfo = (e) => {
 
 	// show all menus ONLY for OPEN Bidding Request
 	setTimeout(() => {
-
 		// for CBA Asst /APPROVE
 		window.bms.default.showAllMenuForOpen (details.status == 0) 
-
 		// for CBA Asst /APPROVE
 		window.bms.default.showAllMenuForOpen (details.status == 1 && window.bms.default.isCBAAsst()) 
-
 		// for both
 		// must change to send to resend
 		window.bms.default.showAllMenuForOpen (details.status == 2) 
-		
 		// GSU
-		//window.bms.default.showAllMenuForOpen (details.status == 3 && window.bms.default.isCBAAsst()) 	
+		//window.bms.default.showAllMenuForOpen (details.status == 3 && window.bms.default.isCBAAsst()) 
+		
+		//load icon
+		window.bms.default.loadCSS('assets/css/fileicon.css')
 
-	},1000)
-
-
-	
+	},1000)	
 }
 
 
@@ -429,18 +539,20 @@ appRoute2.on({
        // change DOM and state
         window.bms.default.state.bidding.cur.bid.id = params.id
         window.bms.default.changeDisplay(['div[name="/bids/initial"]','div[name="/bids/forms/registration/2"]','div[name="/bids/forms/registration"]','div[name="/bids/forms/registration/3"]', '[name="/bids/info/particulars/proposals/form"]'],'none')
-        window.bms.default.changeDisplay(['div[name="/bids/info/particulars/details"]'],'block')
-
+		window.bms.default.changeDisplay(['div[name="/bids/info/particulars/details"]'],'block')
+		
         // clear settings
         window.bms.bidding.requirements = window.bms.bidding.requirements || {}
         window.bms.bidding.requirements.fundToRemove =  {}
         window.bms.bidding.requirements.specsToRemove =  {}
-        window.bms.default.spinner.show()
-
+		window.bms.default.spinner.show()
+		
+		// load bidding list
         if (!document.querySelector('.list')) {
             ListUtil.lists({ token : window.localStorage.getItem('token') }) 
-        }
-        
+		}
+		
+        // change list to active
         document.querySelectorAll(`.list`).forEach((el, index) => {
 			if (el.getAttribute('data-list')==params.id) {
 				el.classList.add('active')
@@ -464,39 +576,43 @@ appRoute2.on({
             setTimeout(() => {
                 // get info from database
                 viewBiddingInfo(params.id)
-            },100)   
+			},100)   
+			
+			setTimeout(() => {
+				InfoUtil.bindRemoveBidding()
+				InfoUtil.bindSendBidding()
+				InfoUtil.bindSetStatus()
+				InfoUtil.bindChangeSignatories()
+			},600)
 
-        }).catch(err => {
-
-        })
-        
+        }).catch(err => { })
         
 
         // more settings
         setTimeout(() => {
             window.bms.default.dropdown('device-dropdown')	
             window.bms.default.lazyLoad(['./assets/js_native/assets/js/modules/Bidding/Util/AttachmentsModal.js'])
-        },800)
-
-        
-
-        
-    
-
-  
-       /* // more settings
-        setTimeout(() => { console.log(document.querySelector('.list'))
-
-            if (!document.querySelector('.list-bids-container')) {
-                ListUtil.lists({ token : window.localStorage.getItem('token') })  
-            } else {
-                            if (!document.querySelector('.list')) {
-                    ListUtil.lists({ token : window.localStorage.getItem('token') })  
-                } 
-            }
-
-     
-        },2000) */
-        
+        },800)    
+   },
+   '/bids/forms/registration/*': (params) => {
+		// load bidding list
+		if (!document.querySelector('.list')) {
+			ListUtil.lists({ token : window.localStorage.getItem('token') }) 
+		}
+	   window.bms.default.lazyLoad(['./assets/js_native/assets/js/routers/bidding/registration.js'],{once:true})
+	   window.bms.default.loadCSS('assets/css/modules/suppliers/list.css')
+   },
+   '/bids/reports/': (params) => {
+	   window.bms.default.changeDisplay(['.inv-router-section', '.bids-router-section', '.feedback-router-section'],'none')
+	   window.bms.default.changeDisplay(['.bids-router-reports-section'],'block')
+	   window.bms.default.activeMenu('bids-menu-list-reports')
+	   
+	   var url=`pages/bidding/reports/index.html`
+	   return XHR.request({method:'GET',url:url}).then(res => {
+		   let targ = document.getElementById('bids-router-reports-section')
+		   targ.innerHTML = res
+		   window.bms.default.scriptLoader(targ)
+	   })
+	   loadCSS('assets/css/fileicon.css')
    },
 }).resolve()

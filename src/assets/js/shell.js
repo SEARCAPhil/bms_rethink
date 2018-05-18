@@ -85,6 +85,9 @@ appRoute.on({
 	'/bids/*':()=>{
 		window.bms.default.lazyLoad(['./assets/js_native/assets/js/routers/bidding.js'],{once:true})
 	},
+   '/bids/requirements/:id': (params) => {
+		window.bms.default.lazyLoad(['./assets/js_native/assets/js/routers/bidding/requirements.js'],{once:true})
+   },
 	'/logout':()=>{
 		window.document.body.innerHTML = '<center><br/>loging out . . .</center>'
 		window.localStorage.clear()
