@@ -25,7 +25,19 @@ window.bms = window.bms || {
 				cur: {
 					bid: {},
 					particulars: {},
-					requirements: {},
+					requirements: {
+						criteria : [{
+							name: 'price',
+							alias: 'Price'
+						},{
+							name: 'quality',
+							alias: 'Goods/ Service Quality'
+						},{
+							name: 'time',
+							alias: 'Delivery Time'
+						}],
+						criteriaArray: [],
+					},
 					invitations: {},
 				},
 			},

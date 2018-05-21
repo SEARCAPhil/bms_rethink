@@ -12,6 +12,9 @@ export default class {
 	view (id) {
 		return this.ListServ.view({id: id, token : window.localStorage.getItem('token')})
 	}
+	changeStatus (data) {
+		return this.ListServ.status(data)
+	}
 
 	showEmpty (targ) {
 		targ.innerHTML = `

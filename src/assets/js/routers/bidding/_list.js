@@ -686,6 +686,7 @@ appRoute.on({
 		setTimeout(() => {
 			window.bms.default.dropdown('device-dropdown')	
 			window.bms.default.lazyLoad(['./assets/js_native/assets/js/modules/Bidding/Util/AttachmentsModal.js'])
+			window.bms.default.lazyLoad(['./assets/js_native/assets/js/modules/Bidding/Util/Feedback/Bidding.js'])
 		},800)
 
 

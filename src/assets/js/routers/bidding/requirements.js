@@ -1,35 +1,19 @@
 import { AttachmentsReq } from '../../modules/Bidding/Util/Attachments/Requirements'
-import ListUtilities from '../../modules/Bidding/Util/List/List.js'
-import InfoUtilities from '../../modules/Bidding/Util/Info'
-import RequirementsUtilities from '../../modules/Bidding/Util/Requirements.js'
-import ParticularUtilities from '../../modules/Bidding/Util/Particulars.js'
+import ListUtilities from '../../modules/Bidding/Util/List/List'
+import RequirementsUtilities from '../../modules/Bidding/Util/Requirements'
 import ProposalService from '../../modules/Invitation/Services/Proposal'
+import FeedService from '../../modules/Bidding/Services/Feedback'
 
 const AttUtil = new AttachmentsReq()
 const ListUtil = new ListUtilities()
-const InfoUtil = new InfoUtilities()
 const ReqUtil = new RequirementsUtilities()
-const PartUtil = new ParticularUtilities()
 const PropServ = new ProposalService ()
+const FeedServ = new FeedService ()
 
 const XHR = new window.bms.exports.XHR()
 const appRoute = new window.bms.exports.Router('http://127.0.0.1/bms_rethink/www/',true)
 const appRoute2 = new window.bms.exports.Router('http://127.0.0.1/bms_rethink/www/',true)
 
-// ratings criteria
-const criteria = [{
-	name: 'price',
-	alias: 'Price'
-},{
-	name: 'quality',
-	alias: 'Goods/ Service Quality'
-},{
-	name: 'time',
-	alias: 'Delivery Time'
-}]
-
-// save to global state
-window.bms.default.state.bidding.cur.requirements.criteria = criteria
 // convert to array for later use
 window.bms.default.state.bidding.cur.requirements.criteriaArray = []
 
@@ -40,6 +24,55 @@ window.bms.default.spinner = new window.bms.exports.Spinner({
 })
 
 let PopupInstance = {}
+
+
+const rate = (e) => {
+	// copy element
+	const newEl = e.target.cloneNode()
+	newEl.textContent = 'star'
+	newEl.classList.add('active')
+
+	e.target.parentNode.querySelectorAll(`.star-${e.target.criteria}`).forEach((el, index) => {
+		if (el.position > e.target.position) {
+			el.textContent = 'star_border'
+			el.classList.remove('active')
+		} else {
+			el.textContent = 'star'
+			el.classList.add('active')
+			window.bms.default.state.bidding.cur.requirements.criteriaToBeSaved[e.target.criteria] = e.target.position+1
+		}
+	})	
+}
+
+const saveRatings = (e) => {
+	// ctrl + enter
+	if (e.ctrlKey && e.target.value.length > 3) {
+		// all criteria must be rated
+		if(Object.keys(window.bms.default.state.bidding.cur.requirements.criteriaToBeSaved).length != window.bms.default.state.bidding.cur.requirements.criteria.length) return 0
+		// disable form
+		e.target.disabled = 'disabled'
+		window.bms.default.spinner.show()
+		// payload
+		const payload = {
+			id: window.bms.default.state.bidding.cur.requirements.id,
+			supplier_id: e.target.supplierId,
+			feedback: e.target.value,
+			ratings: window.bms.default.state.bidding.cur.requirements.criteriaToBeSaved,
+			token: window.localStorage.getItem('token'),
+			action: 'create'
+		}
+		// save feedback
+		FeedServ.create(payload).then((res) => {
+			if(res > 0) {
+				window.location.reload()
+			}
+		}).catch(err => {
+			alert('Unable to save feedback. Please try again later')
+		})
+
+
+	}
+}
 
 const appendReqAttachments = (data) => {
 	const attSec = document.getElementById('attachments-requirements-info-section')
@@ -169,7 +202,7 @@ const appendAwardees = (data) => {
 	recSection.innerHTML = html
 
 	// rating's criteria
-	criteria.forEach((val, index) => {
+	window.bms.default.state.bidding.cur.requirements.criteria.forEach((val, index) => {
 			const span = document.createElement('span')
 			span.innerHTML = `${val.alias}`
 
@@ -387,15 +420,8 @@ const loadRequirementsDetails = (json) => {
 
 }
 
-appRoute.on({
-    '/*': () => {
-        // without this, link will stop working after a few clicks
-    },
-   '/bids/requirements/:id': (params) => { 
-   }
-})
 
-appRoute2.on({
+appRoute.on({
     '/*': () => {
         // without this, link will stop working after a few clicks
     },

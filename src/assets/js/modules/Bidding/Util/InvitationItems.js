@@ -2,10 +2,7 @@ import SuppService from '../../Suppliers/Components/List/List'
 import ListService from '../../Bidding/Services/List/List'
 import RequirementsService from './Requirements'
 
-const Inv = new InvitationItems()
-
 window.bms.bidding.suppliersSendingListItems = {}
-
 
 export class InvitationItems{
 	constructor () {
@@ -38,7 +35,7 @@ const checkItem = (e) => {
 	}
 }
 
-
+const Inv = new InvitationItems()
 const showItems = (e) => {
 	Inv.get(window.bms.default.state.bidding.cur.bid.id).then(json => {
 		const data = JSON.parse(json)

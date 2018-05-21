@@ -1,6 +1,5 @@
 import SuppService from '../../Suppliers/Components/List/List'
 
-const Inv = new Invitations()
 let page = 1
 let timeout = {}
 let searchSupplierPage = 1
@@ -31,6 +30,9 @@ export class Invitations{
 		})
 	}
 }
+
+
+const Inv = new Invitations()
 
 const removeFromSendingList = (e) => {
 	const resources = e.target.getAttribute('data-resources')

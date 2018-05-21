@@ -23,7 +23,7 @@ appRoute.on({
             window.bms.default.loadCommonSettings()
             // show DOM
 			window.bms.default.changeDisplay(['div[name="/suppliers"]','div[name="/suppliers/profile"]','div[name="/suppliers/forms/registration"]','div[name="/suppliers/forms/registration/update"]','.nav-top-menu', '.suppliers-router-section'],'none')
-			window.bms.default.changeDisplay(['div[name="/home"]'],'block')
+			window.bms.default.changeDisplay(['div[name="/home"]', '.welcome-router-section'],'block')
             document.querySelector('.welcome-router-section').classList.remove('hide')
             // hide splash screen
             window.bms.default.hideSplash()

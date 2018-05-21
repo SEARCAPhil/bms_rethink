@@ -177,3 +177,7 @@ dialog > .content > a {
 .for-open {
   display:none;
 }
+
+.welcome-router-section.show {
+  display: flex !important;
+}

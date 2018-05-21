@@ -1,7 +1,7 @@
-import ListUtilities from '../modules/Bidding/Util/List/List.js'
+import ListUtilities from '../modules/Bidding/Util/List/List'
 import InfoUtilities from '../modules/Bidding/Util/Info'
-import RequirementsUtilities from '../modules/Bidding/Util/Requirements.js'
-import ParticularUtilities from '../modules/Bidding/Util/Particulars.js'
+import RequirementsUtilities from '../modules/Bidding/Util/Requirements'
+import ParticularUtilities from '../modules/Bidding/Util/Particulars'
 
 const ListUtil = new ListUtilities()
 const InfoUtil = new InfoUtilities()
@@ -13,6 +13,7 @@ const appRoute = new window.bms.exports.Router('http://127.0.0.1/bms_rethink/www
 const appRoute2 = new window.bms.exports.Router('http://127.0.0.1/bms_rethink/www/',true)
 
 let PopupInstance = {}
+
 
 const viewBiddingInfo = (id) => {
 	ListUtil.view(id).then(data => {
@@ -39,6 +40,148 @@ const viewBiddingInfo = (id) => {
 		})
 		
 	})	
+}
+
+const sendBidding = (e) => {
+	window.bms.default.spinner.show()
+
+	let data = {
+		id: window.bms.default.state.bidding.cur.bid.id,
+		status: e.target.el.status,
+		token : window.localStorage.getItem('token')
+	}
+
+	ListUtil.changeStatus(data).then((json) => {
+		let res = JSON.parse(json)
+
+		if(res.data){
+			// force reload
+			window.location.reload()
+		} else {
+			alert('Oops! Unable to resend this request. Please try again later.')
+		}
+
+		window.bms.default.spinner.hide()
+		document.getElementById('bidding-modal').close()
+
+
+	}).catch((err) => {
+		window.bms.default.spinner.hide()
+		document.getElementById('bidding-modal').close()
+	})
+}
+
+
+const loadReSendBidding = (e) => {
+	const URL='pages/bidding/modal/send.html'
+	const id=e.target.id
+
+	return XHR.request({method:'GET',url:URL}).then(res=>{
+		let modalTarget=document.getElementById('modal-bidding-body')
+		modalTarget.innerHTML=res
+
+		setTimeout(()=>{
+			window.bms.default.scriptLoader(modalTarget)
+			//remove cancel
+			document.getElementById('modal-dialog-close-button').addEventListener('click',()=>{
+				document.getElementById('bidding-modal').close()
+			})
+
+			let btn = document.getElementById('modal-dialog-send-button')
+			btn.el =  e.target
+			btn.addEventListener('click', sendBidding)
+		},50)
+	}).catch(e=>{})
+}
+
+const loadApproveBidding = (e) => {
+	const URL='pages/bidding/modal/approve.html'
+	const id=e.target.id
+
+	return XHR.request({method:'GET',url:URL}).then(res=>{
+		let modalTarget=document.getElementById('modal-bidding-body')
+		modalTarget.innerHTML=res
+
+		setTimeout(()=>{
+			window.bms.default.scriptLoader(modalTarget)
+			//remove cancel
+			document.getElementById('modal-dialog-close-button').addEventListener('click',()=>{
+				document.getElementById('bidding-modal').close()
+			})
+
+			let btn = document.getElementById('modal-dialog-send-button')
+			btn.el =  e.target
+			btn.addEventListener('click', sendBidding)
+		},50)
+	}).catch(e=>{})
+}
+
+
+const loadDisapproveBidding = (e) => {
+	const URL='pages/bidding/modal/disapprove.html'
+	const id=e.target.id
+
+	return XHR.request({method:'GET',url:URL}).then(res=>{
+		let modalTarget=document.getElementById('modal-bidding-body')
+		modalTarget.innerHTML=res
+
+		setTimeout(()=>{
+			window.bms.default.scriptLoader(modalTarget)
+			//remove cancel
+			document.getElementById('modal-dialog-close-button').addEventListener('click',()=>{
+				document.getElementById('bidding-modal').close()
+			})
+
+			let btn = document.getElementById('modal-dialog-send-button')
+			btn.el =  e.target
+			btn.addEventListener('click', sendBidding)
+		},50)
+	}).catch(e=>{})
+}
+
+
+const loadFailedBidding = (e) => {
+	const URL='pages/bidding/modal/failed.html'
+	const id=e.target.id
+
+	return XHR.request({method:'GET',url:URL}).then(res=>{
+		let modalTarget=document.getElementById('modal-bidding-body')
+		modalTarget.innerHTML=res
+
+		setTimeout(()=>{
+			window.bms.default.scriptLoader(modalTarget)
+			//remove cancel
+			document.getElementById('modal-dialog-close-button').addEventListener('click',()=>{
+				document.getElementById('bidding-modal').close()
+			})
+
+			let btn = document.getElementById('modal-dialog-send-button')
+			btn.el =  e.target
+			btn.addEventListener('click', sendBidding)
+		},50)
+	}).catch(e=>{})
+}
+
+const loadCloseBidding = (e) => {
+	const URL='pages/bidding/modal/close.html'
+	const id=e.target.id
+
+	return XHR.request({method:'GET',url:URL}).then(res=>{
+		let modalTarget=document.getElementById('modal-bidding-body')
+		modalTarget.innerHTML=res
+
+		setTimeout(()=>{
+			window.bms.default.scriptLoader(modalTarget)
+			//remove cancel
+			document.getElementById('modal-dialog-close-button').addEventListener('click',()=>{
+				document.getElementById('bidding-modal').close()
+			})
+
+			let btn = document.getElementById('modal-dialog-send-button')
+			btn.el =  e.target
+			btn.addEventListener('click', sendBidding)
+		},50)
+	}).catch(e=>{})
 }
 
 
@@ -591,7 +734,8 @@ appRoute2.on({
         // more settings
         setTimeout(() => {
             window.bms.default.dropdown('device-dropdown')	
-            window.bms.default.lazyLoad(['./assets/js_native/assets/js/modules/Bidding/Util/AttachmentsModal.js'])
+			window.bms.default.lazyLoad(['./assets/js_native/assets/js/modules/Bidding/Util/AttachmentsModal.js'])
+			window.bms.default.lazyLoad(['./assets/js_native/assets/js/modules/Bidding/Util/Feedback/Bidding.js'])
         },800)    
    },
    '/bids/forms/registration/*': (params) => {

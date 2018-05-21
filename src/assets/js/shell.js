@@ -87,12 +87,22 @@ appRoute.on({
 	},
    '/bids/requirements/:id': (params) => {
 		window.bms.default.lazyLoad(['./assets/js_native/assets/js/routers/bidding/requirements.js'],{once:true})
-   },
+   	},
+   	'/inv/*':()=>{
+		window.bms.default.lazyLoad(['./assets/js_native/assets/js/routers/invitation.js'],{once:true})
+   	},
 	'/logout':()=>{
 		window.document.body.innerHTML = '<center><br/>loging out . . .</center>'
 		window.localStorage.clear()
 		window.location = 'pages/'
-	}
+	},
+	'/feedback/form':()=>{
+		window.bms.default.activeMenu('feedback-menu-list')
+		window.bms.default.loadCommonSettings()
+		window.bms.default.changeDisplay(['.suppliers-router-section','.nav-top-menu','.bids-router-section','.inv-router-section'],'none')
+		document.querySelector('.feedback-router-section').classList.remove('hide')
+		window.bms.default.lazyLoad(['./assets/js_native/assets/js/routers/feedback/feedback.js'],{once:true})
+	},
 }).resolve()
 
 // show sidebar

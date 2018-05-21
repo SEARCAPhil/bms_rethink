@@ -1,16 +1,21 @@
 import { AttachmentsReq } from '../modules/Bidding/Util/Attachments/Requirements'
 import IndexUtilities from '../modules/Invitation/Util/Index'
 import InfoUtilities from '../modules/Invitation/Util/Info'
-import PopupES from '../Components/PopupES/PopupES'
+import ListUtilities from '../modules/Invitation/Util/List'
+import ListUtilitiesInv from '../modules/Invitation/Util/List'
 import RequirementsUtilities from '../modules/Bidding/Util/Requirements'
 import ProposalService from '../modules/Invitation/Services/Proposal'
 
 const appRoute = new window.bms.exports.Router('http://127.0.0.1/bms_rethink/www/',true)
+const appRoute2 = new window.bms.exports.Router('http://127.0.0.1/bms_rethink/www/',true)
+
 const InfoUtil = new InfoUtilities()
 const AttUtil = new AttachmentsReq()
 const ReqUtil = new RequirementsUtilities()
 const PropServ = new ProposalService ()
 const IndexUtil = new IndexUtilities()
+const ListUtil = new ListUtilities()
+const ListUtilInv = new ListUtilitiesInv()
 
 window.bms.default.pages = []
 window.bms.default.spinner = new window.bms.exports.Spinner({
@@ -19,15 +24,6 @@ window.bms.default.spinner = new window.bms.exports.Spinner({
 })
 
 let PopupInstance = {}
-
-
-const loadCSS = (href) => {
-	let css = document.createElement('link')
-	css.type= 'text/css'
-	css.rel = 'stylesheet'
-	css.href = href
-	document.body.append(css)
-}
 
 
 const showDeadline = () => {
@@ -166,31 +162,25 @@ const loadRequirementsDetails = (json) => {
 	json.attachments.forEach((val, index) => {
 		appendReqAttachments({type: val.type, original_filename: val.original_filename, id: val.id })
 	})*/
-
-
 	setTimeout(() => {
 			// dropdown
 			window.bms.default.dropdown('device-dropdown')
 			// enable popup
-			PopupInstance = new PopupES()
-			
+			PopupInstance = new window.bms.exports.PopupES()
+			// show proposals
 			ReqUtil.bindShowProposalSection(json.id)
-
 	},10)
-
-
-
 }
 
 const activateInvItem = (params) => {
-	let targ = document.querySelectorAll(`.list-inv-section .list`)
+	let targ = document.querySelectorAll(`.list-inv-section > .list`)
 	targ.forEach((el, index) => { 
 
 		if (el) {
 			if (el.getAttribute('data-list') == params.id) {
-				targ.classList.add('active')
+				el.classList.add('active')
 			} else {
-				targ.classList.remove('active')
+				el.classList.remove('active')
 			}
 		}
 
@@ -271,24 +261,49 @@ const showProposals = (params) => {
 }
 
 appRoute.on({
+    '/*': () => {
+        // without this, link will stop working after a few clicks
+    },'/inv/*': () => {
+		window.bms.default.activeMenu('inv-menu-list')
+		window.bms.default.loadCommonSettings()
+		window.bms.default.changeDisplay(['.suppliers-router-section', '.nav-top-menu', '.bids-router-section', '.welcome-router-section'],'none')
+
+		document.querySelector('.inv-router-section').classList.remove('hide')
+		setTimeout(() => {
+			window.bms.default.lazyLoad(['./assets/js_native/assets/js/modules/Bidding/Util/AccountSidebar.js'],{once:true})
+		},1000)
+
+		// load DOM
+		if (!document.querySelector('.list')) {
+            ListUtil.loadListSec()
+      	}
+		// load Initial page
+		ListUtil.loadInitialPage()
+		// load external CSS
+		window.bms.default.loadCSS('assets/css/modules/suppliers/list.css')
+
+		// hide splash screen
+		window.bms.default.hideSplash()
+	}
+}).resolve()
+
+appRoute2.on({
  	'/*': () => {
  		// this is required to always treat suppliers as separate route
  		// without this, link will stop working after a few clicks
- 	},
-	'/inv/*': () => {
-		IndexUtil.loadListSection()
-		IndexUtil.loadInitialPage()
+	 },
+	'/inv/all': () => {
 		
-		loadCSS('assets/css/modules/suppliers/list.css')
+		window.bms.default.spinner.show()
+		ListUtilInv.lists({token : window.localStorage.getItem('token')})
 	},
 	'/inv/:id/info/': (params) => {
+		window.bms.default.spinner.show()
 		window.bms.default.state.bidding.cur.invitations.id = params.id
 		window.bms.default.changeDisplay(['div[name="/inv/initial"]'],'none')
 		window.bms.default.changeDisplay(['div[name="/inv/info"]'],'block')
 
-
-
-		IndexUtil.loadInfo({id: params.id, status: 1}).then(() => {
+		ListUtilInv.loadInfo({id: params.id, status: 1}).then(() => {
 
 			//get ivitation info
 			InfoUtil.get(params.id).then((json) => {
@@ -306,19 +321,13 @@ appRoute.on({
 				window.bms.default.spinner.hide()
 			})
 
-			/*ReqUtil.get(params.id).then(json => {
-				if (json.id) {
-					loadRequirementsDetails(json)
-				}
-				window.bms.default.spinner.hide()
-			}).catch((err) => {
-				window.bms.default.spinner.hide()
-			})*/
 		})
 
-		// load list only once
+		// load DOM
 		if (!document.querySelector('.list')) {
-			IndexUtil.loadListSection()
+            ListUtil.loadListSec().then(() => {
+				ListUtilInv.lists({token : window.localStorage.getItem('token')})
+			})
 			
 			setTimeout(() => {
 				activateInvItem(params)
@@ -329,8 +338,8 @@ appRoute.on({
 			activateInvItem(params)
 		}
 		
-		loadCSS('assets/css/modules/suppliers/list.css')
-		loadCSS('assets/css/fileicon.css')
+		window.bms.default.loadCSS('assets/css/modules/suppliers/list.css')
+		window.bms.default.loadCSS('assets/css/fileicon.css')
 	},
 	'/inv/requirements/:id': (params) => {
 		window.bms.default.spinner.show()

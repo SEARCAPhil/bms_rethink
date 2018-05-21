@@ -1,7 +1,6 @@
 import ListService from '../Services/List'
 import ListTemplate from '../Templates/List'
 
-const DB = new window.bms.exports.IndexedDB()
 
 export default class {
 	constructor () {
@@ -9,6 +8,56 @@ export default class {
 		this.ListServ = new ListService()
 	}
 
+	loadInitialPage () {
+		let htm = `
+			<div class="col-lg-6 offset-lg-2 d-lg-offset-2 text-center text-muted" style="margin-top:70px;">
+				<i class="material-icons" style="font-size:6em;">mail</i>
+	    		<h2>Invitations</h2>
+			    <small>
+				    <p class="text-muted">
+				    	"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, qui
+				    </p>
+				</small>
+				
+				
+			</div>
+		`
+		document.querySelector('div[name="/inv/initial"]').innerHTML=htm	
+		window.bms.default.changeDisplay(['div[name="/inv/initial"]'],'block')
+	}
+
+	loadListSec () {
+		// new XHR instance to avoid conflict
+		const XHR = new window.bms.exports.XHR()
+		return new Promise((resolve,reject)=>{
+			XHR.request({url:'./pages/bidding/invitation/list.html',method:'GET'}).then((data)=>{
+				const targ = document.querySelector('div[name="/inv"]')
+				// avoid readding to DOM if already exists
+				  targ.innerHTML = data  
+
+				resolve(data)
+			}).catch(err => {
+				console.log(err)
+			})
+		}) 
+	}
+
+	loadInfo (obj = {}) {
+		// new XHR instance to avoid conflict
+		const XHR = new window.bms.exports.XHR()
+		return new Promise((resolve,reject)=>{
+			XHR.request({url:'./pages/bidding/invitation/info.html',method:'GET'}).then((data)=>{
+				const targ = document.querySelector('div[name="/inv/info/details"]')	
+				window.bms.default.changeDisplay(['div[name="/inv/info"]'],'block')
+				targ.innerHTML = data  
+				resolve(data)
+			}).catch(err => {
+				console.log(err)
+			})
+		}) 
+	}
+
+	
 	showEmpty (targ) {
 		targ.innerHTML = `
 			<center class="col text-muted empty-list-message-section" style="margin-top:50px;">
@@ -174,7 +223,7 @@ export default class {
 	}
 
 
-	listsFromLocal (opt = {}) {
+	/*listsFromLocal (opt = {}) {
 
 		const targ = document.querySelector('.list-bidding-section')
 		let filter = 0
@@ -217,6 +266,6 @@ export default class {
 			
 		},90)
 
-	}
+	}*/
 	
 }

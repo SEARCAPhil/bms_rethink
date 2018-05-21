@@ -1,6 +1,5 @@
 import SuppService from '../../Suppliers/Components/List/List'
 
-const Inv = new Invitations()
 // defaults
 let page = 1
 let timeout = {}
@@ -86,6 +85,8 @@ const checkSupplier = (e) => {
 
 
 }
+
+const Inv = new Invitations()
 
 const show = (e) => {
 	const mb = document.querySelectorAll('.more-supplier-checklist-btn')
