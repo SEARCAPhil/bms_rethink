@@ -1,5 +1,4 @@
 import { AttachmentsReq } from '../modules/Bidding/Util/Attachments/Requirements'
-import IndexUtilities from '../modules/Invitation/Util/Index'
 import InfoUtilities from '../modules/Invitation/Util/Info'
 import ListUtilities from '../modules/Invitation/Util/List'
 import ListUtilitiesInv from '../modules/Invitation/Util/List'
@@ -13,7 +12,6 @@ const InfoUtil = new InfoUtilities()
 const AttUtil = new AttachmentsReq()
 const ReqUtil = new RequirementsUtilities()
 const PropServ = new ProposalService ()
-const IndexUtil = new IndexUtilities()
 const ListUtil = new ListUtilities()
 const ListUtilInv = new ListUtilitiesInv()
 
@@ -340,28 +338,5 @@ appRoute2.on({
 		
 		window.bms.default.loadCSS('assets/css/modules/suppliers/list.css')
 		window.bms.default.loadCSS('assets/css/fileicon.css')
-	},
-	'/inv/requirements/:id': (params) => {
-		window.bms.default.spinner.show()
-/*
-		window.bms.default.state.bidding.cur.requirements.id = params.id
-		window.bms.default.changeDisplay(['[name="/bids/info/particulars/details"]'],'block')
-		window.bms.default.changeDisplay(['div[name="/bids/initial"]','div[name="/bids/forms/registration/2"]','div[name="/bids/forms/registration"]', 'div[name="/bids/forms/registration/3"]', 'div[name="/bids/info"]', '[name="/bids/info/particulars/proposals/form"]'],'none')
-		IndexUtil.loadBiddingRequirementsInfo()
-		IndexUtil.loadBiddingListSection()
-
-		window.bms.default.lazyLoad(['./assets/js_native/assets/js/modules/bidding/Util/Attachments/RequirementsModal.js'])
-
-		ReqUtil.get(params.id).then(json => {
-			if (json.id) {
-				loadRequirementsDetails(json)
-			}
-			window.bms.default.spinner.hide()
-		}).catch((err) => {
-			window.bms.default.spinner.hide()
-		})
-
-		loadCSS('assets/css/modules/suppliers/list.css')
-		loadCSS('assets/css/fileicon.css')*/
 	}
 }).resolve()

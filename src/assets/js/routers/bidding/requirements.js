@@ -560,6 +560,9 @@ appRoute.on({
 
 	   window.bms.default.loadCSS('assets/css/modules/suppliers/list.css')
 	   window.bms.default.loadCSS('assets/css/fileicon.css')
+	   setTimeout(() => {
+			window.bms.default.lazyLoad(['./assets/js_native/assets/js/modules/Bidding/Util/AccountSidebar.js'],{once:true})
+		},1000)
    },
    '/bids/requirements/:id/proposal/form': (params) => {
 	   window.bms.default.state.bidding.cur.requirements.id = params.id

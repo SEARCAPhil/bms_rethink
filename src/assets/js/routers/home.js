@@ -26,7 +26,11 @@ appRoute.on({
 			window.bms.default.changeDisplay(['div[name="/home"]', '.welcome-router-section'],'block')
             document.querySelector('.welcome-router-section').classList.remove('hide')
             // hide splash screen
-            window.bms.default.hideSplash()
+			window.bms.default.hideSplash()
+			
+			setTimeout(() => {
+				window.bms.default.lazyLoad(['./assets/js_native/assets/js/modules/Bidding/Util/AccountSidebar.js'],{once:true})
+			},1000)
 		})
 
 		if (!window.localStorage.getItem('role')) {

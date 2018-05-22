@@ -4,7 +4,8 @@ import { Attachments } from './Attachments'
 
 
 const dial = new AttachmentsDialog({id: 'prop-modal'})
-document.querySelectorAll('.file-prop-attachment-dialog-btn').forEach((val, index) => {
+document.querySelectorAll('.file-prop-attachment-dialog-btn:not(.event-binded)').forEach((val, index) => {
+	val.classList.add('event-binded')
 	val.addEventListener('click', () => {
 		dial.dialog().then(() => {
 			// get recent files

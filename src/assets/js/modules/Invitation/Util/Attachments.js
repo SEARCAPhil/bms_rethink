@@ -151,9 +151,10 @@ export class Attachments{
 		const proto = Object.assign({__proto__: this.__proto__}, this)
 
 		if (el) {
-			// el.removeEventListener('change', this.appendFileToBeUploaded.bind(proto))
-			el.addEventListener('change', this.appendFileToBeUploaded.bind(proto))
 			el.classList.add('event-binded')
+			el.removeEventListener('change', this.appendFileToBeUploaded.bind(proto))
+			el.addEventListener('change', this.appendFileToBeUploaded.bind(proto))
+			
 		}
 
 	}

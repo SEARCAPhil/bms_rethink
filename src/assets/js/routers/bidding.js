@@ -638,26 +638,30 @@ appRoute.on({
         // without this, link will stop working after a few clicks
     },
    '/bids/*': () => {
-       // active menu
-       window.bms.default.activeMenu('bids-menu-list')
-       window.bms.default.loadCommonSettings()
-       
-       // hide other sections
-       window.bms.default.changeDisplay(['.suppliers-router-section', '.welcome-router-section', '.nav-top-menu'],'none')
-       
-       document.querySelector('.bids-router-section').classList.remove('hide')
-       // load DOM
-        if (!document.querySelector('.list')) {
-            ListUtil.loadListSec()
-       }
-       
-       ListUtil.loadBiddingInitialPage()
+		// active menu
+		window.bms.default.activeMenu('bids-menu-list')
+		window.bms.default.loadCommonSettings()
+		
+		// hide other sections
+		window.bms.default.changeDisplay(['.suppliers-router-section', '.welcome-router-section', '.nav-top-menu'],'none')
+		
+		document.querySelector('.bids-router-section').classList.remove('hide')
+		// load DOM
+		if (!document.querySelector('.list')) {
+			ListUtil.loadListSec()
+		}
+		
+		ListUtil.loadBiddingInitialPage()
 
-       // load external css
-       window.bms.default.loadCSS('assets/css/modules/suppliers/list.css')
+		// load external css
+		window.bms.default.loadCSS('assets/css/modules/suppliers/list.css')
 
-       // hide splash screen
-       window.bms.default.hideSplash()
+		// hide splash screen
+		window.bms.default.hideSplash()
+	   
+		setTimeout(() => {
+			window.bms.default.lazyLoad(['./assets/js_native/assets/js/modules/Bidding/Util/AccountSidebar.js'],{once:true})
+		},1000)
    }
 }).resolve()
 

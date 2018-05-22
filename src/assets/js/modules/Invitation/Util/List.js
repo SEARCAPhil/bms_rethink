@@ -10,12 +10,12 @@ export default class {
 
 	loadInitialPage () {
 		let htm = `
-			<div class="col-lg-6 offset-lg-2 d-lg-offset-2 text-center text-muted" style="margin-top:70px;">
-				<i class="material-icons" style="font-size:6em;">mail</i>
+			<div class="col-lg-6 offset-lg-2 d-lg-offset-2 text-center" style="margin-top:70px;">
+				<img src="assets/img/invitation.png" width="90%" style="min-width:300px;"/>
 	    		<h2>Invitations</h2>
 			    <small>
-				    <p class="text-muted">
-				    	"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, qui
+				    <p>
+				    	Select an invitation from the list and send an awesome proposals
 				    </p>
 				</small>
 				

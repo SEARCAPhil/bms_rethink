@@ -102,6 +102,8 @@ appRoute.on({
 		window.bms.default.changeDisplay(['.suppliers-router-section','.nav-top-menu','.bids-router-section','.inv-router-section'],'none')
 		document.querySelector('.feedback-router-section').classList.remove('hide')
 		window.bms.default.lazyLoad(['./assets/js_native/assets/js/routers/feedback/feedback.js'],{once:true})
+		// hide splash screen
+		window.bms.default.hideSplash()
 	},
 }).resolve()
 
