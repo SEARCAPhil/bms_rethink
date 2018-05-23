@@ -1,8 +1,10 @@
+import { Attachments } from '../modules/Bidding/Util/Attachments'
 import ListUtilities from '../modules/Bidding/Util/List/List'
 import InfoUtilities from '../modules/Bidding/Util/Info'
 import RequirementsUtilities from '../modules/Bidding/Util/Requirements'
 import ParticularUtilities from '../modules/Bidding/Util/Particulars'
 
+const AttUtil = new Attachments()
 const ListUtil = new ListUtilities()
 const InfoUtil = new InfoUtilities()
 const ReqUtil = new RequirementsUtilities()
@@ -201,7 +203,7 @@ const showBiddingReqApprove = () => {
 
 	targ.innerHTML = `<center class="row" style="background:#495057;color:#fff;padding:5px;">
 		<p class="col-12">
-        	This Bidding request Is for approval. Make sure you review this request before making any further actions.  <span id="disapprove-btn-section"></span> <span id="approve-btn-section"></span> 
+        	This Bidding request is for approval. Make sure you review this request before making any further actions.  <span id="disapprove-btn-section"></span> <span id="approve-btn-section"></span> 
         </p>
     </center>`
 
@@ -224,9 +226,9 @@ const showBiddingReqApprove = () => {
 
 const showBiddingApprove = () => {
 	const targ = document.getElementById('detail-info-menu-status')
-	targ.innerHTML = `<center class="row" style="background:#dee2e6;color:#6c757d;padding:5px;">
+	targ.innerHTML = `<center class="row" style="background:#00897B;color:#fff;padding:5px;">
 		<p class="col-12">
-        	This Bidding request was approved. You may close this bidding request now <span id="failed-btn-section"></span> <span id="close-btn-section"></span>
+        	<i class="material-icons md-18">check_circle</i> This Bidding request was approved. You may close this bidding request now <span id="failed-btn-section"></span> <span id="close-btn-section"></span>
         </p>
     </center>`
 
@@ -256,9 +258,9 @@ const showBiddingApprove = () => {
 
 const showBiddingApproveReadOnly = () => {
 	const targ = document.getElementById('detail-info-menu-status')
-	targ.innerHTML = `<center class="row" style="background:#495057;color:#e6e6e6;padding:5px;">
+	targ.innerHTML = `<center class="row" style="background:#00897B;color:#e6e6e6;padding:5px;">
 		<p class="col-12">
-        	This Bidding request was approved. You may now invite suppliers to bid on this request
+		<i class="material-icons md-18">check_circle</i> This Bidding request was approved. You may now invite suppliers to bid on this request
         </p>
     </center>`
 
@@ -270,7 +272,7 @@ const showBiddingReqReturned = () => {
 	const targ = document.getElementById('detail-info-menu-status')
 	targ.innerHTML = `<center class="row" style="background:#0c5460;color:#fff;padding:5px;">
 		<p class="col-12">
-        	This Bidding request was returned. Make sure that all details are complete and follow the bidding request standard procedures
+        	This Bidding request was returned. Make sure that all details are complete and follows the bidding request standard procedures
         </p>
     </center>`
 }
@@ -279,7 +281,26 @@ const showBiddingClosed = () => {
 	const targ = document.getElementById('detail-info-menu-status')
 	targ.innerHTML = `<center class="row" style="background:#0c5460;color:#fff;padding:5px;">
 		<p class="col-12">
-        	This Bidding request is already closed. <i class="material-icons">lock</i>
+		<section class="col-lg-5 offset-lg-4">
+			<ul class="nav">
+				<li class="nav-item"></li>
+				<li class="nav-item">
+					<a class="nav-link row">
+						<div class="media">
+							<img class="mr-3" src="assets/img/negotiation.png" alt="negotiation" width="40px">
+							<div class="media-body">
+								Sorry ! Bidding for this item is already closed <i class="material-icons md-18">lock</i><br>
+								<small> You are not able to add or modify any content under this item</small>
+							</div>
+						</div>	
+					</a>
+				</li>
+
+				<li class="nav-item">
+					<a class="nav-link proposal-requirement-dialog-btn"></a>
+				</li>
+			</ul>
+		</section>
         </p>
     </center>`
 }
@@ -313,9 +334,9 @@ const showBiddingExemption = () => {
 		const status = document.createElement('center')
 		status.classList.add('row')
 		status.id = 'detail-info-menu-bidding-exemption'
-		status.setAttribute('style', 'background:#dc355a;color:#fff;padding:5px;font-weight: bold;')
+		status.setAttribute('style', 'background:#ff7043;color:#fff;padding:5px;font-weight: bold;')
 		status.innerHTML = `
-			<p class="col-12">
+			<p class="col-lg-11 offset-lg-1">
 	        	<i class="material-icons md-36">touch_app</i> FOR BIDDING EXEMPTION<br/>
 	        	<small>This request is not intended for all suppliers. Please DO NOT send an invitation twice if possible. </small>
 	        </p>
@@ -384,7 +405,7 @@ const appendAttachments = (data) => {
 const appendParticulars = (data) => {
 	let html = `
 		<div class="particulars" style="font-size:14px;">
-	    	<details>
+	    	<details open>
 	    		<summary class="text-info">
 	    			${data.name}
 	    			<span class="float-right text-danger"></span>
@@ -601,7 +622,7 @@ const changeBiddingInfo = (e) => {
 		// enable popup
 		PopupInstance = new window.bms.exports.PopupES()
 		// remove attachments
-		//AttUtil.bindRemoveAttachments()
+		AttUtil.bindRemoveAttachments()
 	}, 1000);
 
 

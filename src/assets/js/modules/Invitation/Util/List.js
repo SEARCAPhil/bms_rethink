@@ -10,17 +10,47 @@ export default class {
 
 	loadInitialPage () {
 		let htm = `
-			<div class="col-lg-6 offset-lg-2 d-lg-offset-2 text-center" style="margin-top:70px;">
-				<img src="assets/img/invitation.png" width="90%" style="min-width:300px;"/>
-	    		<h2>Invitations</h2>
-			    <small>
-				    <p>
-				    	Select an invitation from the list and send an awesome proposals
-				    </p>
-				</small>
-				
-				
-			</div>
+			<!--<style>
+				.circ {
+					position:absolute;
+					top:-130px;
+					bottom:0px;
+					left:-70px;
+					right:0px;
+					background:#ffe8e7;
+					width:300px;
+					height:300px;
+					border-radius:50%;
+					z-index:0;
+				}
+
+			</style>
+			<section class="row" style="position:relative;">
+				<div class="col-lg-2" style="margin-top:20px;z-index:1;">
+					<h3>Get Started</h3>
+					<small>
+						<p>
+							Select an invitation from the list and send an awesome proposals
+						</p>
+					</small>
+				</div>
+				<div class="circ"></div>
+			</section>-->
+
+
+			<section class="row" style="margin-top:20vh;">
+				<div class="col-lg-3 offset-lg-2  text-center">
+					<img src="assets/img/invitation.png" width="100%" style="min-width:320px;"/>
+				</div>
+				<div class="col-lg-3" style="margin-top:70px;z-index:1;">
+					<h2>Invitations</h2>
+					<small>
+						<p>
+							Select an invitation from the list and send an awesome proposals
+						</p>
+					</small>
+				</div>
+			</section>
 		`
 		document.querySelector('div[name="/inv/initial"]').innerHTML=htm	
 		window.bms.default.changeDisplay(['div[name="/inv/initial"]'],'block')
