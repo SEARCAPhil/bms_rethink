@@ -279,7 +279,7 @@ const showBiddingReqReturned = () => {
 
 const showBiddingClosed = () => {
 	const targ = document.getElementById('detail-info-menu-status')
-	targ.innerHTML = `<center class="row" style="background:#0c5460;color:#fff;padding:5px;">
+	targ.innerHTML = `<center class="row" style="background:#fff;color:#607d8b;padding:5px;">
 		<p class="col-12">
 		<section class="col-lg-5 offset-lg-4">
 			<ul class="nav">

@@ -81,7 +81,7 @@ const showWon = () => {
 			left: 0;
 			background:url('assets/img/confetti.png') repeat center;
 			z-index:-1;
-			opacity:0.7;
+			opacity:0.2;
 		}
 	</style>
 	<section class="col-lg-12 text-center congrats-banner" style="padding:  20px;">
@@ -143,13 +143,13 @@ const loadRequirementsDetails = (json) => {
 	printBtn.href = `${window.bms.config.network}/bidding/reports/price_inquiry.php?id=${json.bidding_requirements_invitation_id}&token=${window.localStorage.getItem('token')}`
 	printCurrentBtn.href = `${window.bms.config.network}/bidding/reports/price_inquiry_per_item.php?id=${json.bidding_requirements_invitation_id}&token=${window.localStorage.getItem('token')}`
 
-	printBtn.addEventListener('click',function(){
+	/*printBtn.addEventListener('click',function(){
 		window.open(this.href)
 	})
 
 	printCurrentBtn.addEventListener('click',function(){
 		window.open(this.href)
-	})
+	})*/
 
 
 	// Specifications
