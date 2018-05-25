@@ -1,9 +1,3 @@
-/**
- * EXPORTS.JS
- * 
- * Load common JS and configuration
- * This must be loaded before any other script
- */
 import Router from 'Navigo'
 import XHR from './lib/XHR/XHR'
 import Sidebar from './components/Sidebar/Sidebar'
@@ -64,14 +58,21 @@ window.bms = window.bms || {
 //inject <script> in document.body
 //this is needed if you want to import javscript only after
 //DOM is loaded
-window.bms.default.loadedScript=[]
-window.bms.default.lazyLoad=(src=[],opts={})=>{
-	return new Promise((resolve,reject)=>{
-		//options
-		let opt=opts
-		opt.async=opts.async||false
-		opt.once=opts.once||false
+window.bms.default.loadedScript = []
 
+/**
+ * @function window.bms.default.lazyLoad
+ * @param {array} URL
+ * @param {Object} opts 
+ * @param {boolean} opts.async - Load in async mode
+ * @param {boolean} opts.once - Load JS file only once
+ */
+window.bms.default.lazyLoad = (src = [], opts = {}) => {
+	return new Promise((resolve,reject) => {
+		//options
+		let opt = opts
+		opt.async = opts.async || false
+		opt.once = opts.once || false
 
 		for(let file of src){
 			//stop if already loaded
@@ -92,17 +93,22 @@ window.bms.default.lazyLoad=(src=[],opts={})=>{
 				window.bms.default.loadedScript.push(file)
 				resolve(sc)
 			}
-
-			
 		}
 	})	
 }
 
 
-//parse script and link from DOM
-//since XHR DOESn't execute js
-window.bms.default.scriptLoader=(scope)=>{
-	
+
+/**
+ * Read EXTERNAL script and link from GIVEN NODE and append to the header.
+ * This is used for parsing script from XHR response
+ * 
+ * @function window.bms.default.scriptLoader
+ * @param {string} scope - HTML Node
+ * @example
+ * // window.bms.default.scriptLoader(document)
+ */
+window.bms.default.scriptLoader = (scope) => {
 	scope.querySelectorAll(`script`).forEach((sc,index)=>{
 		// external JS
 		if(sc.getAttribute('src')) {
@@ -119,20 +125,26 @@ window.bms.default.scriptLoader=(scope)=>{
 			const head = document.getElementsByTagName("head")[0];
 			head.appendChild(el)
 		}
-
 	})
-
+	// external CSS
 	scope.querySelectorAll(`link`).forEach((sc,index)=>{
-		let el=document.createElement('link')
-		el.href=sc.getAttribute('href')
-		el.type="text/css"
-		el.rel="stylesheet"
+		let el = document.createElement('link')
+		el.href = sc.getAttribute('href')
+		el.type = "text/css"
+		el.rel = "stylesheet"
 		sc.replaceWith(el)
-	})
-	
+	})	
 }
 
-// dynamic loading of CSS
+
+/**
+ * Load External CSS and automatically appends it to body
+ * 
+ * @function window.bms.default.loadCSS
+ * @param {string} href 
+ * @example
+ * // window.bms.default.loadCSS('assets/css/sidebar.css')
+ */
 window.bms.default.loadCSS = (href) => {
 	let css = document.createElement('link')
 	css.type= 'text/css'
@@ -142,11 +154,16 @@ window.bms.default.loadCSS = (href) => {
 }
 
 
-// for dropdown
+/**
+ * Enable toggle on given class
+ * 
+ * @function window.bms.default.dropdown
+ * @param {string} className 
+ */
 window.bms.default.dropdown = (className) => {
-	window.bms.default.modal = window.bms.default.modal || {}
 	const targ = document.querySelectorAll(`.${className}:not(.data-bind-dropdown)`)
-	console.log(targ)
+	window.bms.default.modal = window.bms.default.modal || {}
+	// read elements
 	targ.forEach((el, index) => {
 			// mark as binded
 			el.classList.add('data-bind-dropdown')
@@ -176,6 +193,15 @@ window.bms.default.dropdown = (className) => {
 }
 
 
+/**
+ * Toggle element by adding .show or .hide to an HTML element
+ * 
+ * @function window.bms.default.changeDisplay
+ * @param {array} selector - className or ID of elements
+ * @param {string} [display = block] - block || none
+ * @example 
+ * //  window.bms.default.changeDisplay(['.sideBar'], 'none')
+ */
 window.bms.default.changeDisplay = (selector=[], display="block") => {
 	selector.forEach((val,index)=>{
 		let el = document.querySelector(val)
@@ -191,8 +217,15 @@ window.bms.default.changeDisplay = (selector=[], display="block") => {
 	})
 }
 
-
-window.bms.default.activeMenu=(id)=>{
+/**
+ * Add active state to sidebar's main navigation
+ * 
+ * @function window.bms.default.activeMenu
+ * @param {string} id - Children of .main-menu-list-item that contains this id
+ * @example
+ * // window.bms.default.activeMenu('bidding-menu')
+ */
+window.bms.default.activeMenu = (id) => {
 	document.querySelectorAll('.main-menu-list-item').forEach((el,index)=>{
 		if(el.getAttribute('id')==id){
 			el.classList.add('active')
@@ -203,19 +236,33 @@ window.bms.default.activeMenu=(id)=>{
 }
 
 
-// splash screen
+/**
+ * Hide splash screen
+ * 
+ * @function window.bms.default.hideSplash
+ */
 window.bms.default.hideSplash = () => {
 	document.querySelector('splash-page').style.display = 'none'
 }
 
-// loading
+// append default loader to the body
 window.bms.default.spinner = new window.bms.exports.Spinner({
 	target:'body',
 	class:'spinner'
 })
 
 
-window.bms.default.toggleOpenClasses=(selector=[],display="block")=>{
+/**
+ * Toggle element by adding or removing .for-open to an HTML element
+ * .for-open is initialy added to an element which makes it visible for all users
+ * 
+ * @function window.bms.default.toggleOpenClasses
+ * @param {array} selector - className or ID of elements
+ * @param {string} [display = block] - block || none
+ * @example 
+ * // window.bms.default.toggleOpenClasses(['.sideBar'], 'none')
+ */
+window.bms.default.toggleOpenClasses = (selector = [], display = "block") => {
 	selector.forEach((val,index)=>{
 
 		var el=document.querySelector(val)
@@ -231,7 +278,13 @@ window.bms.default.toggleOpenClasses=(selector=[],display="block")=>{
 }
 
 
-window.bms.default.showAllMenuForOpen = (action = 0) => {
+/**
+ * Remove for-open class in an HTMLElement
+ * 
+ * @function window.bms.default.showAllMenuForOpen
+ * @param {number|boolean} [action = false] - true || false
+ */
+window.bms.default.showAllMenuForOpen = (action = false) => {
 	if (action) {
 		document.querySelectorAll('.for-open').forEach((el, index) => {
 			el.classList.remove('for-open')
