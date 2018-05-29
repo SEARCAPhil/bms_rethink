@@ -2,6 +2,11 @@ import ListService from '../Services/List/List'
 import RequirementsService from '../Services/Requirements'
 import ProposalService from '../../Invitation/Services/Proposal'
 
+/**
+ * Utility for getting and posting an Item under particular bidding request.
+ * 
+ * @module Bidding\Util
+ */
 export default class {
 	constructor () {
 		this.XHR = new window.bms.exports.XHR()
@@ -10,7 +15,12 @@ export default class {
 		this.PropServ = new ProposalService()
 	}
 
-
+	/**
+	 * Get item information
+	 * 
+	 * @param {number} id 
+	 * @returns {promise}
+	 */
 	get (id) { 
 		let data = {
 			id,
@@ -28,7 +38,11 @@ export default class {
 		})
 	}
 
-
+	/**
+	 * Remove requirements
+	 * @see services\requirements 
+	 * @param {Object} e - MouseEvent
+	 */
 	removeRequirements (e) {
 		window.bms.default.spinner.show()
 		let data = {
@@ -50,7 +64,9 @@ export default class {
 		})
 	}
 
-
+	/**
+	 * @param {Object} e - MouseEvent
+	 */
 	removeAwardee (e) {
 		window.bms.default.spinner.show()
 		let data = {
@@ -73,6 +89,9 @@ export default class {
 		})
 	}
 
+	/**
+	 * @param {Object} e - MouseEvent
+	 */
 	removeRecepients (e) { 
 		window.bms.default.spinner.show()
 		let data = {
@@ -103,7 +122,9 @@ export default class {
 	}
 
 
-
+	/**
+	 * @param {Object} e - MouseEvent
+	 */
 	saveProposal (e) { 
 		window.bms.default.spinner.show()
 
@@ -160,7 +181,9 @@ export default class {
 	}
 
 
-
+	/**
+	 * @param {Object} e - MouseEvent
+	 */
 	updateProposal (e) { 
 		console.log(e)
 		window.bms.default.spinner.show()
@@ -217,7 +240,9 @@ export default class {
 		})
 	}
 
-
+	/**
+	 * @param {Object} e - MouseEvent
+	 */
 	setDeadline (e) {
 		window.bms.default.spinner.show()
 		let data = {
@@ -324,10 +349,16 @@ export default class {
 		}
 	}
 
+	/**
+	 * @param {Object} payload - POST feedback to server by calling feedback services under the hood
+	 */
 	feedback (payload) {
 		return this.ReqServ.feedback(payload)
 	}
 
+	/**
+	 * @param {Object} e - MouseEvent
+	 */
 	award (e) {
 		window.bms.default.spinner.show()
 		let data = {
@@ -350,6 +381,12 @@ export default class {
 		})
 	}
 
+
+	/**
+	 * Display remove confirmation modal
+	 * @param {Object} e - MouseEvent
+	 * @returns XMLHttpRequest
+	 */
 	loadRemoveRequirements (e) {
 		const URL='pages/suppliers/modal/remove.html'
 		const id=e.target.id
@@ -378,6 +415,11 @@ export default class {
 		}).catch(e=>{})
 	}
 
+	/**
+	 * Display remove confirmation modal when deleting suppliers from invitation list
+	 * @param {Object} e - MouseEvent
+	 * @returns XMLHttpRequest
+	 */
 	loadRemoveRecepients (e) {
 		const URL='pages/suppliers/modal/remove.html'
 		const id=e.target.getAttribute('data-resources')
@@ -410,6 +452,11 @@ export default class {
 		}).catch(e=>{})
 	}
 
+	/**
+	 * Display proposal application form
+	 * @param {Object} e - MouseEvent
+	 * @returns XMLHttpRequest
+	 */
 	loadProposalForm (e) {
 		const URL='pages/bidding/forms/proposals/index.html'
 		const target = document.querySelector('[name="/bids/info/particulars/proposals/form"]')
@@ -430,9 +477,12 @@ export default class {
 
 	}
 
-
+	/**
+	 * Display a notice to attach their formal quotation before proceeding
+	 * @param {Object} e - MouseEvent
+	 * @returns XMLHttpRequest
+	 */
 	loadProposalAttachmentsNotice (e) {
-
 		const URL='pages/bidding/modal/proposal-attachments-notice.html'
 		const proto = Object.assign({ __proto__: this.__proto__ }, this)
 		const stat = document.querySelector('#detail-req-menu-status')
@@ -482,7 +532,11 @@ export default class {
 		})
 	}
 
-
+	/**
+	 * Display confirmation modal for sending proposal
+	 * @param {Object} e - MouseEvent
+	 * @returns XMLHttpRequest
+	 */
 	loadSendProposal (e) {
 		const URL='pages/bidding/modal/send-proposals.html'
 		const id=1
@@ -513,7 +567,11 @@ export default class {
 	}
 
 
-
+	/**
+	 * Display confirmation modal when saving proposal
+	 * @param {Object} e - MouseEvent
+	 * @returns XMLHttpRequest
+	 */
 	loadSaveProposal (e) {
 		const URL = 'pages/bidding/modal/save-proposals.html'
 		const id = 1
@@ -541,7 +599,11 @@ export default class {
 		}).catch(e=>{})
 	}
 
-
+	/**
+	 * Display update confirmation modal when updating proposal
+	 * @param {Object} e - MouseEvent
+	 * @returns XMLHttpRequest
+	 */
 	loadUpdateProposal (e) {
 		const URL='pages/bidding/modal/save-proposals.html'
 		const id = e.target.getAttribute('data-resources')
@@ -570,8 +632,11 @@ export default class {
 		}).catch(e=>{})
 	}
 
-
-
+	/**
+	 * Display remove confirmation modal when removing awarded supplier
+	 * @param {Object} e - MouseEvent
+	 * @returns XMLHttpRequest
+	 */
 	loadRemoveAwardee (e) {
 		const URL='pages/suppliers/modal/remove.html'
 		const id=e.target.getAttribute('data-resources')
@@ -601,7 +666,10 @@ export default class {
 		}).catch(e=>{})
 	}
 
-
+	/**
+	 * @param {Object} e - MouseEvent
+	 * @returns XMLHttpRequest
+	 */
 	loadSetDeadline (e) {
 		const URL='pages/bidding/modal/deadline.html'
 		const id=e.target.getAttribute('data-resources')
@@ -661,7 +729,10 @@ export default class {
 		}).catch(e=>{})
 	}
 
-
+	/**
+	 * @param {Object} e - MouseEvent
+	 * @returns XMLHttpRequest
+	 */
 	bindRemoveRequirements () {
 		const proto = Object.assign({ __proto__: this.__proto__ }, this)
 		document.querySelectorAll('.remove-requirements-modal-btn').forEach((val, index) => {
@@ -669,6 +740,10 @@ export default class {
 		})
 	}
 
+	/**
+	 * Display attachments in DOM
+	 * @param {Object} data - Attachment information in JSON format
+	 */
 	appendAttachments (data) {
 		const attSec = document.getElementById('attachments-requirements-info-section')
 		attSec.innerHTML += `	<div class="col-lg-3 col-md-3" style="padding:5px;background:#e9ecef;border:1px solid #fefefe;">
@@ -689,7 +764,12 @@ export default class {
 									</div>
 								</div>`
 	}
-
+	/**
+	 * Send an invitation to supplier
+	 * 
+	 * @param {Object} e - MouseEvent
+	 * @returns XMLHttpRequest
+	 */
 	sendRequirements (e) {
 		window.bms.default.spinner.show()
 		if (!window.bms.bidding.suppliersSendingListItems) window.bms.bidding.suppliersSendingListItems = {}
@@ -772,7 +852,11 @@ export default class {
 		})
 	}
 
-
+	/**
+	 * Display send confirmation modal when inviting supplier.
+	 * @param {Object} e - MouseEvent
+	 * @returns XMLHttpRequest
+	 */
 	loadSendRequirements (e) {
 		const URL='pages/bidding/modal/send-requirements.html'
 		const id=e.target.id
@@ -801,6 +885,11 @@ export default class {
 		}).catch(e=>{})
 	}
 
+	/**
+	 * Display send confirmation modal when inviting supplier(s).
+	 * @param {Object} e - MouseEvent
+	 * @returns XMLHttpRequest
+	 */
 	loadSendRequirementsSelected (e) {
 		const URL='pages/bidding/modal/send-requirements-item.html'
 		const id=e.target.id
@@ -829,8 +918,12 @@ export default class {
 		}).catch(e=>{})
 	}
 
+	/**
+	 * Display notification to attach bidding resolution after they awarded a supplier.
+	 * @param {Object} e - MouseEvent
+	 * @returns XMLHttpRequest
+	 */
 	loadAwardRequirementsAttachmentsNotice (e) {
-
 		const URL='pages/bidding/modal/award-attachments-notice.html'
 		const proto = Object.assign({ __proto__: this.__proto__ }, this)
 		const stat = document.querySelector('#detail-req-menu-status')
@@ -870,6 +963,14 @@ export default class {
 		})
 	}
 
+	/**
+	 * Set winner supplier as officially awarded.
+	 * Please note that the supplier MUST explicitely awarded by GSU.
+	 * Winner -> Awarded
+	 * 
+	 * @param {Object} e - MouseEvent
+	 * @returns XMLHttpRequest
+	 */
 	winnerRequirements (e) {
 		let modalTarget=document.getElementById('modal-bidding-requirements-body')
 		window.bms.default.spinner.show()
@@ -912,6 +1013,11 @@ export default class {
 		})
 	}
 
+	/**
+	 * Display winner confirmation modal
+	 * @param {Object} e - MouseEvent
+	 * @returns XMLHttpRequest
+	 */
 	loadWinnerRequirements (e) {
 		const URL='pages/bidding/modal/winner.html'
 		const id=e.target.id
@@ -940,6 +1046,11 @@ export default class {
 		}).catch(e=>{})
 	}
 
+	/**
+	 * Display award confirmation modal
+	 * @param {Object} e - MouseEvent
+	 * @returns XMLHttpRequest
+	 */
 	loadAwardRequirements (e) {
 		const URL='pages/bidding/modal/award-proposal.html'
 		const id=e.target.id
@@ -968,11 +1079,11 @@ export default class {
 		}).catch(e=>{})
 	}
 	
-
-
-	
-
-
+	/**
+	 * Attach event listener in send button
+	 * 
+	 * @see loadSendRequirements
+	 */
 	bindSendRequirements () {
 		const proto = Object.assign({ __proto__: this.__proto__ }, this)
 		document.querySelectorAll('.send-requirements-modal-btn').forEach((val, index) => {
@@ -980,6 +1091,11 @@ export default class {
 		})
 	}
 
+	/**
+	 * Attach event listener in send button
+	 * 
+	 * @see loadSendRequirementsSelected
+	 */
 	bindSendRequirementsPerItem () {
 		const proto = Object.assign({ __proto__: this.__proto__ }, this)
 		document.querySelectorAll('.send-requirements-selected-modal-btn').forEach((val, index) => {
@@ -987,6 +1103,11 @@ export default class {
 		})
 	}
 
+	/**
+	 * Attach event listener in remove button
+	 * 
+	 * @see loadRemoveRecepients
+	 */
 	bindRemoveRecepients () {
 		const proto = Object.assign({ __proto__: this.__proto__ }, this)
 		document.querySelectorAll('.remove-receipients-modal').forEach((val, index) => {
@@ -1007,6 +1128,11 @@ export default class {
 		})*/
 	}
 
+	/**
+	 * Attach event listener to .send-bidding-modal-btn
+	 * 
+	 * @see loadSendProposal
+	 */
 	bindSendProposal () {
 		const proto = Object.assign({ __proto__: this.__proto__ }, this)
 		document.querySelectorAll('.send-bidding-modal-btn').forEach((val, index) => {
@@ -1014,6 +1140,11 @@ export default class {
 		})
 	}
 
+	/**
+	 * Attach event listener to .save-bidding-modal-btn
+	 * 
+	 * @see loadSaveProposal
+	 */
 	bindSaveProposal () {
 		const proto = Object.assign({ __proto__: this.__proto__ }, this)
 		document.querySelectorAll('.save-bidding-modal-btn:not(.event-binded)').forEach((val, index) => {
@@ -1022,6 +1153,11 @@ export default class {
 		})
 	}
 
+	/**
+	 * Attach event listener to .save-bidding-modal-btn
+	 * 
+	 * @see loadUpdateProposal
+	 */
 	bindUpdateProposal () {
 		const proto = Object.assign({ __proto__: this.__proto__ }, this)
 		document.querySelectorAll('.save-bidding-modal-btn').forEach((val, index) => {
@@ -1029,7 +1165,11 @@ export default class {
 		})
 	}
 
-
+	/**
+	 * Attach event listener to .award-requirements-modal-btn
+	 * 
+	 * @see loadWinnerRequirements
+	 */
 	bindSetWinner () {
 		const proto = Object.assign({ __proto__: this.__proto__ }, this)
 		document.querySelectorAll('.award-requirements-modal-btn').forEach((val, index) => {
@@ -1037,7 +1177,11 @@ export default class {
 		})
 	}
 
-
+	/**
+	 * Attach event listener to .remove-awardees-modal
+	 * 
+	 * @see loadRemoveAwardee
+	 */
 	bindRemoveAwardee () {
 		const proto = Object.assign({ __proto__: this.__proto__ }, this)
 		document.querySelectorAll('.remove-awardees-modal').forEach((val, index) => {
@@ -1045,6 +1189,11 @@ export default class {
 		})
 	}
 
+	/**
+	 * Attach event listener to .set-deadline-modal-btn
+	 * 
+	 * @see loadSetDeadline
+	 */
 	bindSetDeadline () {
 		const proto = Object.assign({ __proto__: this.__proto__ }, this)
 		document.querySelectorAll('.set-deadline-modal-btn').forEach((val, index) => {
@@ -1060,6 +1209,11 @@ export default class {
 		})
 	}
 
+	/**
+	 * Attach event listener to .award-list-modal-btn
+	 * 
+	 * @see loadAwardRequirements
+	 */
 	bindAward () {
 		const proto = Object.assign({ __proto__: this.__proto__ }, this)
 		document.querySelectorAll('.award-list-modal-btn').forEach((val, index) => {

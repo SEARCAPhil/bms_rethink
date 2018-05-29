@@ -9,7 +9,7 @@ const sideBar=new window.bms.exports.Sidebar('.docker-menu ','#docker-sidebar')
 
 /** 
  * @function window.bms.default.isCBAAsst
- * @returns {Object}  
+ * @returns {boolean}  
  * */
 window.bms.default.isCBAAsst = () => {
 	return window.localStorage.getItem('role') === 'cba_assistant'

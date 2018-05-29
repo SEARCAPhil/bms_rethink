@@ -16,7 +16,12 @@ const appRoute2 = new window.bms.exports.Router('http://127.0.0.1/bms_rethink/ww
 
 let PopupInstance = {}
 
-
+/**
+ * Load bidding information based on ID
+ * 
+ * @function viewBiddingInfo
+ * @param {number} id - Bidding request ID
+ */
 const viewBiddingInfo = (id) => {
 	ListUtil.view(id).then(data => {
 		// parse response
@@ -44,6 +49,12 @@ const viewBiddingInfo = (id) => {
 	})	
 }
 
+/**
+ * Send bidding to CBA Recording Assistant
+ * This will change the status from 0 to 1
+ * 
+ * @function sendBidding
+ */
 const sendBidding = (e) => {
 	window.bms.default.spinner.show()
 
@@ -73,7 +84,12 @@ const sendBidding = (e) => {
 	})
 }
 
-
+/**
+ * Send bidding request back to the author
+ * This will change the status to 2
+ * 
+ * @function loadReSendBidding
+ */
 const loadReSendBidding = (e) => {
 	const URL='pages/bidding/modal/send.html'
 	const id=e.target.id
@@ -96,6 +112,12 @@ const loadReSendBidding = (e) => {
 	}).catch(e=>{})
 }
 
+/**
+ * Send bidding toGSU for the next process
+ * This will change the status to 3
+ * 
+ * @function loadApproveBidding
+ */
 const loadApproveBidding = (e) => {
 	const URL='pages/bidding/modal/approve.html'
 	const id=e.target.id
@@ -142,6 +164,12 @@ const loadDisapproveBidding = (e) => {
 }
 
 
+/**
+ * Mark the bidding as failure
+ * This will change the status to 6
+ * 
+ * @function loadFailedBidding
+ */
 const loadFailedBidding = (e) => {
 	const URL='pages/bidding/modal/failed.html'
 	const id=e.target.id
@@ -164,6 +192,13 @@ const loadFailedBidding = (e) => {
 	}).catch(e=>{})
 }
 
+
+/**
+ * Mark the bidding as Closed/ Done
+ * This will change the status to 5
+ * 
+ * @function loadCloseBidding
+ */
 const loadCloseBidding = (e) => {
 	const URL='pages/bidding/modal/close.html'
 	const id=e.target.id
@@ -187,7 +222,13 @@ const loadCloseBidding = (e) => {
 }
 
 
-// MENU based on status
+/* --------------------------
+| MENU based on status
+|----------------------------*/
+
+/**
+ * @function showBiddingReqSent
+ */
 const showBiddingReqSent = () => {
 	const targ = document.getElementById('detail-info-menu-status')
     targ.innerHTML = `<center class="row" style="background:#0c5460;color:#fff;padding:5px;">
@@ -197,7 +238,11 @@ const showBiddingReqSent = () => {
     </center>`
 }
 
-
+/**
+ * Shows when the request IS FOR APPROVAL
+ * 
+ * @function showBiddingReqApprove 
+ */
 const showBiddingReqApprove = () => {
 	const targ = document.getElementById('detail-info-menu-status')
 
@@ -223,7 +268,11 @@ const showBiddingReqApprove = () => {
 	PopupInstance = new window.bms.exports.PopupES()
 }
 
-
+/**
+ * Shows when the request was APPROVED
+ * 
+ * @function showBiddingApprove
+ */
 const showBiddingApprove = () => {
 	const targ = document.getElementById('detail-info-menu-status')
 	targ.innerHTML = `<center class="row" style="background:#00897B;color:#fff;padding:5px;">
@@ -255,7 +304,12 @@ const showBiddingApprove = () => {
 
 }
 
-
+/**
+ * Shows when the request was APPROVED
+ * This is when the current role is GSU
+ * 
+ * @function showBiddingApproveReadOnly
+ */
 const showBiddingApproveReadOnly = () => {
 	const targ = document.getElementById('detail-info-menu-status')
 	targ.innerHTML = `<center class="row" style="background:#00897B;color:#e6e6e6;padding:5px;">
@@ -267,7 +321,9 @@ const showBiddingApproveReadOnly = () => {
 }
 
 
-
+/**
+ * @function showBiddingReqReturned
+ */
 const showBiddingReqReturned = () => {
 	const targ = document.getElementById('detail-info-menu-status')
 	targ.innerHTML = `<center class="row" style="background:#0c5460;color:#fff;padding:5px;">
@@ -277,6 +333,10 @@ const showBiddingReqReturned = () => {
     </center>`
 }
 
+
+/**
+ * @function showBiddingClosed
+ */
 const showBiddingClosed = () => {
 	const targ = document.getElementById('detail-info-menu-status')
 	targ.innerHTML = `<center class="row" style="background:#fff;color:#607d8b;padding:5px;">
@@ -306,7 +366,9 @@ const showBiddingClosed = () => {
 }
 
 
-
+/**
+ * @function showBiddingFailed
+ */
 const showBiddingFailed = () => {
 	const targ = document.getElementById('detail-info-menu-status')
 	targ.innerHTML = `<center class="row" style="background:#dc3545;color:#fff;padding:5px;">
@@ -317,7 +379,9 @@ const showBiddingFailed = () => {
 }
 
 
-
+/**
+ * @function showBiddingDisapproved
+ */
 const showBiddingDisapproved = () => {
 	const targ = document.getElementById('detail-info-menu-status')
 	targ.innerHTML = `<center class="row" style="background:#dc3545;color:#fff;padding:5px;">
@@ -327,7 +391,9 @@ const showBiddingDisapproved = () => {
     </center>`
 }
 
-
+/**
+ * @function showBiddingExemption
+ */
 const showBiddingExemption = () => {
 	const targ = document.getElementById('detail-info-menu-status')
 	if(!document.getElementById('detail-info-menu-bidding-exemption')) {

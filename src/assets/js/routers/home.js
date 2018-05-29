@@ -1,7 +1,13 @@
 const XHR = new window.bms.exports.XHR()
 const appRoute = new window.bms.exports.Router('http://localhost/bms_rethink/www/',true)
 
-const loadHome=()=>{
+/**
+ * Load welcome page
+ * 
+ * @function loadHome
+ * @returns {Promise}
+ */
+const loadHome = () => {
 	return new Promise((resolve,reject)=>{
 		XHR.request({url:'./pages/welcome.html',method:'GET'}).then((data)=>{
 			var el=document.querySelector('div[name="/home"]')
