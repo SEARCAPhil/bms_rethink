@@ -1,72 +1,48 @@
-import { Attachments } from '../../modules/Bidding/Util/Attachments.js'
-import IndexedDB from '../../modules/Bidding/Util/Storage/Bidding'
-import IndexedDBReq from '../../modules/Bidding/Util/Storage/Requirements'
-import IndexedDBPart from '../../modules/Bidding/Util/Storage/Particulars'
-import ListTemplate from '../../modules/Bidding/Templates/List/List'
-import ListService from '../../modules/Bidding/Services/List/List'
-import ListUtilities from '../../modules/Bidding/Util/List/List.js'
-import ParticularUtilities from '../../modules/Bidding/Util/Particulars.js'
-import RequirementsUtilities from '../../modules/Bidding/Util/Requirements.js'
-import PopupES from '../../Components/PopupES/PopupES.js'
-
-const appRoute = new window.bms.exports.Router('http://127.0.0.1/bms_rethink/www/',true)
-const IDB = new IndexedDB()
-const IDBReq = new IndexedDBReq()
-const IDBPart = new IndexedDBPart()
-
-const XHR = new window.bms.exports.XHR()
-let DB = new window.bms.exports.IndexedDB()
-
-window.bms.templates=window.bms.templates||{}
-window.bms.templates.biddingList=ListTemplate
+import { Attachments } from '../modules/Bidding/Util/Attachments'
+import ListUtilities from '../modules/Bidding/Util/List/List'
+import InfoUtilities from '../modules/Bidding/Util/Info'
+import RequirementsUtilities from '../modules/Bidding/Util/Requirements'
+import ParticularUtilities from '../modules/Bidding/Util/Particulars'
 
 const AttUtil = new Attachments()
-const List = new ListTemplate()
-const listUtil = new ListUtilities()
-const ListServ = new ListService()
-const PartUtil = new ParticularUtilities()
+const ListUtil = new ListUtilities()
+const InfoUtil = new InfoUtilities()
 const ReqUtil = new RequirementsUtilities()
+const PartUtil = new ParticularUtilities()
+
+const XHR = new window.bms.exports.XHR()
+const appRoute = new window.bms.exports.Router('http://127.0.0.1/bms_rethink/www/',true)
+const appRoute2 = new window.bms.exports.Router('http://127.0.0.1/bms_rethink/www/',true)
 
 let PopupInstance = {}
 
 
-
 const viewBiddingInfo = (id) => {
-	ListServ.view({id: id, token : window.localStorage.getItem('token')}).then(data => {
-
-		window.bms.default.spinner.hide()
-
-		const parsedData=JSON.parse(data)
-		const json=parsedData.data
-		json[0].id = parseInt(json[0].id)
-		json[0].status = parseInt(json[0].status)
-
+	ListUtil.view(id).then(data => {
+		// parse response
+		const parsedData = JSON.parse(data)
+        const json = parsedData.data
+        // hide loading
+        window.bms.default.spinner.hide()
+        // dispatch listener
 		var e = new CustomEvent('biddingInfoChange', {detail: json})
 		document.dispatchEvent(e)
-
-		// save to storage
-		IDB.set(json[0])
 
 		// save particulars to storage
 		json[0].particulars.forEach((val, index) => {
 			// return an int
 			val.id = parseInt(val.id)
 			val.bidding_id = parseInt(val.bidding_id)
-			// save 
-			IDBPart.set(val)
 
 			// requirements
 			val.requirements.forEach((res, i) => {
 				res.id = parseInt(res.id)
 				res.particular_id = parseInt(res.particular_id)
-				IDBReq.set(res)
 			})
 		})
 		
 	})	
 }
-
-
 
 const sendBidding = (e) => {
 	window.bms.default.spinner.show()
@@ -77,7 +53,7 @@ const sendBidding = (e) => {
 		token : window.localStorage.getItem('token')
 	}
 
-	ListServ.status(data).then((json) => {
+	ListUtil.changeStatus(data).then((json) => {
 		let res = JSON.parse(json)
 
 		if(res.data){
@@ -119,15 +95,6 @@ const loadReSendBidding = (e) => {
 		},50)
 	}).catch(e=>{})
 }
-
-const loadCSS = (href) => {
-	let css = document.createElement('link')
-	css.type= 'text/css'
-	css.rel = 'stylesheet'
-	css.href = href
-	document.body.append(css)
-}
-
 
 const loadApproveBidding = (e) => {
 	const URL='pages/bidding/modal/approve.html'
@@ -219,6 +186,7 @@ const loadCloseBidding = (e) => {
 	}).catch(e=>{})
 }
 
+
 // MENU based on status
 const showBiddingReqSent = () => {
 	const targ = document.getElementById('detail-info-menu-status')
@@ -235,7 +203,7 @@ const showBiddingReqApprove = () => {
 
 	targ.innerHTML = `<center class="row" style="background:#495057;color:#fff;padding:5px;">
 		<p class="col-12">
-        	This Bidding request Is for approval. Make sure you review this request before making any further actions.  <span id="disapprove-btn-section"></span> <span id="approve-btn-section"></span> 
+        	This Bidding request is for approval. Make sure you review this request before making any further actions.  <span id="disapprove-btn-section"></span> <span id="approve-btn-section"></span> 
         </p>
     </center>`
 
@@ -251,29 +219,16 @@ const showBiddingReqApprove = () => {
 
 	targ.querySelector('#approve-btn-section').append(btn)
 
-    // REMOVED as listed in Pre-release update [#25]
-    /*
-    const btn2 = document.createElement('button')
-    btn2.classList.add('btn', 'btn-dark', 'btn-sm', 'disapprove-btn')
-    btn2.setAttribute('data-target', '#bidding-modal')
-    btn2.setAttribute('data-popup-toggle', 'open')
-
-    btn2.textContent = 'Disapprove'
-    btn2.status = 6
-
-    btn2.addEventListener('click', loadDisapproveBidding)
-    targ.querySelector('#disapprove-btn-section').append(btn2)*/
-    
     // enable popup
-	PopupInstance = new PopupES()
+	PopupInstance = new window.bms.exports.PopupES()
 }
 
 
 const showBiddingApprove = () => {
 	const targ = document.getElementById('detail-info-menu-status')
-	targ.innerHTML = `<center class="row" style="background:#dee2e6;color:#6c757d;padding:5px;">
+	targ.innerHTML = `<center class="row" style="background:#00897B;color:#fff;padding:5px;">
 		<p class="col-12">
-        	This Bidding request was approved. You may close this bidding request now <span id="failed-btn-section"></span> <span id="close-btn-section"></span>
+        	<i class="material-icons md-18">check_circle</i> This Bidding request was approved. You may close this bidding request now <span id="failed-btn-section"></span> <span id="close-btn-section"></span>
         </p>
     </center>`
 
@@ -303,9 +258,9 @@ const showBiddingApprove = () => {
 
 const showBiddingApproveReadOnly = () => {
 	const targ = document.getElementById('detail-info-menu-status')
-	targ.innerHTML = `<center class="row" style="background:#495057;color:#e6e6e6;padding:5px;">
+	targ.innerHTML = `<center class="row" style="background:#00897B;color:#e6e6e6;padding:5px;">
 		<p class="col-12">
-        	This Bidding request was approved. You may now invite suppliers to bid on this request
+		<i class="material-icons md-18">check_circle</i> This Bidding request was approved. You may now invite suppliers to bid on this request
         </p>
     </center>`
 
@@ -317,16 +272,35 @@ const showBiddingReqReturned = () => {
 	const targ = document.getElementById('detail-info-menu-status')
 	targ.innerHTML = `<center class="row" style="background:#0c5460;color:#fff;padding:5px;">
 		<p class="col-12">
-        	This Bidding request was returned. Make sure that all details are complete and follow the bidding request standard procedures
+        	This Bidding request was returned. Make sure that all details are complete and follows the bidding request standard procedures
         </p>
     </center>`
 }
 
 const showBiddingClosed = () => {
 	const targ = document.getElementById('detail-info-menu-status')
-	targ.innerHTML = `<center class="row" style="background:#0c5460;color:#fff;padding:5px;">
+	targ.innerHTML = `<center class="row" style="background:#fff;color:#607d8b;padding:5px;">
 		<p class="col-12">
-        	This Bidding request is already closed. <i class="material-icons">lock</i>
+		<section class="col-lg-5 offset-lg-4">
+			<ul class="nav">
+				<li class="nav-item"></li>
+				<li class="nav-item">
+					<a class="nav-link row">
+						<div class="media">
+							<img class="mr-3" src="assets/img/negotiation.png" alt="negotiation" width="40px">
+							<div class="media-body">
+								Sorry ! Bidding for this item is already closed <i class="material-icons md-18">lock</i><br>
+								<small> You are not able to add or modify any content under this item</small>
+							</div>
+						</div>	
+					</a>
+				</li>
+
+				<li class="nav-item">
+					<a class="nav-link proposal-requirement-dialog-btn"></a>
+				</li>
+			</ul>
+		</section>
         </p>
     </center>`
 }
@@ -360,9 +334,9 @@ const showBiddingExemption = () => {
 		const status = document.createElement('center')
 		status.classList.add('row')
 		status.id = 'detail-info-menu-bidding-exemption'
-		status.setAttribute('style', 'background:#dc355a;color:#fff;padding:5px;font-weight: bold;')
+		status.setAttribute('style', 'background:#ff7043;color:#fff;padding:5px;font-weight: bold;')
 		status.innerHTML = `
-			<p class="col-12">
+			<p class="col-lg-11 offset-lg-1">
 	        	<i class="material-icons md-36">touch_app</i> FOR BIDDING EXEMPTION<br/>
 	        	<small>This request is not intended for all suppliers. Please DO NOT send an invitation twice if possible. </small>
 	        </p>
@@ -404,11 +378,124 @@ const changeSendToReturn = () => {
 }
 
 
+
+
+const appendAttachments = (data) => {
+	const attSec = document.getElementById('attacments-info-section')
+	attSec.innerHTML += `	<div class="col-lg-3 col-md-3" style="padding:5px;background:#505050;border:1px solid #fefefe;position:relative;color:#fff;">
+								<div class="d-flex align-items-stretch">
+
+									<div class="col-10">
+										<div class="file-icon file-icon-sm" data-type="${data.type}"></div> ${data.original_filename}
+									</div>
+
+									<div class="col-2">
+										<i class="material-icons md-18 device-dropdown" data-device-dropdown="dropdown-${data.id}" data-resources="${data.id}">arrow_drop_down</i>
+										<div class="dropdown-section float-right" id="dropdown-${data.id}">
+											<ul class="list-group list-group-flush">
+	  											<li class="list-group-item"><a href="#" onclick="event.preventDefault();window.open('${window.bms.config.network}/bidding/attachments/download.php?id=${data.id}')">Download</a></li>
+												<li class="list-group-item for-open"><a data-target="#bidding-modal" data-popup-toggle="open" href="#" class="remove-attachments-modal">Remove</a></li>
+											<ul>
+										</div>
+									</div>
+								</div>
+							</div>`
+}
+
+const appendParticulars = (data) => {
+	let html = `
+		<div class="particulars" style="font-size:14px;">
+	    	<details open>
+	    		<summary class="text-info">
+	    			${data.name}
+	    			<span class="float-right text-danger"></span>
+
+	    		</summary>
+	    		<div class="col-lg-12" style="padding-top:5px;padding-bottom:5px;background:#f6f6f6;">
+	    			
+	    			<p>
+	    				<span class="badge badge-danger">${data.requirements.length}</span> <span class="text-danger">Requirements &emsp;
+	    				<u class="for-open"><a href="#/bids/forms/registration/${data.id}/steps/3">Add New</a></u></span>
+	    			</p>
+	    			`
+	// requirements
+	for (let x = 0; x < data.requirements.length; x++) {
+		html +=`
+			<section>
+				
+    			<p style="border-left:2px solid green;padding-left:10px;"><b><a href="#/bids/requirements/${data.requirements[x].id}"><u>${data.requirements[x].name}</u></a></b> 
+    				<span>(${data.requirements[x].quantity} ${data.requirements[x].unit})</span>`
+
+    				for (let y = 0; y < data.requirements[x].funds.length; y++) {
+    					html +=`
+    						<span class="badge badge-dark">${data.requirements[x].funds[y].fund_type} - ${data.requirements[x].funds[y].cost_center} - ${data.requirements[x].funds[y].line_item}</span>
+    					`
+    				}
+
+    	// not applicable for already awarded requirements
+    	if (data.requirements[x].awardees.length < 1) {
+	    	html +=`	<span class="for-open">
+	    					<a href="#/bids/forms/registration/${data.requirements[x].id}/steps/3/update"><i class="material-icons md-12 text-muted">edit</i></a>
+	    					<a href="#" class="remove-requirements-modal-btn" data-target="#bidding-modal" data-popup-toggle="open" id="${data.requirements[x].id}"><i class="material-icons md-12 text-muted" id="${data.requirements[x].id}">remove_circle_outline</i></a>&emsp;
+	    				</span>
+	    				<span class="float-right text-danger">${data.requirements[x].budget_currency} ${new Intl.NumberFormat('en-us', {maximumSignificantDigits:3}).format(data.requirements[x].budget_amount)}</span><br/>
+	    				<span class="text-muted">${data.requirements[x].bidding_excemption_request ===1 ? 'For bidding excemption' : ''}</span>
+	    			
+			`
+
+
+		} else {
+
+			html +=`<span class="" style="color:#ffb80c;">
+						<i class="material-icons md-18">star</i> 
+						<span>Awarded</span>
+					</span>
+					<span class="float-right text-danger">${data.requirements[x].budget_currency} ${new Intl.NumberFormat('en-us', {maximumSignificantDigits:3}).format(data.requirements[x].budget_amount)}</span>
+
+					`
+		}
+
+
+		html +=`</p></section>`
+	}
+
+	html +=`
+	    		</div>
+	    	</details>
+	    	<div class="col-lg-12">
+		    	<span class="deadline">
+		    		<b>Deadline</b> : ${data.deadline}<br/>
+		    		<!--menu -->
+		    		<span class="particulars-menu for-open" style="visibility:hidden;">
+	    				<a href="#" class="remove-particulars-modal" data-target="#bidding-modal" data-popup-toggle="open" id="${data.id}">Remove</a>&emsp;
+
+	    				<a href="#/bids/forms/registration/${data.id}/steps/2/update">Edit</a>&emsp;<br/>
+
+	    			</span>
+		    	</span>
+		    </div>
+	    </small>
+	`
+	document.getElementById('particulars-section').innerHTML += html
+
+	PopupInstance = new window.bms.exports.PopupES()
+
+	// remove particulars
+	PartUtil.bindRemoveParticulars()
+	// remove requirements
+	ReqUtil.bindRemoveRequirements()
+}
+
+
 const changeBiddingInfo = (e) => {
 	const details = e.detail[0]
 	const collabsSec = document.getElementById('bidding-collaborators')
 	const attSec = document.getElementById('attacments-info-section')
 
+	// print buttons
+	document.querySelectorAll('.print-btn').forEach((el, index) => {
+		el.href = `${window.bms.config.network}/bidding/reports/bidding_request.php?id=${details.id}`
+	})
 	// menu
 	if (details.status == 0) {
 		window.bms.default.toggleOpenClasses(['.for-open'], 'block')
@@ -498,10 +585,7 @@ const changeBiddingInfo = (e) => {
 
 	// info
 	document.getElementById('bidding-created-by-info').innerHTML = `${details.profile_name}`
-	// document.getElementById('bidding-name').innerHTML = `${details.name}`
 	document.getElementById('bidding-number-info').innerHTML = `#${details.id}`
-	//document.getElementById('bidding-description-info').innerHTML = `${details.description}`
-	//document.getElementById('bidding-deadline-info').innerHTML = `${details.deadline !== '0000-00-00' ? details.deadline : 'N/A'}`
 	document.getElementById('bidding-excemption-info').innerHTML = `${details.excemption == 1 ? 'YES' : 'NO'}`
 	document.getElementById('bidding-date-created').innerHTML = `${details.date_created}`
 	document.getElementById('image-info-section').innerHTML = `${details.profile_name ? details.profile_name.substr(0,2).toUpperCase() : ''}`
@@ -511,12 +595,11 @@ const changeBiddingInfo = (e) => {
 	collabsSec.innerHTML = ''
 	attSec.innerHTML = ''
 
-
+	// particulars
 	if (details.particulars) {
 		for (let x = 0; x < details.particulars.length; x++) {
 			// particulars
-			appendParticulars(details.particulars[x])
-			
+			appendParticulars(details.particulars[x])	
 		}
 	}
 
@@ -526,7 +609,6 @@ const changeBiddingInfo = (e) => {
 			collabsSec.innerHTML += `<span class="">${details.collaborators[i].profile_name};</span> `
 		}	
 	}
-
 
 	// attachments
 	for (var i = 0; i < details.attachments.length; i++) {
@@ -538,7 +620,7 @@ const changeBiddingInfo = (e) => {
 		// dropdown
 		window.bms.default.dropdown('device-dropdown')
 		// enable popup
-		PopupInstance = new PopupES()
+		PopupInstance = new window.bms.exports.PopupES()
 		// remove attachments
 		AttUtil.bindRemoveAttachments()
 	}, 1000);
@@ -547,207 +629,159 @@ const changeBiddingInfo = (e) => {
 
 	// show all menus ONLY for OPEN Bidding Request
 	setTimeout(() => {
-
 		// for CBA Asst /APPROVE
 		window.bms.default.showAllMenuForOpen (details.status == 0) 
-
 		// for CBA Asst /APPROVE
 		window.bms.default.showAllMenuForOpen (details.status == 1 && window.bms.default.isCBAAsst()) 
-
 		// for both
 		// must change to send to resend
 		window.bms.default.showAllMenuForOpen (details.status == 2) 
-		
 		// GSU
-		//window.bms.default.showAllMenuForOpen (details.status == 3 && window.bms.default.isCBAAsst()) 	
+		//window.bms.default.showAllMenuForOpen (details.status == 3 && window.bms.default.isCBAAsst()) 
+		
+		//load icon
+		window.bms.default.loadCSS('assets/css/fileicon.css')
 
-	},1000)
-
-
-	
+	},1000)	
 }
 
-const appendAttachments = (data) => {
-	const attSec = document.getElementById('attacments-info-section')
-	attSec.innerHTML += `	<div class="col-lg-3 col-md-3" style="padding:5px;background:#505050;border:1px solid #fefefe;position:relative;color:#fff;">
-								<div class="d-flex align-items-stretch">
 
-									<div class="col-10">
-										<div class="file-icon file-icon-sm" data-type="${data.type}"></div> ${data.original_filename}
-									</div>
-
-									<div class="col-2">
-										<i class="material-icons md-18 device-dropdown" data-device-dropdown="dropdown-${data.id}" data-resources="${data.id}">arrow_drop_down</i>
-										<div class="dropdown-section float-right" id="dropdown-${data.id}">
-											<ul class="list-group list-group-flush">
-	  											<li class="list-group-item"><a href="#" onclick="event.preventDefault();window.open('${window.bms.config.network}/bidding/attachments/download.php?id=${data.id}')">Download</a></li>
-												<li class="list-group-item for-open"><a data-target="#bidding-modal" data-popup-toggle="open" href="#" class="remove-attachments-modal">Remove</a></li>
-											<ul>
-										</div>
-									</div>
-								</div>
-							</div>`
-}
-
-const appendParticulars = (data) => {
-	let html = `
-		<div class="particulars" style="font-size:14px;">
-	    	<details>
-	    		<summary class="text-info">
-	    			${data.name}
-	    			<span class="float-right text-danger"></span>
-
-	    		</summary>
-	    		<div class="col-lg-12" style="padding-top:5px;padding-bottom:5px;background:#f6f6f6;">
-	    			
-	    			<p>
-	    				<span class="badge badge-danger">${data.requirements.length}</span> <span class="text-danger">Requirements &emsp;
-	    				<u class="for-open"><a href="#/bids/forms/registration/${data.id}/steps/3">Add New</a></u></span>
-	    			</p>
-	    			`
-	// requirements
-	for (let x = 0; x < data.requirements.length; x++) {
-		html +=`
-			<section>
-				
-    			<p style="border-left:2px solid green;padding-left:10px;"><b><a href="#/bids/requirements/${data.requirements[x].id}"><u>${data.requirements[x].name}</u></a></b> 
-    				<span>(${data.requirements[x].quantity} ${data.requirements[x].unit})</span>`
-
-    				for (let y = 0; y < data.requirements[x].funds.length; y++) {
-    					html +=`
-    						<span class="badge badge-dark">${data.requirements[x].funds[y].fund_type} - ${data.requirements[x].funds[y].cost_center} - ${data.requirements[x].funds[y].line_item}</span>
-    					`
-    				}
-
-    	// not applicable for already awarded requirements
-    	if (data.requirements[x].awardees.length < 1) {
-	    	html +=`	<span class="for-open">
-	    					<a href="#/bids/forms/registration/${data.requirements[x].id}/steps/3/update"><i class="material-icons md-12 text-muted">edit</i></a>
-	    					<a href="#" class="remove-requirements-modal-btn" data-target="#bidding-modal" data-popup-toggle="open" id="${data.requirements[x].id}"><i class="material-icons md-12 text-muted" id="${data.requirements[x].id}">remove_circle_outline</i></a>&emsp;
-	    				</span>
-	    				<span class="float-right text-danger">${data.requirements[x].budget_currency} ${new Intl.NumberFormat('en-us', {maximumSignificantDigits:3}).format(data.requirements[x].budget_amount)}</span><br/>
-	    				<span class="text-muted">${data.requirements[x].bidding_excemption_request ===1 ? 'For bidding excemption' : ''}</span>
-	    			
-			`
-
-
-		} else {
-
-			html +=`<span class="" style="color:#ffb80c;">
-						<i class="material-icons md-18">star</i> 
-						<span>Awarded</span>
-					</span>
-					<span class="float-right text-danger">${data.requirements[x].budget_currency} ${new Intl.NumberFormat('en-us', {maximumSignificantDigits:3}).format(data.requirements[x].budget_amount)}</span>
-
-					`
-		}
-
-
-		html +=`</p></section>`
-	}
-
-	html +=`
-	    		</div>
-	    	</details>
-	    	<div class="col-lg-12">
-		    	<span class="deadline">
-		    		<b>Deadline</b> : ${data.deadline}<br/>
-		    		<!--menu -->
-		    		<span class="particulars-menu for-open" style="visibility:hidden;">
-	    				<a href="#" class="remove-particulars-modal" data-target="#bidding-modal" data-popup-toggle="open" id="${data.id}">Remove</a>&emsp;
-
-	    				<a href="#/bids/forms/registration/${data.id}/steps/2/update">Edit</a>&emsp;<br/>
-
-	    			</span>
-		    	</span>
-		    </div>
-	    </small>
-	`
-	document.getElementById('particulars-section').innerHTML += html
-
-	PopupInstance = new PopupES()
-
-	// remove particulars
-	PartUtil.bindRemoveParticulars()
-	// remove requirements
-	ReqUtil.bindRemoveRequirements()
-}
 
 // hide menu dropdown
 const hideListFilter = () => {
-	document.getElementById('list-menu-drop').classList.remove('open')
+    const targ = document.getElementById('list-menu-drop')
+    if (targ) targ.classList.remove('open')
 }
 
+
 appRoute.on({
-	'*': () => {
-
-	},
-	'/bids/all': () => {
-		// listUtil.listsFromLocal({filter: 'all'})
-		window.bms.default.spinner.show()
-		listUtil.lists({token : window.localStorage.getItem('token')})
-		hideListFilter()
-		window.bms.default.activeMenu('bids-menu-list-all')
-	},
-	'/bids/drafts': () => {
-		// listUtil.listsFromLocal({filter: 'drafts'})
-		window.bms.default.spinner.show()
-		listUtil.lists({filter: 'drafts', token : window.localStorage.getItem('token')})
-		hideListFilter()
-		window.bms.default.activeMenu('bids-menu-list-drafts')
-	},
-	'/bids/:id/info/': (params) => {
-		window.bms.default.spinner.show()
-		document.removeEventListener('biddingInfoChange', changeBiddingInfo)
-		document.addEventListener('biddingInfoChange', changeBiddingInfo)
-
-		viewBiddingInfo(params.id)
-		// more settings
-		setTimeout(() => {
-			window.bms.default.dropdown('device-dropdown')	
-			window.bms.default.lazyLoad(['./assets/js_native/assets/js/modules/Bidding/Util/AttachmentsModal.js'])
-		},800)
-
-
-		// show list onpageloaded
-		if (!document.querySelector('.list')) {
-			//listUtil.listsFromLocal({filter: 'all'})
-			listUtil.lists({ token : window.localStorage.getItem('token') })
-		}
-
-		// clear settings
-		window.bms.bidding.requirements = window.bms.bidding.requirements || {}
-		window.bms.bidding.requirements.fundToRemove =  {}
-		window.bms.bidding.requirements.specsToRemove =  {}
-
-	},
-	'/bids/requirements/:id': (params) => {
-
-		// show list onpageloaded
-		if (!document.querySelector('.list')) {
-			// listUtil.listsFromLocal({filter: 'all'})
-			listUtil.lists({token: window.localStorage.getItem('token')})
-		}
-	},
-	'/bids/requirements/:id/proposal/form': (params) => {
-
-		// show list onpageloaded
-		if (!document.querySelector('.list')) {
-			//listUtil.listsFromLocal({filter: 'all'})
-			listUtil.lists({ token : window.localStorage.getItem('token') })
-		}
-	},
-	'/bids/reports/': (params) => {
-		window.bms.default.changeDisplay(['.inv-router-section', '.bids-router-section', '.feedback-router-section'],'none')
-		window.bms.default.changeDisplay(['.bids-router-reports-section'],'block')
-		window.bms.default.activeMenu('bids-menu-list-reports')
+    '/*': () => {
+        // without this, link will stop working after a few clicks
+    },
+   '/bids/*': () => {
+		// active menu
+		window.bms.default.activeMenu('bids-menu-list')
+		window.bms.default.loadCommonSettings()
 		
-		var url=`pages/bidding/reports/index.html`
-		return XHR.request({method:'GET',url:url}).then(res => {
-			let targ = document.getElementById('bids-router-reports-section')
-			targ.innerHTML = res
-			window.bms.default.scriptLoader(targ)
+		// hide other sections
+		window.bms.default.changeDisplay(['.suppliers-router-section', '.welcome-router-section', '.nav-top-menu'],'none')
+		
+		document.querySelector('.bids-router-section').classList.remove('hide')
+		// load DOM
+		if (!document.querySelector('.list')) {
+			ListUtil.loadListSec()
+		}
+		
+		ListUtil.loadBiddingInitialPage()
+
+		// load external css
+		window.bms.default.loadCSS('assets/css/modules/suppliers/list.css')
+
+		// hide splash screen
+		window.bms.default.hideSplash()
+	   
+		setTimeout(() => {
+			window.bms.default.lazyLoad(['./assets/js_native/assets/js/modules/Bidding/Util/AccountSidebar.js'],{once:true})
+		},1000)
+   }
+}).resolve()
+
+
+appRoute2.on({
+    '/*': () => {
+        // without this, link will stop working after a few clicks
+    },
+   '/bids/all': () => {
+       window.bms.default.spinner.show()
+       ListUtil.lists({token : window.localStorage.getItem('token')})
+       hideListFilter()
+       window.bms.default.activeMenu('bids-menu-list-all')
+   },
+   '/bids/drafts': () => {
+       window.bms.default.spinner.show()
+       ListUtil.lists({filter: 'drafts', token : window.localStorage.getItem('token')})
+       hideListFilter()
+       window.bms.default.activeMenu('bids-menu-list-drafts')
+   },
+   '/bids/:id/info/': (params) => {
+       // change DOM and state
+        window.bms.default.state.bidding.cur.bid.id = params.id
+        window.bms.default.changeDisplay(['div[name="/bids/initial"]','div[name="/bids/forms/registration/2"]','div[name="/bids/forms/registration"]','div[name="/bids/forms/registration/3"]', '[name="/bids/info/particulars/proposals/form"]'],'none')
+		window.bms.default.changeDisplay(['div[name="/bids/info/particulars/details"]'],'block')
+		
+        // clear settings
+        window.bms.bidding.requirements = window.bms.bidding.requirements || {}
+        window.bms.bidding.requirements.fundToRemove =  {}
+        window.bms.bidding.requirements.specsToRemove =  {}
+		window.bms.default.spinner.show()
+		
+		// load bidding list
+        if (!document.querySelector('.list')) {
+            ListUtil.lists({ token : window.localStorage.getItem('token') }) 
+		}
+		
+        // change list to active
+        document.querySelectorAll(`.list`).forEach((el, index) => {
+			if (el.getAttribute('data-list')==params.id) {
+				el.classList.add('active')
+			} else {
+				el.classList.remove('active')
+			}
 		})
-		loadCSS('assets/css/fileicon.css')
-	},
+
+        // listen on changes
+        document.removeEventListener('biddingInfoChange', changeBiddingInfo)
+        document.addEventListener('biddingInfoChange', changeBiddingInfo)
+
+        // load bidding information
+        XHR.request({url:'./pages/bidding/info.html',method:'GET'}).then((data)=>{ 
+            document.querySelector('div[name="/bids/info/details"]').innerHTML = data	
+            window.bms.default.changeDisplay(['div[name="/bids/info"]'],'block')
+            
+            // show particulars
+            ListUtil.loadBiddingParticulars(params.id)
+
+            setTimeout(() => {
+                // get info from database
+                viewBiddingInfo(params.id)
+			},100)   
+			
+			setTimeout(() => {
+				InfoUtil.bindRemoveBidding()
+				InfoUtil.bindSendBidding()
+				InfoUtil.bindSetStatus()
+				InfoUtil.bindChangeSignatories()
+			},600)
+
+        }).catch(err => { })
+        
+
+        // more settings
+        setTimeout(() => {
+            window.bms.default.dropdown('device-dropdown')	
+			window.bms.default.lazyLoad(['./assets/js_native/assets/js/modules/Bidding/Util/AttachmentsModal.js'])
+			window.bms.default.lazyLoad(['./assets/js_native/assets/js/modules/Bidding/Util/Feedback/Bidding.js'])
+        },800)    
+   },
+   '/bids/forms/registration/*': (params) => {
+		// load bidding list
+		if (!document.querySelector('.list')) {
+			ListUtil.lists({ token : window.localStorage.getItem('token') }) 
+		}
+	   window.bms.default.lazyLoad(['./assets/js_native/assets/js/routers/bidding/registration.js'],{once:true})
+	   window.bms.default.loadCSS('assets/css/modules/suppliers/list.css')
+   },
+   '/bids/reports/': (params) => {
+	   window.bms.default.changeDisplay(['.inv-router-section', '.bids-router-section', '.feedback-router-section'],'none')
+	   window.bms.default.changeDisplay(['.bids-router-reports-section'],'block')
+	   window.bms.default.activeMenu('bids-menu-list-reports')
+	   
+	   var url=`pages/bidding/reports/index.html`
+	   return XHR.request({method:'GET',url:url}).then(res => {
+		   let targ = document.getElementById('bids-router-reports-section')
+		   targ.innerHTML = res
+		   window.bms.default.scriptLoader(targ)
+	   })
+	   loadCSS('assets/css/fileicon.css')
+   },
 }).resolve()

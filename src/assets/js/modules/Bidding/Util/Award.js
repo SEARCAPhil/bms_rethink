@@ -1,5 +1,12 @@
 import SuppService from '../../Suppliers/Components/List/List'
 
+let page = 1
+let timeout = {}
+let searchSupplierPage = 1
+
+window.bms.bidding.suppliersSendingList = {}
+window.bms.bidding.suppliersSendingListItems = {}
+
 export class Invitations{
 	constructor () {
 		this.SuppUtil = new SuppService()
@@ -23,10 +30,9 @@ export class Invitations{
 		})
 	}
 }
+
+
 const Inv = new Invitations()
-let page = 1
-window.bms.bidding.suppliersSendingList = {}
-window.bms.bidding.suppliersSendingListItems = {}
 
 const removeFromSendingList = (e) => {
 	const resources = e.target.getAttribute('data-resources')
@@ -117,8 +123,6 @@ const show = (e) => {
 
 }
 
-let timeout = {}
-let searchSupplierPage = 1
 
 const searchSupplier = (e) => {
 	const targ = document.querySelector('.suppliers-invitation-check-list-search-section')

@@ -1,24 +1,19 @@
 import { AttachmentsReq } from '../modules/Bidding/Util/Attachments/Requirements'
-import IndexUtilities from '../modules/Invitation/Util/Index'
 import InfoUtilities from '../modules/Invitation/Util/Info'
-import PopupES from '../Components/PopupES/PopupES'
+import ListUtilities from '../modules/Invitation/Util/List'
+import ListUtilitiesInv from '../modules/Invitation/Util/List'
 import RequirementsUtilities from '../modules/Bidding/Util/Requirements'
 import ProposalService from '../modules/Invitation/Services/Proposal'
 
-
 const appRoute = new window.bms.exports.Router('http://127.0.0.1/bms_rethink/www/',true)
-
+const appRoute2 = new window.bms.exports.Router('http://127.0.0.1/bms_rethink/www/',true)
 
 const InfoUtil = new InfoUtilities()
 const AttUtil = new AttachmentsReq()
 const ReqUtil = new RequirementsUtilities()
 const PropServ = new ProposalService ()
-
-
-
-const IndexUtil = new IndexUtilities()
-
-
+const ListUtil = new ListUtilities()
+const ListUtilInv = new ListUtilitiesInv()
 
 window.bms.default.pages = []
 window.bms.default.spinner = new window.bms.exports.Spinner({
@@ -29,18 +24,9 @@ window.bms.default.spinner = new window.bms.exports.Spinner({
 let PopupInstance = {}
 
 
-const loadCSS = (href) => {
-	let css = document.createElement('link')
-	css.type= 'text/css'
-	css.rel = 'stylesheet'
-	css.href = href
-	document.body.append(css)
-}
-
-
 const showDeadline = () => {
 	let targ = document.getElementById('detail-req-menu-status')
-	targ.parentNode.style.background = '#dc3545'
+	targ.parentNode.style.background = '#00897B'
 	targ.parentNode.style.color = '#fff'
 	targ.parentNode.style.padding = '4px'
 	targ.parentNode.innerHTML = `<section class="col-lg-11 offset-lg-1">
@@ -50,7 +36,16 @@ const showDeadline = () => {
 							</li>
 							<li class="nav-item">
 								<a class="nav-link row">
-									<i class="material-icons md-18">lock</i> Sorry ! Bidding for this item is already closed.
+
+								<div class="media">
+									<img class="mr-3" src="assets/img/negotiation.png" alt="negotiation" width="40px">
+								<div class="media-body">
+									Sorry ! Bidding for this item is already closed <i class="material-icons md-18">lock</i><br/>
+									<small> You are not able to add or modify any content under this item</small>
+								</div>
+							  </div>
+
+									
 								</a>
 							</li>
 
@@ -86,7 +81,7 @@ const showWon = () => {
 			left: 0;
 			background:url('assets/img/confetti.png') repeat center;
 			z-index:-1;
-			opacity:0.7;
+			opacity:0.2;
 		}
 	</style>
 	<section class="col-lg-12 text-center congrats-banner" style="padding:  20px;">
@@ -148,13 +143,13 @@ const loadRequirementsDetails = (json) => {
 	printBtn.href = `${window.bms.config.network}/bidding/reports/price_inquiry.php?id=${json.bidding_requirements_invitation_id}&token=${window.localStorage.getItem('token')}`
 	printCurrentBtn.href = `${window.bms.config.network}/bidding/reports/price_inquiry_per_item.php?id=${json.bidding_requirements_invitation_id}&token=${window.localStorage.getItem('token')}`
 
-	printBtn.addEventListener('click',function(){
+	/*printBtn.addEventListener('click',function(){
 		window.open(this.href)
 	})
 
 	printCurrentBtn.addEventListener('click',function(){
 		window.open(this.href)
-	})
+	})*/
 
 
 	// Specifications
@@ -174,31 +169,25 @@ const loadRequirementsDetails = (json) => {
 	json.attachments.forEach((val, index) => {
 		appendReqAttachments({type: val.type, original_filename: val.original_filename, id: val.id })
 	})*/
-
-
 	setTimeout(() => {
 			// dropdown
 			window.bms.default.dropdown('device-dropdown')
 			// enable popup
-			PopupInstance = new PopupES()
-			
+			PopupInstance = new window.bms.exports.PopupES()
+			// show proposals
 			ReqUtil.bindShowProposalSection(json.id)
-
 	},10)
-
-
-
 }
 
 const activateInvItem = (params) => {
-	let targ = document.querySelectorAll(`.list-inv-section .list`)
+	let targ = document.querySelectorAll(`.list-inv-section > .list`)
 	targ.forEach((el, index) => { 
 
 		if (el) {
 			if (el.getAttribute('data-list') == params.id) {
-				targ.classList.add('active')
+				el.classList.add('active')
 			} else {
-				targ.classList.remove('active')
+				el.classList.remove('active')
 			}
 		}
 
@@ -279,24 +268,49 @@ const showProposals = (params) => {
 }
 
 appRoute.on({
+    '/*': () => {
+        // without this, link will stop working after a few clicks
+    },'/inv/*': () => {
+		window.bms.default.activeMenu('inv-menu-list')
+		window.bms.default.loadCommonSettings()
+		window.bms.default.changeDisplay(['.suppliers-router-section', '.nav-top-menu', '.bids-router-section', '.welcome-router-section'],'none')
+
+		document.querySelector('.inv-router-section').classList.remove('hide')
+		setTimeout(() => {
+			window.bms.default.lazyLoad(['./assets/js_native/assets/js/modules/Bidding/Util/AccountSidebar.js'],{once:true})
+		},1000)
+
+		// load DOM
+		if (!document.querySelector('.list')) {
+            ListUtil.loadListSec()
+      	}
+		// load Initial page
+		ListUtil.loadInitialPage()
+		// load external CSS
+		window.bms.default.loadCSS('assets/css/modules/suppliers/list.css')
+
+		// hide splash screen
+		window.bms.default.hideSplash()
+	}
+}).resolve()
+
+appRoute2.on({
  	'/*': () => {
  		// this is required to always treat suppliers as separate route
  		// without this, link will stop working after a few clicks
- 	},
-	'/inv/*': () => {
-		IndexUtil.loadListSection()
-		IndexUtil.loadInitialPage()
+	 },
+	'/inv/all': () => {
 		
-		loadCSS('assets/css/modules/suppliers/list.css')
+		window.bms.default.spinner.show()
+		ListUtilInv.lists({token : window.localStorage.getItem('token')})
 	},
 	'/inv/:id/info/': (params) => {
+		window.bms.default.spinner.show()
 		window.bms.default.state.bidding.cur.invitations.id = params.id
 		window.bms.default.changeDisplay(['div[name="/inv/initial"]'],'none')
 		window.bms.default.changeDisplay(['div[name="/inv/info"]'],'block')
 
-
-
-		IndexUtil.loadInfo({id: params.id, status: 1}).then(() => {
+		ListUtilInv.loadInfo({id: params.id, status: 1}).then(() => {
 
 			//get ivitation info
 			InfoUtil.get(params.id).then((json) => {
@@ -314,19 +328,13 @@ appRoute.on({
 				window.bms.default.spinner.hide()
 			})
 
-			/*ReqUtil.get(params.id).then(json => {
-				if (json.id) {
-					loadRequirementsDetails(json)
-				}
-				window.bms.default.spinner.hide()
-			}).catch((err) => {
-				window.bms.default.spinner.hide()
-			})*/
 		})
 
-		// load list only once
+		// load DOM
 		if (!document.querySelector('.list')) {
-			IndexUtil.loadListSection()
+            ListUtil.loadListSec().then(() => {
+				ListUtilInv.lists({token : window.localStorage.getItem('token')})
+			})
 			
 			setTimeout(() => {
 				activateInvItem(params)
@@ -337,30 +345,7 @@ appRoute.on({
 			activateInvItem(params)
 		}
 		
-		loadCSS('assets/css/modules/suppliers/list.css')
-		loadCSS('assets/css/fileicon.css')
-	},
-	'/inv/requirements/:id': (params) => {
-		window.bms.default.spinner.show()
-/*
-		window.bms.default.state.bidding.cur.requirements.id = params.id
-		window.bms.default.changeDisplay(['[name="/bids/info/particulars/details"]'],'block')
-		window.bms.default.changeDisplay(['div[name="/bids/initial"]','div[name="/bids/forms/registration/2"]','div[name="/bids/forms/registration"]', 'div[name="/bids/forms/registration/3"]', 'div[name="/bids/info"]', '[name="/bids/info/particulars/proposals/form"]'],'none')
-		IndexUtil.loadBiddingRequirementsInfo()
-		IndexUtil.loadBiddingListSection()
-
-		window.bms.default.lazyLoad(['./assets/js_native/assets/js/modules/bidding/Util/Attachments/RequirementsModal.js'])
-
-		ReqUtil.get(params.id).then(json => {
-			if (json.id) {
-				loadRequirementsDetails(json)
-			}
-			window.bms.default.spinner.hide()
-		}).catch((err) => {
-			window.bms.default.spinner.hide()
-		})
-
-		loadCSS('assets/css/modules/suppliers/list.css')
-		loadCSS('assets/css/fileicon.css')*/
+		window.bms.default.loadCSS('assets/css/modules/suppliers/list.css')
+		window.bms.default.loadCSS('assets/css/fileicon.css')
 	}
 }).resolve()

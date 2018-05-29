@@ -46,15 +46,12 @@ export default class {
 	loadRegistration () {
 		return new Promise((resolve,reject)=>{
 			const url = './pages/bidding/forms/registration/registration.html'
-
 			window.bms.loadedScript = window.bms.loadedScript || []
 
 			/*if (window.bms.loadedScript.indexOf(url) != -1 ) {
 				resolve()
 				return 0
 			}*/
-
-			
 
 			XHR.request({url:url,method:'GET'}).then((data)=>{
 				window.bms.loadedScript.push(url)

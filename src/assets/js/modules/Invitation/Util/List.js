@@ -1,7 +1,6 @@
 import ListService from '../Services/List'
 import ListTemplate from '../Templates/List'
 
-const DB = new window.bms.exports.IndexedDB()
 
 export default class {
 	constructor () {
@@ -9,6 +8,86 @@ export default class {
 		this.ListServ = new ListService()
 	}
 
+	loadInitialPage () {
+		let htm = `
+			<!--<style>
+				.circ {
+					position:absolute;
+					top:-130px;
+					bottom:0px;
+					left:-70px;
+					right:0px;
+					background:#ffe8e7;
+					width:300px;
+					height:300px;
+					border-radius:50%;
+					z-index:0;
+				}
+
+			</style>
+			<section class="row" style="position:relative;">
+				<div class="col-lg-2" style="margin-top:20px;z-index:1;">
+					<h3>Get Started</h3>
+					<small>
+						<p>
+							Select an invitation from the list and send an awesome proposals
+						</p>
+					</small>
+				</div>
+				<div class="circ"></div>
+			</section>-->
+
+
+			<section class="row" style="margin-top:20vh;">
+				<div class="col-lg-3 offset-lg-2  text-center">
+					<img src="assets/img/invitation.png" width="100%" style="min-width:320px;"/>
+				</div>
+				<div class="col-lg-3" style="margin-top:70px;z-index:1;">
+					<h2>Invitations</h2>
+					<small>
+						<p>
+							Select an invitation from the list and send an awesome proposals
+						</p>
+					</small>
+				</div>
+			</section>
+		`
+		document.querySelector('div[name="/inv/initial"]').innerHTML=htm	
+		window.bms.default.changeDisplay(['div[name="/inv/initial"]'],'block')
+	}
+
+	loadListSec () {
+		// new XHR instance to avoid conflict
+		const XHR = new window.bms.exports.XHR()
+		return new Promise((resolve,reject)=>{
+			XHR.request({url:'./pages/bidding/invitation/list.html',method:'GET'}).then((data)=>{
+				const targ = document.querySelector('div[name="/inv"]')
+				// avoid readding to DOM if already exists
+				  targ.innerHTML = data  
+
+				resolve(data)
+			}).catch(err => {
+				console.log(err)
+			})
+		}) 
+	}
+
+	loadInfo (obj = {}) {
+		// new XHR instance to avoid conflict
+		const XHR = new window.bms.exports.XHR()
+		return new Promise((resolve,reject)=>{
+			XHR.request({url:'./pages/bidding/invitation/info.html',method:'GET'}).then((data)=>{
+				const targ = document.querySelector('div[name="/inv/info/details"]')	
+				window.bms.default.changeDisplay(['div[name="/inv/info"]'],'block')
+				targ.innerHTML = data  
+				resolve(data)
+			}).catch(err => {
+				console.log(err)
+			})
+		}) 
+	}
+
+	
 	showEmpty (targ) {
 		targ.innerHTML = `
 			<center class="col text-muted empty-list-message-section" style="margin-top:50px;">
@@ -174,7 +253,7 @@ export default class {
 	}
 
 
-	listsFromLocal (opt = {}) {
+	/*listsFromLocal (opt = {}) {
 
 		const targ = document.querySelector('.list-bidding-section')
 		let filter = 0
@@ -217,6 +296,6 @@ export default class {
 			
 		},90)
 
-	}
+	}*/
 	
 }

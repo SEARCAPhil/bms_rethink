@@ -97,6 +97,7 @@
     initial-page{
         float: left;
         width: 100%;
+        display: none;
     }
     initial-page h4{
         font-family: "Arial Rounded MT Bold", "Helvetica Rounded", Arial, sans-serif !important;
@@ -164,27 +165,48 @@
       50%  { top: 30px;  opacity: .2; }
       100% { top: 0;     opacity: 1; }
     }
-    </style>
 
-   
+    </style>
+    <style>
+        splash-page {
+            position: fixed;
+            top:0;
+            width: 100%;
+            height: 100%;
+            background: #fff;
+            z-index: 2048;
+            padding-top: 30vh;
+            text-align: center;
+            overflow: hidden;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: Roboto,Helvetica,Arial,sans-serif;
+            font-weight: 300;
+        }
+
+        .h3, h3 {
+            font-size: 1.75rem;
+        }
+    </style>
     <link rel="preload" type="text/css" href="node_modules/bootstrap/dist/css/bootstrap.min.css"  as="style" onload="this.rel='stylesheet'" />
     <link rel="preload" type="text/css"  href="assets/css/docker.css" as="style" onload="this.rel='stylesheet'"/>
     <link rel="preload" href="assets/css/default.css" as="style" onload="this.rel='stylesheet'"/>
    
-
 </head>
 
 <body>
+          
+    <splash-page>
+        <h3>Loading Application . . .</h3>
+        <small>Hang on! Please wait while we are working on the app. . . </small>
+    </splash-page>
+
     <article class="container-fluid">
         <!--header-->
         <header>
             <nav class="navbar navbar-dark navbar-top fixed-top">
-
-                <!--<a href="#/suppliers/all" class="back-to-list-button d-lg-none">
-                    <i class="material-icons">arrow_back</i> Back
-                </a>-->
-
-                <ul class="nav  ml-auto nav-top-menu">
+                <ul class="nav  ml-auto nav-top-menu" style="display: none;">
                   <li class="nav-item" id="about-tab">
                     <a class="nav-link active" href="#"><i class="material-icons md-18">dashboard</i></a>
                   </li>
@@ -201,29 +223,20 @@
                     <a class="nav-link" href="#"><i class="material-icons md-18">settings</i></a>
                   </li>
                 </ul>
-
-                
+                <!-- hamburger -->
                 <span class="navbar-brand hamburger mb-0 h1 d-none d-lg-block hidden">
-                 <span class="burger"></span>
+                    <span class="burger"></span>
                     <span class="burger"></span>
                     <span class="burger"></span>  
                 </span>
                 
-
-
-
-
-
+                <!-- APP name -->
                  <span class="navbar-brand hamburger d-none d-lg-block hidden" style="
                     color: #d8d8d8;
-                    font-size: 14px;
-                ">  Bidding Management System
+                    font-size: 14px;">  Bidding Management System
                 </span>
-
-
-
+                <!-- APP top menus -->
                 <ul class="nav  ml-auto nav-top-menu d-none d-lg-block">
-                  
                   <li class="nav-item row account-sidebar-btn" id="settings-tab" style="color: #fff;">
                      <span class="float-left mr-3" id="givenName-header-section" style="padding-top: 5px;"></span>
                      <div class="text-center" style="float: left;width: 35px;height: 35px;border-radius: 50%;margin-right: 10px;overflow: hidden;background: #ffb80c;color:#fff;padding-top: 5px;" id="image-header-section">
@@ -231,16 +244,13 @@
                     </div>
                   </li>
                 </ul>
-                            
-                      
+                             
                 <!--bootstrap menu-->
                 <span class="navbar-brand hamburger mb-0 h1 docker-menu d-lg-none" data-target=".docker">
                     <span class="burger"></span>
                     <span class="burger"></span>
                     <span class="burger"></span>
                 </span>
-
-
             </nav>
         </header>
         <!--/header-->
@@ -262,8 +272,8 @@
                </div>
             </center>
         </initial-page>
-        <section class="row online-status offline"></section>
 
+        <!--<section class="row online-status offline"></section>-->
 
         <!--sidebar-->
         <aside class="col col-lg-2 col-md-3 col-xs-12 docker docker-sm-fixed docker-md-fixed docker-sm-hidden docker-xs-hidden docker-md-hidden d-md-none d-lg-block docker-lg-visible docker-lg-fixed docker-lg-block row" id="docker-sidebar" data-role="none" data-enhance="false" style="background:rgba(0,0,0,0.8);min-width:100px;">
@@ -271,24 +281,11 @@
                 <menu class="col col-md-12 text-left">
 
                     <ul class="list-unstyled main-menu main-menu-list">
-                        <!-- <li data-status="home" 
-                            class="main-menu-list-item suppliers_main_menu" 
-                            id="home_menu" 
-                            data-menu="main-menu-list-item" 
-                            onclick="window.location.hash='#/home/'">
-
-                                <i class="material-icons md-24" style="width: 24px;">home</i> 
-                                <br/>Home
-                        </li>-->
-
                         <li data-status="home" 
                             class="main-menu-list-item suppliers_main_menu" 
                             id="home_menu" 
                             data-menu="main-menu-list-item" 
-                            onclick="window.location.hash='#/home/'">
-
-                                <i class="material-icons md-18" style="width: 24px;">home</i> 
-                                Home
+                            onclick="window.location.hash='#/home/'"> <i class="material-icons md-18" style="width: 24px;">home</i> Home
                         </li>
                         <!--
                         <li data-status="supplies" 
@@ -301,73 +298,44 @@
                                 <br/>Suppliers
                         </li>-->
 
-                        <!--<li data-status="bids" 
-                            class="main-menu-list-item bids-menu-list" 
-                            id="bids-menu-list"
-                            data-menu="main-menu-list-item" 
-                            data-role="none" onclick="window.location.hash='#/bids/all'">
-                                <i class="material-icons md-24" style="width: 24px;">trending_up</i> 
-                                <br/>Bidding request
-                        </li>-->
 
-
-                         <li data-status="bids" 
+                        <li data-status="bids" 
                             class="main-menu-list-item bids-menu-list hide" 
                             id="bids-menu-list"
                             data-menu="main-menu-list-item" 
-                            data-role="none" onclick="window.location.hash='#/bids/all'">
-                                 
-                                Bidding request<i class="material-icons md-18 float-right text-muted" style="width: 24px;">expand_more</i>
+                            data-role="none" onclick="window.location.hash='#/bids/all'"> Bidding request <i class="material-icons md-18 float-right text-muted" style="width: 24px;">expand_more</i>
                         </li>
 
 
                         <li data-status="all" 
                             class="main-menu-list-item bids-menu-list sub hide" 
-                            
                             data-menu="main-menu-list-item" 
                             id="bids-menu-list-all"
-                            data-role="none" onclick="window.location.hash='#/bids/all'">
-                                <i class="material-icons md-18" style="width: 24px;">inbox</i> 
-                                All
+                            data-role="none" onclick="window.location.hash='#/bids/all'"> <i class="material-icons md-18" style="width: 24px;">inbox</i> All
                         </li>
 
                         <li data-status="drafts" 
                             class="main-menu-list-item bids-menu-list sub hide" 
                             id="bids-menu-list-drafts"
                             data-menu="main-menu-list-item" 
-                            data-role="none" onclick="window.location.hash='#/bids/drafts'">
-                                <i class="material-icons md-18" style="width: 24px;">drafts</i> 
-                                Drafts
+                            data-role="none" onclick="window.location.hash='#/bids/drafts'"> <i class="material-icons md-18" style="width: 24px;">drafts</i> Drafts
                         </li>
 
 
                         <li
-                        class="main-menu-list-item bids-menu-list sub hide" 
-                         id="bids-menu-list-new"
-                        data-menu="main-menu-list-item" 
-                        data-role="none" onclick="window.location.hash='#/bids/forms/registration/steps/1'">
-                            <i class="material-icons md-18" style="width: 24px;">add_circle</i> 
-                            New
-                    </li>
-
-                    <li
-                        class="main-menu-list-item bids-menu-list sub hide" 
-                        id="bids-menu-list-reports"
-                        data-menu="main-menu-list-item" 
-                        data-role="none" onclick="window.location.hash='#/bids/reports/'">
-                            <i class="material-icons md-18" style="width: 24px;">trending_up</i> 
-                            Reports
-                    </li>
-
-
-                        <!--<li data-status="inv" 
-                            class="main-menu-list-item inv-menu-list" 
-                            id="inv-menu-list"
+                            class="main-menu-list-item bids-menu-list sub hide" 
+                            id="bids-menu-list-new"
                             data-menu="main-menu-list-item" 
-                            data-role="none" onclick="window.location.hash='#/inv/all'">
-                                <i class="material-icons md-24" style="width: 24px;">mail</i> 
-                                <br/>Invitations
-                        </li>-->
+                            data-role="none" onclick="window.location.hash='#/bids/forms/registration/steps/1'"> <i class="material-icons md-18" style="width: 24px;">add_circle</i> New
+                        </li>
+
+                        <li
+                            class="main-menu-list-item bids-menu-list sub hide" 
+                            id="bids-menu-list-reports"
+                            data-menu="main-menu-list-item" 
+                            data-role="none" onclick="window.location.hash='#/bids/reports/'"> <i class="material-icons md-18" style="width: 24px;">trending_up</i> Reports
+                        </li>
+
                         <li data-status="inv" 
                             class="main-menu-list-item inv-menu-list hide" 
                             id="inv-menu-list"
@@ -392,29 +360,7 @@
                                 <i class="material-icons md-18" style="width: 24px;">feedback</i> 
                                 Submit your feedback/ Comments/ Suggestions here
                         </li>
-
-
-
-                        
-
-                        <!--<li data-status="open" 
-                            class="main-menu-list-item deactivated">
-                                <i class="material-icons md-24" style="width: 24px;">drafts</i>
-                                <br/>Proposals 
-                        </li>
-
-                        <li data-status="closed" 
-                            class="main-menu-list-item deactivated">
-                                <i class="material-icons md-24">account_circle</i>
-                                <br/>Account Settings 
-                        </li>-->
                     </ul>
-
-
-                    <!--<ul class="list-unstyled main-menu main-menu-list">
-                        <li id="new" class="deactivated">New <i class="material-icons">add</i></li>
-                    </ul>-->
-
                 </menu>
 
                 <menu class="col col-md-12">
@@ -433,11 +379,16 @@
          </aside>
         <!--/docker-->
         <section class="online-status online"></section>
-        <router class="row suppliers-router-section">
+
+        <router class="row welcome-router-section">
             <route class="default-spinner"></route>
+                <div name="/home" page="pages/welcome.html" class="col col-12 col-lg-10 col-sm-12 col-xs-12 offset-lg-2 max-height-panel" style="background: #fff;height: 100vh;"></div>
+        </router>
 
-            <div name="/home" page="pages/welcome.html" class="col col-12 col-lg-10 col-sm-12 col-xs-12 offset-lg-2 max-height-panel" style="background: #fff;"></div>
 
+
+
+        <router class="row suppliers-router-section hide">
             <div name="/suppliers" page="pages/suppliers/list/list.html" class="col-md-12 col-lg-2 offset-lg-2 max-height-panel" style="z-index: 1;box-shadow: 0px 0px 4px rgba(180,180,180,0.6);"></div>
 
             <div name="/suppliers/initial" page="pages/initial.html" class="col col-lg-8 col-sm-12 col-xs-12 max-height-panel" style="padding-top:70px;background: rgb(252,252,252);"></div>

@@ -22,7 +22,7 @@ window.bms.default.spinner = new window.bms.exports.Spinner({
 
 
 const loadFeedbackForm = (params) => {
-	window.bms.default.changeDisplay(['.inv-router-section', '.bids-router-section', '.bids-router-reports-section'],'none')
+	window.bms.default.changeDisplay(['.inv-router-section', '.bids-router-section', '.bids-router-reports-section', '.welcome-router-section'],'none')
 	window.bms.default.changeDisplay(['.feedback-router-section'],'block')
 	return new Promise((resolve, reject) => {
 		const URL='pages/feedback/forms/registration.html'

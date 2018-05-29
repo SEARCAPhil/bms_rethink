@@ -1,6 +1,3 @@
-import IndexedDB from '../../modules/Bidding/Util/Storage/Bidding'
-import IndexedDBReq from '../../modules/Bidding/Util/Storage/Requirements'
-import IndexedDBPart from '../../modules/Bidding/Util/Storage/Particulars'
 import ListUtilities from '../../modules/Bidding/Util/List/List.js'
 import ListService from '../../modules/Bidding/Services/List/List'
 import PartService from '../../modules/Bidding/Services/Particulars'
@@ -9,15 +6,12 @@ import ReqService from '../../modules/Bidding/Services/Requirements'
 
 const appRoute = new window.bms.exports.Router('http://127.0.0.1/bms_rethink/www/',true)
 const appRoute2 = new window.bms.exports.Router('http://127.0.0.1/bms_rethink/www/',true)
-const IDB = new IndexedDB()
-const IDBReq = new IndexedDBReq()
-const IDBPart = new IndexedDBPart()
+
 const listUtil = new ListUtilities()
 const ListServ = new ListService()
 const PartServ = new PartService()
 const RegUtil = new RegUtilities()
 const ReqServ = new ReqService()
-
 
 
 window.bms.default.spinner = new window.bms.exports.Spinner({
@@ -206,17 +200,6 @@ appRoute.on({
 
 		RegUtil.loadRegistration().then(() => {
 			window.bms.default.lazyLoad(['./assets/js_native/assets/js/modules/Bidding/Util/Forms/Registration/RegistrationUpdate.js'])
-			/*IDB.get(params.id).then(json => {
-				let nameField = document.querySelector('form[name="bidding-request-registration"] input[name="name"]')
-				let descField = document.querySelector('form[name="bidding-request-registration"] textarea[name="description"]')
-				let deadlineField = document.querySelector('form[name="bidding-request-registration"] input[name="deadline"]')
-
-				if (json.id) {
-					nameField.value = json.name
-					descField.value = json.description
-					deadlineField.value = json.deadline
-				}
-			})*/
 
 			let nameField = document.querySelector('form[name="bidding-request-registration"] input[name="name"]')
 			let descField = document.querySelector('form[name="bidding-request-registration"] textarea[name="description"]')
@@ -361,49 +344,36 @@ appRoute.on({
 
 				// result
 				if (parsedJson[0]) {
+					// JSON
 					const json = parsedJson[0]
-
+					// current state
 					window.bms.default.state.bidding.cur.bid.id = json.bidding_id
-
+					// input fields
 					let particularID = json.particular_id
-
 					let nameField = document.querySelector('form[name="bidding-request-requirements"] input[name="name"]')
 					let quantityField = document.querySelector('form[name="bidding-request-requirements"] input[name="quantity"]')
 					let unitField = document.querySelector('form[name="bidding-request-requirements"] input[name="unit"]')
 					let currencyField = document.querySelector('form[name="bidding-request-requirements"] select[name="currency"]')
 					let amountField = document.querySelector('form[name="bidding-request-requirements"] input[name="amount"]')
 					let fundFields = document.querySelectorAll('form[name="bidding-request-requirements"] .funds-input-section')
-					//let excemptionField = document.querySelectorAll('form[name="bidding-request-requirements"] input[name="excemption"]')
 					let sourceOfFundSec = document.querySelector('.source_of_fund_section')
-
 					// reflect value
 					nameField.value = json.name
 					quantityField.value = json.quantity
 					unitField.value = json.unit
 					amountField.value = json.budget_amount
-
 					// source of fund
 					for (let  x = 0; x < json.funds.length; x++) { 
 						if (x == 0) document.querySelector('.source_of_fund_section').innerHTML = ''
 						addFundSelection({type:json.funds[x].fund_type, cost_center:json.funds[x].cost_center, line_item:json.funds[x].line_item, id:json.funds[x].id})
 					}
-
-					// for excemption ?
-					/*if (json.bidding_excemption_request == 1) {
-						excemptionField[0].setAttribute('checked', 'checked')
-					}else{
-						excemptionField[1].setAttribute('checked', 'checked')
-					}*/
-
 					//currency
 					currencyField.innerHTML = `<option value="${json.budget_currency}">${json.budget_currency}</option>` + currencyField.innerHTML
-
 					// specs
 					for (let  x = 0; x < json.specs.length; x++) { 
 						if (x == 0) document.querySelector('.specs-section').innerHTML = ''
 						addSpecsField({name:json.specs[x].name, value:json.specs[x].value, id:json.specs[x].id})
 					}
-
 				}
 
 				// specs
@@ -413,65 +383,8 @@ appRoute.on({
 			}).catch(err => {
 				window.bms.default.spinner.hide()
 			})
-
-
 			window.bms.default.lazyLoad(['./assets/js_native/assets/js/modules/Bidding/Util/Forms/Registration/RequirementsUpdate.js'])
 		})
-
-		/*RegUtil.loadRegistrationItem().then(() => {
-			IDBReq.get(params.id).then((json) => {
-				if (json.id) {
-
-					let particularID = json.particular_id
-
-					let nameField = document.querySelector('form[name="bidding-request-requirements"] input[name="name"]')
-					let quantityField = document.querySelector('form[name="bidding-request-requirements"] input[name="quantity"]')
-					let unitField = document.querySelector('form[name="bidding-request-requirements"] input[name="unit"]')
-					let currencyField = document.querySelector('form[name="bidding-request-requirements"] select[name="currency"]')
-					let amountField = document.querySelector('form[name="bidding-request-requirements"] input[name="amount"]')
-					let fundFields = document.querySelectorAll('form[name="bidding-request-requirements"] .funds-input-section')
-					let excemptionField = document.querySelectorAll('form[name="bidding-request-requirements"] input[name="excemption"]')
-					let sourceOfFundSec = document.querySelector('.source_of_fund_section')
-
-					// reflect value
-					nameField.value = json.name
-					quantityField.value = json.quantity
-					unitField.value = json.unit
-					amountField.value = json.budget_amount
-
-					// source of fund
-					for (let  x = 0; x < json.funds.length; x++) { 
-						if (x == 0) document.querySelector('.source_of_fund_section').innerHTML = ''
-						addFundSelection({type:json.funds[x].fund_type, cost_center:json.funds[x].cost_center, line_item:json.funds[x].line_item, id:json.funds[x].id})
-					}
-
-					// for excemption ?
-					if (json.bidding_excemption_request == 1) {
-						excemptionField[0].setAttribute('checked', 'checked')
-					}else{
-						excemptionField[1].setAttribute('checked', 'checked')
-					}
-
-					//currency
-					currencyField.innerHTML = `<option value="${json.budget_currency}">${json.budget_currency}</option>` + currencyField.innerHTML
-
-					// specs
-					for (let  x = 0; x < json.specs.length; x++) { 
-						if (x == 0) document.querySelector('.specs-section').innerHTML = ''
-						addSpecsField({name:json.specs[x].name, value:json.specs[x].value, id:json.specs[x].id})
-					}
-
-					// get bidding_id from particulars
-					IDBPart.get(particularID).then((jsonP) => {
-						 window.bms.default.state.bidding.cur.bid.id = jsonP.bidding_id
-					})
-				}
-
-				// specs
-				bindAddSpecsSection()
-			})
-		})*/
-
 	},
 	'/bids/forms/registration/:parent/steps/4/:id': (params) => {
 		window.bms.default.state.bidding.cur.requirements.id = params.id

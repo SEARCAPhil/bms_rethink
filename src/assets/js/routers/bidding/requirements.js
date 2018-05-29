@@ -1,45 +1,21 @@
 import { AttachmentsReq } from '../../modules/Bidding/Util/Attachments/Requirements'
-import IndexUtilities from '../../modules/Bidding/Util/Index/Index'
-import InfoUtilities from '../../modules/Bidding/Util/Info'
-import IndexedDB from '../../modules/Bidding/Util/Storage/Bidding'
-import IndexedDBReq from '../../modules/Bidding/Util/Storage/Requirements'
-import PopupES from '../../Components/PopupES/PopupES'
-import ProposalService from '../../modules/Invitation/Services/Proposal'
+import ListUtilities from '../../modules/Bidding/Util/List/List'
 import RequirementsUtilities from '../../modules/Bidding/Util/Requirements'
-import FeedbackService from '../../modules/Bidding/Services/Feedback'
+import ProposalService from '../../modules/Invitation/Services/Proposal'
+import FeedService from '../../modules/Bidding/Services/Feedback'
 
-
-
-const appRoute = new window.bms.exports.Router('http://127.0.0.1/bms_rethink/www/',true)
-const IDB = new IndexedDB()
-const IDBReq = new IndexedDBReq()
-const IndexUtil = new IndexUtilities()
-const InfoUtil = new InfoUtilities()
 const AttUtil = new AttachmentsReq()
-const PropServ = new ProposalService ()
+const ListUtil = new ListUtilities()
 const ReqUtil = new RequirementsUtilities()
-const FeedServ = new FeedbackService()
+const PropServ = new ProposalService ()
+const FeedServ = new FeedService ()
 
-// ratings criteria
-const criteria = [{
-	name: 'price',
-	alias: 'Price'
-},{
-	name: 'quality',
-	alias: 'Goods/ Service Quality'
-},{
-	name: 'time',
-	alias: 'Delivery Time'
-}]
+const XHR = new window.bms.exports.XHR()
+const appRoute = new window.bms.exports.Router('http://127.0.0.1/bms_rethink/www/',true)
+const appRoute2 = new window.bms.exports.Router('http://127.0.0.1/bms_rethink/www/',true)
 
-// save to global state
-window.bms.default.state.bidding.cur.requirements.criteria = criteria
 // convert to array for later use
 window.bms.default.state.bidding.cur.requirements.criteriaArray = []
-criteria.forEach((val, index) => {
-	window.bms.default.state.bidding.cur.requirements.criteriaArray[val.name] = val.alias
-})
-
 
 window.bms.default.pages = []
 window.bms.default.spinner = new window.bms.exports.Spinner({
@@ -48,15 +24,6 @@ window.bms.default.spinner = new window.bms.exports.Spinner({
 })
 
 let PopupInstance = {}
-
-
-const loadCSS = (href) => {
-	let css = document.createElement('link')
-	css.type= 'text/css'
-	css.rel = 'stylesheet'
-	css.href = href
-	document.body.append(css)
-}
 
 
 const rate = (e) => {
@@ -235,7 +202,7 @@ const appendAwardees = (data) => {
 	recSection.innerHTML = html
 
 	// rating's criteria
-	criteria.forEach((val, index) => {
+	window.bms.default.state.bidding.cur.requirements.criteria.forEach((val, index) => {
 			const span = document.createElement('span')
 			span.innerHTML = `${val.alias}`
 
@@ -298,6 +265,29 @@ const showAwardedStatus = () => {
 							<img src="assets/img/medal.png" width="50px"> This has been awarded. Please review before making any changes.
 				        </p>
 				    </center>`
+}
+
+const loadInit = () => {
+     // active menu
+     window.bms.default.activeMenu('bids-menu-list')
+     window.bms.default.loadCommonSettings()
+     
+     // hide other sections
+     window.bms.default.changeDisplay(['.suppliers-router-section', '.welcome-router-section', '.nav-top-menu'],'none')
+     
+     document.querySelector('.bids-router-section').classList.remove('hide')
+     // load DOM
+      if (!document.querySelector('.list')) {
+          ListUtil.loadListSec()
+     }
+     
+     ListUtil.loadBiddingInitialPage()
+
+     // load external css
+     window.bms.default.loadCSS('assets/css/modules/suppliers/list.css')
+
+     // hide splash screen
+     window.bms.default.hideSplash()
 }
 
 const loadRequirementsDetails = (json) => {
@@ -365,7 +355,7 @@ const loadRequirementsDetails = (json) => {
 		}
 
 		// enable popup
-		PopupInstance = new PopupES()
+		PopupInstance = new window.bms.exports.PopupES()
 
 	},600)
 
@@ -374,7 +364,7 @@ const loadRequirementsDetails = (json) => {
 		// dropdown
 		window.bms.default.dropdown('device-dropdown')
 		// enable popup
-		PopupInstance = new PopupES()
+		PopupInstance = new window.bms.exports.PopupES()
 		// remove attachments
 		AttUtil.bindRemoveAttachments()
 		// send
@@ -430,276 +420,158 @@ const loadRequirementsDetails = (json) => {
 
 }
 
-const addOtherSpecsField = () => {
-	let targ = document.getElementById('specs-other-section')
-
-	let sec = document.createElement('section')
-
-	sec.innerHTML = `
-		<span class="row specs-input-section specs-input-section-others " style="margin-top: 15px;">
-			 <div class="col-lg-4 col-md-4">
-		    	<input type="text" class="other-req-name-fields specs-input-section-name form-control" placeholder="name"/>
-		    </div>
-		    <div class="col-lg-8 col-md-8">
-		    	<input type="text" class="other-req-value-fields specs-input-section-value form-control" placeholder="value"/>
-		    	<small class="orig-req-menu">
-		    		<a href="#" onclick="event.preventDefault();this.parentNode.parentNode.parentNode.remove()">remove</a>
-		    	</small>
-		    </div>
-
-		</span>
-	`
-
-	targ.append(sec)
-
-}
-
-const cancelSpecsInput = (e) => {
-	const val = e.target.value
-	const id = e.target.id
-
-	let targ = document.getElementById(`orig-req-val-${id}`)
-	targ.innerHTML = val
-
-	// change link
-	let btn = document.createElement('a')
-	btn.href = '#'
-	btn.setAttribute('onclick', 'event.preventDefault()')
-	btn.setAttribute('data-resources', id)
-	btn.setAttribute('data-resources-val', val)
-	btn.textContent = 'change'
-	btn.addEventListener('click', changeEventSpecsInput)
-
-	e.target.replaceWith(btn)
-}
-
-const changeEventSpecsInput = (e) => {
-	const id = e.target.getAttribute('data-resources')
-	const origValue = e.target.getAttribute('data-resources-val')
-	const origEl = e.target
-
-
-
-	let targ = document.getElementById(`orig-req-val-${id}`)
-	targ.innerHTML = `<input type="text" style="width:250px;" placeholder="${origValue}" class="specs-input-section-value" data-resources="${id}"/>`
-
-	let link = document.createElement('a')
-	link.href = '#'
-	link.setAttribute('onclick','event.preventDefault();')
-	link.textContent = 'cancel'
-	link.id = id
-	link.value = origValue
-	link.setAttribute('data-resources', id)
-	link.setAttribute('data-resources-val', origValue)
-	link.addEventListener('click', cancelSpecsInput)
-	
-	e.target.replaceWith(link)
-}
 
 appRoute.on({
- 	'/*': () => {
- 		// this is required to always treat suppliers as separate route
- 		// without this, link will stop working after a few clicks
- 	},
-	'/bids/*': () => {
-		IndexUtil.loadBiddingListSection()
-		// for all users except supplier
-		// supplier must only see a welcome page
-		//if (window.bms.default.isGSU() || window.bms.default.isCBAAsst() || window.bms.default.isStandard()) {
-			IndexUtil.loadBiddingInitialPage()
-		//} else {
-			//IndexUtil.loadBiddingInitialStandardPage()
-		//}
+    '/*': () => {
+        // without this, link will stop working after a few clicks
+    },
+   '/bids/requirements/:id': (params) => { 
+       loadInit()
+       window.bms.default.spinner.show()
+
+	   window.bms.default.state.bidding.cur.requirements.id = params.id
+	   window.bms.default.changeDisplay(['[name="/bids/info/particulars/details"]'],'block')
+	   window.bms.default.changeDisplay(['div[name="/bids/initial"]','div[name="/bids/forms/registration/2"]','div[name="/bids/forms/registration"]', 'div[name="/bids/forms/registration/3"]', 'div[name="/bids/info"]', '[name="/bids/info/particulars/proposals/form"]'],'none')
 		
-		loadCSS('assets/css/modules/suppliers/list.css')
-	},
-	'/bids/:id/info/': (params) => {
-		window.bms.default.state.bidding.cur.bid.id = params.id
-		window.bms.default.changeDisplay(['div[name="/bids/initial"]','div[name="/bids/forms/registration/2"]','div[name="/bids/forms/registration"]','div[name="/bids/forms/registration/3"]', '[name="/bids/info/particulars/proposals/form"]'],'none')
-		window.bms.default.changeDisplay(['div[name="/bids/info/particulars/details"]'],'block')
-		
-		IndexUtil.loadBiddingInfo({id: params.id, status: 1}).then(() => {
-			setTimeout(() => {
-				InfoUtil.bindRemoveBidding()
-				InfoUtil.bindSendBidding()
-				InfoUtil.bindSetStatus()
-				InfoUtil.bindChangeSignatories()
-			},600)
-		})
-
-		document.querySelectorAll(`.list`).forEach((el, index) => {
-			if (el.getAttribute('data-list')==params.id) {
-				el.classList.add('active')
-			} else {
-				el.classList.remove('active')
-			}
-		})
-
-		// show particulars
-		IndexUtil.loadBiddingParticulars(params.id)
-		IndexUtil.loadBiddingListSection()
-		// load external css
-		loadCSS('assets/css/modules/suppliers/list.css')
-		loadCSS('assets/css/fileicon.css')
-		// load external JS
-		setTimeout(() => {
-			window.bms.default.lazyLoad(['./assets/js_native/assets/js/modules/Bidding/Util/Feedback/Bidding.js'])
-		},1000)
-	},
-	'/bids/requirements/:id': (params) => {
-		window.bms.default.spinner.show()
-
-		window.bms.default.state.bidding.cur.requirements.id = params.id
-		window.bms.default.changeDisplay(['[name="/bids/info/particulars/details"]'],'block')
-		window.bms.default.changeDisplay(['div[name="/bids/initial"]','div[name="/bids/forms/registration/2"]','div[name="/bids/forms/registration"]', 'div[name="/bids/forms/registration/3"]', 'div[name="/bids/info"]', '[name="/bids/info/particulars/proposals/form"]'],'none')
-		IndexUtil.loadBiddingRequirementsInfo().then(() => {
+		// load bidding list
+        if (!document.querySelector('.list')) {
+            ListUtil.lists({ token : window.localStorage.getItem('token') }) 
+        }
+        
+        ListUtil.loadBiddingRequirementsInfo().then(() => {
 			// dropdown
 			window.bms.default.dropdown('device-dropdown')
-		})
+	   		window.bms.default.lazyLoad(['./assets/js_native/assets/js/modules/Bidding/Util/Attachments/RequirementsModal.js'])
+			ReqUtil.get(params.id).then(json => {
+				if (json.id) {
+					// bidding info
+					window.bms.default.state.bidding.cur.bid.id = json.bidding_id
+					// requirements info
+					loadRequirementsDetails(json)
+					// proposals
+					PropServ.lists({id: params.id, token : window.localStorage.getItem('token'), id:params.id}).then((data) => {
+						const json = JSON.parse(data)
+						let targ = document.querySelectorAll('.proposal-list-section > ul')
+						targ.forEach((el, index) => {
+							// clear proposal list section
+							el.innerHTML =''
+						})
 
-		IndexUtil.loadBiddingListSection()
+						setTimeout(() => {
+							// number of proposals
+							document.querySelector('.req-proposal-count').textContent = json.length
 
-		window.bms.default.lazyLoad(['./assets/js_native/assets/js/modules/Bidding/Util/Attachments/RequirementsModal.js'])
+							targ.forEach((el, index) => {
+								json.forEach((val, index) => {
+									let html = document.createElement('li')
+									let status = ''
+									html.classList.add('nav-item', 'col-12')
+									html.setAttribute('data-resources', val.id)
+									html.style = 'border-bottom:1px solid #ccc;padding-top:5px;padding-bottom: 5px;'
+									//html.setAttribute('onclick','event.preventDefault();')
+									html.id = val.id
 
-		ReqUtil.get(params.id).then(json => {
-			if (json.id) {
-				// bidding info
-				window.bms.default.state.bidding.cur.bid.id = json.bidding_id
-				// requirements info
-				loadRequirementsDetails(json)
-				// proposals
-				PropServ.lists({id: params.id, token : window.localStorage.getItem('token'), id:params.id}).then((data) => {
-					const json = JSON.parse(data)
-					let targ = document.querySelectorAll('.proposal-list-section > ul')
+									if (val.status == 0) {
+										status = `<br/><span class="text-danger" data-resources="${val.id}"><i class="material-icons md-12">drafts</i> DRAFT</span>`
+									}
 
+									if (val.status == 1) {
+										status = `<br/><span class="text-success" data-resources="${val.id}"><i class="material-icons md-12">check</i> Sent</span>`
+									}
 
-					targ.forEach((el, index) => {
-						// clear proposal list section
-						el.innerHTML =''
+									if (val.status == 2) {
+										status = `<br/><span class="text-danger" data-resources="${val.id}"><i class="material-icons md-12">warning</i> Requesting changes</span>`
+									}
+
+									if (val.status == 3) {
+										status = `<br/><span data-resources="${val.id}" style="color:#ffb80c;"><i class="material-icons">star</i> AWARDED</span>`
+									}
+
+									if (val.status == 5) {
+										status = `<br/><span data-resources="${val.id}" style="color:#ffb80c;"><i class="material-icons">star</i> Winner</span>`
+									}
+
+									html.innerHTML = `
+														
+														<a href="#" class="proposal-dialog-btn row" data-resources="${val.id}" onclick="event.preventDefault();">
+
+															<div class="col-3"  data-resources="${val.id}">
+																<div class="text-center" data-resources="${val.id}" style="float:left;width:35px;height:35px;border-radius:50%;margin-right:10px;overflow:hidden;background:#42403c;color:#fff;padding-top:5px" id="image-header-section"  data-resources="${val.id}">${val.username.substr(0,2).toUpperCase()}</div>
+															</div>
+															<div class="col-9"  data-resources="${val.id}">
+																	<small data-resources="${val.id}">
+																		<p data-resources="${val.id}">
+																			${val.username}<br/>
+																			<span class="text-muted">${val.date_created}</span>
+																			${status}
+																		</p>
+																	</small>
+															</div>
+														</a>
+														<div class="row col-12"  data-resources="${val.id}">
+															<input type="checkbox" name="compare" class="compare-checkbox-list ${val.status}" data-resources="${val.id}"/> &nbsp; <small class="text-muted"> #${val.id}</small>
+														</div>
+
+												`
+									// insert to DOM
+									el.append(html)
+									
+								})
+							})
+
+							let checkbox = document.getElementById('compare-checkbox')
+
+							checkbox.addEventListener('click', (e) => {
+								document.querySelectorAll('.compare-checkbox-list').forEach((el, index) => {
+									// exclude proposals that need changes
+									if (!el.classList.contains('2')) {	
+										e.target.checked ? el.checked = true : el.checked = false
+									}
+								})
+							})
+
+							// compare
+							let compareBtn = document.querySelector('#compare-btn:not(.event-binded)')
+
+							if (compareBtn) {
+								compareBtn.classList.add('event-binded')
+								compareBtn.addEventListener('click' , () => {
+									// get all selected checkbox
+									let ids = []
+									const isSignatoriesIncluded = document.querySelector('#compare-sign-checkbox').checked ? '&signatories=true' : ''
+									document.querySelectorAll(`.compare-checkbox-list:checked`).forEach((el, index) => {
+										const atr = el.getAttribute('data-resources')
+										if (!ids[atr]) ids.push(atr)
+									})
+									window.open(`${window.bms.config.network}/bidding/reports/proposal_comparison.php?id=${params.id}&token=6170b5207b92e5a7445ee3f7de7247c4c1f1b8ef&prop=${ids.join(',')}${isSignatoriesIncluded}`)
+								})
+							}
+
+							window.bms.default.lazyLoad(['./assets/js_native/assets/js/modules/Invitation/Util/ProposalModal.js'])
+						},600)
 					})
 
-					setTimeout(() => {
-
-						// number of proposals
-						document.querySelector('.req-proposal-count').textContent = json.length
-
-						targ.forEach((el, index) => {
-
-							
-
-							json.forEach((val, index) => {
-								let html = document.createElement('li')
-								let status = ''
-								html.classList.add('nav-item', 'col-12')
-								html.setAttribute('data-resources', val.id)
-								html.style = 'border-bottom:1px solid #ccc;padding-top:5px;padding-bottom: 5px;'
-								//html.setAttribute('onclick','event.preventDefault();')
-								html.id = val.id
-
-								
-
-								if (val.status == 0) {
-									status = `<br/><span class="text-danger" data-resources="${val.id}"><i class="material-icons md-12">drafts</i> DRAFT</span>`
-								}
-
-								if (val.status == 1) {
-									status = `<br/><span class="text-success" data-resources="${val.id}"><i class="material-icons md-12">check</i> Sent</span>`
-								}
-
-								if (val.status == 2) {
-									status = `<br/><span class="text-danger" data-resources="${val.id}"><i class="material-icons md-12">warning</i> Requesting changes</span>`
-								}
-
-								if (val.status == 3) {
-									status = `<br/><span data-resources="${val.id}" style="color:#ffb80c;"><i class="material-icons">star</i> AWARDED</span>`
-								}
-
-								if (val.status == 5) {
-									status = `<br/><span data-resources="${val.id}" style="color:#ffb80c;"><i class="material-icons">star</i> Winner</span>`
-								}
-
-								html.innerHTML = `
-													
-				                                    <a href="#" class="proposal-dialog-btn row" data-resources="${val.id}" onclick="event.preventDefault();">
-
-				                                        <div class="col-3"  data-resources="${val.id}">
-				                                            <div class="text-center" data-resources="${val.id}" style="float:left;width:35px;height:35px;border-radius:50%;margin-right:10px;overflow:hidden;background:#42403c;color:#fff;padding-top:5px" id="image-header-section"  data-resources="${val.id}">${val.username.substr(0,2).toUpperCase()}</div>
-				                                        </div>
-				                                        <div class="col-9"  data-resources="${val.id}">
-				                                                <small data-resources="${val.id}">
-				                                                    <p data-resources="${val.id}">
-				                                                        ${val.username}<br/>
-				                                                        <span class="text-muted">${val.date_created}</span>
-				                                                        ${status}
-				                                                    </p>
-				                                                </small>
-				                                        </div>
-				                                    </a>
-				                                    <div class="row col-12"  data-resources="${val.id}">
-				                                    	<input type="checkbox" name="compare" class="compare-checkbox-list ${val.status}" data-resources="${val.id}"/> &nbsp; <small class="text-muted"> #${val.id}</small>
-				                                    </div>
-
-				                           `
-				                // insert to DOM
-				                el.append(html)
-				               
-							})
-						})
-
-						let checkbox = document.getElementById('compare-checkbox')
-
-						checkbox.addEventListener('click', (e) => {
-							document.querySelectorAll('.compare-checkbox-list').forEach((el, index) => {
-								// exclude proposals that need changes
-								if (!el.classList.contains('2')) {	
-									e.target.checked ? el.checked = true : el.checked = false
-								}
-							})
-						})
-
-						// compare
-						let compareBtn = document.querySelector('#compare-btn:not(.event-binded)')
-
-						if (compareBtn) {
-							compareBtn.classList.add('event-binded')
-							compareBtn.addEventListener('click' , () => {
-								// get all selected checkbox
-								let ids = []
-								const isSignatoriesIncluded = document.querySelector('#compare-sign-checkbox').checked ? '&signatories=true' : ''
-								document.querySelectorAll(`.compare-checkbox-list:checked`).forEach((el, index) => {
-									const atr = el.getAttribute('data-resources')
-									if (!ids[atr]) ids.push(atr)
-								})
-								window.open(`${window.bms.config.network}/bidding/reports/proposal_comparison.php?id=${params.id}&token=6170b5207b92e5a7445ee3f7de7247c4c1f1b8ef&prop=${ids.join(',')}${isSignatoriesIncluded}`)
-							})
-						}
-
-						window.bms.default.lazyLoad(['./assets/js_native/assets/js/modules/Invitation/Util/ProposalModal.js'])
-					},600)
-				})
-
-			}
-			window.bms.default.spinner.hide()
-		}).catch((err) => {
-			window.bms.default.spinner.hide()
+				}
+				window.bms.default.spinner.hide()
+			}).catch((err) => {
+				window.bms.default.spinner.hide()
+			})
 		})
 
-		loadCSS('assets/css/modules/suppliers/list.css')
-		loadCSS('assets/css/fileicon.css')
-	},
-	'/bids/requirements/:id/proposal/form': (params) => {
-		window.bms.default.state.bidding.cur.requirements.id = params.id
-		window.bms.default.spinner.show()
-		window.bms.default.changeDisplay(['div[name="/bids/initial"]','div[name="/bids/forms/registration/2"]', 'div[name="/bids/forms/registration"]', 'div[name="/bids/forms/registration/3"]', 'div[name="/bids/info"]', 'div[name="/bids/info"]','[name="/bids/info/particulars/details"]'],'none')
-		window.bms.default.changeDisplay(['[name="/bids/info/particulars"]', '[name="/bids/info/particulars/proposals/form"]'],'block')
+	   window.bms.default.loadCSS('assets/css/modules/suppliers/list.css')
+	   window.bms.default.loadCSS('assets/css/fileicon.css')
+	   setTimeout(() => {
+			window.bms.default.lazyLoad(['./assets/js_native/assets/js/modules/Bidding/Util/AccountSidebar.js'],{once:true})
+		},1000)
+   },
+   '/bids/requirements/:id/proposal/form': (params) => {
+	   window.bms.default.state.bidding.cur.requirements.id = params.id
+	   window.bms.default.spinner.show()
+	   window.bms.default.changeDisplay(['div[name="/bids/initial"]','div[name="/bids/forms/registration/2"]', 'div[name="/bids/forms/registration"]', 'div[name="/bids/forms/registration/3"]', 'div[name="/bids/info"]', 'div[name="/bids/info"]','[name="/bids/info/particulars/details"]'],'none')
+	   window.bms.default.changeDisplay(['[name="/bids/info/particulars"]', '[name="/bids/info/particulars/proposals/form"]'],'block')
 
-		// load list if not exists
-		IndexUtil.loadBiddingListSection()
-		loadCSS('assets/css/modules/suppliers/list.css')	
-	},
-	'/bids/forms/registration/*': (params) => {
-		IndexUtil.loadBiddingListSection()
-		window.bms.default.lazyLoad(['./assets/js_native/assets/js/routers/bidding/registration.js'],{once:true})
-		loadCSS('assets/css/modules/suppliers/list.css')
-	}
+	   // load list if not exists
+	   IndexUtil.loadBiddingListSection()
+	   loadCSS('assets/css/modules/suppliers/list.css')	
+   }
 }).resolve()

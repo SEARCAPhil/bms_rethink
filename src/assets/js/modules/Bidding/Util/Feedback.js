@@ -4,7 +4,6 @@ export class FeedList {
 	constructor () {
 		this.XHR = new window.bms.exports.XHR()
 		this.FeedServ = new FeedService()
-
 	}
 
 	get (id) { 
@@ -90,9 +89,6 @@ document.querySelectorAll('.feedback-list-section').forEach((el, index) => {
 			})
 
 			el.append(art)
-
 		})
-
 	})
-
 })

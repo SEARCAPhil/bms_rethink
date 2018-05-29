@@ -1,8 +1,6 @@
 import ListService from '../Services/List/List'
 import RequirementsService from '../Services/Requirements'
 import ProposalService from '../../Invitation/Services/Proposal'
-import IndexedDB from '../Util/Storage/Bidding'
-import PopupES from '../../../components/PopupES/PopupES'
 
 export default class {
 	constructor () {
@@ -10,12 +8,10 @@ export default class {
 		this.ListServ = new ListService()
 		this.ReqServ = new RequirementsService()
 		this.PropServ = new ProposalService()
-		this.IDB = new IndexedDB()
 	}
 
 
 	get (id) { 
-		//window.bms.default.spinner.show()
 		let data = {
 			id,
 			token: window.localStorage.getItem('token'),
@@ -24,13 +20,10 @@ export default class {
 		return new Promise((resolve, reject) => {
 			this.ReqServ.view(data).then((json) => {
 				let res = JSON.parse(json)
-			
 				if(res[0]){
 					window.bms.default.spinner.hide()
 					resolve(res[0])
 				}
-
-
 			})
 		})
 	}
@@ -118,13 +111,11 @@ export default class {
 		const discount = document.getElementById('proposal-form-discount').value
 		const remarks = document.getElementById('proposal-form-remarks').value
 
-
 		let original = []
 		let others = []
 
 		document.querySelectorAll('.specs-input-section-orig').forEach((el,index) => {
 			const val = el.querySelector('.specs-input-section-value')
-
 			if(val) {
 				const id = val.getAttribute('data-resources')
 				original.push({id, value: val.value })
@@ -134,7 +125,6 @@ export default class {
 		document.querySelectorAll('.specs-input-section-others').forEach((el, index) => {
 			const name = el.querySelector('.specs-input-section-name')
 			const val = el.querySelector('.specs-input-section-value')
-
 			if (val && name) {
 				others.push({name: name.value, value: val.value})
 			}
@@ -152,11 +142,8 @@ export default class {
 		}
 
 		this.PropServ.send(data).then((res) => {
-
 			const proto = Object.assign({ __proto__: this.__proto__ }, this)
-
-
-
+			
 			if (res > 0) {
 				// update current state
 				window.bms.default.state.proposals.cur.id = res
@@ -758,7 +745,7 @@ export default class {
 						// dropdown
 						window.bms.default.dropdown('device-dropdown')
 						// enable popup
-						const PopupInstance = new PopupES()
+						const PopupInstance = new window.bms.exports.PopupES()
 						this.bindRemoveRecepients()
 				},1000)
 

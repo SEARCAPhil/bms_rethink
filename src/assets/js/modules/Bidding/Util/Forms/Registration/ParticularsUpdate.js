@@ -34,18 +34,13 @@ const update = (e) => {
 	}
 
 	Reg.particulars(data).then(json => {
-
 		let res = JSON.parse(json)
-
 		if (res.data) {
 			window.location.hash = `#/bids/${window.bms.default.state.bidding.cur.bid.id}/info`
 			window.bms.default.spinner.hide()
 			//document.getElementById('bid-form-status').innerHTML = ''
 			return 0
 		}
-		
-		// show error
-		// showError()
 		
 	}).catch(() => {
 		// showError()

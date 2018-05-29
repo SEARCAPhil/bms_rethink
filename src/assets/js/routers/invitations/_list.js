@@ -1,18 +1,10 @@
 import ListUtilities from '../../modules/Invitation/Util/List'
 import ListService from '../../modules/Invitation/Services/List'
 
-import PopupES from '../../Components/PopupES/PopupES.js'
-
 const appRoute = new window.bms.exports.Router('http://127.0.0.1/bms_rethink/www/',true)
-
-const XHR = new window.bms.exports.XHR()
-let DB = new window.bms.exports.IndexedDB()
-
-
 const listUtil = new ListUtilities()
 const ListServ = new ListService()
-
-
+const XHR = new window.bms.exports.XHR()
 
 let PopupInstance = {}
 
