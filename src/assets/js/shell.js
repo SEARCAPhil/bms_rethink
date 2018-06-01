@@ -139,3 +139,25 @@ appRoute.on({
 
 // show sidebar
 sideBar.toggle()
+
+// Google analytics
+setTimeout(() => {
+	try {
+		if (window.bms.account.name) {
+			// delay 3 seconds to avoid blocking
+			const r = new Promise((resolve, reject) => {
+					const g = document.createElement('script')
+					g.setAttribute('async', '')
+					g.src = 'https://www.googletagmanager.com/gtag/js?id=UA-99081752-4'
+					document.body.append(g)
+					resolve()
+			}).then(res => {
+				window.dataLayer = window.dataLayer || [];
+				function gtag(){dataLayer.push(arguments);}
+				gtag('js', new Date());
+				gtag('set', {'user_id': window.bms.account.name})
+				gtag('config', 'UA-99081752-4');
+			})	
+		}
+	} catch (e) {}
+},3000)

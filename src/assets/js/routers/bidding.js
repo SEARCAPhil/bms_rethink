@@ -400,7 +400,7 @@ const showBiddingExemption = () => {
 		const status = document.createElement('center')
 		status.classList.add('row')
 		status.id = 'detail-info-menu-bidding-exemption'
-		status.setAttribute('style', 'background:#ff7043;color:#fff;padding:5px;font-weight: bold;')
+		status.setAttribute('style', 'background:#424242;color:#fff;padding:5px;font-weight: bold;')
 		status.innerHTML = `
 			<p class="col-lg-11 offset-lg-1">
 	        	<i class="material-icons md-36">touch_app</i> FOR BIDDING EXEMPTION<br/>
