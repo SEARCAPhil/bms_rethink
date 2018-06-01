@@ -10,6 +10,7 @@ export default class {
 		let data = {
 			id: e.target.el.id,
 			action: 'remove',
+			token: window.localStorage.getItem('token'),
 		}
 
 		this.ListServ.removeParticulars(data).then((json) => {

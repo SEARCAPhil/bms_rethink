@@ -31,6 +31,7 @@ const update = (e) => {
 		deadline: deadlineField.value,
 		id: window.bms.default.state.bidding.cur.particulars.id,
 		action: 'update',
+		token: window.localStorage.getItem('token'),
 	}
 
 	Reg.particulars(data).then(json => {

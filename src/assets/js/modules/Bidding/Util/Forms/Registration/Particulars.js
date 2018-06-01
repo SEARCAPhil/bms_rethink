@@ -31,6 +31,7 @@ const register = (e) => {
 		deadline: deadlineField.value,
 		id: window.bms.default.state.bidding.cur.id,
 		action: 'create',
+		token: window.localStorage.getItem('token'),
 	}
 
 	Reg.particulars(data).then(json => {

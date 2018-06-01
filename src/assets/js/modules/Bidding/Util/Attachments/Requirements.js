@@ -28,7 +28,11 @@ export class AttachmentsReq{
 		// disable button first
 		e.target.setAttribute('disabled', 'disabled')
 
-		this.AttServ.attach({attachments:window.bms.bidding.files.recentFilesToUpload, action: 'create', id: window.bms.default.state.bidding.cur.requirements.id}).then(json => {
+		this.AttServ.attach({
+			attachments:window.bms.bidding.files.recentFilesToUpload, 
+			action: 'create', id: window.bms.default.state.bidding.cur.requirements.id,
+			token: window.localStorage.getItem('token'),
+		}).then(json => {
 			const data = JSON.parse(json)
 
 			//show in DOM
@@ -207,6 +211,7 @@ export class AttachmentsReq{
 
 		let data = {
 			id: window.bms.default.modal.resources,
+			token: window.localStorage.getItem('token'),
 			action: 'remove',
 		}
 

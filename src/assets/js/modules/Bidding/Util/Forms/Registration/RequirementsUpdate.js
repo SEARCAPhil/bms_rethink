@@ -108,6 +108,7 @@ const updateReq = (e) => {
 		fundsToRemove : window.bms.bidding.requirements.fundToRemove,
 		specsToRemove : window.bms.bidding.requirements.specsToRemove,
 		action: 'update',
+		token: localStorage.getItem('token'),
 	}
 	
 	setTimeout(() => {
