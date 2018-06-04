@@ -568,7 +568,6 @@ const changeBiddingInfo = (e) => {
 		el.href = `#/bids/forms/registration/${details.id}/steps/1/update`
 	})
 
-	
 	// menu
 	if (details.status == 0) {
 		window.bms.default.toggleOpenClasses(['.for-open'], 'block')
