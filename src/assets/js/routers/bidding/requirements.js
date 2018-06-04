@@ -441,7 +441,9 @@ appRoute.on({
         ListUtil.loadBiddingRequirementsInfo().then(() => {
 			// dropdown
 			window.bms.default.dropdown('device-dropdown')
-	   		window.bms.default.lazyLoad(['./assets/js_native/assets/js/modules/Bidding/Util/Attachments/RequirementsModal.js'])
+			window.bms.default.lazyLoad(['./assets/js_native/assets/js/modules/Bidding/Util/Attachments/RequirementsModal.js']) 
+			window.bms.default.changeDisplay(['div[name="/bids/initial"]'],'none')
+
 			ReqUtil.get(params.id).then(json => {
 				if (json.id) {
 					// bidding info

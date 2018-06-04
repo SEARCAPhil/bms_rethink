@@ -562,6 +562,13 @@ const changeBiddingInfo = (e) => {
 	document.querySelectorAll('.print-btn').forEach((el, index) => {
 		el.href = `${window.bms.config.network}/bidding/reports/bidding_request.php?id=${details.id}`
 	})
+
+	// update buttons
+	document.querySelectorAll('.update-bidding-modal-btn').forEach((el, index) => {
+		el.href = `#/bids/forms/registration/${details.id}/steps/1/update`
+	})
+
+	
 	// menu
 	if (details.status == 0) {
 		window.bms.default.toggleOpenClasses(['.for-open'], 'block')
