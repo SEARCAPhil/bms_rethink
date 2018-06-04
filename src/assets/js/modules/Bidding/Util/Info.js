@@ -71,6 +71,7 @@ export default class {
 			id: window.bms.default.state.bidding.cur.bid.id,
 			emails: emails,
 			action: 'create',
+			token : window.localStorage.getItem('token'),
 		}
 
 		this.ListServ.send(data).then((json) => {
@@ -96,7 +97,6 @@ export default class {
 
 	setStatus (e) {
 		window.bms.default.spinner.show()
-
 		let data = {
 			id: window.bms.default.state.bidding.cur.bid.id,
 			status: e.target.resources,
@@ -104,11 +104,7 @@ export default class {
 
 		this.ListServ.status(data).then((json) => {
 			let res = JSON.parse(json)
-
-			if(res){
-
-			}
-
+			if(res){ }
 			window.bms.default.spinner.hide()
 			document.getElementById('bidding-modal').close()
 		}).catch((err) => {
@@ -135,6 +131,7 @@ export default class {
 			approved,
 			approving_position,
 			id: window.bms.default.state.bidding.cur.bid.id,
+			token : window.localStorage.getItem('token'),
 		}
 
 		this.ListServ.signatories(data).then((json) => {

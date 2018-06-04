@@ -120,7 +120,8 @@ const loadRequirementsDetails = (json) => {
 
 	const date = new Date()
 	const curMonth = (date.getMonth()+1) < 10 ? `0${date.getMonth()+1}` : (date.getMonth()+1)
-	const currentDate = `${date.getFullYear()}-${curMonth}-${date.getDate()}`
+	const curD = date.getDate() < 10 ? `0${date.getDate()}` : date.getDate()
+	const currentDate = `${date.getFullYear()}-${curMonth}-${curD}`
 
 	document.querySelector('.req-name').textContent = json.name
 	document.querySelector('.req-quantity').textContent = json.quantity
@@ -318,6 +319,7 @@ appRoute2.on({
 					window.bms.default.state.bidding.cur.requirements.id = json.id
 					json.bidding_requirements_invitation_id = params.id
 					loadRequirementsDetails(json)
+				
 				}
 				window.bms.default.spinner.hide()
 
