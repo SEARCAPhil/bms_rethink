@@ -339,7 +339,7 @@ const showBiddingReqReturned = () => {
  */
 const showBiddingClosed = () => {
 	const targ = document.getElementById('detail-info-menu-status')
-	targ.innerHTML = `<center class="row" style="background:#fff;color:#607d8b;padding:5px;">
+	targ.innerHTML = `<center class="row" style="background:#444;color:#fff;padding:5px;">
 		<p class="col-12">
 		<section class="col-lg-5 offset-lg-4">
 			<ul class="nav">
@@ -347,9 +347,9 @@ const showBiddingClosed = () => {
 				<li class="nav-item">
 					<a class="nav-link row">
 						<div class="media">
-							<img class="mr-3" src="assets/img/negotiation.png" alt="negotiation" width="40px">
+							<i class="material-icons md-36 mr-3">lock</i>
 							<div class="media-body">
-								Sorry ! Bidding for this item is already closed <i class="material-icons md-18">lock</i><br>
+								Sorry ! Bidding for this item is already closed <br>
 								<small> You are not able to add or modify any content under this item</small>
 							</div>
 						</div>	
@@ -400,9 +400,9 @@ const showBiddingExemption = () => {
 		const status = document.createElement('center')
 		status.classList.add('row')
 		status.id = 'detail-info-menu-bidding-exemption'
-		status.setAttribute('style', 'background:#424242;color:#fff;padding:5px;font-weight: bold;')
+		status.setAttribute('style', 'background:#5d5d5d;color:#fff;padding:5px;font-weight: bold;')
 		status.innerHTML = `
-			<p class="col-lg-11 offset-lg-1">
+			<p class="col-lg-10 offset-lg-1">
 	        	<i class="material-icons md-36">touch_app</i> FOR BIDDING EXEMPTION<br/>
 	        	<small>This request is not intended for all suppliers. Please DO NOT send an invitation twice if possible. </small>
 	        </p>

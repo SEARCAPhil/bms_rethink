@@ -26,7 +26,7 @@ let PopupInstance = {}
 
 const showDeadline = () => {
 	let targ = document.getElementById('detail-req-menu-status')
-	targ.parentNode.style.background = '#00897B'
+	targ.parentNode.style.background = '#444'
 	targ.parentNode.style.color = '#fff'
 	targ.parentNode.style.padding = '4px'
 	targ.parentNode.innerHTML = `<section class="col-lg-11 offset-lg-1">
@@ -38,9 +38,9 @@ const showDeadline = () => {
 								<a class="nav-link row">
 
 								<div class="media">
-									<img class="mr-3" src="assets/img/negotiation.png" alt="negotiation" width="40px">
+								<i class="material-icons md-36 mr-3">lock</i>
 								<div class="media-body">
-									Sorry ! Bidding for this item is already closed <i class="material-icons md-18">lock</i><br/>
+									Sorry ! Bidding for this item is already closed <br/>
 									<small> You are not able to add or modify any content under this item</small>
 								</div>
 							  </div>
