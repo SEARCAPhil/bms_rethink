@@ -37,15 +37,71 @@
     * Create your own at http://cspisawesome.com
     -->
     <!-- <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: 'unsafe-inline' https://ssl.gstatic.com; style-src 'self' 'unsafe-inline'; media-src *" /> -->
-    <link rel="stylesheet" type="text/css" href="../node_modules/bootstrap/dist/css/bootstrap.min.css">
+    <link  rel="preload" type="text/css" as="style" href="../node_modules/bootstrap/dist/css/bootstrap.min.css" onload="this.rel='stylesheet'" />
+    <link rel="preload" href="assets/css/default.css" as="style" onload="this.rel='stylesheet'"/>
     <style> @import url('https://fonts.googleapis.com/css?family=Roboto:100');</style>
+    <style>
+      body{
+        font-family: 'Roboto', sans-serif;
+        overflow: hidden;
+      }
+      splash-page {
+        position: fixed;
+        top:0;
+        width: 100%;
+        height: 100%;
+        background: #fff;
+        z-index: 2048;
+        padding-top: 30vh;
+        text-align: center;
+        overflow: hidden;
+      }
+      h1, h2, h3, h4, h5, h6 {
+        font-family: Roboto,Helvetica,Arial,sans-serif;
+        font-weight: 300;
+      }
+      .h3, h3 {
+        font-size: 1.75rem;
+      }
+      .hide {
+        display: none;
+      }
+      .show {
+        display: block;
+      }
+    </style>
 </head>
+  <body>
+    <!-- splash -->
+    <splash-page>
+      <h3>Loading Application . . .</h3>
+      <small>Hang on! Please wait while we are working on the app. . . </small>
+    </splash-page>
 
-<body>
-  <auth-section></auth-section>
-</body>
+    <!-- auth -->
+    <auth-section></auth-section>
 
+
+    <main class="d-flex bidding-section">
+      <header></header>
+      <left-sidebar></left-sidebar>
+      <article class="col-12 d-flex">
+        <section class="row col-12 welcome-section"></section>
+        <list-section></list-section>
+        <initial-section></initial-section>
+      </article>
+    </main>
+
+  </body>
 </html>
 <script type="module" src="./routers/index.js"></script>
+<script>
+  setTimeout(()=>{
+    // Define a new FontFace
+    const notoSansRegular = new FontFace('Material Icons', 'url(assets/fonts/MaterialIcons-Regular.woff2)');
+    // Add the FontFace to the FontFaceSet
+    document.fonts.add(notoSansRegular);
+  },100)
+</script>
 
 
