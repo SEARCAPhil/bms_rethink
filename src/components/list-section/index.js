@@ -3,7 +3,6 @@ import style from './style'
 export default `
 <style>${style.toString()}</style>
   <section class="list-sidebar row" style="background:#fff;box-shadow:0 0 5px rgba(200,200,200,.7);min-height: 100vh">     
-
     <section class="col-12" style="margin-top:50px;">
       <div style="border:1px solid rgba(200,200,200,0.3);margin-bottom:5px;background:#fff;" class="row">
         <div class="btn-group btn-group-sm search-button-group" role="group" aria-label="Basic example">
@@ -26,13 +25,6 @@ export default `
                         <a href="#/bids/all">All</a>
                     </span>
                 </li>
-                <!--<li class="list-group-item">
-                    <span class="menuList blockedNav"><a href="#/bids/open">Open</a></span>
-                </li>
-
-                <li class="list-group-item">
-                    <span class="menuList blockedNav"><a href="#/bids/closed">Closed</a></span>
-                </li>-->
 
                 <li class="list-group-item">
                     <span class="menuList blockedNav">
@@ -46,13 +38,13 @@ export default `
         <span class="menuList suppliers_new_button float-right"><a href="#/bids/forms/registration/steps/1">New <i class="material-icons md-18">add_circle_outline</i></a></span>
         <br> 
       </div>
-    </section>	
-    <section>
+
         <!--list-->
         <div class="row list-bidding-section"></div>
+
         <!--search results -->
         <div class="row list-search-bidding-section hide"></div>
-    </section>	
+    </section>		
   </section>
 <script type="text/javascript" src="assets/js_native/assets/js/routers/bidding/list.js"></script>
 `

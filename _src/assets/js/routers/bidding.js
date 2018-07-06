@@ -771,7 +771,7 @@ appRoute2.on({
    },
    '/bids/drafts': () => {
        window.bms.default.spinner.show()
-       ListUtil.lists({filter: 'drafts', token : window.localStorage.getItem('token')})
+       s
        hideListFilter()
        window.bms.default.activeMenu('bids-menu-list-drafts')
    },

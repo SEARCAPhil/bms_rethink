@@ -87,20 +87,22 @@ Navigo.then((Navigo) => {
       // load components
       loadHeader()
       loadLeftSidebar().then(() => {
-        Menuselector.then(loader => loader.default('home_menu'))
+        Menuselector.then(loader => { new loader.default().active('home_menu') })
       })
       loadWelcome()
       // dropdown
       DropdownLoader.then(loader =>  loader.default('device-dropdown'))
     },
-    '/bids/*':()=>{
+    '/bids/*': () => {
       // load components
       loadHeader()
-      loadLeftSidebar()
+      loadLeftSidebar().then(() => {
+        import('./bidding')
+      })
       // dropdown
       DropdownLoader.then(loader => loader.default('device-dropdown'))
 
-      import('./bidding')
+      
     }
   }).resolve()
 })

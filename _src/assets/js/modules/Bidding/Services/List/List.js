@@ -6,10 +6,6 @@ export default class{
 		this.timestamp = new Date().getTime()
 	}
 	
-	lists(opt = {}){
-		const url=`${Net}/bidding/?status=${opt.filter || 'all'}&page=${opt.page || 1}&token=${opt.token}`
-		return XHR.request({method:'GET',url:url})
-	}
 
 	search(opt = {}){
 		const url=`${Net}/bidding/search.php?param=${opt.param}&page=${opt.page || 1}&token=${opt.token}`

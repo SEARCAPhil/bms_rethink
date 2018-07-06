@@ -8,14 +8,28 @@ const PrivilegeLoader = import('./privilege-loader')
  * @example
  * // window.bms.default.activeMenu('bidding-menu')
  */
-export default (id) => {
-	document.querySelectorAll('.main-menu-list-item').forEach((el,index)=>{
-		if(el.getAttribute('id')==id){
-			el.classList.add('active')
-		}else{
-			el.classList.remove('active')
-		}
-	})
+export default class {
+	constructor () {
+
+	}
+	active (id) {
+		document.querySelectorAll('.main-menu-list-item').forEach((el,index)=>{
+			if(el.getAttribute('id')==id){
+				el.classList.add('active')
+			}else{
+				el.classList.remove('active')
+			}
+		})
+		// show menu based on privilege
+		this.showMenus()
+	}
+	showMenus () {
+		// privilege
+		PrivilegeLoader.then(loader => {
+			return (loader.isGSU() || loader.isCBAAsst() || loader.isStandard() ) ? showExtendedMenu() : showStandardMenu()	
+		})
+	}
+
 }
 
 /**
@@ -45,7 +59,3 @@ const showExtendedMenu = () => {
 }
 
 
-// privilege
-PrivilegeLoader.then(loader => {
-	return (loader.isGSU() || loader.isCBAAsst() || loader.isStandard() ) ? showExtendedMenu() : showStandardMenu()	
-})
