@@ -80,16 +80,27 @@
     <!-- auth -->
     <auth-section></auth-section>
 
-
     <main class="d-flex bidding-section">
       <header></header>
       <left-sidebar></left-sidebar>
-      <article class="col-12 d-flex">
+      <article class="col-10 d-flex align-items-stretch p-0">
         <section class="row col-12 welcome-section"></section>
         <list-section></list-section>
+        <info-section></info-section>
+        <registration-section></registration-section>
         <initial-section></initial-section>
       </article>
     </main>
+
+    <!-- dialog -->
+    <dialog id="general-modal" data-popup="fade" style="visibility:hidden;">
+      <main class="content">
+        <!--close button-->
+        <a href="#" data-popup-toggle="close">x</a>
+        <section class="header"></section>
+        <section class="body" id="modal-body"></section>
+      </main>	
+    </dialog>
 
   </body>
 </html>

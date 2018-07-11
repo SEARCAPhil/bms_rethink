@@ -29,14 +29,14 @@ module.exports = {
           from: 'src/assets/css/*.css',
           to: 'assets/css/[name].[ext]'
         },{
-          from: 'src/assets/fonts/*.*',
-          to: 'assets/fonts/[name].[ext]'
+            from: 'src/assets/fonts/*.*',
+            to: 'assets/fonts/[name].[ext]'
         }]),
         new UglifyJSPlugin(),
 
     ],
     resolve:{
-        extensions: ['.js', '.styl', '.css']
+        extensions: ['.js', '.styl', '.css', '.html']
     },
 	module: {
 		rules: [
@@ -84,7 +84,11 @@ module.exports = {
                         loader: 'stylus-loader'
                     }
                 ]
-                
+            },
+            {
+                test: /\.css$/,
+                include: /src/,
+                use: [ 'style-loader', 'css-loader' ]
             }
         ]
     },

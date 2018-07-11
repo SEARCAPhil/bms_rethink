@@ -37,7 +37,7 @@ const loadLeftSidebar = (activeMenuID) => {
     if (!lSec) return 0
     // sidebar's content
     const aside = document.createElement('aside')
-    aside.classList.add('col', 'col-lg-2', 'col-md-3', 'col-xs-12', 'd-none', 'd-lg-block', 'row' )
+    aside.classList.add('col', 'col-lg-2', 'col-md-3', 'col-xs-12', 'd-none', 'd-lg-block')
     aside.innerHTML = res.default
     aside.setAttribute('style', 'background:rgba(0,0,0,0.8);min-width:100px;')
     lSec.replaceWith(aside)

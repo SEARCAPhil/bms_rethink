@@ -2,7 +2,7 @@ import style from './style'
 
 export default `
 <style>${style.toString()}</style>
-  <section class="list-sidebar row" style="background:#fff;box-shadow:0 0 5px rgba(200,200,200,.7);min-height: 100vh">     
+  <section class="list-sidebar" style="background:#fff;box-shadow:0 0 5px rgba(200,200,200,.7);height: 100vh;overflow-y:auto;">     
     <section class="col-12" style="margin-top:50px;">
       <div style="border:1px solid rgba(200,200,200,0.3);margin-bottom:5px;background:#fff;" class="row">
         <div class="btn-group btn-group-sm search-button-group" role="group" aria-label="Basic example">
@@ -35,7 +35,7 @@ export default `
             <ul>
         </ul></ul></div>
 
-        <span class="menuList suppliers_new_button float-right"><a href="#/bids/forms/registration/steps/1">New <i class="material-icons md-18">add_circle_outline</i></a></span>
+        <span class="menuList suppliers_new_button float-right"><a href="#/bids/forms/registration/step/1">New <i class="material-icons md-18">add_circle_outline</i></a></span>
         <br> 
       </div>
 

@@ -771,7 +771,6 @@ appRoute2.on({
    },
    '/bids/drafts': () => {
        window.bms.default.spinner.show()
-       s
        hideListFilter()
        window.bms.default.activeMenu('bids-menu-list-drafts')
    },

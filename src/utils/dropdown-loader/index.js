@@ -8,7 +8,7 @@ import style from './style'
 
 export default  (className) => {
   // create style
-  if (!document.getElementById('styl')) {
+  if (!document.getElementById('dropdownStyle')) {
     const styl = document.createElement('style')
     styl.id = 'dropdownStyle'
     styl.innerHTML = style.toString()
