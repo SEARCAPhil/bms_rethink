@@ -44,11 +44,10 @@ const appendItems = (target, data) => {
  */
 const register = (e) => {
 	e.preventDefault()
-	let exemptionField = document.querySelector('form[name="bidding-request-registration"] input[name="forExemption"]:checked')
-
-	// payload
-	let payload = {
-		excemption: parseInt(exemptionField.value),
+  // payload
+  const __exemptionField = document.querySelector('form[name="bidding-request-registration"] input[name="forExemption"]:checked')
+	const payload = {
+		excemption: parseInt(__exemptionField.value),
 		action: 'create',
 		token: localStorage.getItem('token'),
   }
@@ -66,8 +65,7 @@ const register = (e) => {
         // append to DOM
         appendItems(document.querySelector('.list-bidding-section'),item)
         // clear and redirect to next step if any
-        showSuccess()
-        return 0
+        return showSuccess()
       }
       // failed
       showError()
@@ -75,7 +73,35 @@ const register = (e) => {
   }).catch(err => {
     showError()
   })
-
 }
 
-export { showError, register }
+/**
+ * Create new Bidding
+ * @param {*} e 
+ */
+const update = (e) => {
+  // payload
+  const __exemptionField = document.querySelector('form[name="bidding-request-registration"] input[name="forExemption"]:checked')
+	const __payload = {
+    id: e.target.id,
+		excemption: parseInt(__exemptionField.value),
+		action: 'update',
+		token: localStorage.getItem('token'),
+  }
+  
+  // update
+  Serv.then(loader => {
+    return new loader.default().create(__payload).then(json => {
+      // success
+      if(json.data == 1) {
+        return window.location.hash = `#/bids/${__payload.id}/info`
+      }
+      // failed
+      return showError()
+    })
+  }).catch(err => {
+    return showError()
+  })
+}
+
+export { showError, register, update }

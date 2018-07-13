@@ -12,7 +12,7 @@ const loadListSection = () => {
       if (!lSec) return 0
       // list section
       const newLSec = document.createElement('article')
-      newLSec.classList.add('list-bids-container', 'd-none', 'd-lg-block')
+      newLSec.classList.add('list-bids-container', 'd-none', 'd-lg-block', 'col-lg-2')
       newLSec.style.zIndex = 1
       newLSec.innerHTML = sec.default
       lSec.replaceWith(newLSec)
@@ -52,4 +52,25 @@ const getBiddingList = (opt = {}) => {
     })
 }
 
-export { loadListSection, getBiddingList }
+
+  /**
+   * Attachment Components
+   */
+  const loadAttachments = (target, data) => { 
+    import('../../components/attachments-item').then(res => {
+      const targ = document.querySelector(target)
+      if (!targ) return 0
+      // empty section
+      targ.innerHTML = ''
+      // append files
+      data.forEach((val ,index) => {
+        targ.append(new res.default(val))
+      })
+      setTimeout(() => {
+        // dropdown
+        DropdownLoader.then(loader =>  loader.default('device-dropdown'))
+      },1000)
+    })
+  }
+
+export { loadListSection, getBiddingList, loadAttachments }

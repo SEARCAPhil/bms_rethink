@@ -1,9 +1,8 @@
 const Navigo = import('navigo')
 const DisplayStyler = import('../../utils/display-styler')
 const ScriptLoader = import('../../utils/script-loader')
-const DropdownLoader = import('../../utils/dropdown-loader/index')
+const DropdownLoader = import('../../utils/dropdown-loader')
 const Menuselector = import('../../utils/menu-selector')
-const InfoSection = import('../../pages/bidding-info-section')
 const BiddingServ = import('../../services/bidding-list-service')
 const ParticularsItem = import('../../components/particulars-item')
 const CustomerReviews = import('../../components/customer-reviews')
@@ -27,7 +26,7 @@ Navigo.then((Navigo) => {
 
   appRoute.on({
     '' : () => { },
-    '/bids/:id/info/': (params) => {
+    '/bids/:id/info/': async (params) => {
       // change visibility
       DisplayStyler.then(display => {
         display.default(['splash-page', '.welcome-section', '#initial-section'], 'none')
@@ -38,22 +37,20 @@ Navigo.then((Navigo) => {
 
 
       // loade Information section
-      InfoSection.then(res => {
+      return await import('../../pages/bidding-info-section').then(res => { 
         // template
         const temp = new res.template({id: params.id})
         const template = temp.render()
         template.then(html => { 
+  
           // DOM
-          const infMenu = document.querySelector('info-section')
-          if(infMenu) infMenu.replaceWith(html)
-
+          const infMenu = document.querySelector('info-section') || document.querySelector('#bids-info-container')
+          if(infMenu) infMenu.replaceWith(html) 
+         
           // other content
           temp.setStatus()
-          
-        }).then(() => {
-
-          temp.getAttachments()
-        })
+ 
+        }).then(() => { temp.getAttachments() })
 
         
         /*

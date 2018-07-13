@@ -15,7 +15,6 @@ const register = () => {
   const serv = import('../../pages/bidding-reg-form/actions')
   serv.then(loader => {
     document.querySelector('.add-bidding-button').addEventListener('click', loader.register)
-    
   })
 }
 
@@ -33,14 +32,24 @@ Navigo.then((Navigo) => {
 
   appRoute.on({
     '' : () => { },
-    '/bids/forms/registration/step/1': () => {
-      
+    '/bids/forms/registration/step/1': () => { 
       // load form
       showContainer()
       loadForm().then(() => {
         register()
       })
-      
+    },
+    '/bids/forms/registration/:id/step/1/update': (params) => { 
+      // load form
+      showContainer()
+      loadForm().then(() => {
+        const serv = import('../../pages/bidding-reg-form/actions')
+        serv.then(loader => {
+          const btn = document.querySelector('.add-bidding-button')
+          btn.id = params.id
+          btn.addEventListener('click', loader.update) 
+        })
+      })
     },
     '/bids/forms/registration/:id/step/2': () => {
       showContainer()

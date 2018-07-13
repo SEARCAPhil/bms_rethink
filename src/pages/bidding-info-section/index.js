@@ -1,7 +1,6 @@
 const infoMenu = import('../../components/bidding-info-menu')
 const infoStatus = import('../../components/bidding-status')
 const info = import('../../services/bidding-list-service')
-const privUtil = import('../../utils/privilege-loader')
 const statusMessage = import('../../components/status-message')
 
 
@@ -17,7 +16,7 @@ class template {
   async render () {
     this.__info = await this.__getInfo(this.__params.id)
     const template = document.createElement('section')
-
+    
     // reviewed by
     let arr = this.__info.collaborators.map(val => {
       return `<span class="badge badge-dark">${val.profile_name}</span>`
@@ -30,10 +29,13 @@ class template {
       <section id="detail-info-menu-status" class="w-100"></section>
       <section>
         <bidding-info-menu></bidding-info-menu>
+        <!-- attachment upload preview -->
+        <div class="col-lg-11 col-sm-12 offset-lg-1 row attachment-pool-section" style="padding-top:10px"></div>
+
         <article class="col-10 offset-lg-1 mt-5">
           <!-- info -->
           <h3><b>Bidding Request <span id="bidding-number-info">#${this.__info.id}</span></b></h3>
-          <span class="text-danger">Bidding Exemption : ${this.__info.excemption ? 'Yes' : 'No'}</span><br/>
+          <span class="text-danger">Bidding Exemption : ${parseInt(this.__info.excemption) ? 'Yes' : 'No'}</span><br/>
           <p>Reviewed By : ${arr.join(' ')} </p>
 
           <!-- author -->
@@ -101,18 +103,9 @@ class template {
   /**
    * Attachment Components
    */
-  getAttachments() { 
-    import('../../components/attachments-item').then(res => {
-      const target = document.querySelector('.attachments-info-section')
-      if (!target) return 0
-      // empty section
-      target.innerHTML = ''
-      // append files
-      this.__info.attachments.forEach((val ,index) => {
-        let item = new res.default(val)
-        target.append(item)
-      })
-    })
+  async getAttachments() { 
+    const loadAttachments = (await import('./actions')).loadAttachments
+    return loadAttachments('.attachments-info-section', this.__info.attachments)
   }
 
   /**
@@ -153,7 +146,7 @@ class template {
       this.__payload = {}
       this.__payload_menu = {
         id: this.__params.id,
-        menus: ['send', 'attach', 'remove', 'update', 'particulars', 'print']
+        menus: ['send', 'attach', 'remove', 'update', 'particulars', 'print', 'sign']
       }
     } 
 
@@ -207,13 +200,13 @@ class template {
   }
 
 
-  async setStatus () { 
+  async setStatus () {  
     const status = await statusMessage
     const popupes = import('../../components/popup-es')
     const popupesStyle = import('../../components/popup-es/style')
 
     // set menu and payload based on user privilege
-    privUtil.then(loader => {
+    return await import('../../utils/privilege-loader').then(loader => {
       this.setPayload(loader, status)
       this.showMenu(this.__payload_menu).then(() => {
         console.log('show')
@@ -229,8 +222,8 @@ class template {
          const a = new loader.default()
         })
       })
+      
       this.getStatus(this.__payload)
-     
     })
   }
 }
