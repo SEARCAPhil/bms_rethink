@@ -1,7 +1,26 @@
 const BiddingServ = import('../../services/bidding-list-service')
 const ListItem = import('../../components/list-item')
 const ListSection = import('../../components/list-section')
-const DropdownLoader = import('../../utils/dropdown-loader/index')
+const DropdownLoader = import('../../utils/dropdown-loader')
+
+const loadPopup = () => {
+
+  const popupes = import('../../components/popup-es')
+  const popupesStyle = import('../../components/popup-es/style')
+
+    // enable popup
+    popupesStyle.then(css => {
+      const style = document.createElement('style')
+      style.id = 'popup-es-style'
+      style.innerHTML = css.default.toString()
+      if(!document.querySelector('#popup-es-style')) document.head.append(style)
+      
+    })
+
+    popupes.then(loader => new loader.default())
+
+}
+
 /**
  * Load List section
  */
@@ -56,7 +75,8 @@ const getBiddingList = (opt = {}) => {
   /**
    * Attachment Components
    */
-  const loadAttachments = (target, data) => { 
+  const loadAttachments = (target, data) => {
+      
     import('../../components/attachments-item').then(res => {
       const targ = document.querySelector(target)
       if (!targ) return 0
@@ -64,12 +84,14 @@ const getBiddingList = (opt = {}) => {
       targ.innerHTML = ''
       // append files
       data.forEach((val ,index) => {
+        val.menus = ['remove']
         targ.append(new res.default(val))
       })
       setTimeout(() => {
         // dropdown
         DropdownLoader.then(loader =>  loader.default('device-dropdown'))
-      },1000)
+        loadPopup()
+      },2000)
     })
   }
 

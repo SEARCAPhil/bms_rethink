@@ -19,7 +19,6 @@ const activateList = (id) => {
 }
 
 
-
 Navigo.then((Navigo) => {
   // Navigo instance
   const appRoute = new Navigo.default('http://localhost/bms_rethink/www/',  true)

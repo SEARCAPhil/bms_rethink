@@ -5,8 +5,11 @@ export default class {
     return this.render().__show()
   }
 
+  __close () {
+    this.classList.remove('open')
+  }
+
   close (e) {
-    console.log(e)
 	  return  e.target.classList.contains('file-attachment-main-dialog') ? document.querySelector(`#file-attachment-main-dialog-${this.opt.id}`).classList.remove('open')  : false
   }
   
@@ -24,7 +27,8 @@ export default class {
     template .classList.add('col', 'col-lg-12', 'file-attachment-main-dialog')
     
 		//unique dialog box
-		template.id = `file-attachment-main-dialog-${this.opt.id}`
+    template.id = `file-attachment-main-dialog-${this.opt.id}`
+    template.close = this.__close
 		template.addEventListener('click', this.close.bind(proto))
 		template.innerHTML = `
 			<style>${style.toString()}</style>

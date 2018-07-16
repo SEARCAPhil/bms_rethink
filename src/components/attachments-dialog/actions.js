@@ -5,19 +5,13 @@ export default class {
   constructor (opt) {
     this.opt = opt
     this.__apiConfig = ApiConfig
-    //this.bindAttach()
+    this.filesToBeUploaded = {}
+   
   }
 
-  /*attach () {
-    console.log('a')
+  __showError () {
+    alert('Unable to process this request.Please try again later.')
   }
-
-  bindAttach() {
-		const btn = document.querySelector(this.opt.selector)
-		const proto = Object.assign({__proto__: this.__proto__}, this)
-		btn.addEventListener('click', this.attach.bind(proto))
-  }*/
-
 
   __appendFileToBeUploaded (e) {
     const targ = document.querySelectorAll('.attachment-pool-section')
@@ -55,20 +49,122 @@ export default class {
 		el.removeEventListener('change', this.__appendFileToBeUploaded.bind(__proto))
 		el.addEventListener('change', this.__appendFileToBeUploaded.bind(__proto))
   }
+
+  __bindSelectFile () { 
+    const el = document.querySelectorAll('.attachment-recent-checkbox-bidding')
+    const __proto = Object.assign({__proto__: this.__proto__}, this)
+    
+    for(let x of el) {
+      x.removeEventListener('change', this.__enableUploadButton.bind(__proto))
+      x.addEventListener('change', this.__enableUploadButton.bind(__proto))
+    }
+  }
   
+  __enableUploadButton(e) {
+		const btn = document.getElementById(`file-attachment-upload-recent-btn-${this.opt.id}`)
+		const id = e.target.getAttribute('data-resources')
+		const oFilename = e.target.getAttribute('data-original-filename')
+
+		if(id&&e.target.checked) {
+			this.filesToBeUploaded[id] = oFilename
+		}else{
+			delete this.filesToBeUploaded[id]
+		}
+
+		// enable button
+		setTimeout(() => {
+      Object.keys(this.filesToBeUploaded ).length > 0 ? btn.removeAttribute('disabled') : btn.setAttribute('disabled', 'disabled')
+		},10)
+		
+  }
+  
+
+	__showRecent (json) {
+    this.filesToBeUploaded = {}
+    
+		const html = document.createElement('div')
+		html.classList.add('recently-attached')
+		html.innerHTML = `<input type="checkbox" class="attachment-recent-checkbox-bidding" data-resources="${json.id}" data-original-filename="${json.original_filename}"> 
+							<div class="file-icon file-icon-sm" data-type="${json.type}"></div> 
+							<a href="#">${json.original_filename}</a> 
+							<small class="text-muted"> (${json.size}KB&emsp;${json.date_created})</small>`
+		document.querySelector(`#recently-attached-section-${this.opt.id}`).append(html)
+		
+  }
+  
+  __bindAttach() {
+		const btn = document.getElementById(`file-attachment-upload-recent-btn-${this.opt.id}`)
+		const proto = Object.assign({__proto__: this.__proto__}, this)
+		btn.addEventListener('click', this.attach.bind(proto))
+	}
+  
+
+  async recent (opt) {
+    const __serv = (await import('../../services/bidding-attachment-service')).default
+    this.opt = this.opt || opt
+    // get from storage
+    return new __serv().recent(opt).then(data => {
+      data.data.forEach((val, index) => {
+        this.__showRecent(val)
+      })
+    }).then(() => {
+      setTimeout(() => {
+        this.__bindSelectFile()
+        this. __bindAttach()
+      }, 800);
+    })
+	}
+
+  async attach (e) {
+    // disable button first
+    e.target.setAttribute('disabled', 'disabled')
+
+    //payload
+    const __payload = {
+      attachments: this.filesToBeUploaded, 
+      action: 'create', 
+      id: this.opt.id, 
+      token: window.localStorage.getItem('token')
+    }
+    
+
+    const service = (await import('../../services/bidding-attachment-service')).default
+    return new service().attach(__payload).then(data => {
+      if (!data.data) return this._showError()
+      //show in DOM
+      for (var i = 0; i < data.data.length; i++) {
+        const __d = {
+          type: data.data[i].type,
+          original_filename: data.data[i].original_filename,
+          id: data.data[i].id,
+          menus: ['remove']
+        }
+        this.loadAttachments('.attachments-info-section', [__d])
+      }
+				// close dialog
+        document.querySelectorAll('.file-attachment-main-dialog').forEach((val, res) => val.close())
+      
+      setTimeout(() => {
+        // dropdown
+        DropdownLoader.then(loader =>  loader.default('device-dropdown'))
+        e.target.removeAttribute('disabled')
+      },1000)
+    }).catch(err => {
+      this._showError()
+    })
+  }
+
   upload(opt) {
     const __proto = Object.assign({__proto__: this.__proto__}, this)
     this.__bindSelectDeviceFile(opt)
   }
 
-    /**
+  /**
    * Attachment Components
    */
  loadAttachments (target, data) { 
     import('../attachments-item/').then(res => {
       const targ = document.querySelector(target)
-      console.log(targ)
-      console.log(data)
       if (!targ) return 0
       // append files
       data.forEach((val ,index) => {
@@ -76,6 +172,7 @@ export default class {
       })
     })
   }
+
 
   save(id,file,index) { 
     //form data
@@ -106,17 +203,17 @@ export default class {
 				const __payload = {
 					id: request.responseText,
 					type: file.type.split('/')[1],
-					original_filename: file.name,
+          original_filename: file.name,
+          menus: ['remove']
         }
         
 				this.loadAttachments('.attachments-info-section', [__payload])
 				// more settings
 				setTimeout(() => {
-					//const pop = new window.bms.exports.PopupES()
-				//	window.bms.default.dropdown('device-dropdown')	
-					// remove attachments
-					//this.bindRemoveAttachments()
-
+          // dropdown and popup menu
+          DropdownLoader.then(loader =>  new loader.default('device-dropdown'))
+          import('../../components/popup-es').then(loader => new loader('device-dropdown'))
+          
 				},1000)
 					
 			}else{
