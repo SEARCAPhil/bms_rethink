@@ -20,7 +20,7 @@ export default class {
         })
       })
     }
-    import('../../components/popup-es').then(loader => new loader.default())
+    import('../popup-es').then(loader => new loader.default())
   }
 
   render(opt = {}) { 

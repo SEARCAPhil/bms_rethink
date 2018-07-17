@@ -28,13 +28,48 @@ export default class {
       })
     }
 
-     // bind remove action
-     if(opt.menus.indexOf('attach')!=-1) {
+    // bind remove action
+    if(opt.menus.indexOf('attach')!=-1) {
       import('./actions/attach').then(loader => {
         return new loader.default({
           root: this.template,
           selector: '.file-attachment-dialog-btn',
           id: opt.id
+        })
+      })
+    }
+
+
+    // bind remove action
+    if(opt.menus.indexOf('send')!=-1) {
+      import('./actions/send').then(loader => {
+        return new loader.default({
+          root: this.template,
+          selector: '.send-bidding-modal-btn',
+          id: opt.id,
+        })
+      })
+    }
+    
+
+    // return
+    if(opt.menus.indexOf('return')!=-1) {
+      import('./actions/return').then(loader => {
+        return new loader.default({
+          root: this.template,
+          selector: '.return-bidding-modal-btn',
+          id: opt.id,
+        })
+      })
+    }
+
+    // resend
+    if(opt.menus.indexOf('resend')!=-1) {
+      import('./actions/resend').then(loader => {
+        return new loader.default({
+          root: this.template,
+          selector: '.resend-bidding-modal-btn',
+          id: opt.id,
         })
       })
     }
@@ -49,6 +84,7 @@ export default class {
 
     // custom classes
     if(opt.class) this.template.classList.add(...opt.class.split(' '))
+      opt.menus = opt.menus || []
     
     // template
     this.template.innerHTML = `
@@ -56,9 +92,9 @@ export default class {
       <ul class="nav offset-lg-1">
       
         <!-- resend -->
-        ${ opt.menus.indexOf('resend')!=-1 ?
+        ${ opt.menus.indexOf('return')!=-1 ?
           `<li class="nav-item">
-            <a class="nav-link resend-bidding-modal-btn" href="#" data-target="#general-modal" data-popup-toggle="open">
+            <a class="nav-link return-bidding-modal-btn" href="#" data-target="#general-modal" data-popup-toggle="open">
               <i class="material-icons md-18">keyboard_return</i> Return 
             </a>
           </li>` : ''
@@ -69,6 +105,15 @@ export default class {
           `<li class="nav-item">
             <a class="nav-link send-bidding-modal-btn"  href="#" data-target="#general-modal" data-popup-toggle="open">
               <i class="material-icons md-18">send</i> Send 
+            </a>
+          </li>` : ''
+        }
+
+        <!-- re-send -->
+        ${ opt.menus.indexOf('resend')!=-1 ?
+          `<li class="nav-item">
+            <a class="nav-link resend-bidding-modal-btn"  href="#" data-target="#general-modal" data-popup-toggle="open">
+              <i class="material-icons md-18">send</i> Resend 
             </a>
           </li>` : ''
         }
@@ -112,7 +157,7 @@ export default class {
         <!--print -->
         ${ opt.menus.indexOf('print')!=-1 ?
           `<li class="nav-item">
-            <a class="nav-link nav-link remove-bidding-modal-btn print-btn device-dropdown"  data-device-dropdown="print-menu-drop" href="${ApiConfig.default.url}/bidding/reports/bidding_request.php?id=${opt.id}" target="_blank">
+            <a class="nav-link nav-link  print-btn" href="${ApiConfig.default.url}/bidding/reports/bidding_request.php?id=${opt.id}" target="_blank">
               <i class="material-icons md-18">print</i> 
             </a>
           </li>` : ''

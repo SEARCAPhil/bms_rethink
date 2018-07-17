@@ -40,7 +40,6 @@ export default class {
 
   loadRemoveAttachments (e) {
     import('../../remove-conf-modal').then(res => {
-
       const __proto = Object.assign({ __proto__: this.__proto__ }, this)
       // DOM
       const __target = document.querySelector('#general-modal  > .content > .body')

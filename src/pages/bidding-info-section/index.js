@@ -73,6 +73,29 @@ class template {
     return template
   }
 
+  async __bindListeners (loader, template) { 
+    const __proto = Object.assign({ __proto__: this.__proto__ }, this)
+
+    // request for approval
+    if (this.__info.status == 1 && loader.isCBAAsst()) {
+      const __serv = (await import('../../components/bidding-info-menu/actions/approve')).default
+      return new __serv({ id: this.__info.id, selector: '#btn-approve'})
+      
+    }
+
+    
+    if (this.__info.status == 3  && loader.isCBAAsst()) {
+      // close request
+      const __serv = (await import('../../components/bidding-info-menu/actions/close')).default
+      const __c = new __serv({ id: this.__info.id, selector: '#btn-close'})
+      // failure of bidding
+      const __servF = (await import('../../components/bidding-info-menu/actions/fail')).default
+      const __f = new __servF({ id: this.__info.id, selector: '#btn-fail'})
+    }
+
+
+  }
+
   /**
    * Get bidding information via built-in bidding services
    * 
@@ -105,6 +128,11 @@ class template {
    */
   async getAttachments() { 
     const loadAttachments = (await import('./actions')).loadAttachments
+    // prevent deletion for already closed bidding
+    if(this.__info.status == 5) this.__info.attachments.map(t => {
+      return t.locked = true
+    })
+
     return loadAttachments('.attachments-info-section', this.__info.attachments)
   }
 
@@ -139,7 +167,10 @@ class template {
    */
   setPayload (loader, status) {
     this.__payload = {}
-    this.__payload_menu = { menus: [] }
+    this.__payload_menu = { 
+      id: this.__params.id,
+      menus: [], 
+    }
 
     // draft (For all users)
     if (this.__info.status == 0) {
@@ -151,25 +182,32 @@ class template {
     } 
 
     // for regular USER
-    if (this.__info.status == 1 && !loader.isCBAAsst()) this.__payload = status.showBiddingReqApprove(this.__info.id)
+    if (this.__info.status == 1 && !loader.isCBAAsst()) this.__payload = status.showBiddingReqSent(this.__info.id)
     
     // for CBA Asst /APPROVE
-    if (this.__info.status == 1 && loader.isCBAAsst()) this.__payload = status.showBiddingReqApprove(this.__info.id)
+    if (this.__info.status == 1 && loader.isCBAAsst()) {
+      this.__payload_menu = {
+        id: this.__params.id,
+        menus: ['return', 'attach', 'update', 'sign', 'particulars'],
+      }
 
+      this.__payload = status.showBiddingReqApprove(this.__info.id)
+    } 
+    
     // for both
     // must change to send to resend
-    if (this.__info.status == 2) this.__payload = status.showBiddingReqReturned(this.__info.id)
+    if (this.__info.status == 2) (this.__payload_menu.menus = ['resend', 'attach', 'update', 'print', 'sign', 'particulars']) | (this.__payload = status.showBiddingReqReturned(this.__info.id))
 
-    if (this.__info.status == 3  && loader.isCBAAsst()) this.__payload = status.showBiddingApprove(this.__info.id)
+    if (this.__info.status == 3  && loader.isCBAAsst()) (this.__payload_menu.menus = ['resend', 'attach', 'print', 'sign', 'particulars']) |  (this.__payload = status.showBiddingApproved(this.__info.id))
 
     // for GSU
-    // enale all commands
-    if (this.__info.status == 3  && loader.isGSU()) this.__payload = status.showBiddingApproveReadOnly(this.__info.id)
+    // enable all commands
+    if (this.__info.status == 3  && (loader.isGSU() || !loader.isCBAAsst())) this.__payload = status.showBiddingApproveReadOnlyStandard(this.__info.id)
 
     // closed
     if (this.__info.status  == 5) { 
       this.__payload = status.showBiddingClosed(this.__info.id) 
-      this.__payload_menu = {}
+      this.__payload_menu.menus = ['print']
     }
 
     // disapproved
@@ -187,16 +225,21 @@ class template {
    */
   getStatus(payload) {
     // render
-    if (this.__info.status > 0) {
-      infoStatus.then(res => { 
-        return new res.default(this.__payload).then(html => { 
-          const a = (!document.querySelector('#bidding-status')) ? document.querySelector('#detail-info-menu-status').prepend(html) : document.querySelector('#bidding-status').replaceWith(html)
+    return new Promise((resolve, reject) => {
+      if (this.__info.status > 0) {
+        infoStatus.then(res => { 
+          return new res.default(this.__payload).then(html => { 
+            const a = (!document.querySelector('#bidding-status')) ? document.querySelector('#detail-info-menu-status').prepend(html) : document.querySelector('#bidding-status').replaceWith(html)
+            resolve(html)
+          })
         })
-      })
-    } else {
-      // remove
-      const a = (!document.querySelector('#bidding-status')) ? document.querySelector('#detail-info-menu-status').innerHTML = '' : document.querySelector('#bidding-status').innerHTML = ''
-    }
+      } else {
+        // remove
+        const a = (!document.querySelector('#bidding-status')) ? document.querySelector('#detail-info-menu-status').innerHTML = '' : document.querySelector('#bidding-status').innerHTML = ''
+        resolve({})
+      }
+      
+    })
   }
 
 
@@ -205,8 +248,10 @@ class template {
     const popupes = import('../../components/popup-es')
     const popupesStyle = import('../../components/popup-es/style')
 
+
     // set menu and payload based on user privilege
     return await import('../../utils/privilege-loader').then(loader => {
+      this.privilegeLoader = loader
       this.setPayload(loader, status)
       this.showMenu(this.__payload_menu).then(() => {
         console.log('show')
@@ -223,7 +268,9 @@ class template {
         })
       })
       
-      this.getStatus(this.__payload)
+      this.getStatus(this.__payload).then(temp => {
+        this.__bindListeners(loader, temp)
+      })
     })
   }
 }

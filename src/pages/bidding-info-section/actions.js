@@ -84,7 +84,7 @@ const getBiddingList = (opt = {}) => {
       targ.innerHTML = ''
       // append files
       data.forEach((val ,index) => {
-        val.menus = ['remove']
+        if(!val.locked) val.menus = ['remove']
         targ.append(new res.default(val))
       })
       setTimeout(() => {

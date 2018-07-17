@@ -46,18 +46,7 @@ export default class{
 	}
 
 	status(opt){
-		return new Promise((resolve, reject) => {
-			Network.then(net => {
-				fetch(`${net.default.url}/bidding/status.php/?timestamp=${this.timestamp}`,
-				{
-					method: 'POST',
-					body: JSON.stringify(opt),
-				})
-				.then(res => {
-					resolve(res.json())
-				})
-			})
-		})
+		return this.__postData(`/bidding/status.php/?timestamp=${this.timestamp}`, opt)
 	}
 
 	create(opt) {
@@ -81,6 +70,10 @@ export default class{
 
 	signatories(opt = {}){
 		return this.__postData('/bidding/signatories.php/?timestamp=${this.timestamp}', opt)
+	}
+
+	send (opt) {
+		return this.__postData(`/bidding/collaborators/?timestamp=${this.timestamp}`, opt)	
 	}
 
 	/*create(opt){

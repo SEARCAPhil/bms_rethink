@@ -77,7 +77,7 @@ export default class{
 		})
 	}
 	_findPopupHandler(selector){
-		document.querySelectorAll(selector).forEach((el,index)=>{ console.log(el)
+		document.querySelectorAll(selector).forEach((el,index)=>{ 
 			let target = el.getAttribute(this.targetSelector)
 			this._findTargetPopup(target).then((e)=>{
 				el.removeEventListener('click',e.show)

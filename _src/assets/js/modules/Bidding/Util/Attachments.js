@@ -250,7 +250,7 @@ export class Attachments{
 				//remove cancel
 				document.getElementById('modal-dialog-close-button').addEventListener('click',()=>{
 		
-					document.getElementById('bidding-modal').close()
+					document.getElementById('general-modal').close()
 					
 				})
 

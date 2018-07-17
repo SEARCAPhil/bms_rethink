@@ -34,7 +34,7 @@ const showBiddingReqApprove = (id) => {
     id,
     icon: '<i class="material-icons" style="color:#ffb80c;">bookmark</i>',
     message: 'This Bidding request is for approval. Make sure you review this request before making any further actions.',
-    actions: `<button class="btn btn-danger btn-sm approve-btn" status= "3" data-target="#bidding-modal" data-popup-toggle="open">Approve</button>`
+    actions: `<button class="btn btn-danger btn-sm approve-btn" id="btn-approve" status= "3" data-target="#general-modal" data-popup-toggle="open">Approve</button>`
   }
 }
 
@@ -45,7 +45,7 @@ const showBiddingReqApprove = (id) => {
 const showBiddingReqReturned = (id) => {
     return {
       id,
-      icon: '<i class="material-icons" style="color:#ffb80c;">bookmark</i>',
+      icon: '<i class="material-icons text-danger">keyboard_return</i>',
       message: 'This Bidding request was returned. Make sure that all details are complete and follows the bidding request standard procedures',
       actions: ``
     }
@@ -72,11 +72,30 @@ const showBiddingFailed = (id) => {
   return {
     id,
     icon: '<i class="material-icons" style="color:#ffb80c;">lock</i>',
-    message: 'This bidding request has been closed due to failure of bidding. For more info. please contact the Administrator',
+    message: 'This bidding request has been closed due to <span class="badge badge-danger">failure of bidding</span>. For more info, please contact the Administrator',
     actions: ``
   }
 }
 
+
+/**
+ * Shows when the request was APPROVED
+ * 
+ * @function showBiddingApprove
+ */
+const showBiddingApproved = (id) => {
+  return {
+    id,
+    icon: '<i class="material-icons" style="color:#8bc34a;">check_circle</i>',
+    message: 'This Bidding request was approved. You may now close this bidding request',
+    actions: `<span id="failed-btn-section">
+                <button class="btn btn-dark btn-sm" id="btn-fail" data-target="#general-modal" data-popup-toggle="open">Failed</button>
+              </span>
+              <span id="close-btn-section">
+                <button class="btn btn-danger btn-sm" id="btn-close" data-target="#general-modal" data-popup-toggle="open">Close</button>
+              </span>`
+  }
+}
 
 /**
  * @function showBiddingDisapproved
@@ -105,4 +124,19 @@ const showBiddingApproveReadOnly = (id) => {
   }
 }
 
-export { showBiddingReqSent, showBiddingReqApprove, showBiddingReqReturned, showBiddingClosed, showBiddingFailed, showBiddingDisapproved, showBiddingApproveReadOnly }
+/**
+ * Shows when the request was APPROVED
+ * For non-admin access
+ * 
+ * @function showBiddingApproveReadOnlyStandard
+ */
+const showBiddingApproveReadOnlyStandard = (id) => {
+  return {
+    id,
+    icon: '<i class="material-icons" style="color:#8BC34A;">check_circle</i>',
+    message: 'This Bidding request was approved and reviewed.',
+    actions: ` `
+  }
+}
+
+export { showBiddingReqSent,  showBiddingReqApprove, showBiddingReqReturned, showBiddingClosed, showBiddingFailed, showBiddingDisapproved, showBiddingApproveReadOnly, showBiddingApproveReadOnlyStandard, showBiddingApproved }
