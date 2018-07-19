@@ -1,6 +1,5 @@
 import style from './style'
 import ApiConfig from '../../config/api'
-import Actions from './actions/remove'
 
 const fileIconCss = import('../../assets/css/fileicon.css')
 

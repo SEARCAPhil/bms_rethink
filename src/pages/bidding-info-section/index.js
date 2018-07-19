@@ -3,7 +3,6 @@ const infoStatus = import('../../components/bidding-status')
 const info = import('../../services/bidding-list-service')
 const statusMessage = import('../../components/status-message')
 
-
 class template {
   constructor (params) {
     this.__params = params
@@ -32,7 +31,7 @@ class template {
         <!-- attachment upload preview -->
         <div class="col-lg-11 col-sm-12 offset-lg-1 row attachment-pool-section" style="padding-top:10px"></div>
 
-        <article class="col-10 offset-lg-1 mt-5">
+        <article class="col-10 offset-lg-1 mt-5" id="bidding-info-details">
           <!-- info -->
           <h3><b>Bidding Request <span id="bidding-number-info">#${this.__info.id}</span></b></h3>
           <span class="text-danger">Bidding Exemption : ${parseInt(this.__info.excemption) ? 'Yes' : 'No'}</span><br/>
@@ -238,7 +237,7 @@ class template {
         const a = (!document.querySelector('#bidding-status')) ? document.querySelector('#detail-info-menu-status').innerHTML = '' : document.querySelector('#bidding-status').innerHTML = ''
         resolve({})
       }
-      
+
     })
   }
 
@@ -247,7 +246,6 @@ class template {
     const status = await statusMessage
     const popupes = import('../../components/popup-es')
     const popupesStyle = import('../../components/popup-es/style')
-
 
     // set menu and payload based on user privilege
     return await import('../../utils/privilege-loader').then(loader => {

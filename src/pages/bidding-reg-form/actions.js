@@ -15,7 +15,7 @@ const showError = () => {
 /**
  * Submission success
  */
-const showSuccess = () => {
+const showSuccess = (json) => {
   document.getElementById('bid-form-status').innerHTML = ''
   // remove empty message
   if (document.querySelector('.empty-list-message-section')) document.querySelector('.empty-list-message-section').remove()	
@@ -65,7 +65,7 @@ const register = (e) => {
         // append to DOM
         appendItems(document.querySelector('.list-bidding-section'),item)
         // clear and redirect to next step if any
-        return showSuccess()
+        return showSuccess(json)
       }
       // failed
       showError()

@@ -34,9 +34,8 @@ Navigo.then((Navigo) => {
 
       activateList(params.id)
 
-
       // loade Information section
-      return await import('../../pages/bidding-info-section').then(res => { 
+      return import('../../pages/bidding-info-section').then(res => { 
         // template
         const temp = new res.template({id: params.id})
         const template = temp.render()
@@ -49,16 +48,17 @@ Navigo.then((Navigo) => {
           // other content
           temp.setStatus()
  
-        }).then(() => { temp.getAttachments() })
+        }).then(() => { 
+          temp.getAttachments() 
+
+          ParticularsItem.then(res => {
+            const targ = document.querySelector('.particulars-section')
+            targ.append(new res.default())
+          })
+        })
 
         
         /*
-        
-
-        ParticularsItem.then(res => {
-          const targ = document.querySelector('.particulars-section')
-          targ.append(new res.default())
-        })
 
         CustomerReviews.then(res => {
           const targ = document.querySelector('.reviews-section')

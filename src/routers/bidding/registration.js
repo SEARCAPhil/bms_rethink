@@ -51,13 +51,21 @@ Navigo.then((Navigo) => {
         })
       })
     },
-    '/bids/forms/registration/:id/step/2': () => {
+    '/bids/forms/registration/:id/step/2': (params) => {
       showContainer()
       return import('../../pages/bidding-part-form').then(res => {
         const targ = document.querySelector('registration-section')
         targ.classList.add('col', 'col-lg-10')
         targ.innerHTML = '<style>registration-section { height:100vh;overflow-y:auto; } </style>'
         targ.append(res.template)
+
+        // attach service call
+        const __serv = import('../../pages/bidding-part-form/actions')
+        const __target = document.querySelector('form[name="bidding-request-particulars"]')
+        __serv.then(loader => {
+          __target.biddingId = params.id 
+          __target.addEventListener('submit', loader.register)
+        })
       })
     },
     '/bids/forms/registration/:id/step/3': () => {

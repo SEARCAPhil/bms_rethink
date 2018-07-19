@@ -52,6 +52,12 @@ Navigo.then((Navigo) => {
           ActionsInfo.getBiddingList()
         })
       }
+
+      // spinner
+      import('../components/app-spinner').then(loader => {
+        return new loader.default().show({target: '#bidding-info-details'}).then(t => t.template.show())
+      })
+    
       import('./bidding/info')
     },
     '/bids/forms/registration/*': async (params) => {   
@@ -65,6 +71,17 @@ Navigo.then((Navigo) => {
       }
 
       import('./bidding/registration')
+    },
+    '/bids/requirements/:id':  async (params) => {
+      let ActionsInfo = await import('../pages/bidding-info-section/actions')
+      // load list on page refresh or later
+      if (!document.querySelector('.list-bids-container')) {
+        Menuselector.then(loader => { new loader.default().active('bids-menu-list-all') })
+        ActionsInfo.loadListSection().then(() => {
+          ActionsInfo.getBiddingList()
+        })
+      }
+      import('./bidding/requirements')
     }
   }).resolve()
 })
