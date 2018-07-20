@@ -34,17 +34,12 @@ export default class{
 			})
 		})
 	}
-	
-	view(opt) {
-    return this.__getData(`/bidding/requirements/?id=${opt.id}&token=${opt.token}&timestamp=${this.timestamp}`)
-	}
-	
-	deadline(opt) {
-		return this.__postData(`/bidding/requirements/deadline.php/?timestamp=${this.timestamp}`, opt)
-	}
-
-	invite(opt) {
-		return this.__postData(`/bidding/requirements/recepients/?timestamp=${this.timestamp}`, opt)
-	}
   
+  list(opt) {
+    return this.__getData(`/suppliers/?status=${opt.filter}&page=${opt.page}`)
+  }
+	
+	search(opt) {
+		return this.__getData(`/suppliers/?&page=${opt.page}&param=${opt.param}&search=true`)
+	}
 }

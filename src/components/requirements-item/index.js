@@ -8,6 +8,7 @@ export default class {
   render(opt = {}) { 
     this.template = document.createElement('div')
     this.template.classList.add('requirement-item')
+    this.__funds = opt.funds.map(val => `<span class="badge badge-dark">${val.fund_type} - ${val.cost_center} - ${val.line_item}</span>`)
 
     // custom classes
     if(opt.class) this.template.classList.add(...opt.class.split(' '))
@@ -15,15 +16,16 @@ export default class {
     // template
     this.template.innerHTML = `
       <style>${style.toString()}</style>
-        <b><a href="#/bids/requirements/66"><u>HP Eliteone800</u></a></b> 
-        <span>(25 Unit)</span>
-        <span class="badge badge-dark">OpF - ITSU - Capital Expenditures</span>
+        <b><a href="#/bids/requirements/${opt.id}"><u>${opt.name}</u></a></b> 
+        <span>(${opt.quantity} ${opt.unit})</span>
+        ${this.__funds}
         
-        <span class="" style="color:#ffb80c;">
+        ${opt.awarded ? `<span class="" style="color:#ffb80c;">
           <i class="material-icons md-18">star</i> 
           <span>Awarded</span>
-        </span>
-        <span class="float-right text-danger">PHP 1,000,000</span>
+        </span>` : ''}
+        
+        <span class="float-right text-danger">${opt.currency} ${opt.amount}</span>
       `
 
     // start rendering

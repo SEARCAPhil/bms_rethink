@@ -4,7 +4,6 @@ const ScriptLoader = import('../../utils/script-loader')
 const DropdownLoader = import('../../utils/dropdown-loader')
 const Menuselector = import('../../utils/menu-selector')
 const BiddingServ = import('../../services/bidding-list-service')
-const ParticularsItem = import('../../components/particulars-item')
 const CustomerReviews = import('../../components/customer-reviews')
 
 // change list to active
@@ -49,12 +48,10 @@ Navigo.then((Navigo) => {
           temp.setStatus()
  
         }).then(() => { 
-          temp.getAttachments() 
+          temp.getAttachments()
+          temp.getParticulars() 
 
-          ParticularsItem.then(res => {
-            const targ = document.querySelector('.particulars-section')
-            targ.append(new res.default())
-          })
+         
         })
 
         

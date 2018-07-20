@@ -26,7 +26,15 @@ class template {
   }
 
   async __bindListeners (loader, template) { 
-  
+    const __proto = Object.assign({ __proto__: this.__proto__ }, this)
+
+    // request for approval
+    if (loader.isCBAAsst()) {
+      document.querySelector('.file-attachment-requirement-dialog-btn').addEventListener('click', async () => {
+        const __serv = (await import('../../components/requirement-attachments-dialog')).default
+        return new __serv({ id: this.__info.id, selector: '.file-attachment-requirement-dialog-btn', target: 'body'})
+      })
+    }
   }
 
   __loadPopup () {
@@ -66,6 +74,29 @@ class template {
     }
   }
 
+  /**
+   * Attachment Components
+   */
+  async getAttachments() { 
+    const loadAttachments = (await import('./actions')).loadAttachments
+    // prevent deletion for already closed bidding
+    if(this.__info.status == 5) this.__info.attachments.map(t => {
+      return t.locked = true
+    })
+
+    return loadAttachments('#attachments-requirements-info-section', this.__info.attachments)
+  }
+
+
+  /**
+   * Attachment Components
+   */
+  async getAwardees() { 
+    const loadAwardees = (await import('./actions')).loadAwardees
+    return this.__info.awardees.length ? (loadAwardees('#awardees-section-list', this.__info.awardees)) | (document.getElementById('awardees-section').classList.remove('hide')) : ''
+  }
+
+
 
   /**
    * Return template as HTMLObject to be rendered in DOM
@@ -90,7 +121,7 @@ class template {
    // this.__info.specs.forEach(el,)
 
     // template settings
-    template.setAttribute('style', 'background:#fff;margin-top:50px;position:relative;box-shadow:0px 0px 10px rgba(200,200,200,0.4);height:100vh;overflow-y:auto;')
+    template.setAttribute('style', 'background:#fff;margin-top:50px;position:relative;box-shadow:0px 0px 10px rgba(200,200,200,0.4);height:100vh;overflow-y:auto;padding-bottom:200px;')
     template.classList.add('col-lg-8')
     template.id = 'requirement-container'
     template.innerHTML = `
@@ -126,7 +157,7 @@ class template {
           <div class="hide" id="awardees-section">
               <hr/>
               <b>Winning Bidder(s)</b>
-              <section class="row" id="awardees-section-list"></section>  
+              <section id="awardees-section-list"></section>  
           </div>
         </small>
         <hr/>	
@@ -176,11 +207,13 @@ class template {
     this.__payload = {}
     this.__payload_menu = {
       id: this.__params.id,
+      bidding_id: this.__info.bidding_id,
       menus: ['back']
     }
 
     if(this.__info.awardees.length) this.__payload = status.showAwardedStatus()
     if(this.__info.awardees.length && loader.isCBAAsst()) this.__payload_menu.menus = ['back', 'attach', 'winner']
+    if(!this.__info.awardees.length && loader.isCBAAsst()) this.__payload_menu.menus = ['back', 'attach', 'winner', 'deadline', 'invite']
   }
 
 
@@ -193,7 +226,8 @@ class template {
     // render
     return infoStatus.then(res => {
       return new Promise((resolve, reject) => {
-        return new res.default(this.__payload).then(html => { 
+        return new res.default(this.__payload).then(html => {
+          if(!Object.keys(this.__payload).length) return resolve() 
           const __targ = document.querySelector('#requirement-menu-status')
           __targ.innerHTML = ''
           __targ.append(html)
@@ -247,20 +281,20 @@ class template {
         }`
         const __targ = document.getElementById('bidding-status')
         if(this.__info.awardees.length) __targ.append(__styl) | __targ.classList.add('congrats-banner')
+      })
 
-        // get recepients
-        import('../../components/requirement-recepient-item').then(loader => {
-          const __recSection = document.querySelector('.attachment-recepients-section')
-          this.__info.recepients.forEach((val, index) => {
-            __recSection.append(new loader.default({
-              id: val.id,
-              name: val.name,
-            }))
-          })
-          
-        }).then(() => {
-          this.__loadAdditionalComponents() 
+      // get recepients
+      import('../../components/requirement-recepient-item').then(loader => {
+        const __recSection = document.querySelector('.attachment-recepients-section')
+        this.__info.recepients.forEach((val, index) => {
+          __recSection.append(new loader.default({
+            id: val.id,
+            name: val.name,
+          }))
         })
+        
+      }).then(() => {
+        this.__loadAdditionalComponents() 
       })
     })
   }

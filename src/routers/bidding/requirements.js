@@ -19,13 +19,12 @@ Navigo.then((Navigo) => {
         display.default(['#requirements-container'], 'block')
       })  
 
-      // loade Information section
-      return import('../../pages/bidding-req-section').then(res => { 
+      // load Information section
+      import('../../pages/bidding-req-section').then(res => { 
         // template
         const temp = new res.template({id: params.id})
         const template = temp.render()
         template.then(html => { 
-          console.log(html)
           // DOM
           const reqSec = document.querySelector('requirement-section') || document.querySelector('#requirement-container')
           if(reqSec) reqSec.replaceWith(html) 
@@ -34,10 +33,23 @@ Navigo.then((Navigo) => {
           temp.setStatus()
  
         }).then(() => { 
-          
+          temp.getAttachments()
+          temp.getAwardees() 
         })
 
        
+      })
+
+      // load proposal section
+      return import('../../pages/requirement-proposal-section').then(res => {
+        // template
+        const temp = new res.template({id: params.id})
+        const template = temp.render()
+        template.then(html => { 
+          // DOM
+          const reqSec = document.querySelector('proposal-section') || document.querySelector('#requirement-proposal-container')
+          if(reqSec) reqSec.replaceWith(html) 
+        })
       })
     }
   }).resolve()

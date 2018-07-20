@@ -33,7 +33,7 @@ export default class {
               <i class="material-icons md-18 device-dropdown" data-device-dropdown="dropdown-req-recepients-${opt.id}" data-resources="${opt.id}">arrow_drop_down</i>
               <div class="dropdown-section float-right" id="dropdown-req-recepients-${opt.id}">
                 <ul class="list-group list-group-flush" style="font-size:14px;">
-                  <li class="list-group-item"><a data-target="#bidding-modal" data-popup-toggle="open" href="#" class="remove-receipients-modal" data-resources="${opt.id}">Cancel Invitation</a></li>
+                  <!--<li class="list-group-item"><a data-target="#bidding-modal" data-popup-toggle="open" href="#" class="remove-receipients-modal" data-resources="${opt.id}">Cancel Invitation</a></li>-->
                   <li class="list-group-item"><a href="${ApiConfig.url}/bidding/reports/price_inquiry_per_item.php?id=${opt.id}&token=${window.localStorage.getItem('token')}" target="_blank" data-resources="${opt.id}"><div class="file-icon file-icon-sm" data-type="pdf"></div> Price Inquiry</a></li>
                   <li class="list-group-item"><a href="${ApiConfig.url}/bidding/reports/price_inquiry.php?id=${opt.id}&token=${window.localStorage.getItem('token')}" target="_blank" data-resources="${opt.id}"><div class="file-icon file-icon-sm" data-type="pdf"></div> See Related</a></li>
                 <ul>

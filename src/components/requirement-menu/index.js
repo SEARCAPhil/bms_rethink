@@ -6,7 +6,37 @@ export default class {
   }
 
   bindListeners (opt) {
+    // deadline
+    if(opt.menus.indexOf('deadline')!=-1) {
+      import('./actions/deadline').then(loader => {
+        return new loader.default({
+          root: this.template,
+          selector: '.set-deadline-modal-btn',
+          id: opt.id,
+        })
+      })
+    }
 
+    // invitation (QUICK)
+    if(opt.menus.indexOf('invite')!=-1) {
+      import('./actions/invite_quick').then(loader => {
+        return new loader.default({
+          root: this.template,
+          selector: '.send-requirements-modal-btn',
+          id: opt.id,
+        })
+      })
+
+      import('./actions/invite_advanced').then(loader => {
+        return new loader.default({
+          root: this.template,
+          selector: '.send-requirements-selected-modal-btn',
+          id: opt.id,
+          bidding_id: opt.bidding_id,
+        })
+      })
+
+    }
   }
 
   async render(opt) { 
@@ -41,12 +71,12 @@ export default class {
           <div class="dropdown-section float-right" id="invite-menu-drop" style="right:0px;width:200px;">
             <ul class="list-group list-group-flush">
               <li class="list-group-item">
-                <a href="#" onclick="event.preventDefault()" class="nav-link send-requirements-modal-btn" data-target="#bidding-requirements-modal" data-popup-toggle="open">
+                <a href="#" onclick="event.preventDefault()" class="nav-link send-requirements-modal-btn" data-target="#general-modal" data-popup-toggle="open">
                   Quick<br/><small>(Send invitation for this item only)</small>	
                 </a>
               </li>
               <li class="list-group-item">
-                <a href="#" onclick="event.preventDefault()" class="nav-link send-requirements-selected-modal-btn" data-target="#bidding-requirements-modal" data-popup-toggle="open">
+                <a href="#" onclick="event.preventDefault()" class="nav-link send-requirements-selected-modal-btn" data-target="#general-modal" data-popup-toggle="open">
                   Advanced
                 </a>
               </li>
@@ -75,7 +105,7 @@ export default class {
 
       ${ opt.menus.indexOf('deadline')!=-1 ?
         `<li class="nav-item">
-            <a href="#" class="nav-link text-danger set-deadline-modal-btn" data-target="#bidding-requirements-modal" data-popup-toggle="open">
+            <a href="#" class="nav-link text-danger set-deadline-modal-btn" data-target="#general-modal" data-popup-toggle="open">
                 <i class="material-icons md-18">date_range</i> Set deadline
             </a>
         </li>` : ''

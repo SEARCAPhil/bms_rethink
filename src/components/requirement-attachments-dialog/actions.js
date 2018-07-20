@@ -14,7 +14,7 @@ export default class {
   }
 
   __appendFileToBeUploaded (e) {
-    const targ = document.querySelectorAll('.attachment-pool-section')
+    const targ = document.querySelectorAll('.attachment-requirements-pool-section')
 
 		// close dialog
     document.querySelector('.file-attachment-main-dialog').classList.remove('open')
@@ -34,7 +34,8 @@ export default class {
           </div>
 				`
 				// add to file uploader
-				this.save(e.target.opt.id, e.target.files[i], i)	
+        this.save(e.target.opt.id, e.target.files[i], i)	
+        console.log(e.target)
 			}
     })
     
@@ -100,7 +101,7 @@ export default class {
   
 
   async recent (opt) {
-    const __serv = (await import('../../services/bidding-attachment-service')).default
+    const __serv = (await import('../../services/bidding-req-attachment-service')).default
     this.opt = this.opt || opt
     // get from storage
     return new __serv().recent(opt).then(data => {
@@ -128,7 +129,7 @@ export default class {
     }
     
 
-    const service = (await import('../../services/bidding-attachment-service')).default
+    const service = (await import('../../services/bidding-req-attachment-service')).default
     return new service().attach(__payload).then(data => {
       if (!data.data) return this._showError()
       //show in DOM
@@ -139,7 +140,7 @@ export default class {
           id: data.data[i].id,
           menus: ['remove']
         }
-        this.loadAttachments('.attachments-info-section', [__d])
+        this.loadAttachments('#attachments-requirements-info-section', [__d])
       }
 				// close dialog
         document.querySelectorAll('.file-attachment-main-dialog').forEach((val, res) => val.close())
@@ -165,6 +166,7 @@ export default class {
  loadAttachments (target, data) { 
     import('../attachments-item').then(res => {
       const targ = document.querySelector(target)
+      console.log(targ)
       if (!targ) return 0
       // append files
       data.forEach((val ,index) => {
@@ -183,7 +185,7 @@ export default class {
 
     //XHR
 		let request = new XMLHttpRequest();
-		request.open("POST", `${this.__apiConfig.url}/bidding/attachments/`);
+		request.open("POST", `${this.__apiConfig.url}/bidding/requirements/attachments/`);
 
 		request.upload.addEventListener('progress', (e) => {
 			let targ = document.getElementById(`progress-bar-${index}`)
@@ -207,7 +209,7 @@ export default class {
           menus: ['remove']
         }
         
-				this.loadAttachments('.attachments-info-section', [__payload])
+				this.loadAttachments('#attachments-requirements-info-section', [__payload])
 				// more settings
 				setTimeout(() => {
           // dropdown and popup menu
