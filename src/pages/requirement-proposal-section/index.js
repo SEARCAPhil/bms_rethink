@@ -1,12 +1,13 @@
 const infoMenu = import('../../components/requirement-menu')
-const info = import('../../services/bidding-req-service')
+const info = import('../../services/bidding-req-proposal-service')
 const infoStatus = import('../../components/bidding-status')
 const statusMessage = import('../../components/requirement-status')
 
-class template {
-  constructor (params) {
-    this.__params = params
+export default class {
+  constructor (opt) {
+    this.opt = opt
     this.__info = {}
+    return this.render()
   }
 
   __loadPopup () {
@@ -25,6 +26,19 @@ class template {
   
       popupes.then(loader => new loader.default())
   
+  }
+
+  __getList () {
+    info.then(loader => {
+      new loader.default().list({
+        id: this.opt.id,
+        token: window.localStorage.getItem('token'),
+        filter: 'all',
+        page: 1,
+      }).then(res => {
+        console.log(res)
+      })
+    })
   }
 
 
@@ -63,12 +77,8 @@ class template {
       </section>
     </section>`
     this.template = template
+    this.__getList()
     return template
   }
 
 }
-
-
-
-
-export { template }

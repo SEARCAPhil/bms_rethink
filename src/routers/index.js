@@ -103,6 +103,20 @@ Navigo.then((Navigo) => {
       DropdownLoader.then(loader => loader.default('device-dropdown'))
 
       
-    }
+    },
+   	'/inv/*':()=>{
+      // load components
+      loadHeader()
+      loadLeftSidebar().then(() => {
+        Menuselector.then(loader => { new loader.default().active('inv-menu-list') })
+        import('./invitation')
+      })
+      // dropdown
+      DropdownLoader.then(loader => loader.default('device-dropdown'))
+   	},
+    '/logout/' : () => { 
+      return (localStorage.getItem('role') === 'supplier') ? (window.location = `${window.location.origin}${window.location.pathname}cauth.html`) : window.location.hash = '/auth'
+      
+    },
   }).resolve()
 })

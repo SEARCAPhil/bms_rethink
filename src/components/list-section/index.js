@@ -13,7 +13,7 @@ export default `
         </div>
       </div>
       <div class="col col-md-12" data-role="none" style="margin-bottom: 5px;padding:8px;">
-        <a href="#" class="device-dropdown" data-device-dropdown="list-menu-drop" onclick="event.preventDefault();">
+        <a href="#" class="device-dropdown filter-dropdown" data-device-dropdown="list-menu-drop" onclick="event.preventDefault();">
           Filter <i class="material-icons md-18">expand_more</i>
         </a>
 

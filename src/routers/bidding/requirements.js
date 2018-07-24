@@ -43,9 +43,8 @@ Navigo.then((Navigo) => {
       // load proposal section
       return import('../../pages/requirement-proposal-section').then(res => {
         // template
-        const temp = new res.template({id: params.id})
-        const template = temp.render()
-        template.then(html => { 
+        const temp = new res.default({id: params.id})
+        temp.then(html => { 
           // DOM
           const reqSec = document.querySelector('proposal-section') || document.querySelector('#requirement-proposal-container')
           if(reqSec) reqSec.replaceWith(html) 
