@@ -30,7 +30,7 @@ export default class {
 
   __getList () {
     info.then(loader => {
-      new loader.default().list({
+      new loader.default().lists({
         id: this.opt.id,
         token: window.localStorage.getItem('token'),
         filter: 'all',
@@ -41,6 +41,17 @@ export default class {
     })
   }
 
+  __bindListeners () {
+    import('./actions/create').then(loader => {
+      return new loader.default({
+        id: this.opt.id,
+        token: window.localStorage.getItem('token'),
+        selector: '.proposal-reg-dialog-btn',
+      })
+    })
+  }
+
+  
 
   /**
    * Return template as HTMLObject to be rendered in DOM
@@ -53,7 +64,15 @@ export default class {
     <section>
       <style>#requirement-proposal-container { background: #eee!important; padding-top: 100px; }</style>
       <h5>Proposals</h5><hr/>
-
+      <div class="col-12">
+        <center>
+          <p class="text-muted">
+            <i class="material-icons md-48">insert_drive_file</i><br>
+            Submit a good propasal and stand above all other companies!<br><br>
+            <a href="#" class="proposal-reg-dialog-btn" onclick="event.preventDefault();">Submit <i class="material-icons md-18">add_circle</i></a></p>
+        </center>
+        <hr/>
+      </div>
       <section id="proposal-list-section" class="proposal-list-section">
         <menu class="row col-12">
           <div class="col-2">
@@ -78,6 +97,7 @@ export default class {
     </section>`
     this.template = template
     this.__getList()
+    this.__bindListeners()
     return template
   }
 

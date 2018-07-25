@@ -3,7 +3,7 @@ const DisplayStyler = import('../../utils/display-styler')
 const ScriptLoader = import('../../utils/script-loader')
 const DropdownLoader = import('../../utils/dropdown-loader')
 const Menuselector = import('../../utils/menu-selector')
-const BiddingServ = import('../../services/bidding-list-service')
+const Serv = import('../../services/bidding-inv-service')
 const CustomerReviews = import('../../components/customer-reviews')
 
 // change list to active
@@ -24,7 +24,7 @@ Navigo.then((Navigo) => {
 
   appRoute.on({
     '' : () => { },
-    '/inv/:id/info/': async (params) => {
+    '/inv/:id/info/': async (params) => { 
       // change visibility
       DisplayStyler.then(display => {
         display.default(['splash-page', '.welcome-section', '#initial-section'], 'none')
@@ -34,27 +34,28 @@ Navigo.then((Navigo) => {
       activateList(params.id)
 
       // loade Information section
-      return import('../../pages/bidding-info-section').then(res => { 
+      import('../../pages/invitation-info-section').then(res => {
         // template
         const temp = new res.template({id: params.id})
         const template = temp.render()
         template.then(html => { 
   
           // DOM
-          const infMenu = document.querySelector('info-section') || document.querySelector('#bids-info-container')
+          const infMenu = document.querySelector('info-section') || document.querySelector('#inv-info-container')
           if(infMenu) infMenu.replaceWith(html) 
          
           // other content
           temp.setStatus()
  
         }).then(() => { 
-          temp.getAttachments()
-          temp.getParticulars() 
+          //temp.getAttachments()
+          //temp.getParticulars() 
 
          
         })
         
       })
+
     }
   }).resolve()
 })

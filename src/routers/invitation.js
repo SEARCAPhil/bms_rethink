@@ -44,6 +44,7 @@ Navigo.then((Navigo) => {
           __ActionsInfo.list()
         })
       }
+      import('./invitation/info')
     },
   }).resolve()
 })

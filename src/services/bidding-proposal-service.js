@@ -35,12 +35,9 @@ export default class{
 		})
 	}
 	
-	list(opt) {
-    return this.__getData(`/bidding/invitations/?status=${opt.filter}&page=${opt.page}&token=${opt.token}`)
-	}
-
-	view(opt) {
-		return this.__getData(`/bidding/invitations/?id=${opt.id}&token=${opt.token}`)
-	}
+	create(opt) {
+    return this.__postData(`/bidding/proposals/?timestamp=${this.timestamp}`, opt)
+  }
   
+
 }
