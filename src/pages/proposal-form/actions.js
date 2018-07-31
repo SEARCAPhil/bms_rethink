@@ -163,7 +163,7 @@ export default class {
    * Attachment Components
    */
  loadAttachments (target, data) { 
-    import('../attachments-item').then(res => {
+    import('../../components/attachments-item').then(res => {
       const targ = document.querySelector(target)
       if (!targ) return 0
       // append files
@@ -212,7 +212,7 @@ export default class {
 				setTimeout(() => {
           // dropdown and popup menu
           DropdownLoader.then(loader =>  new loader.default('device-dropdown'))
-          import('.././popup-es').then(loader => new loader.default())
+          import('../../components/popup-es').then(loader => new loader.default())
           
 				},1000)
 					

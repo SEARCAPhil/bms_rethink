@@ -21,7 +21,7 @@ export default class {
     const proto = Object.assign({ __proto__: this.__proto__ }, this)
     const stat = document.querySelector('#bidding-status')
 
-    import('../../proposal-attachments-notice-modal').then(loader => { 
+    import('../../../components/proposal-attachments-notice-modal').then(loader => { 
       const __target = document.querySelector('#general-modal > .content > .body')
       __target.innerHTML = loader.template
       __target.querySelector('#modal-dialog-close-button').addEventListener('click', () => document.querySelector('#general-modal').close())
@@ -96,7 +96,7 @@ export default class {
 
 	load (e) {
     const __proto = Object.assign({ __proto__: this.__proto__ }, this)
-    return import('../../save-modal').then(loader => { 
+    return import('../../../components/save-modal').then(loader => { 
       const __target = document.querySelector('#general-modal > .content > .body')
       __target.innerHTML = loader.template
       __target.querySelector('#modal-dialog-send-button').addEventListener('click', this.create.bind(__proto))

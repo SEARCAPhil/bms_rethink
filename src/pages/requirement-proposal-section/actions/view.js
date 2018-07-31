@@ -15,11 +15,12 @@ export default class {
   }
 
 
-  loadDialogPane () {
-    return import('../../proposal-form').then(loader => {
+  loadDialogPane (e) { 
+    e.preventDefault()
+    return import('../../../components/proposal-dialog').then(loader => {
       return new loader.default({
         target: 'body',
-        id: this.opt.id
+        id: e.target.getAttribute('data-resources')
       })
     })
     

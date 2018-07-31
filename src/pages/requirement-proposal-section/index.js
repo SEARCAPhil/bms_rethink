@@ -9,6 +9,34 @@ export default class {
     this.__info = {}
     return this.render()
   }
+  
+    /**
+   * Get bidding information via built-in bidding services
+   * 
+   * @param {int} id 
+   */
+  __getInfo (id) {
+    // fetch details
+    return new Promise((resolve, reject) => {
+      import('../../services/bidding-req-service').then(loader => {
+        const a = new loader.default().view({ id, token: localStorage.getItem('token') }).then(res => {
+          resolve(res[0])
+        }).catch(err => reject(err))
+      })
+    })
+  }
+
+  /**
+   * Assign information to scoped data
+   */
+  async getInfo() {
+    if(!this.__info.id) {
+      await this.__getInfo(this.opt.id).then(data => {
+        this.__info = data
+      })
+    }
+  }
+
 
   __loadPopup () {
 
@@ -36,7 +64,7 @@ export default class {
         filter: 'all',
         page: 1,
       }).then(res => {
-        console.log(res)
+        this.showProposals('.proposal-list-section > ul' , res)
       })
     })
   }
@@ -49,20 +77,98 @@ export default class {
         selector: '.proposal-reg-dialog-btn',
       })
     })
+
   }
 
-  
+  showProposals (target, data, isEmpty = false) { 
+    let __targ = this.template.querySelectorAll(target)
+
+    // clear proposal list section
+    if(isEmpty) __targ.forEach((el, index) => { el.innerHTML ='' })
+
+
+    data.forEach((val, index) => {
+      let html = document.createElement('li')
+      let status = ''
+      html.classList.add('nav-item', 'col-12')
+      html.setAttribute('data-resources', val.id)
+      html.style = 'border-bottom:1px solid #ccc;padding-top:15px;padding-bottom: 5px;'
+      html.id = val.id
+
+      
+      if (val.status == 0) {
+        status = `<br/><span class="text-danger" data-resources="${val.id}"><i class="material-icons md-12">drafts</i> DRAFT</span>`
+      }
+
+      if (val.status == 1 || val.status == 5) {
+        status = `<br/><span class="text-success" data-resources="${val.id}"><i class="material-icons md-12">check</i> Sent</span>`
+      }
+
+
+      if (val.status == 2) {
+        status = `<br/><span class="text-danger" data-resources="${val.id}"><i class="material-icons md-12">warning</i> Requesting changes</span>`
+      }
+
+      if (val.status ==3) {
+        status = `<br/><span data-resources="${val.id}" style="color:#ffb80c;"><i class="material-icons">star</i> AWARDED</span>`
+        // show won status
+       //// showWon()
+        // add medal icon
+        //const img = document.createElement('img')
+        //img.src = 'assets/img/trophy.png'
+        //img.style.width = '30px'
+        //document.querySelector('.req-name').append(img)
+      }
+
+      html.innerHTML = `
+        <a href="#" class="proposal-dialog-btn row" data-resources="${val.id}">
+            <div class="col-3"  data-resources="${val.id}">
+                <div class="text-center" data-resources="${val.id}" style="float:left;width:35px;height:35px;border-radius:50%;margin-right:10px;overflow:hidden;background:#42403c;color:#fff;padding-top:5px" id="image-header-section"  data-resources="${val.id}">${val.username.substr(0,2).toUpperCase()}</div>
+            </div>
+            <div class="col-7"  data-resources="${val.id}">
+              <section data-resources="${val.id}">
+                <small>
+                  <p data-resources="${val.id}">
+                    ${val.username}<br/>
+                    <span class="text-muted">${val.date_created}</span>
+                    ${status}
+                  </p>
+                </small>
+              </section>
+            </div>
+        </a>`
+        
+      // insert to DOM
+      __targ.forEach((el, index) => {
+        el.append(html)
+      })
+    })
+
+    setTimeout(() => {
+      import('./actions/view').then(loader => {
+        return new loader.default({
+          id: this.opt.id,
+          token: window.localStorage.getItem('token'),
+          selector: '.proposal-dialog-btn',
+        })
+      })
+    }, 1000)
+
+  }
 
   /**
    * Return template as HTMLObject to be rendered in DOM
    */
   async render () {
+
+    this.__info = await this.__getInfo(this.opt.id)
     const template = document.createElement('section')
-    template.classList.add('col-lg-2')
+
+    template.classList.add('col-lg-3')
     template.id = 'requirement-proposal-container'
     template.innerHTML = `
     <section>
-      <style>#requirement-proposal-container { background: #eee!important; padding-top: 100px; }</style>
+      <style>#requirement-proposal-container { background: #eee!important; padding-top: 100px; padding-bottom: 100px; height: 100vh; overflow-x:hidden; overflow-y:auto; border-left: 1px solid #ccc; }</style>
       <h5>Proposals</h5><hr/>
       <div class="col-12">
         <center>

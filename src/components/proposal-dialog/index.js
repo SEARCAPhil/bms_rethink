@@ -7,88 +7,6 @@ export default class {
   
   }
 
-  __bindListeners () {
-    this.template.querySelector(`#file-attachment-main-dialog-cancel-btn-${this.opt.id}`).addEventListener('click', () => {
-      document.querySelector(`#file-attachment-main-dialog-${this.opt.id}`).close()
-    })
-  }
-
-  
-  __autoComputeTotalAmount (quantity) {
-    const targ = document.querySelector('#proposal-form-amount-per-item:not(.event-binded)')
-    const totalTarg = document.querySelector('#proposal-form-amount')
-  
-    if (targ) {
-      targ.classList.add('event-binded')
-      targ.addEventListener('keyup', () => {
-        const total = (targ.value*quantity)
-        totalTarg.value = total
-      })
-    } 
-  }
-
-  __cancelSpecsInput  (e)  {
-    const __proto = Object.assign({__proto__: this.__proto__}, this)
-    const val = e.target.value
-    const id = e.target.id
-  
-    let targ = document.getElementById(`orig-req-val-${id}`)
-    targ.innerHTML = val
-  
-    // change link
-    let btn = document.createElement('a')
-    btn.href = '#'
-    btn.setAttribute('onclick', 'event.preventDefault()')
-    btn.setAttribute('data-resources', id)
-    btn.setAttribute('data-resources-val', val)
-    btn.textContent = 'change'
-    btn.addEventListener('click', this.__changeEventSpecsInput.bind(__proto))
-  
-    e.target.replaceWith(btn)
-  }
-  
-  __changeEventSpecsInput (e) { console.log(e)
-    const __proto = Object.assign({__proto__: this.__proto__}, this)
-    const id = e.target.getAttribute('data-resources')
-    const origValue = e.target.getAttribute('data-resources-val')
-    const origEl = e.target
-    let targ = document.getElementById(`orig-req-val-${id}`)
-    targ.innerHTML = `<input type="text" style="width:250px;" placeholder="${origValue}" class="specs-input-section-value" data-resources="${id}"/>`
-  
-    let link = document.createElement('a')
-    link.href = '#'
-    link.setAttribute('onclick','event.preventDefault();')
-    link.textContent = 'cancel'
-    link.id = id
-    link.value = origValue
-    link.setAttribute('data-resources', id)
-    link.setAttribute('data-resources-val', origValue)
-    link.addEventListener('click', this.__cancelSpecsInput.bind(__proto))
-    
-    e.target.replaceWith(link)
-  }
-
-  __addOtherSpecsField () {
-    let targ = document.getElementById('specs-other-section')
-  
-    let sec = document.createElement('section')
-  
-    sec.innerHTML = `
-      <span class="row specs-input-section specs-input-section-others " style="margin-top: 15px;">
-         <div class="col-lg-4 col-md-4">
-            <input type="text" class="other-req-name-fields specs-input-section-name form-control" placeholder="name"/>
-          </div>
-          <div class="col-lg-8 col-md-8">
-            <input type="text" class="other-req-value-fields specs-input-section-value form-control" placeholder="value"/>
-            <small class="orig-req-menu">
-              <a href="#" onclick="event.preventDefault();this.parentNode.parentNode.parentNode.remove()">remove</a>
-            </small>
-          </div>
-  
-      </span>
-    `
-    targ.append(sec)
-  }
   
   loadPopup () {
     
@@ -108,11 +26,32 @@ export default class {
  
   }
 
+  /**
+   * Attachment Components
+   */
+  loadAttachments (target, data) { 
+    import('../proposal-attachments-item').then(res => {
+      const targ = document.querySelector(target)
+      if (!targ) return 0
+      
+      // append files
+      data.forEach((val ,index) => { 
+        val.menus = ['remove']
+        // class
+        val.class = "col-lg-12 col-12"
+        targ.append(new res.default(val))
+      })
+      import('../../utils/dropdown-loader').then(loader =>  loader.default('device-dropdown'))
+    })
+  }
+
+
   async loadDialog () { 
     const __proto = Object.assign({__proto__: this.__proto__}, this)
-    const dialog = (await import('../dialog-pane')).default
-
+    const dialog = (await import('../../components/dialog-pane')).default
     this.__info = await this.__getInfo(this.opt.id)
+
+    //this.__info = await this.__getInfo(this.opt.id)
     return new dialog(this.opt).then(res => {
       // open dialog pane
       res.open()
@@ -120,83 +59,9 @@ export default class {
 
       // attach to DOM
       const sec = document.querySelector(`#${res.id} > .body`)
+      
       sec.innerHTML = ''
       sec.append(this.template)
-
-      setTimeout(() => {
-        const section = document.querySelector('.specs-section-proposal')
-        this.__autoComputeTotalAmount(this.__info.quantity)
-        // specs
-        this.__info.specs.forEach((val, index) => {
-          let html = document.createElement('span')
-          html.classList.add('row', 'specs-input-section', 'specs-input-section-orig')
-          html.setAttribute('data-resources', this.__info.id)
-          html.setAttribute('style', 'margin-top: 15px;')
-          html.innerHTML = `
-              <div class="col-lg-3 col-md-3" id="orig-req-name-${val.id}" class="orig-req-name">
-                <b>${val.name}</b>
-              </div>
-              <div class="col-lg-9 col-md-9">
-                <span id="orig-req-val-${val.id}" class="orig-req-val" data-resources-val="${val.value}">${val.value}</span>
-                <small class="orig-req-menu"></small>
-              </div>
-
-          `
-
-          // change link
-          let btn = document.createElement('a')
-          btn.href = '#'
-          btn.setAttribute('onclick', 'event.preventDefault()')
-          btn.setAttribute('data-resources', val.id)
-          btn.setAttribute('data-resources-val', val.value)
-          btn.textContent = 'change'
-          btn.addEventListener('click', this.__changeEventSpecsInput.bind(__proto))
-
-          html.querySelector('.orig-req-menu').append(btn)
-
-          section.append(html)
-        })
-
-        // bind other specs
-        const otherSpecsBtn = document.querySelector('.add-other-specs-btn:not(.event-binded)')
-        if (otherSpecsBtn) {
-          otherSpecsBtn.classList.add('event-binded')
-          otherSpecsBtn.addEventListener('click', this.__addOtherSpecsField.bind(__proto))
-        }
-        
-        this.loadPopup()
-
-        setTimeout(() => {
-          // show proposals
-          //ReqUtil.bindSendProposal()
-          //ReqUtil.bindSaveProposal()
-          import('./actions/create').then(actions => {
-            return new actions.default({
-              selector: '.save-bidding-modal-btn',
-              id: this.__info.id,
-            })
-          })
-
-        },10)
-
-        // load actions
-        /*import('./actions').then(actions => {
-          const attachments = new actions.default().upload({
-            id: this.opt.id,
-            selector: '#file-upload-attachment-bidding',
-          })
-
-          // get recent files
-          const recent = new actions.default().recent({
-            id: this.opt.id, 
-            page: 1, 
-            token: window.localStorage.getItem('token'),
-          })
-          
-        })*/
-
-      },700)
-
     })
   }
 
@@ -208,7 +73,7 @@ export default class {
   __getInfo (id) {
     // fetch details
     return new Promise((resolve, reject) => {
-      import('../../services/bidding-req-service').then(loader => {
+      import('../../services/bidding-proposal-service').then(loader => {
         const a = new loader.default().view({ id, token: localStorage.getItem('token') }).then(res => {
           resolve(res[0])
         }).catch(err => reject(err))
@@ -227,130 +92,151 @@ export default class {
     }
   }
 
+  getMenu() {
+    return import('../proposal-menu').then(loader => {
+      return new loader.default({
+        id: this.opt.id,
+        menus: ['send', 'attach', 'remove', 'update']
+      }).then(res => {
+        const __targ = this.template.querySelector('#prop-info-menu')
+        __targ.innerHTML = ''
+        __targ.append(res)
+      })
+    })
+  }
+
+  __bindListeners () {
+    this.template.querySelector(`#file-attachment-main-dialog-cancel-btn-${this.opt.id}`).addEventListener('click', () => {
+      document.querySelector(`#file-attachment-main-dialog-${this.opt.id}`).close()
+    })
+
+    this.getMenu().then(() => this.loadPopup ())
+   
+    this.loadAttachments('.recently-attached-prop-section', this.__info.attachments)
+    
+  }
+
+
+
   render() { 
     this.template = document.createElement('section')
-    this.template.classList.add('row', 's')
+    this.template.classList.add('row', 'col-12')
     this.template.style.overflowY = 'auto'
+    this.__specs = ''
 
+    let __classMarker = ''
+
+    this.__info.specs.map(el => {
+      // show old value
+      if (((el.name != el.orig_name) || (el.value != el.orig_value)) && (el.orig_value)) __classMarker = 'text-danger'
+
+      this.__specs+= `<div class="col-3 ${__classMarker}">
+        <b>${el.name}</b>
+      </div>
+      <div class="col-9 ${__classMarker}">
+        <p>${el.value}</p>
+      </div>`
+      
+    })
     // custom classes
     if(this.opt.class) this.template.classList.add(...this.opt.class.split(' '))
     
     // template
     this.template.innerHTML = `
-      <small class="col-12" style="background:#464a4e;padding:3px;margin-top:50px;position:relative;">
-        <ul class="nav col">
-          <li class="nav-item">
-            <a class="nav-link save-bidding-modal-btn" href="#" data-target="#general-modal" data-popup-toggle="open" onclick="event.preventDefault();" style="color:#ffb80c;">
-              <i class="material-icons md-18">save</i> Save
-            </a>
+    <div class="col-5" style="border-right: 1px solid rgba(200,200,200,0.5);padding-top: 100px;">
+      <ul class="list-unstyled">
+        <li data-role="none">
+            <h5 class="text-center">
+              <i class="material-icons md-48 text-muted">computer</i>
+            </h5>
+           
+              <h2 id="prop-info-name" class="text-center">${this.__info.name}</h2>
+
+              <small>
+                <p class="text-danger text-center"><b>Quantity : </b> <span class="prop-info-quantity">${this.__info.quantity}</span> <span class="prop-info-unit">${this.__info.unit}</span></p>
+              </small>
+         
           </li>
-        </ul>
+          
+          <li class="nav-item col-12" style="border-bottom:1px solid #ccc;padding-top:5px;padding-bottom:5px">
+
+              <div class="col-12">
+                <div class="text-center" style="float:left;width:35px;height:35px;border-radius:50%;margin-left:45%;overflow:hidden;background:#42403c;color:#fff;padding-top:5px" id="prop-info-name-header-section">${this.__info.username.substr(0,2).toUpperCase()}</div>
+              </div>
+            <div class="col-12 text-center">
+              <small><p class="prop-info-username">${this.__info.username}<br><span class="text-muted prop-info-date-created">${this.__info.date_created}</span></p></small>
+            </div>
+          </li>
+      </ul>
+    </div>
+        <div class="col-7" style="padding-top: 60px;overflow-y:auto;">
+            <div class="col-lg-12" style="height: 70vh;">
+                <p>Your Proposal <i class="material-icons">navigate_next</i> <span class="text-muted">Preview</span>
+                  <span id="file-attachment-main-dialog-cancel-btn-${this.opt.id}" class="float-right text-muted"><u>close (x)</u></span>
+                </p>
+      
+                <!-- menu-->
+                <small class="col-12" id="prop-info-menu-status"></small>
+
+                <section  id="prop-info-menu">
+                  <ul class="nav">
+                    <li class="nav-item row">
+                      <a class="nav-link send-prop-modal-btn" href="#" data-target="#bidding-modal" data-popup-toggle="open" data-resources="${this.opt.id}"><i class="material-icons md-18">send</i> Send </a>
+                    </li>
+                    <li class="nav-item file-prop-attachment-dialog-btn">
+                      <a class="nav-link">
+                        <i class="material-icons md-18">attach_file</i> Attach
+                      </a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link nav-link remove-prop-modal-btn" href="#" data-target="#bidding-modal" data-popup-toggle="open" data-resources="${this.opt.id}">
+                        <i class="material-icons md-18">remove_circle_outline</i> Remove
+                      </a>
+                    </li>
+
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-link proposal-reg-dialog-btn-update" href="#" onclick="event.preventDefault();">
+                        Update
+                      </a>
+                    </li>
+
+
+                  </ul>
+                </section>
+               
+                <div class="recently-attached-prop-section" id="recently-attached-prop-section-${this.opt.id}"></div>
+            <div>
+            <br/>
+                    <section class="col-12">
+      <h2 class="text-danger"><span id="prop-info-currency">${this.__info.currency}</span>: <span id="prop-info-amount">${new Intl.NumberFormat('en-us', {maximumSignificantDigits:3}).format(this.__info.amount)}</span></h2
+      <small>
+        <p><b>DISCOUNT : <span id="prop-info-discount">${new Intl.NumberFormat('en-us', {maximumSignificantDigits:3}).format(this.__info.discount)}</span></b></p>
       </small>
 
-    <div class="col-12">
-      <article class="col-xs-12 col-md-12 col-lg-10 offset-lg-1 col-xs-12" style="overflow:auto;padding-bottom: 30px;">
-        <section id="reg-notif-area"></section>
-        
-        <form class="form-horizontal row" name="bidding-request-registration" onsubmit="return false;">
-          <section class="col-md-12">
-            <section class="recently-attached-prop-section"></section>
-            <br/><br/>
-            <h2 class="req-form-name">${this.__info.name}</h2>
-            <small>
-    
-              <p>
-                  <b>Unit Price : </b>
-                  <span class="req-currency">PHP</span>
-                  <b><span class="req-amount text-danger">
-                    <input type="text" placeholder="Enter Amount (Per Item)" class="form-control" autofocus="true" id="proposal-form-amount-per-item">
-                  </span></b>
-                  
-                </p>
-    
-                <p class="text-muted">
-                  <b>Total Amount <small>(Unit Price X Quantity)</small> : </b><br/>
-                  <b><span class="req-amount text-danger">
-                    <input type="text" placeholder="Enter Amount" class="form-control" autofocus="true" id="proposal-form-amount" readonly="readonly">
-                  </span>
-                  <small class="text-danger">This will be automatically filled out</small>
-                  </b>
-                  
-                </p>
-    
-                <p>
-                  <b>Discount (for all items) : </b>
-                  <b><span class="req-amount text-danger">
-                    <input type="text" placeholder="Enter Amount" class="form-control" autofocus="true" id="proposal-form-discount">
-                  </span></b>
-                  
-                </p>
-    
-                <p><b>Quantity : </b> <span class="req-quantity-reg">${this.__info.quantity}</span> <span class="req-unit-reg">${this.__info.unit}</span></p>
-    
-              </small><br/>
-          </section>
-    
-          <section class="col-12">
-            <br/><br/>
-            <p>
-              <b><span class="text-danger">Specifications</span></b><br/>
-              <small>Please fill up all the fields below</small>
-    
-            </p>
-            <div class="specs-section-proposal">
-              
+      <div class="col-12 attachment-prop-pool-section row" id="attachment-prop-pool-section"></div>
+      <hr/>
+        <h5>
+          <span class="header-circle"><i class="material-icons md-24">add_shopping_cart</i></span>
+          Specification
+        </h5><br>	
+
+      <div class="prop-specs-section-info d-flex row">
+        ${this.__specs}
+      </div>
+    </section>
+    <br/><br/>
+    <section class="col-12">
+      <p><b>Remarks</b></p><br/>
+      <p  id="prop-info-remarks" class="text-muted">${this.__info.remarks}</p>	
+    </section>
+
+                </div> 
             </div>
-    
-    
-            <div class="specs-other">
-              <br/><br/><br/>
-              <p>
-                <b>
-                  <span class="text-info">Others 
-                    <span class="text-muted">(optional)</span> 
-                  </span>
-                  <a href="#" onclick="event.preventDefault();" class="add-other-specs-btn"  id="add-other-specs-btn">
-                    <i class="material-icons md-18 text-danger">add_circle</i>
-                  </a>
-                </b><br/>
-                <small>
-                  These are additional specifications not included in the original bidding request.
-                </small>
-    
-              </p>
-    
-              <div id="specs-other-section"></div>
-    
-            </div>
-    
-    
-            <div class="specs-remarks">
-              <br/><br/><br/>
-              <p>
-                <b>
-                  <span class="text-info">Remarks
-                    <span class="text-muted">(optional)</span> 
-                  </span>
-                </b><br/>
-                <small>
-                  Add additional content in your proposal. Please make it short and simple
-                </small>
-    
-                
-                <textarea class="form-control" rows="10" style="border:1px solid #ccc !important;" id="proposal-form-remarks"></textarea>
-    
-              </p>
-    
-            </div>
-    
-          </section>
-    
-        </form>
-    
-    
-      </article>
-    </div>`
-    //this.__bindListeners()
+        </div>
+    </section>
+     `
+    this.__bindListeners()
     // start rendering
     return this.template
   }

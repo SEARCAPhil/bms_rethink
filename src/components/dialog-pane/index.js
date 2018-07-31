@@ -14,7 +14,7 @@ export default class {
   }
   
   open (e) {
-	  return document.querySelector(`#file-attachment-main-dialog-${this.opt.id}`).classList.add('open') 
+	  return setTimeout(() => { document.querySelector(`#file-attachment-main-dialog-${this.opt.id}`).classList.add('open') }, 10)
   }
   
 	cancel () {

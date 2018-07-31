@@ -12,9 +12,13 @@ class template {
 
   __loadProposalSection () {
     // load proposal section
-    return import('../../pages/requirement-proposal-section').then(res => {
+    return import('../../pages/requirement-proposal-section').then(res => { 
       // template
-      const temp = new res.default({id: this.__info.id})
+      const temp = new res.default({
+        id: this.__info.id,
+        invitation_id: this.__params.id,
+      })
+      
       temp.then(html => { 
         // DOM
         const reqSec = document.querySelector('proposal-section') || document.querySelector('#requirement-proposal-container')
@@ -50,7 +54,7 @@ class template {
 
     // template settings
     template.setAttribute('style', 'margin-top:50px;padding-bottom:40px;height:100vh;overflow-y:auto;')
-    template.classList.add('col-lg-8')
+    template.classList.add('col-lg-7')
     template.id = 'inv-info-container'
     template.innerHTML = `
     <section id="detail-info-menu-status" class="w-100"></section>
