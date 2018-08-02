@@ -1,5 +1,5 @@
-import PopupES from '../../Components/PopupES/PopupES'
-import Quill from 'Quill'
+import PopupES from '../../components/PopupES/PopupES'
+import Quill from 'quill'
 
 const appRoute = new window.bms.exports.Router('http://127.0.0.1/bms_rethink/www/',true)
 const loadCSS = (href) => {

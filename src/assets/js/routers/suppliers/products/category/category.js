@@ -2,7 +2,7 @@ import Categories from '../../../../modules/Suppliers/Components/Products/Catego
 import Products from '../../../../modules/Suppliers/Components/Products/Products.js'
 import CatTemplate from '../../../../modules/Suppliers/Templates/Products/Categories/Categories.js'
 import CatUtilities from '../../../../modules/Suppliers/Util/Forms/Products/Category.js'
-import PopupES from '../../../../Components/PopupES/PopupES.js'
+import PopupES from '../../../../components/PopupES/PopupES.js'
 import ProdUtilities from '../../../../modules/Suppliers/Util/Forms/Products/Products.js'
 
 

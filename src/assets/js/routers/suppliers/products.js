@@ -2,7 +2,7 @@ import Categories from '../../modules/Suppliers/Components/Products/Categories/C
 import Products from '../../modules/Suppliers/Components/Products/Products.js'
 import Prices from '../../modules/Suppliers/Components/Products/Price/Price.js'
 import ProdUtilities from '../../modules/Suppliers/Util/Forms/Products/Products.js'
-import PopupES from '../../Components/PopupES/PopupES.js'
+import PopupES from '../../components/PopupES/PopupES.js'
 
 const Cat=new Categories()
 const Prod=new Products()

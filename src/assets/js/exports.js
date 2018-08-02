@@ -1,4 +1,4 @@
-import Router from 'Navigo'
+import Router from 'navigo'
 import XHR from './lib/XHR/XHR'
 import Sidebar from './components/Sidebar/Sidebar'
 import Spinner from './components/Spinner/Spinner'

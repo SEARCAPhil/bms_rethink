@@ -1,6 +1,6 @@
 import CatComp from '../../../Components/Products/Categories/Categories.js'
 import CatTemplate from '../../../Templates/Products/Categories/Categories.js'
-import PopupES from '../../../../../Components/PopupES/PopupES.js'
+import PopupES from '../../../../../components/PopupES/PopupES.js'
 
 
 const CatTemp=new CatTemplate()

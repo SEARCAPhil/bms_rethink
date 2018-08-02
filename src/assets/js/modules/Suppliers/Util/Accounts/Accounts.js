@@ -1,5 +1,5 @@
 import AccComp from '../../../../modules/Suppliers/Components/Accounts/Accounts.js'
-import PopupES from '../../../../Components/PopupES/PopupES.js'
+import PopupES from '../../../../components/PopupES/PopupES.js'
 
 const AccC = new AccComp()
 

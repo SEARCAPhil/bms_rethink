@@ -1,5 +1,5 @@
 import Products from '../../../Components/Products/Products.js'
-import PopupES from '../../../../../Components/PopupES/PopupES.js'
+import PopupES from '../../../../../components/PopupES/PopupES.js'
 
 
 const Prod=new Products()
