@@ -1,7 +1,7 @@
 import Categories from '../../modules/Suppliers/Components/Products/Categories/Categories.js'
 import CatTemplate from '../../modules/Suppliers/Templates/Products/Categories/Categories.js'
 import ListComp from '../../modules/Suppliers/Components/List/List.js'
-import PopupES from '../../Components/PopupES/PopupES.js'
+import PopupES from '../../components/PopupES/PopupES.js'
 
 const appRoute=new window.bms.exports.Router('http://localhost/bms_rethink/www/',true)
 const XHR=new window.bms.exports.XHR()

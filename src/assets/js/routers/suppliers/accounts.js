@@ -1,7 +1,7 @@
 import AccComp from '../../modules/Suppliers/Components/Accounts/Accounts.js'
 import AccTemplate from '../../modules/Suppliers/Templates/Accounts/Accounts.js'
 import AccUtilities from '../../modules/Suppliers/Util/Accounts/Accounts.js'
-import PopupES from '../../Components/PopupES/PopupES.js'
+import PopupES from '../../components/PopupES/PopupES.js'
 
 
 const appRoute=new window.bms.exports.Router('http://localhost/bms_rethink/www/',true)
