@@ -53,7 +53,7 @@ const loadPopup = () => {
    */
   const loadAwardees = (target, data) => {
       
-    import('../../components/requirement-awardees-item').then(res => { console.log(data)
+    import('../../components/requirement-awardees-item').then(res => { 
       const targ = document.querySelector(target)
       if (!targ) return 0
       // empty section

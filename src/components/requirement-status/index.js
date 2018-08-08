@@ -27,4 +27,13 @@ const showAwardedStatus = (id) => {
   }
 }
 
-export { showAwardedStatus }
+const showModifiedStatus = (id) => {
+  return {
+    id,
+    icon: `<style>${awardedStyle.toString()}</style> <i class="material-icons md-36">refresh</i>`,
+    message: ' <p class="p-3">This bidding requirement has been modified. Please reload this page to see changes</p>',
+    actions: `<a href="#" onclick="event.preventDefault();window.location.reload();"> reload </a> `
+  }
+}
+
+export { showAwardedStatus, showModifiedStatus }

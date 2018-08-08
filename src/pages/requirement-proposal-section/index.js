@@ -1,7 +1,5 @@
-const infoMenu = import('../../components/requirement-menu')
 const info = import('../../services/bidding-req-proposal-service')
-const infoStatus = import('../../components/bidding-status')
-const statusMessage = import('../../components/requirement-status')
+import { isCBAAsst , isAdmin, isGSU, isSupplier, isStandard } from '../../utils/privilege-loader'
 
 export default class {
   constructor (opt) {
@@ -78,6 +76,14 @@ export default class {
       })
     })
 
+    import('./actions/compare').then(loader => {
+      return new loader.default({
+        id: this.opt.id,
+        token: window.localStorage.getItem('token'),
+        selector: '#compare-checkbox',
+      })
+    })
+
   }
 
   showProposals (target, data, isEmpty = false) { 
@@ -109,7 +115,7 @@ export default class {
         status = `<br/><span class="text-danger" data-resources="${val.id}"><i class="material-icons md-12">warning</i> Requesting changes</span>`
       }
 
-      if (val.status ==3) {
+      if (val.status == 3) {
         status = `<br/><span data-resources="${val.id}" style="color:#ffb80c;"><i class="material-icons">star</i> AWARDED</span>`
         // show won status
        //// showWon()
@@ -118,6 +124,10 @@ export default class {
         //img.src = 'assets/img/trophy.png'
         //img.style.width = '30px'
         //document.querySelector('.req-name').append(img)
+      }
+
+      if (val.status == 5) {
+        status = `<br/><span data-resources="${val.id}" style="color:#ffb80c;"><i class="material-icons">star</i> Winner</span>`
       }
 
       html.innerHTML = `
@@ -136,7 +146,12 @@ export default class {
                 </small>
               </section>
             </div>
-        </a>`
+        </a>
+        <div class="row col-12" data-resources="${val.id}">
+          ${isCBAAsst() ? `<input type="checkbox" name="compare" class="compare-checkbox-list ${val.status}" data-resources="${val.id}">` : '' }
+          &nbsp; <small class="text-muted"> #${val.id}</small>
+        </div>
+                            `
         
       // insert to DOM
       __targ.forEach((el, index) => {
@@ -170,7 +185,9 @@ export default class {
     <section>
       <style>#requirement-proposal-container { background: #eee!important; padding-top: 100px; padding-bottom: 100px; height: 100vh; overflow-x:hidden; overflow-y:auto; border-left: 1px solid #ccc; }</style>
       <h5>Proposals</h5><hr/>
-      <div class="col-12">
+      
+      ${isSupplier() ?
+      `<div class="col-12">
         <center>
           <p class="text-muted">
             <i class="material-icons md-48">insert_drive_file</i><br>
@@ -178,25 +195,28 @@ export default class {
             <a href="#" class="proposal-reg-dialog-btn" onclick="event.preventDefault();">Submit <i class="material-icons md-18">add_circle</i></a></p>
         </center>
         <hr/>
-      </div>
+      </div>` : '' }
+
       <section id="proposal-list-section" class="proposal-list-section">
-        <menu class="row col-12">
-          <div class="col-2">
-            <input type="checkbox" name="compare" id="compare-checkbox">
-          </div>
-          <div class="col-8">
-            <button class="btn btn-default btn-sm event-binded" type="button" id="compare-btn">Compare</button>
-          </div>
-        </menu>
-        
-        <menu class="row col-12">
-          <div class="col-2">
-            <input type="checkbox" name="compare-sign" id="compare-sign-checkbox" checked="checked">
-          </div>
-          <div class="col-8">
-            <small class="text-muted">Include signatories?</small>
-          </div>
-        </menu><hr>
+        ${isCBAAsst() || isGSU() ?
+          `<menu class="row col-12">
+            <div class="col-2">
+              <input type="checkbox" name="compare" id="compare-checkbox">
+            </div>
+            <div class="col-8">
+              <button class="btn btn-default btn-sm" type="button" id="compare-btn">Compare</button>
+            </div>
+          </menu>
+          
+          <menu class="row col-12">
+            <div class="col-2">
+              <input type="checkbox" name="compare-sign" id="compare-sign-checkbox" checked="checked">
+            </div>
+            <div class="col-8">
+              <small class="text-muted">Include signatories?</small>
+            </div>
+          </menu><hr>` : ''
+        }
         
         <ul class="nav"></ul>
       </section>

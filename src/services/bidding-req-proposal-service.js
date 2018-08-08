@@ -41,6 +41,13 @@ export default class{
 
   view(opt) {
     return this.__getData(`/bidding/proposals/?id=${opt.id}&token=${opt.token}&timestamp=${this.timestamp}`)
-  }
-  
+	}
+
+	send(opt) {
+		return this.__postData(`/bidding/proposals/?timestamp=${this.timestamp}`, opt)
+	}
+	
+	award(opt) {
+		return this.send(opt)
+	}
 }

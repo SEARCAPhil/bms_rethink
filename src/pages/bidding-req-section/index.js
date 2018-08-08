@@ -122,7 +122,7 @@ class template {
 
     // template settings
     template.setAttribute('style', 'background:#fff;margin-top:50px;position:relative;box-shadow:0px 0px 10px rgba(200,200,200,0.4);height:100vh;overflow-y:auto;padding-bottom:200px;')
-    template.classList.add('col-lg-8')
+    template.classList.add('col-lg-7')
     template.id = 'requirement-container'
     template.innerHTML = `
     <section id="requirement-menu-status" class="w-100"></section>

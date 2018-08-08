@@ -35,7 +35,17 @@ export default class {
           bidding_id: opt.bidding_id,
         })
       })
+    }
 
+     // deadline
+     if(opt.menus.indexOf('winner')!=-1) {
+      import('./actions/winner').then(loader => {
+        return new loader.default({
+          root: this.template,
+          selector: '.award-requirements-modal-btn',
+          id: opt.id,
+        })
+      })
     }
   }
 
@@ -96,7 +106,7 @@ export default class {
 
       ${ opt.menus.indexOf('winner')!=-1 ?
         `<li class="nav-item">
-            <a class="nav-link award-requirements-modal-btn" data-target="#bidding-requirements-modal" data-popup-toggle="open">
+            <a class="nav-link award-requirements-modal-btn" data-target="#general-modal" data-popup-toggle="open">
               <i class="material-icons md-18">card_membership</i> Select Winner <small>(*bidding exemption)</small>
             </a>
           </li>` : ''

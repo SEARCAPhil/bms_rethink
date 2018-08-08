@@ -26,7 +26,9 @@ export default class {
           id: opt.id,
         })
       })
+    }
 
+    if(opt.menus.indexOf('attach')!=-1) {
       import('./actions/attach').then(loader => {
         return new loader.default({
           root: this.template,
@@ -35,6 +37,7 @@ export default class {
           target: 'body',
         })
       })
+    }
 
       import('./actions/view').then(loader => {
         return new loader.default({
@@ -45,8 +48,25 @@ export default class {
           target: '.bidding-section',
         })
       })
+    
+    if(opt.menus.indexOf('send')!=-1) {
+      import('./actions/send').then(loader => {
+        return new loader.default({
+          root: this.template,
+          selector: '.send-bidding-modal-btn',
+          id: opt.id,
+        })
+      })
+    }
 
-      
+    if(opt.menus.indexOf('request_new')!=-1) {
+      import('./actions/request').then(loader => {
+        return new loader.default({
+          root: this.template,
+          selector: '.resend-prop-modal-btn',
+          id: opt.id,
+        })
+      })
     }
   
   }
@@ -110,6 +130,15 @@ export default class {
               Update
             </a>
           </li>` : ''
+        }
+
+        <!--request new quotation -->
+        ${ opt.menus.indexOf('request_new')!=-1 ?
+        `<li class="nav-item">
+          <a class="nav-link resend-prop-modal-btn text-danger"  href="#" data-target="#general-modal" data-popup-toggle="open">
+            <i class="material-icons md-18">keyboard_return</i> Request new quotation 
+          </a>
+        </li>` : ''
         }
        
       </ul>

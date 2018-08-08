@@ -38,7 +38,7 @@ export default `
             class="main-menu-list-item bids-menu-list sub hide" 
             id="bids-menu-list-new"
             data-menu="main-menu-list-item" 
-            data-role="none" onclick="window.location.hash='#/bids/forms/registration/steps/1'"> <i class="material-icons md-18" style="width: 24px;">add_circle</i> New
+            data-role="none" onclick="window.location.hash='#/bids/forms/registration/step/1'"> <i class="material-icons md-18" style="width: 24px;">add_circle</i> New
         </li>
 
         <li

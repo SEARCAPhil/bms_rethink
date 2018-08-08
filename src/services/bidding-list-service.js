@@ -20,6 +20,21 @@ export default class{
 			})
 		})
 	}
+
+	__getData(url) {
+		return new Promise((resolve, reject) => {
+			Network.then(net => {
+				fetch(`${net.default.url}${url}`,
+				{
+					method: 'GET',
+				})
+				.then(res => {
+					resolve(res.json())
+				})
+			})
+		})
+	}
+	
 	
 	async lists(opt = {}){
 		return await new Promise((resolve, reject) => {
@@ -74,6 +89,10 @@ export default class{
 
 	send (opt) {
 		return this.__postData(`/bidding/collaborators/?timestamp=${this.timestamp}`, opt)	
+	}
+
+	reviews (opt) {
+		return this.__getData(`/bidding/requirements/feedback.php/?token=${opt.token}&id=${opt.id}&timestamp=${this.timestamp}&bidding_request=true`)
 	}
 
 	/*create(opt){

@@ -15,18 +15,18 @@ export default class {
 
     // custom classes
     if(opt.class) this.template.classList.add(...opt.class.split(' '))
-    
+    console.log(opt)
     // template
     this.template.innerHTML = `
       <p>
-        <b><i class="material-icons md-18">add_shopping_cart</i> IT EQPT F.Y. 2018-2019 </b><br/>
-        Deadline : 2018-04-30
+        <b><i class="material-icons md-18">add_shopping_cart</i> ${opt.name} </b><br/>
+        Deadline : ${opt.deadline} 
       </p>
 
       <section style="background:rgba(250,250,250,0.3);padding:5px;">
         <p>
           <span class="badge badge-danger">1</span> <span class="text-danger">Requirements &emsp;
-          <u class=""><a href="#/bids/forms/registration/${this.opt.id}/steps/3">Add New</a></u></span>
+          <u class=""><a href="#/bids/forms/registration/${this.opt.id}/step/3">Add New</a></u></span>
         </p>
         <section class="requirements-items-section" id="item-${this.__timestamp}"></section>
       </section>

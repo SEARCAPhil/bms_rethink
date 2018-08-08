@@ -1,3 +1,7 @@
+import style from './style'
+import styleRatings from '../../components/general-style/star-ratings'
+import Network from '../../config/api'
+
 const infoMenu = import('../../components/bidding-info-menu')
 const infoStatus = import('../../components/bidding-status')
 const info = import('../../services/bidding-list-service')
@@ -7,6 +11,93 @@ class template {
   constructor (params) {
     this.__params = params
     this.__info = {}
+    this.criteria = [{
+      name: 'price',
+      alias: 'Price'
+    },{
+      name: 'quality',
+      alias: 'Goods/ Service Quality'
+    },{
+      name: 'time',
+      alias: 'Delivery Time'
+    }]
+  }
+
+  __getFeedbacks (opt) {
+    
+    this.template.querySelectorAll('.reviews-section').forEach((el, index) => {
+      // id
+      const __payload = {
+        id: this.__info.id,
+        token: window.localStorage.getItem('token')
+      }
+      
+      // get from DB
+      info.then(res => {
+        new res.default().reviews(__payload).then(json => {
+          if (json.length > 0) {
+            el.innerHTML = '<p class="row col-12" style="border-bottom:1px solid rgba(200,200,200,0.3);padding-bottom:10px;margin-top: 60px;"><b>What other say about this supplier</b> <i class="material-icons md-18 float-right text-muted">expand_more</i></p>'
+          }  
+        
+
+          json.forEach((val, ind) => {
+            const nameAlias = val.author[0].profile_name.substr(0,2).toUpperCase()
+            const art = document.createElement('article')
+
+            art.classList.add('row')
+            art.innerHTML+=`
+              <article class="row col-12">
+                  <section class="col-12">
+                    <div class="media">
+                    <div class="text-center mr-3" style="float:left;width:35px;height:35px;overflow:hidden;background:#ffb80c;color:#fff;padding-top:5px" id="image-header-section">${nameAlias}</div>
+                    <div class="media-body">
+                      <p class="mt-0"><b>${val.author[0].profile_name}</b><br>
+                      ${val.author[0].department}
+                      <a href="${Network.url}/bidding/reports/bidding_feedback.php?id=${val.id}" target="_blank" class="btn btn-default btn-sm" style="border:1px solid #009688;">
+                        <i class="material-icons md-18">print</i> PRINT
+                      </a>
+                      </p>
+                    </div>
+                  </div> 
+                  </section>
+
+                <section class="col-12 rate-section"></section><br/><br/>	
+                <section class="col-12"><br/>	<p class="text-muted">${val.feedback}<br/><span class="badge badge-dark">${val.company_name}</span> <span class="badge badge-dark">${val.product_name}</span></p><hr/></section>
+              </article><br/><br/>
+            `
+            const rateSec = art.querySelector('.rate-section')
+            val.ratings.forEach((rateVal, rateIndex) => {
+              const span = document.createElement('span')
+              span.innerHTML = this.criteria[rateVal.name] || `${rateVal.name}`
+              span.innerHTML += '&emsp;'
+
+              for (let  x = 0; x < 4; x++) {
+                const star = document.createElement('i')
+                star.classList.add('material-icons', 'md-18', 'star-ratings', `star-${rateVal.name}`)
+
+                if (x < rateVal.value) {
+                  star.textContent = 'star'
+                  star.classList.add('active')	
+                } else {
+                  star.textContent = 'star_border'
+                }
+                
+                star.position = x
+                star.criteria = rateVal.name
+                span.append(star)	
+              }
+
+              span.append(document.createElement('br'))
+
+              rateSec.append(span)
+
+            })
+
+            el.append(art)
+          })
+        })
+      })
+    })
   }
 
   /**
@@ -14,17 +105,18 @@ class template {
    */
   async render () {
     this.__info = await this.__getInfo(this.__params.id)
-    const template = document.createElement('section')
+    this.template = document.createElement('section')
     
     // reviewed by
     let arr = this.__info.collaborators.map(val => {
       return `<span class="badge badge-dark">${val.profile_name}</span>`
     })
     // template settings
-    template.setAttribute('style', 'margin-top:50px;padding-bottom:40px;height:100vh;overflow-y:auto;')
-    template.classList.add('col-lg-10')
-    template.id = 'bids-info-container'
-    template.innerHTML = `
+    this.template.setAttribute('style', 'margin-top:50px;padding-bottom:40px;height:100vh;overflow-y:auto;')
+    this.template.classList.add('col-lg-10')
+    this.template.id = 'bids-info-container'
+    this.template.innerHTML = `
+      <style>${style.toString()} ${styleRatings.toString()}</style>
       <section id="detail-info-menu-status" class="w-100"></section>
       <section>
         <bidding-info-menu></bidding-info-menu>
@@ -68,8 +160,8 @@ class template {
 
         </article>
       </section>`
-    this.template = template
-    return template
+    this.__getFeedbacks(this.__info.id)
+    return this.template
   }
 
   async __bindListeners (loader, template) { 
@@ -106,6 +198,23 @@ class template {
       info.then(loader => {
         const a = new loader.default().view({ id, token: localStorage.getItem('token') }).then(res => {
           resolve(res.data[0])
+        }).catch(err => reject(err))
+      })
+    })
+  }
+
+  
+  /**
+   * Get bidding information via built-in bidding services
+   * 
+   * @param {int} id 
+   */
+  __getReviews(id) {
+    // fetch details
+    return new Promise((resolve, reject) => {
+      info.then(loader => {
+        const a = new loader.default().reviews({ id, token: localStorage.getItem('token') }).then(res => {
+          resolve(res)
         }).catch(err => reject(err))
       })
     })

@@ -46,5 +46,21 @@ export default class{
 	invite(opt) {
 		return this.__postData(`/bidding/requirements/recepients/?timestamp=${this.timestamp}`, opt)
 	}
+
+	winner(opt) {
+		return this.invite(opt)
+	}
+
+	award(opt) {
+		return this.invite(opt)
+	}
+
+	sendFeedbackToAwardee(opt){
+		return this.__postData(`/bidding/requirements/feedback.php/?timestamp=${this.timestamp}`, opt)
+	}
+
+	getFeedbackAwardee(opt) {
+		return this.__getData(`/bidding/requirements/feedback.php/?token=${opt.token}&id=${opt.id}&timestamp=${this.timestamp}`)
+	}
   
 }

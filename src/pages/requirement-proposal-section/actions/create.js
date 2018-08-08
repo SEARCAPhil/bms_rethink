@@ -1,7 +1,4 @@
 
-const BiddingServ = import('../../../services/bidding-list-service')
-const AccServ = import('../../../services/accounts')
-
 export default class {
   constructor(opt){
     this.opt = opt

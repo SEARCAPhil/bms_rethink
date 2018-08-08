@@ -1,3 +1,4 @@
+import { isCBAAsst , isAdmin, isGSU, isSupplier, isStandard } from '../../utils/privilege-loader'
 
 export default class {
   constructor(opt = {}) {
@@ -92,15 +93,106 @@ export default class {
     }
   }
 
-  getMenu() {
+  getMenu() { 
+    let menus = []
+    
+    if(this.__info.status == 0) menus = ['send', 'attach', 'remove', 'update']
+    if(this.__info.status == 1 && isCBAAsst()) menus = ['request_new', 'attach', 'remove', 'update']
+    if(this.__info.status == 5 && isCBAAsst()) menus = ['attach']
+    
     return import('../proposal-menu').then(loader => {
       return new loader.default({
         id: this.opt.id,
-        menus: ['send', 'attach', 'remove', 'update']
+        menus
       }).then(res => {
         const __targ = this.template.querySelector('#prop-info-menu')
         __targ.innerHTML = ''
         __targ.append(res)
+
+        // send status
+        if(this.__info.status == 1 && !isCBAAsst()) {
+          this.template.querySelector('#prop-info-menu-status').innerHTML = `
+          <center style="background:#464a4e;color:#fff;padding:5px;">
+           <p class="col-12">
+            <i class="material-icons">share</i> This proposal has been sent. You cannot change your proposal any longer.
+              </p>
+          </center>
+          `
+        }
+
+        // send status
+        if(this.__info.status == 1 && isCBAAsst()) {
+          this.template.querySelector('#prop-info-menu-status').innerHTML = `
+          <center style="background:#464a4e;color:#fff;padding:5px;">
+            <p class="col-12">
+              <i class="material-icons">share</i> You have received this proposal. Please review all the details before doing any further actions.
+              <a class="award-prop-modal-btn btn btn-sm btn-danger" data-resources="${this.__info.id}" data-target="#general-modal" data-popup-toggle="open">
+                <i class="material-icons md-18">star</i> Set as Winner
+              </a>
+              <br>
+              <small class="text-muted">Note: Supplier will not received any notification. General Services should 'award' the supplier manualy.</small>
+            </p>
+          </center>`
+
+          import('./actions/winner').then(loader => {
+            return new loader.default({
+              root: this.template,
+              selector: '.award-prop-modal-btn',
+              id: this.__info.id,
+            })
+          })
+        }
+
+
+         // awarded status
+         if(this.__info.status == 3) {
+          this.template.querySelector('#prop-info-menu-status').innerHTML = `
+          <center style="background:#464a4e;color:#fff;padding:5px;" class="congrats-banner">
+            <p class="col-12">
+              <img src="assets/img/medal.png" width="50px"><br> <span style="color:#ffb80c;font-size:1.3em;">Congratulations!</span><br> This proposal stands out among others
+            </p>
+          </center>
+          `
+        }
+
+        if(this.__info.status == 2) {
+          this.template.querySelector('#prop-info-menu-status').innerHTML = `
+          <section style="background:#dc3545;color:#ececec;padding:5px;" class="">
+								<p class="col-12">
+									</p><details>
+										<summary><i class="material-icons md-18">warning</i> Your proposal needs changes Find out why ?</summary><br>
+										<p>${this.__info.bidders_remarks}</p>
+									</details>
+						        <p></p>
+						</section>`
+        }
+
+
+        if(this.__info.status == 5) {
+          this.template.querySelector('#prop-info-menu-status').innerHTML = `
+          <section style="background:#464a4e;color:#fff;padding:5px;">
+						<div class="media">
+							<img src="./assets/img/trophy.png" width="40px" class="mr-3 ml-3 mt-0">
+							<div class="media-body">
+								<h5 class="mt-0" style="color:#ffb80c;">Winner</h5>
+								This bidding proposal won the competition. You can now congratuate the supplier and officialy award them.&emsp; <br>
+								<a class="award-prop-modal-btn btn btn-xs btn-danger" data-resources="${this.__info.id}" data-target="#general-modal" data-popup-toggle="open">
+									<i class="material-icons md-18">card_membership</i> Award
+								</a>
+								<br><br>
+							</div>
+						</div>
+          </section>`
+          // award
+          import('./actions/award').then(loader => {
+            return new loader.default({
+              root: this.template,
+              selector: '.award-prop-modal-btn',
+              id: this.__info.id,
+            })
+          })
+        }
+
       })
     })
   }
@@ -209,9 +301,9 @@ export default class {
             <div>
             <br/>
                     <section class="col-12">
-      <h2 class="text-danger"><span id="prop-info-currency">${this.__info.currency}</span>: <span id="prop-info-amount">${new Intl.NumberFormat('en-us', {maximumSignificantDigits:3}).format(this.__info.amount)}</span></h2
+      <h2 class="text-danger"><span id="prop-info-currency">${this.__info.currency}</span>: <span id="prop-info-amount">${new Intl.NumberFormat('en-us').format(this.__info.amount)}</span></h2
       <small>
-        <p><b>DISCOUNT : <span id="prop-info-discount">${new Intl.NumberFormat('en-us', {maximumSignificantDigits:3}).format(this.__info.discount)}</span></b></p>
+        <p><b>DISCOUNT : <span id="prop-info-discount">${new Intl.NumberFormat('en-us').format(this.__info.discount)}</span></b></p>
       </small>
 
       <div class="col-12 attachment-prop-pool-section row" id="attachment-prop-pool-section"></div>
