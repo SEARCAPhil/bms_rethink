@@ -113,7 +113,14 @@ Navigo.then((Navigo) => {
       })
       // dropdown
       DropdownLoader.then(loader => loader.default('device-dropdown'))
-   	},
+     },
+     'feedback/*': () => {
+        loadHeader()
+        loadLeftSidebar().then(() => {
+          Menuselector.then(loader => { new loader.default().active('feedback-menu-list') })
+          import('./feedback')
+        })
+     },
     '/logout/' : () => { 
       return (localStorage.getItem('role') === 'supplier') ? (window.location = `${window.location.origin}${window.location.pathname}cauth.html`) : window.location.hash = '/auth'
       

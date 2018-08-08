@@ -15,7 +15,7 @@ Navigo.then((Navigo) => {
     '/bids/*' : () => {
       // change visibility
       DisplayStyler.then(display => {
-        display.default(['splash-page', '.welcome-section', 'registration-section'], 'none')
+        display.default(['splash-page', '.welcome-section', 'registration-section', '#bids-report-section', '#feedback-section'], 'none')
         display.default(['.list-bids-container'], 'block')
       })
       console.log('bidding')
@@ -82,6 +82,19 @@ Navigo.then((Navigo) => {
         })
       }
       import('./bidding/requirements')
+    },
+    'bids/reports':  (params) => {
+
+      Menuselector.then(loader => { new loader.default().active('bids-menu-list-reports') })
+      setTimeout(() => {
+        DisplayStyler.then(display => {
+          display.default(['.list-bids-container', '#initial-section', '#bids-info-container'], 'none')
+          display.default(['#bids-report-section'], 'block')
+        })
+      },100)
+
+      import('./bidding/reports')
+
     }
   }).resolve()
 })
