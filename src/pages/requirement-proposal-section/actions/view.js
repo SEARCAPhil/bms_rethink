@@ -34,10 +34,10 @@ export default class {
       return new loader.default({
         target: 'body',
         id: e.target.getAttribute('data-resources')
-      }).then(() => {
+      })
+    }).then(() => {
         this.hideSpinner()
       })
-    })
     
   }
 

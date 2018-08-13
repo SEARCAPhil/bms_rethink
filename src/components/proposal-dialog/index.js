@@ -168,7 +168,7 @@ export default class {
         }
 
 
-        if(this.__info.status == 5) {
+        if(this.__info.status == 5 && (isCBAAsst() || isGSU())) {
           this.template.querySelector('#prop-info-menu-status').innerHTML = `
           <section style="background:#464a4e;color:#fff;padding:5px;">
 						<div class="media">

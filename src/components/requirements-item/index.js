@@ -2,6 +2,7 @@ import style from './style'
 
 export default class {
   constructor(opt = {}) {
+    this.opt = opt
     return this.render(opt) 
   }
 
@@ -36,10 +37,10 @@ export default class {
         </span>` : ''}
 
         <span class="">
-          <a href="#/bids/forms/registration/${opt.id}/step/3/update"><i class="material-icons md-12 text-muted">edit</i></a>
-          <a href="#" class="remove-requirements-modal-btn" data-target="#general-modal" data-popup-toggle="open" id="${opt.id}">
+          ${opt.menus['update'] ? `<a href="#/bids/forms/registration/${opt.id}/step/3/update"><i class="material-icons md-12 text-muted">edit</i></a>` : '' }
+          ${opt.menus['remove'] ? `<a href="#" class="remove-requirements-modal-btn" data-target="#general-modal" data-popup-toggle="open" id="${opt.id}">
             <i class="material-icons md-12 text-muted" id="${opt.id}">remove_circle_outline</i>
-          </a>&emsp;
+          </a>&emsp;` : '' }
         </span>
           
         <span class="float-right text-danger">${opt.currency} ${opt.amount}</span>

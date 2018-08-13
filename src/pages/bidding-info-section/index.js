@@ -237,7 +237,7 @@ class template {
   async getAttachments() { 
     const loadAttachments = (await import('./actions')).loadAttachments
     // prevent deletion for already closed bidding
-    if(this.__info.status == 5) this.__info.attachments.map(t => {
+    if(this.__info.status == 5 || this.__info.status == 3) this.__info.attachments.map(t => {
       return t.locked = true
     })
 
@@ -285,18 +285,20 @@ class template {
       this.__payload = {}
       this.__payload_menu = {
         id: this.__params.id,
-        menus: ['send', 'attach', 'remove', 'update', 'particulars', 'print', 'sign']
+        menus: ['print']
       }
     } 
 
+    if (this.__info.status == 0) this.__payload_menu.menus = ['send', 'attach', 'remove', 'update', 'particulars', 'print', 'sign']
+
     // for regular USER
-    if (this.__info.status == 1 && !loader.isCBAAsst()) this.__payload = status.showBiddingReqSent(this.__info.id)
+    if (this.__info.status == 1 && !loader.isCBAAsst()) this.__payload_menu.menus = ['attach',  'print'] | (this.__payload = status.showBiddingReqSent(this.__info.id))
     
     // for CBA Asst /APPROVE
     if (this.__info.status == 1 && loader.isCBAAsst()) {
       this.__payload_menu = {
         id: this.__params.id,
-        menus: ['return', 'attach', 'update', 'sign', 'particulars'],
+        menus: ['return', 'attach', 'update', 'print', 'sign', 'particulars'],
       }
 
       this.__payload = status.showBiddingReqApprove(this.__info.id)
@@ -306,11 +308,12 @@ class template {
     // must change to send to resend
     if (this.__info.status == 2) (this.__payload_menu.menus = ['resend', 'attach', 'update', 'print', 'sign', 'particulars']) | (this.__payload = status.showBiddingReqReturned(this.__info.id))
 
-    if (this.__info.status == 3  && loader.isCBAAsst()) (this.__payload_menu.menus = ['resend', 'attach', 'print', 'sign', 'particulars']) |  (this.__payload = status.showBiddingApproved(this.__info.id))
+    if (this.__info.status == 3  && loader.isCBAAsst()) (this.__payload_menu.menus = ['return', 'attach', 'print']) |  (this.__payload = status.showBiddingApproved(this.__info.id))
 
     // for GSU
-    // enable all commands
+    // enable commands for approved request
     if (this.__info.status == 3  && (loader.isGSU() || !loader.isCBAAsst())) this.__payload = status.showBiddingApproveReadOnlyStandard(this.__info.id)
+    if (this.__info.status == 3  && loader.isGSU())  this.__payload_menu.menus = ['attach', 'print']
 
     // closed
     if (this.__info.status  == 5) { 
@@ -385,7 +388,12 @@ class template {
     import('../../components/particulars-item').then(res => {
       const targ = document.querySelector('.particulars-section')
       this.__info.particulars.forEach((el, index) => {
-        targ.append(new res.default({id: el.id, name: el.name, deadline: el.deadline, requirements: el.requirements, biddingId: this.__info.id, menus: ['remove', 'update']}))
+        targ.append(new res.default({
+          id: el.id, name: el.name, 
+          deadline: el.deadline, 
+          requirements: el.requirements, 
+          biddingId: this.__info.id, 
+          menus: (this.__info.status == 0 || this.__info.status == 1) ? ['remove', 'update', 'add'] : []}))
       })
     })
   }

@@ -64,7 +64,7 @@ export default class {
           <hr/>
           <p>
             <span class="badge badge-danger">${opt.requirements.length}</span> <span class="text-danger">Requirements &emsp;
-            <u class=""><a href="#/bids/forms/registration/${opt.id}/step/3">Add New</a></u></span>
+            ${this.opt.menus.indexOf('add')!=-1 ? `<u class=""><a href="#/bids/forms/registration/${opt.id}/step/3">Add New</a></u></span>` : '' }
           </p>
           <section class="requirements-items-section" id="item-${this.__timestamp}"></section>
           <br/>
@@ -88,6 +88,7 @@ export default class {
           awarded: el.awardees.length,
           quantity: el.quantity,
           unit: el.unit,
+          menus: (this.opt.menus.indexOf('remove')!=-1) ? ['update', 'remove'] : []
         }))
       })
 

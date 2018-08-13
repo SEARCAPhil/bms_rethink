@@ -12,7 +12,7 @@ export default class {
   }
 
   __showError () {
-    alert('Oops! Unable to resend this request. Please try again later.')
+    alert('Oops! Unable to resend this request. Please try again later. Make sure you have set the deadline before inviting a supplier')
   }
 
   __removeFromSendingList (e) {
@@ -146,10 +146,11 @@ export default class {
     return new __serv().invite(__payload).then(res => {
       if(res.data) { 
         for(let val in res.data) {
-          window.location.reload()
+         return window.location.reload()
         }
       }
-    }).catch(err => console.log(err))
+      return this.__showError()
+    }).catch(err => console.log(err) | this.__showError())
 
   }
 

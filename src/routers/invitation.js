@@ -31,7 +31,6 @@ Navigo.then((Navigo) => {
       InitSection.then(res => document.querySelector('initial-section') ? document.querySelector('initial-section').replaceWith(res.default) : 0)
       // get bidding
       ActionsInfo.loadListSection().then(() => {
-        document.querySelector('.filter-dropdown').remove()
         ActionsInfo.list()
       })
      },

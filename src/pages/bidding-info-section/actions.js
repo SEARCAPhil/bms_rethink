@@ -49,11 +49,13 @@ const loadListSection = () => {
  * Bidding List AJAX
  */
 const getBiddingList = (opt = {}) => { 
+  opt.page = opt.page || 1
+  console.log(opt.page)
   // load Via AJAX
   const listSection = document.querySelector('.list-bidding-section')
     BiddingServ.then(loader => { 
       const a = new loader.default()
-      a.lists({ token : window.localStorage.getItem('token'), filter: opt.filter || 'all' }).then(res => {
+      a.lists({ token : window.localStorage.getItem('token'), filter: opt.filter || 'all', page: opt.page }).then(res => {
 
         // clear section for page 1
         if(opt.page < 2) listSection.innerHTML = ''
@@ -65,6 +67,28 @@ const getBiddingList = (opt = {}) => {
             const lItem = new item.default({class: 'col-12 list', id: el.id, profile_name: el.profile_name, date_created: el.date_created})
             listSection.append(lItem)
           })
+
+          // more btn
+          setTimeout(() => {
+            const moreBtn = document.createElement('a')
+            moreBtn.href = '#'
+            moreBtn.textContent = 'More'
+            moreBtn.classList.add('col-12')
+            moreBtn.style.textAlign = 'center'
+            moreBtn.style.paddingBottom = '100px'
+            moreBtn.style.paddingTop = '10px'
+            moreBtn.opt = {}
+            moreBtn.opt.filter = opt.filter
+            moreBtn.opt.page = opt.page+1
+            moreBtn.addEventListener('click', (e) => {
+             e.preventDefault()
+             getBiddingList(e.target.opt)
+             moreBtn.remove()
+            })
+
+            return  res.length > 0 ? listSection.append(moreBtn) : 0
+            
+          }, 1000)
 
         })
       })

@@ -33,7 +33,9 @@ const loadListSection = () => {
       newLSec.classList.add('list-bids-container', 'd-none', 'd-lg-block', 'col-lg-2')
       newLSec.style.zIndex = 1
       newLSec.innerHTML = sec.default
+      newLSec.querySelector('.suppliers_new_button').parentNode.remove()
       lSec.replaceWith(newLSec)
+      
       // dropdown
       DropdownLoader.then(loader =>  loader.default('device-dropdown'))
       // resolve
@@ -48,10 +50,11 @@ const loadListSection = () => {
  * Bidding List AJAX
  */
 const list = (opt = {}) => { 
+  opt.page = opt.page || 1
   // load Via AJAX
   const listSection = document.querySelector('.list-bidding-section')
   Serv.then(loader => { 
-    new loader.default().list({ token : window.localStorage.getItem('token'), filter: opt.filter || 'all' }).then(res => {
+    new loader.default().list({ token : window.localStorage.getItem('token'), filter: opt.filter || 'all', page: opt.page }).then(res => {
 
       // clear section for page 1
       if(opt.page < 2) listSection.innerHTML = ''
@@ -64,6 +67,27 @@ const list = (opt = {}) => {
           listSection.append(lItem)
         })
 
+         // more btn
+         setTimeout(() => {
+          const moreBtn = document.createElement('a')
+          moreBtn.href = '#'
+          moreBtn.textContent = 'More'
+          moreBtn.classList.add('col-12')
+          moreBtn.style.textAlign = 'center'
+          moreBtn.style.paddingBottom = '100px'
+          moreBtn.style.paddingTop = '10px'
+          moreBtn.opt = {}
+          moreBtn.opt.filter = opt.filter
+          moreBtn.opt.page = opt.page+1
+          moreBtn.addEventListener('click', (e) => {
+           e.preventDefault()
+           list(e.target.opt)
+           moreBtn.remove()
+          })
+
+          return  res.length > 0 ? listSection.append(moreBtn) : 0
+          
+        }, 1000)
       })
     })
   })

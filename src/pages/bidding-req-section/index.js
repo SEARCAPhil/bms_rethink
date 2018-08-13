@@ -80,7 +80,7 @@ class template {
   async getAttachments() { 
     const loadAttachments = (await import('./actions')).loadAttachments
     // prevent deletion for already closed bidding
-    if(this.__info.status == 5) this.__info.attachments.map(t => {
+    if(this.__info.bidding_status == 5) this.__info.attachments.map(t => {
       return t.locked = true
     })
 
@@ -116,7 +116,7 @@ class template {
       <div class="col-10"><p>${el.value}</p></div> `
     })
 
-    const __price = new Intl.NumberFormat('en-us', {maximumSignificantDigits:3}).format(this.__info.budget_amount)
+    const __price = new Intl.NumberFormat('en-us').format(this.__info.budget_amount)
 
    // this.__info.specs.forEach(el,)
 
@@ -208,11 +208,18 @@ class template {
     this.__payload_menu = {
       id: this.__params.id,
       bidding_id: this.__info.bidding_id,
-      menus: ['back']
+      menus: ['back', 'attach']
     }
 
+
     if(this.__info.awardees.length) this.__payload = status.showAwardedStatus()
-    if(this.__info.awardees.length && loader.isCBAAsst()) this.__payload_menu.menus = ['back', 'attach', 'winner']
+
+    if(this.__info.bidding_status == 5) return this.__payload_menu.menus = ['back']
+
+
+    if(this.__info.awardees.length && loader.isCBAAsst()) this.__payload_menu.menus.push('winner')
+
+    if(loader.isGSU()) this.__payload_menu.menus = ['back', 'attach', 'deadline', 'invite']
     if(!this.__info.awardees.length && loader.isCBAAsst()) this.__payload_menu.menus = ['back', 'attach', 'winner', 'deadline', 'invite']
   }
 

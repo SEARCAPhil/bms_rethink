@@ -11,7 +11,7 @@ export default class {
   success() {	
     // close popup
     document.getElementById('general-modal').close()
-    //window.location.reload()
+    window.location.reload()
   }
 
   error (err = '') {

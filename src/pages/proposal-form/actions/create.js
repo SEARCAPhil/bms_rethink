@@ -8,8 +8,16 @@ export default class {
     return this.__bind()
   }
 
+  
+  hideSpinner () {
+    const targ = document.querySelector('#inv-info-container > .spinner')
+    if (targ) targ.hide()
+  }
+
+
   __showError () {
     alert('Oops! Unable to resend this request. Please try again later.')
+    this.hideSpinner()
   }
 
   	/**
@@ -18,7 +26,6 @@ export default class {
 	 * @returns XMLHttpRequest
 	 */
 	__loadProposalAttachmentsNotice () { 
-    const proto = Object.assign({ __proto__: this.__proto__ }, this)
     const stat = document.querySelector('#bidding-status')
 
     import('../../../components/proposal-attachments-notice-modal').then(loader => { 
@@ -27,7 +34,9 @@ export default class {
       __target.querySelector('#modal-dialog-close-button').addEventListener('click', () => document.querySelector('#general-modal').close())
     }).catch(err=>{
 			console.log(err)
-		})
+    })
+    
+    this.hideSpinner()
     
 		//const URL='pages/bidding/modal/proposal-attachments-notice.html'
 
@@ -54,13 +63,14 @@ export default class {
 	 */
   async create(e) {
     const __serv = (await BiddingServ).default
-    const __proto = Object.assign({ __proto__: this.__proto__ }, this)
     const amount = document.getElementById('proposal-form-amount').value
 		const discount = document.getElementById('proposal-form-discount').value
-		const remarks = document.getElementById('proposal-form-remarks').value
+    const remarks = document.getElementById('proposal-form-remarks').value
 
 		let original = []
-		let others = []
+    let others = []
+    
+    e.target.disabled = 'disabled'
 
 		document.querySelectorAll('.specs-input-section-orig').forEach((el,index) => {
 			const val = el.querySelector('.specs-input-section-value')
@@ -88,10 +98,16 @@ export default class {
 			token : window.localStorage.getItem('token'),
 			action: 'create',
     }
+
+    // spinner
+		import('../../../components/app-spinner').then(loader => {
+			return new loader.default().show({target: '#inv-info-container'}).then(t => t.template.show())
+    })
     
     new __serv().create(__payload).then(res => { 
+      e.target.disabled = false
       return res ? this.__loadProposalAttachmentsNotice() : this.__showError()
-    }).catch(err => this.__showError() | console.log(err))
+    }).catch(err => this.__showError() | (e.target.disabled = false) | console.log(err))
   }
 
 	load (e) {

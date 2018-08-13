@@ -14,7 +14,7 @@ export default class {
   render(opt = {}) { 
     opt.menus = opt.menus || []
     this.template = document.createElement('section')
-    this.template.classList.add('col-lg-2', 'col-md-2')
+    this.template.classList.add('col-lg-4', 'col-md-4')
     this.template.id = `requirement-recepient-item-${opt.id}`
 
     // custom classes

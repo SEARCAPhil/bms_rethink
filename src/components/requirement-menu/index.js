@@ -47,6 +47,17 @@ export default class {
         })
       })
     }
+
+    // deadline
+    if(opt.menus.indexOf('attach')!=-1) {
+    import('./actions/attach').then(loader => {
+      return new loader.default({
+        root: this.template,
+        selector: '.file-attachment-requirement-dialog-btn',
+        id: opt.id,
+      })
+    })
+  }
   }
 
   async render(opt) { 

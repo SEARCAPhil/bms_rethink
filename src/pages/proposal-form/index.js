@@ -8,9 +8,11 @@ export default class {
   }
 
   __bindListeners () {
-    this.template.querySelector(`#file-attachment-main-dialog-cancel-btn-${this.opt.id}`).addEventListener('click', () => {
-      document.querySelector(`#file-attachment-main-dialog-${this.opt.id}`).close()
-    })
+    //this.template.querySelector(`#file-attachment-main-dialog-cancel-btn-${this.opt.id}`).addEventListener('click', () => {
+    //  document.querySelector(`#file-attachment-main-dialog-${this.opt.id}`).close()
+    //})
+    this.template.querySelector('.specs-section-proposal').innerHTML = ''
+    this.template.querySelector('#specs-other-section').innerHTML = ''
   }
 
   
@@ -350,7 +352,7 @@ export default class {
     
       </article>
     </div>`
-    //this.__bindListeners()
+    this.__bindListeners()
     // start rendering
     return this.template
   }
