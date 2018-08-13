@@ -11,7 +11,14 @@ export default class {
     return this.__bindSend()
   }
 
-  async send () {
+  hideSpinner () {
+    const targ = document.querySelector('#general-modal > .spinner')
+    if (targ) targ.hide()
+  }
+
+  async send (e) {
+    e.target.disabled = 'disabled'
+    e.preventDefault()
     const __serv = (await BiddingServ).default
     const __cont = Object.keys(this.sendingList)
 
@@ -35,9 +42,15 @@ export default class {
       token : this.opt.token,
     }
 
+   // spinner
+		import('../../app-spinner').then(loader => {
+			return new loader.default().show({target: '#general-modal'}).then(t => t.template.show())
+    })
+    
+
     return new __serv().send(__payload).then(res => {
       // reload on success
-      return (res.data.length === __emails.length) ? window.location.reload() : alert('Notice : Not all collaborators specified did not received this request.')
+      return (res.data.length === __emails.length) ? window.location.reload() : (alert('Notice : Not all collaborators specified did not received this request.') | this.hideSpinner() | (e.target.disabled = false))
     })
      
   }

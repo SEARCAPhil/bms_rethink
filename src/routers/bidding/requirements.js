@@ -13,6 +13,10 @@ Navigo.then((Navigo) => {
   appRoute.on({
     '' : () => { },
     '/bids/requirements/:id': async (params) => {
+       // spinner
+      import('../../components/app-spinner').then(loader => {
+        return new loader.default().show({target: '#requirement-container'}).then(t => t.template.show())
+      })
       // change visibility
       DisplayStyler.then(display => {
         display.default(['splash-page', '.welcome-section', '#initial-section', '#bids-info-container'], 'none')

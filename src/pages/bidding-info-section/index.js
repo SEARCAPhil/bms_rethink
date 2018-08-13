@@ -385,7 +385,7 @@ class template {
     import('../../components/particulars-item').then(res => {
       const targ = document.querySelector('.particulars-section')
       this.__info.particulars.forEach((el, index) => {
-        targ.append(new res.default({id: this.__info.id, name: el.name, deadline: el.deadline, requirements: el.requirements}))
+        targ.append(new res.default({id: el.id, name: el.name, deadline: el.deadline, requirements: el.requirements, biddingId: this.__info.id, menus: ['remove', 'update']}))
       })
     })
   }

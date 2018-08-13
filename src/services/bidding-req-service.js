@@ -38,6 +38,10 @@ export default class{
 	view(opt) {
     return this.__getData(`/bidding/requirements/?id=${opt.id}&token=${opt.token}&timestamp=${this.timestamp}`)
 	}
+
+	remove(opt) {
+		return this.__postData(`/bidding/requirements/?timestamp=${this.timestamp}`, opt)
+	}
 	
 	deadline(opt) {
 		return this.__postData(`/bidding/requirements/deadline.php/?timestamp=${this.timestamp}`, opt)

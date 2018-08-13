@@ -202,8 +202,13 @@ export default class {
       <style>${style.toString()} ${styleRatings.toString()}</style>
      
 
-      <details class="col-10 row">
-        <summary> <span class="text-success">${opt.name}</span> ${this.__stat}</summary><br/>
+      <details class="col-12 row">
+        <summary> <span class="text-success">${opt.name}</span> ${this.__stat} ${
+          opt.status == 2 ? `<span class="float-right text-right" style="color:#ffb80c;" data-resources="${opt.id}" id="${opt.id}"><i class="material-icons md-18">star</i> Awarded</span>`:
+          `<a class="award-list-modal-btn text-danger text-right float-right" id="${opt.id}" data-resources="${opt.id}" data-target="#general-modal" data-popup-toggle="open">
+            <i class="material-icons md-18">card_membership</i> Click to Award
+          </a>`
+        }</summary><br/>
         <p class="col-12">
          
         </p>
@@ -220,12 +225,7 @@ export default class {
         <p class="col-12  rating-feedback-section"><br/></p>
 			</details> 
        
-        ${
-          opt.status == 2 ? `<span class="col-2 float-right" style="color:#ffb80c;" data-resources="${opt.id}" id="${opt.id}"><i class="material-icons md-18">star</i> Awarded</span>`:
-          `<a class="award-list-modal-btn text-danger" id="${opt.id}" data-resources="${opt.id}" data-target="#general-modal" data-popup-toggle="open">
-            <i class="material-icons md-18">card_membership</i> Click to Award
-          </a>`
-        }
+       
       </span>`
       this.__listeners(opt)
       this.__giveFeedback(opt)

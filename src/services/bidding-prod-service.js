@@ -36,16 +36,13 @@ export default class{
 	}
 	
 	create(opt) {
-    return this.__postData(`/bidding/particulars/?timestamp=${this.timestamp}`, opt)
+    return this.__postData(`/bidding/requirements/?timestamp=${this.timestamp}`, opt)
+  }
+
+  view(opt) {
+    return this.__getData(`/bidding/requirements/?timestamp=${this.timestamp}&id=${opt.id}&token=${opt.token}`)
 	}
 
-	remove(opt) {
-    return this.__postData(`/bidding/particulars/?timestamp=${this.timestamp}`, opt)
-	}
-	
-	view(opt) {
-    return this.__getData(`/bidding/particulars/?timestamp=${this.timestamp}&token=${opt.token}&id=${opt.id}`)
-  }
   
 
 }

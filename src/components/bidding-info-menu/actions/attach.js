@@ -8,6 +8,11 @@ export default class {
     return this.bindAttach()
   }
 
+  hideSpinner () {
+    const targ = document.querySelector('#bids-info-container > .spinner')
+    if (targ) targ.hide()
+  }
+
   success() {	
     const __target = document.querySelector('#general-modal  > .content > .body')
     __target.innerHTML = `
@@ -34,11 +39,18 @@ export default class {
 
 
   loadDialogPane () {
+    // spinner
+		import('../../../components/app-spinner').then(loader => {
+			return new loader.default().show({target: '#bids-info-container'}).then(t => t.template.show())
+    })
+    
     return import('../../attachments-dialog').then(loader => {
       return new loader.default({
         target: 'body',
         id: this.opt.id
       })
+    }).then(() => {
+      this.hideSpinner()
     })
     
   }

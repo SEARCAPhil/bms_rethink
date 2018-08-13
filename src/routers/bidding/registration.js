@@ -21,9 +21,14 @@ const register = () => {
 const showContainer = () => {
   // change visibility
   DisplayStyler.then(display => {
-    display.default(['splash-page', '.welcome-section', '#initial-section', '#bids-info-container'], 'none')
+    display.default(['splash-page', '.welcome-section', '#initial-section', '#bids-info-container', '#requirement-container', '#requirement-proposal-container'], 'none')
     display.default(['.bids-info-container', 'registration-section'], 'block')
   }) 
+
+  // spinner
+  import('../../components/app-spinner').then(loader => {
+    return new loader.default().show({target: 'registration-section'}).then(t => t.template.show())
+  })
 }
 
 Navigo.then((Navigo) => {
@@ -37,6 +42,10 @@ Navigo.then((Navigo) => {
       showContainer()
       loadForm().then(() => {
         register()
+        setTimeout(() => {
+          const s = document.querySelector('registration-section > .spinner')
+          if(s) document.querySelector('registration-section > .spinner').remove()
+        }, 3000)
       })
     },
     '/bids/forms/registration/:id/step/1/update': (params) => { 
@@ -53,37 +62,78 @@ Navigo.then((Navigo) => {
     },
     '/bids/forms/registration/:id/step/2': (params) => {
       showContainer()
-      return import('../../pages/bidding-part-form').then(res => {
-        const targ = document.querySelector('registration-section')
-        targ.classList.add('col', 'col-lg-10')
-        targ.innerHTML = '<style>registration-section { height:100vh;overflow-y:auto; } </style>'
-        targ.append(res.template)
+      const targ = document.querySelector('registration-section')
+      targ.classList.add('col', 'col-lg-10')
+      
 
-        // attach service call
-        const __serv = import('../../pages/bidding-part-form/actions')
-        const __target = document.querySelector('form[name="bidding-request-particulars"]')
-        __serv.then(loader => {
-          __target.biddingId = params.id 
-          __target.addEventListener('submit', loader.register)
+      return import('../../pages/bidding-part-form').then(res => {
+        new res.default({
+          action: 'create',
+          id: params.id,
+        }).then(html => {
+          targ.innerHTML = '<style>registration-section { height:100vh;overflow-y:auto; } </style>'
+          targ.append(html)
         })
       })
     },
-    '/bids/forms/registration/:id/step/3': () => {
+    '/bids/forms/registration/:id/step/2/update': (params) => {
       showContainer()
-      return import('../../pages/bidding-prod-form').then(res => {
-        const targ = document.querySelector('registration-section')
-        targ.classList.add('col', 'col-lg-10')
-        targ.innerHTML = '<style>registration-section { height:100vh;overflow-y:auto; } </style>'
-        targ.append(res.template)
+      const targ = document.querySelector('registration-section')
+      targ.classList.add('col', 'col-lg-10')
+
+      return import('../../pages/bidding-part-form').then(res => {
+        new res.default({
+          action: 'update',
+          id: params.id,
+        }).then(html => {
+          targ.innerHTML = '<style>registration-section { height:100vh;overflow-y:auto; } </style>'
+          targ.append(html)
+        })
       })
     },
-    '/bids/forms/registration/:id/step/4/:pid': () => {
+    '/bids/forms/registration/:id/step/3': (params) => {
       showContainer()
+      const targ = document.querySelector('registration-section')
+      targ.classList.add('col', 'col-lg-10')
+
+      return import('../../pages/bidding-prod-form').then(res => {
+        new res.default({
+          action: 'create',
+          id: params.id,
+        }).then(html => {
+          targ.innerHTML = '<style>registration-section { height:100vh;overflow-y:auto; } </style>'
+          targ.append(html)
+        })
+      })
+    },
+    '/bids/forms/registration/:id/step/3/update': (params) => {
+      showContainer()
+      const targ = document.querySelector('registration-section')
+      targ.classList.add('col', 'col-lg-10')
+
+      return import('../../pages/bidding-prod-form').then(res => {
+        new res.default({
+          action: 'update',
+          id: params.id,
+        }).then(html => {
+          targ.innerHTML = '<style>registration-section { height:100vh;overflow-y:auto; } </style>'
+          targ.append(html)
+        })
+      })
+    },
+    '/bids/forms/registration/:id/step/4/:pid': (params) => {
+      showContainer()
+      const targ = document.querySelector('registration-section')
+      targ.classList.add('col', 'col-lg-10')
+
       return import('../../pages/bidding-prod-form/confirmation').then(res => {
-        const targ = document.querySelector('registration-section')
-        targ.classList.add('col', 'col-lg-10')
-        targ.innerHTML = '<style>registration-section { height:100vh;overflow-y:auto; } </style>'
-        targ.append(res.template)
+        new res.default({
+          id: params.id,
+          pid: params.pid,
+        }).then(html => {
+          targ.innerHTML = '<style>registration-section { height:100vh;overflow-y:auto; } </style>'
+          targ.append(html)
+        })
       })
     }
   }).resolve()

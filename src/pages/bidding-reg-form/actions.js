@@ -1,6 +1,10 @@
 const Serv = import('../../services/bidding-list-service')
 const ListItem = import('../../components/list-item')
 
+const hideSpinner = () => {
+  const targ = document.querySelector('registration-section > .spinner')
+  if (targ) targ.hide()
+}
 /**
  * Submission failed
  */
@@ -9,6 +13,7 @@ const showError = () => {
     <div class="col text-danger" style="border:2px solid orangered;padding:5px;">
       Unable to process request. Please try again later
     </div>  `
+    hideSpinner()
 }
 
 
@@ -16,6 +21,7 @@ const showError = () => {
  * Submission success
  */
 const showSuccess = (json) => {
+  hideSpinner()
   document.getElementById('bid-form-status').innerHTML = ''
   // remove empty message
   if (document.querySelector('.empty-list-message-section')) document.querySelector('.empty-list-message-section').remove()	
@@ -42,7 +48,12 @@ const appendItems = (target, data) => {
  * Create new Bidding
  * @param {*} e 
  */
-const register = (e) => {
+const register = (e) => { 
+  // spinner
+  import('../../components/app-spinner').then(loader => {
+    return new loader.default().show({target: 'registration-section'}).then(t => t.template.show())
+  })
+  e.target.disabled = 'disabled'
 	e.preventDefault()
   // payload
   const __exemptionField = document.querySelector('form[name="bidding-request-registration"] input[name="forExemption"]:checked')
@@ -51,6 +62,7 @@ const register = (e) => {
 		action: 'create',
 		token: localStorage.getItem('token'),
   }
+ 
   
   // create
   Serv.then(loader => {
@@ -69,9 +81,11 @@ const register = (e) => {
       }
       // failed
       showError()
+      e.target.disabled = false
     })
   }).catch(err => {
     showError()
+    e.target.disabled = false
   })
 }
 
