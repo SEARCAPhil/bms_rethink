@@ -83,6 +83,10 @@ export default class{
 		return this.create(opt)
 	}
 
+	search(opt){
+		return this.__getData(`/bidding/search.php?token=${opt.token}&param=${opt.param}&timestamp=${this.timestamp}&page=${opt.page}`)
+	}
+
 	signatories(opt = {}){
 		return this.__postData('/bidding/signatories.php/?timestamp=${this.timestamp}', opt)
 	}

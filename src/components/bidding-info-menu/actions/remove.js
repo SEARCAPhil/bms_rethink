@@ -61,7 +61,8 @@ export default class {
   bindRemoveBidding () {
     const proto = Object.assign({ __proto__: this.__proto__ }, this)
     const root = this.opt.root || document
-    root.querySelector(this.opt.selector).addEventListener('click',this.loadRemoveBidding.bind(proto))
+    const sel = root.querySelector(this.opt.selector)
+    if(sel) sel.addEventListener('click',this.loadRemoveBidding.bind(proto))
   }
   
 }

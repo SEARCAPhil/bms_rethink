@@ -2,6 +2,8 @@ const Serv = import('../../services/bidding-inv-service')
 const ListSection = import('../../components/list-section')
 const DropdownLoader = import('../../utils/dropdown-loader')
 
+let timeout = {}
+
 const loadPopup = () => {
 
   const popupes = import('../../components/popup-es')
@@ -18,6 +20,78 @@ const loadPopup = () => {
 
     popupes.then(loader => new loader.default())
 
+}
+
+
+const showEmptySearch = () => {
+  const targ = document.querySelector('.list-search-bidding-section')
+  targ.innerHTML = `
+    <center class="col text-muted empty-list-message-section" style="margin-top:50px;">
+      <i class="material-icons md-48">search</i>
+      <p>
+         <small>No matches found. <br/>Please try another keyword</small>
+      </p>
+    </center>`
+}
+
+const search = (e) => {
+  const targ = document.querySelector('.list-search-bidding-section')
+
+  let __payload = {
+    token : window.localStorage.getItem('token'),
+    param: e.target.value,
+    page: 1, 
+  }
+
+  if (e.target.value.length > 0) {
+
+    // hide list and show search results
+    document.querySelector('.list-bidding-section').classList.add('hide')
+    targ.classList.remove('hide')
+
+    // clear area
+    if (__payload.page === 1) targ.innerHTML = ' <div class="col text-muted text-center">searching . . . </div>'
+
+    // search
+    clearTimeout(timeout)
+    timeout = setTimeout(() => {
+
+      Serv.then(loader => { 
+        const a = new loader.default()
+        a.search(__payload).then(res => {
+  
+          // clear section for page 1
+          if(__payload.page < 2) targ.innerHTML = ''
+  
+           // items
+          import('../../components/inv-item').then(item => {
+            // items
+            res.forEach((el, index) => {
+              const lItem = new item.default({class: 'col-12 list', id: el.id, name: el.name, quantity: el.quantity, unit: el.unit, bidding_requirements_id: el.bidding_requirements_id, deadline: el.deadline})
+              targ.append(lItem)
+            })
+            
+            // empty result
+            if (__payload.page === 1 && res.length === 0) {
+              showEmptySearch()		
+            } 
+
+          }).catch((err) => showEmptySearch())
+        })
+      })
+
+    },500)
+
+  } else {
+    // revert to normal
+    document.querySelector('.list-bidding-section').classList.remove('hide')
+    document.querySelector('.list-search-bidding-section').classList.add('hide')
+  }
+
+}
+
+const bindSearch = () => {
+  document.querySelector('#search').addEventListener('keyup', search)
 }
 
 /**
@@ -38,6 +112,7 @@ const loadListSection = () => {
       
       // dropdown
       DropdownLoader.then(loader =>  loader.default('device-dropdown'))
+      bindSearch()
       // resolve
       resolve()
     })

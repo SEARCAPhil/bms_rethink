@@ -42,5 +42,10 @@ export default class{
 	view(opt) {
 		return this.__getData(`/bidding/invitations/?id=${opt.id}&token=${opt.token}`)
 	}
+
+	search(opt){
+		return this.__getData(`/bidding/invitations/search.php?token=${opt.token}&param=${opt.param}&timestamp=${this.timestamp}&page=${opt.page}`)
+	}
+
   
 }

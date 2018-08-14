@@ -65,7 +65,8 @@ export default class {
   bind () {
     const proto = Object.assign({ __proto__: this.__proto__ }, this)
     const root = this.opt.root || document
-    root.querySelector(this.opt.selector).addEventListener('click',this.load.bind(proto))
+    const sel = root.querySelector(this.opt.selector)
+    if(sel) sel.addEventListener('click',this.load.bind(proto))
   }
   
 }
