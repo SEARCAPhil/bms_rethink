@@ -74,10 +74,14 @@ Navigo.then((Navigo) => {
     '' : () =>{
       // redirect to home by default
       window.location.hash = '/home'
+      
     },
     '/auth' :  () =>  {
       // redirect to o365 authentication page
       window.location = 'auth.html'
+    },
+    '/authentication' : () => {
+      window.location = `${window.location.origin}${window.location.pathname}cauth.html`
     },
     '/home' : () => {
       // detect login instance
@@ -104,7 +108,7 @@ Navigo.then((Navigo) => {
 
       
     },
-   	'/inv/*':()=>{
+   	'/inv/*': ()=>{
       // load components
       loadHeader()
       loadLeftSidebar().then(() => {
@@ -122,7 +126,9 @@ Navigo.then((Navigo) => {
         })
      },
     '/logout/' : () => { 
-      return (localStorage.getItem('role') === 'supplier') ? (window.location = `${window.location.origin}${window.location.pathname}cauth.html`) : window.location.hash = '/auth'
+      window.document.body.innerHTML = '<center><br/>loging out . . .</center>'
+      window.localStorage.clear()
+      return (localStorage.getItem('role') === 'supplier') ? window.location.hash = '/authentication' : window.location.hash = '/auth'
       
     },
   }).resolve()

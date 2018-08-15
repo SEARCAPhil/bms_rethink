@@ -1,46 +1,49 @@
 body
-  font-family: 'Roboto', sans-serif
   overflow: hidden
 
-.go-to-app-btn 
+html
+  font-family: 'Roboto', 'Helvetica', 'Arial', sans-serif
+
+.main-login
+  height: 100vh
+  width: 100%
+  overflow: hidden
+
+.main-login-banner
+  height: 100vh
+  padding-top:  20%
+  color:  rgb(255,255,255)
+  z-index:  1
+  position: relative
+
+.main-login-backdrop
+  float:  left
+  position: absolute
+  width:  100%
+  height: 100%
+  top:  0
+  background: rgba(0,0,0,0.8)
+  z-index:  1
+
+.main-login-banner-text
+  float:  left
+  position: absolute
+  width:  100%
+  height: 100%
+  top:  25vh
+  z-index:  2
+
+
+.green
+  color: #23f98b
+
+
+.sub-login-banner
+  padding-top:  7%
+  position: relative
+  height: 100%
+  overflow: hidden
+  overflow-y: auto
+
+.go-to-app-btn
   border-radius: 50px
-    
-.backdrop
-  position: fixed
-  top:0
-  left: 0
-  width: 100%
-  height: 100%
-  background: rgba(0,0,0,0.82) linear-gradient(to bottom, rgba(255, 255, 255, 0) 0%, rgba(0,0,0, 0.9) 93%) repeat scroll 0 0
-  z-index: 1
-
-.backdrop-content
-  position: fixed
-  top:0vh
-  left: 0
-  width: 100%
-  height: 100%
-  z-index: 2
-  color: #fff
-  padding-top:15vh
-  opacity: 1
-  animation: goUp 1.2s ease 0s
-
-.backdrop-header
-  z-index: 3
-  color: #fff
-  position: fixed
-  top: 0
-  width: 100%
-  height: 100px
-
-@keyframes goUp
-  0%
-    opacity: 0.3
-    top:30vh
-  
-
-  100%
-    opacity: 1
-    top:0
-  
