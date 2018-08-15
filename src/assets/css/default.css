@@ -32,44 +32,8 @@ summary{
   outline:none;
 }
 
-.navbar-top{
-    background: rgb(60,60,60) !important;
-    margin-bottom: 0;
-}
-.nav-top-menu li a{
-  color: rgb(255,184,12) !important;
-}
-/*main menu*/
-.main-menu{
-    margin-top: 50px;
-}
 
-.main-menu li{
-    padding: 10px 5px 10px 5px;
-    margin-bottom: 2px;
-    cursor:pointer;
-    font-size: 13px;
-}
 
-.main-menu li.sub {
-  color: #bbbbbb;
-}
-
-.main-menu li.sub .material-icons {
- font-size: 20px !important;
-}
-
-.main-menu li.active{
-    background: rgb(255,184,12);
-    color: #000;
-}
-
-.main-menu li.deactivated{
-    opacity: 0.5;
-}
-.main-menu-list{
-    color: rgb(240,240,240);
-}
 
 .btn-group-xs > .btn, .btn-xs {
     padding  : .25rem .4rem;

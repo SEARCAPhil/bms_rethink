@@ -1,0 +1,24 @@
+.file-attachment-main-dialog
+  background: rgba(255,255,255,0.6)
+  height: 100vh
+  position: fixed
+  z-index: 2
+  opacity: 0
+  visibility: hidden
+  top: 0
+
+.file-attachment-main-dialog
+  & .body
+    transition: all 0.2s ease-in-out
+    right: -120vh
+    opacity: 0
+
+.file-attachment-main-dialog
+  &.open
+    visibility: visible
+    opacity: 1
+
+.file-attachment-main-dialog.open
+  & .body
+    right: 0
+    opacity: 1
