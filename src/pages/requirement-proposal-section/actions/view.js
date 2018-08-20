@@ -46,10 +46,11 @@ export default class {
    *
    */
   __bind () {
-		const proto = Object.assign({ __proto__: this.__proto__ }, this)
-		const el = document.querySelectorAll(this.opt.selector)
+		const __proto = Object.assign({ __proto__: this.__proto__ }, this)
+		const el = document.querySelectorAll(`${this.opt.selector}:not(.event-binded)`)
 		el.forEach((els, index) => {
-			els.addEventListener('click',this.loadDialogPane.bind(proto))
+      els.classList.add('event-binded')
+			els.addEventListener('click', this.loadDialogPane.bind(__proto))
 		})
 	}
 

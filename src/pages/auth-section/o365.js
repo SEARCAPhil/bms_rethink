@@ -61,7 +61,7 @@ const loginOnPremiseServer = (data) => {
 
 // authenticate to remote server
 const loginOnPremise = (data) => {
-  loginOnPremiseServer (data).then((json) => { 
+  loginOnPremiseServer (data).then((json) => {
       // account not yet verified
       if (!json.role) {
           window.location = 'authentication/confirmation.html'
@@ -76,6 +76,7 @@ const loginOnPremise = (data) => {
       window.localStorage.setItem('givenName', data.displayName)
       window.localStorage.setItem('department', data.department)
       window.localStorage.setItem('position', data.jobTitle)
+      window.localStorage.setItem('image', data.image)
       window.location = './#/home/'
      
   }).catch((err) => {
@@ -95,10 +96,32 @@ const getGraph = (token)  => {
   ).then(response => response.json()).catch((err) => {
       authError()
   }).then(data => {
-      // auth to onpremise
-      if(data.id) { 
-          loginOnPremise(data)
-      }
+    // auth to onpremise
+    if(data.id) { 
+        
+        getImage(token).then(res => { 
+          res.blob().then(blob => {
+          // reader
+          let reader = new FileReader();
+          reader.readAsDataURL(blob); 
+          reader.onloadend = function() {
+            //let img = document.createElement('img')
+           // img.src = reader.result
+            data.image = reader.result
+            loginOnPremise(data)              
+          }
+         
+        })
+      })
+    }
+  })
+}
+
+const getImage = (token) => {
+  //https://graph.microsoft.com/v1.0/me/photo/$value
+  return fetch('https://graph.microsoft.com/v1.0/me/photo/$value', { 
+    headers: {'Authorization':'Bearer '+token }, 
+    method: 'GET'
   })
 }
 

@@ -204,7 +204,7 @@ export default class {
 
     this.getMenu().then(() => this.loadPopup ())
    
-    this.loadAttachments('.recently-attached-prop-section', this.__info.attachments)
+    this.loadAttachments(`#recently-attached-prop-section-${this.opt.id}`, this.__info.attachments)
     
   }
 
@@ -306,7 +306,7 @@ export default class {
         <p><b>DISCOUNT : <span id="prop-info-discount">${new Intl.NumberFormat('en-us').format(this.__info.discount)}</span></b></p>
       </small>
 
-      <div class="col-12 attachment-prop-pool-section row" id="attachment-prop-pool-section"></div>
+      <div class="col-12 attachment-prop-pool-section row" id="attachment-prop-pool-section-${this.opt.id}"></div>
       <hr/>
         <h5>
           <span class="header-circle"><i class="material-icons md-24">add_shopping_cart</i></span>

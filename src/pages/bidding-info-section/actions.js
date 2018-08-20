@@ -134,7 +134,7 @@ const getBiddingList = (opt = {}) => {
         ListItem.then(item => {
           // items
           res.forEach((el, index) => {
-            const lItem = new item.default({class: 'col-12 list', id: el.id, profile_name: el.profile_name, date_created: el.date_created})
+            const lItem = new item.default({class: 'col-12 list', id: el.id, profile_name: el.profile_name, date_created: el.date_created, status: el.status})
             listSection.append(lItem)
           })
 

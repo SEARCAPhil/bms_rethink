@@ -33,6 +33,11 @@ class template {
   async render () {
     const net = (await Network).default
     const template = document.createElement('section')
+    const date = new Date()
+    const curMonth = (date.getMonth()+1) < 10 ? `0${date.getMonth()+1}` : (date.getMonth()+1)
+    const curD = date.getDate() < 10 ? `0${date.getDate()}` : date.getDate()
+    const currentDate = `${date.getFullYear()}-${curMonth}-${curD}`
+
     let __specs = ''
     let __attachments = ''
     this.__info = await this.__getInfo(this.__params.id)
@@ -75,7 +80,7 @@ class template {
           <b>Bidding Item #: </b> <span class="req-bidding-number">${this.__info.bidding_id}</span> <br/>
           <b>Reference #: </b> <span class="req-reference-number">${this.__info.id}</span> <br/>
           <span class="text-danger"><b>Quantity : </b> <span class="req-quantity">${this.__info.quantity}</span> <span class="req-unit">${this.__info.unit}</span></span> <br/>
-          <b>Deadline: </b> <span class="req-deadline">${this.__info.deadline}</span>
+          <b>Deadline: </b> <span class="${(currentDate > this.__info.deadline) ? 'text-danger' : 'text-primary'}">${this.__info.deadline != '0000-00-00' ? this.__info.deadline : 'Not Set'}</span>
         </p><br/>
 
         <!-- attachments-->

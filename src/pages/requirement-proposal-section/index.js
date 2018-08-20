@@ -92,7 +92,7 @@ export default class {
     // clear proposal list section
     if(isEmpty) __targ.forEach((el, index) => { el.innerHTML ='' })
 
-
+    
     data.forEach((val, index) => {
       let html = document.createElement('li')
       let status = ''
@@ -178,6 +178,11 @@ export default class {
 
     this.__info = await this.__getInfo(this.opt.id)
     const template = document.createElement('section')
+    const date = new Date()
+    const curMonth = (date.getMonth()+1) < 10 ? `0${date.getMonth()+1}` : (date.getMonth()+1)
+    const curD = date.getDate() < 10 ? `0${date.getDate()}` : date.getDate()
+    const currentDate = `${date.getFullYear()}-${curMonth}-${curD}`
+
 
     template.classList.add('col-lg-3')
     template.id = 'requirement-proposal-container'
@@ -186,7 +191,7 @@ export default class {
       <style>#requirement-proposal-container { background: #eee!important; padding-top: 100px; padding-bottom: 100px; height: 100vh; overflow-x:hidden; overflow-y:auto; border-left: 1px solid #ccc; }</style>
       <h5>Proposals</h5><hr/>
       
-      ${isSupplier() ?
+      ${(isSupplier() && currentDate <= this.__info.deadline) ?
       `<div class="col-12">
         <center>
           <p class="text-muted">
@@ -196,6 +201,16 @@ export default class {
         </center>
         <hr/>
       </div>` : '' }
+
+      ${(currentDate > this.__info.deadline) ?
+        `<div class="col-12">
+          <center>
+            <p class="text-muted">
+              <i class="material-icons md-48">lock</i><br>
+              Sorry, this bidding is already closed. You are not allowed to bid on this item anymore. 
+          </center>
+          <hr/>
+        </div>` : '' }
 
       <section id="proposal-list-section" class="proposal-list-section">
         ${isCBAAsst() || isGSU() ?

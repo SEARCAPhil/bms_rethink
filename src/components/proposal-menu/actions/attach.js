@@ -28,7 +28,7 @@ export default class {
   }
 
   __appendFileToBeUploaded (e) {
-    const targ = document.querySelectorAll('.attachment-prop-pool-section')
+    const targ = document.querySelectorAll(`#attachment-prop-pool-section-${this.opt.id}`)
 
 		// close dialog
 		document.querySelector(`#file-attachment-main-dialog-${this.opt2.id}`).close()
@@ -60,7 +60,7 @@ export default class {
     const el = document.querySelector(opt.selector)
     const __proto = Object.assign({__proto__: this.__proto__}, this)
     el.opt = opt
-		el.removeEventListener('change', this.__appendFileToBeUploaded.bind(__proto))
+    el.classList.add('event-binded')
 		el.addEventListener('change', this.__appendFileToBeUploaded.bind(__proto))
   }
 
@@ -68,7 +68,7 @@ export default class {
    * Attachment Components
    */
   loadAttachments (target, data) { 
-    import('../../attachments-item').then(res => {
+    import('../../proposal-attachments-item').then(res => {
       const targ = document.querySelector(target)
       if (!targ) return 0
       // append files
@@ -113,7 +113,7 @@ export default class {
           menus: ['remove']
         }
         
-				this.loadAttachments('.recently-attached-prop-section', [__payload])
+				this.loadAttachments(`#recently-attached-prop-section-${id}`, [__payload])
 				// more settings
 				setTimeout(() => {
           // dropdown and popup menu
@@ -149,7 +149,7 @@ export default class {
 
       setTimeout(() => {
         this.__bindSelectDeviceFile({
-          selector: '#file-upload-attachment-prop-modal',
+          selector: '#file-upload-attachment-prop-modal:not(.event-binded)',
         })
 
       },1000)
@@ -174,7 +174,7 @@ export default class {
                   <i class="material-icons md-48">cloud</i>
                   <h6>Upload files from your device</h6>
                   <label for="file-upload-attachment-prop-modal" class="btn btn-dark btn-sm">Select file <i class="material-icons md-18">attach_file</i></label>
-                  <input id="file-upload-attachment-prop-modal" name="file-upload-attachment[]" class="hide event-binded" type="file" multiple="">
+                  <input id="file-upload-attachment-prop-modal" name="file-upload-attachment[]" class="hide" type="file" multiple="">
               </center>  
             </div> 
         </div>

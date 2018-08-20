@@ -10,6 +10,9 @@ const Menuselector = import('../utils/menu-selector')
 const loadHeader = () => {
   const MainHeader = import('../components/main-header')
   const ProfileLoader = import('../utils/profile-loader') 
+
+  if(document.querySelector('header > .nav')) return
+
   // header
   return MainHeader.then(res => {
     const headerSec =  document.querySelector('header')
@@ -21,8 +24,23 @@ const loadHeader = () => {
     // change visibility
     DisplayStyler.then(display => {
       display.default(['splash-page', '.list-bids-container'],'none')
+      setImage()
     })
   })
+}
+
+const setImage = () => {
+  const src = window.localStorage.getItem('image')
+  const headerSection = document.getElementById('image-header-section')
+
+  // User's information
+  document.getElementById('givenName-header-section').innerHTML = window.localStorage.getItem('givenName')	
+
+  if(!src) return headerSection.innerText = window.localStorage.getItem('givenName').substr(0,2).toUpperCase()
+  // change user info in DOM's header
+  headerSection.style.background = `url(${src}) center center no-repeat`
+  headerSection.style.backgroundSize = 'cover'
+
 }
 
 
@@ -124,6 +142,16 @@ Navigo.then((Navigo) => {
           Menuselector.then(loader => { new loader.default().active('feedback-menu-list') })
           import('./feedback')
         })
+     },
+   	'/supplier/*': ()=>{
+      // load components
+      loadHeader()
+      loadLeftSidebar().then(() => {
+        Menuselector.then(loader => { new loader.default().active('inv-menu-list') })
+        import('./invitation')
+      })
+      // dropdown
+      DropdownLoader.then(loader => loader.default('device-dropdown'))
      },
     '/logout/' : () => { 
       window.document.body.innerHTML = '<center><br/>loging out . . .</center>'

@@ -16,7 +16,10 @@ export default class {
     this.template.innerHTML = `
       <style>${style.toString()}</style>
       <a href="#/bids/${opt.id}/info">
-        <h6 class="list-item-header">#${opt.id}</h6>
+        <h6 class="list-item-header">#${opt.id} 
+          ${opt.status == 3 ? '<span class="float-right"><i class="material-icons md-18" style="color:#8BC34A;">check_circle</i></span>' : ''}
+          ${opt.status == 5 ? '<span class="float-right"><i class="material-icons md-18 text-muted">lock</i></span>' : ''}
+        </h6>
         <small>
           <p style="font-size:smaller;" class="text-muted">
             ${opt.profile_name}<br/>
