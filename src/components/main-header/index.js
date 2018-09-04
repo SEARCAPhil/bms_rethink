@@ -29,7 +29,7 @@ export default `
       </span>
         
       
-      <span class="navbar-brand hamburger d-none d-lg-block hidden" style="
+      <span class="navbar-brand hamburger" style="
           color: #d8d8d8;
           font-size: 14px;">  Bidding Management System
       </span>

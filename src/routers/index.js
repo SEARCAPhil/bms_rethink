@@ -143,12 +143,12 @@ Navigo.then((Navigo) => {
           import('./feedback')
         })
      },
-   	'/supplier/*': ()=>{
+   	'/suppliers/*': ()=>{
       // load components
       loadHeader()
       loadLeftSidebar().then(() => {
-        Menuselector.then(loader => { new loader.default().active('inv-menu-list') })
-        import('./invitation')
+        Menuselector.then(loader => { new loader.default().active('supplier-menu-list') })
+        import('./suppliers')
       })
       // dropdown
       DropdownLoader.then(loader => loader.default('device-dropdown'))

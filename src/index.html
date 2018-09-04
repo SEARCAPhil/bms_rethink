@@ -63,13 +63,13 @@
         font-size: 1.75rem;
       }
       .hide {
-        display: none;
+        display: none !important;
       }
       .hide.d-lg-block {
         display: none !important;
       }
       .show {
-        display: block;
+        display: block !important;
       }
     </style>
 </head>
@@ -86,7 +86,8 @@
     <main class="d-flex bidding-section">
       <header></header>
       <left-sidebar></left-sidebar>
-      <article class="col-10 d-flex align-items-stretch p-0">
+
+      <article class="col-12 col-lg-10 col-md-12 col-xl-10 d-flex align-items-stretch p-0 bidding-module-container" style="height:100vh;">
         <section class="row col-12 welcome-section"></section>
         <list-section></list-section>
         <info-section></info-section>
@@ -97,6 +98,11 @@
         <report-section></report-section>
         <feedback-section></feedback-section>
       </article>
+
+      <article class="col-12 col-lg-10 col-md-12 col-xl-10 d-flex align-items-stretch p-0 hide supplier-module-container" style="height:100vh;">
+        <supplier-section></supplier-section>
+      </article>
+
     </main>
 
     <!-- dialog -->

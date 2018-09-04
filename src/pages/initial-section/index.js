@@ -3,7 +3,7 @@ const template = document.createElement('div')
 
 template.name =  "/bids/initial"
 template.id = 'initial-section'
-template.classList.add('col', 'col-lg-9', 'col-sm-12', 'col-xs-12', 'max-height-panel')
+template.classList.add('col', 'col-12')
 template.innerHTML = `
   <style>${style.toString()}</style>
   <div class="col-lg-7 offset-lg-2 d-lg-offset-2 text-center" style="margin-top:70px;">

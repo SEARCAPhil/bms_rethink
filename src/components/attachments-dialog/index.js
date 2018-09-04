@@ -56,7 +56,7 @@ export default class {
     // template
     this.template.innerHTML = `
       <style>.recently-attached-section { height:70vh; overflow: auto;}</style>
-      <div class="col row" style="border-right: 1px solid rgba(200,200,200,0.5);padding-top: 100px;">
+      <div class="col col-6 col-lg-3 row" style="border-right: 1px solid rgba(200,200,200,0.5);padding-top: 100px;">
         <ul class="list-unstyled col">
           <li data-role="none">
             <h5>
@@ -73,13 +73,13 @@ export default class {
           </li>
         </ul>
       </div>
-      <div class="col-9" style="padding-top: 100px;">
-        <div class="col-lg-12">
+      <div class="col-6 col-lg-9" style="padding-top: 100px;">
+        <div class="col-12">
           <p>Recently attached <i class="material-icons">navigate_next</i> <span class="text-muted">Files</span></p><br/>
           <hr/>
           <div class="recently-attached-section" id="recently-attached-section-${this.opt.id}"></div> 
         </div>
-        <div class="col-lg-12 mt-3">
+        <div class="col-12 mt-3">
           <button class="btn btn-sm btn-default" id="file-attachment-upload-recent-btn-${this.opt.id}" disabled="disabled">Attach</button>&emsp; 
           <button class="btn btn-sm btn-default" id="file-attachment-main-dialog-cancel-btn-${this.opt.id}">CANCEL</button>
         </div>

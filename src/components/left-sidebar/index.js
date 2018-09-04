@@ -4,7 +4,7 @@ import scrollbar from '../general-style/scrollbar-custom'
 export default `
   <style>${style.toString()} ${scrollbar.toString()}</style>
   <div class="content container-fluid" style="height: 1080px;background: none;padding-top:40px;">
-    <menu class="col col-md-12 text-left">
+    <menu class="col col-12 col-md-12 text-left">
       <ul class="list-unstyled main-menu main-menu-list">
         <li data-status="home" 
             class="main-menu-list-item suppliers_main_menu" 

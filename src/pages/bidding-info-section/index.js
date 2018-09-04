@@ -112,7 +112,7 @@ class template {
       return `<span class="badge badge-dark">${val.profile_name}</span>`
     })
     // template settings
-    this.template.setAttribute('style', 'margin-top:50px;padding-bottom:40px;height:100vh;overflow-y:auto;')
+    this.template.setAttribute('style', 'margin-top:45px;padding-bottom:40px;height:100vh;overflow-y:auto;')
     this.template.classList.add('col-lg-10')
     this.template.id = 'bids-info-container'
     this.template.innerHTML = `
@@ -123,7 +123,7 @@ class template {
         <!-- attachment upload preview -->
         <div class="col-lg-11 col-sm-12 offset-lg-1 row attachment-pool-section" style="padding-top:10px"></div>
 
-        <article class="col-10 offset-lg-1 mt-5" id="bidding-info-details">
+        <article class="col-12 col-lg-10 offset-lg-1 mt-5" id="bidding-info-details">
           <!-- info -->
           <h3><b>Bidding Request <span id="bidding-number-info">#${this.__info.id}</span></b></h3>
           <span class="text-danger">Bidding Exemption : ${parseInt(this.__info.excemption) ? 'Yes' : 'No'}</span><br/>
