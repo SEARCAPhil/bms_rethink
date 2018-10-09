@@ -6,7 +6,7 @@ const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 
 module.exports = {
-  mode: 'development',
+  mode: 'production',
 	entry: toObject(glob.sync('./src/**/*.js*'),'./src'),  
 	output: {
 		path: path.resolve(__dirname,'www'),
