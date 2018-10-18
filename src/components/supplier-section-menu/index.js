@@ -47,7 +47,7 @@ export default class {
         <!-- update -->
         ${ opt.menus.indexOf('register')!=-1 ?
           `<li class="nav-item  ${opt.active === 'register' ? 'active' : ''}">
-            <a class="nav-link nav-link supplier-section-nav" href="#/bids/forms/registration//step/1/update">
+            <a class="nav-link nav-link supplier-section-nav" href="#/suppliers/forms/registration/">
               Register new <i class="material-icons md-18">add_circle</i>
             </a>
           </li>` : ''

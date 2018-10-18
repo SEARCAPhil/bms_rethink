@@ -27,11 +27,11 @@ Navigo.then((Navigo) => {
     })
   }
 
-  const loadSuppliersListSection = () => {
+  const loadSuppliersListSection = (params = {}) => {
     // loade Information section
     return import('../pages/supplier-list-section').then(res => { 
       // template
-      const temp = new res.template({})
+      const temp = new res.template(params)
       const template = temp.render()
       template.then(html => {
         // DOM
@@ -44,6 +44,15 @@ Navigo.then((Navigo) => {
   const loadSuppliersInfoSection = (opt) => {
     import('../pages/supplier-info-section').then(res => {
       new res.default(opt).render().then(html => {
+        const sec = document.querySelector('supplier-section') || document.querySelector('#supplier-section')
+        if(sec) sec.replaceWith(html) 
+      })
+    })
+  }
+
+  const loadSuppliersRegForm = (param = {}) => {
+    import('../pages/supplier-reg-form').then(res => {
+      new res.default(param).then(html => {
         const sec = document.querySelector('supplier-section') || document.querySelector('#supplier-section')
         if(sec) sec.replaceWith(html) 
       })
@@ -73,9 +82,10 @@ Navigo.then((Navigo) => {
     '/suppliers/welcome' : () => {
       loadSupplierSection({}).then(() => {
         import('../pages/initial-supplier-section').then(res => {
-          if(document.querySelector('suppliers-section-container')) {
-            document.querySelector('suppliers-section-container').innerHTML = ''
-            document.querySelector('suppliers-section-container').append(res.default)
+          let __targ =  document.querySelector('suppliers-section-container') || document.querySelector('#supplier-section')
+          if(__targ) {
+            __targ.innerHTML = ''
+            __targ.append(res.default)
           }
         })
       })
@@ -86,6 +96,16 @@ Navigo.then((Navigo) => {
       }).then(() => {
         document.querySelector('suppliers-section-container').innerHTML = ''
         loadSuppliersListSection()
+      })
+      //setTimeout(() => { setActiveMenu('suppliers-records-nav') }, 800)
+      //InitSection.then(res => document.querySelector('initial-section') ? document.querySelector('initial-section').replaceWith(res.default) : 0)
+    },
+    '/suppliers/all/page/:page' : async (params) => { 
+      loadSupplierSection({
+        active: 'suppliers'
+      }).then(() => {
+        document.querySelector('suppliers-section-container').innerHTML = ''
+        loadSuppliersListSection(params)
       })
       //setTimeout(() => { setActiveMenu('suppliers-records-nav') }, 800)
       //InitSection.then(res => document.querySelector('initial-section') ? document.querySelector('initial-section').replaceWith(res.default) : 0)
@@ -104,6 +124,10 @@ Navigo.then((Navigo) => {
     },
     '/suppliers/accounts/*' : async (params) => {
       import('./suppliers/accounts')
+    },
+    '/suppliers/forms/registration' : async (params) => {
+
+      loadSuppliersRegForm(params)
     },
 
   }).resolve()

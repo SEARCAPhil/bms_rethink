@@ -1,54 +1,55 @@
 import style from './style'
+const suppServ = import('../../services/supplier-service')
 
 export default class {
   constructor (params) {
     this.__opt = params
   }
 
-  __about () {
+  __getDetails () {
+    return new Promise((resolve, reject) => {
+      suppServ.then(res => {
+        const __payload = {
+          id: this.__opt.id,
+          token: window.localStorage.getItem('token'),
+        }
+        new res.default().view(__payload).then(data => {
+          resolve(data)
+        })
+      })
+    })
+  }
+
+  __setDetails (res) {
+    return `
+      <h3><b>${res.alias}</b></h3>
+      <small>${res.name}<br/>
+        <span class="text-muted"><i class="material-icons">location_on</i> ${res.location || 'Location not set'}</span>
+        <br/><span class="text-muted"><i class="material-icons">public</i> ${res.website || 'Website not set'}</span>
+      </small><hr/>
+      <br/>
+      <p class="text-justify">${res.about || 'No details available'}</p>`
+  }
+
+  __setNotFound () {
+    return `
+      <h3><b>Not Found</b></h3><br/>
+      <p>The page you are requesting is currently not available. Please try again later.</p>
+      <br/>`
+  }
+
+  async __about () {
     const __targ = this.template.querySelector('suppliers-section-container')
     const __temp = document.createElement('section')
+    const __details = await this.__getDetails ()
     __temp.classList.add('col', 'col-lg-10', 'offset-lg-1')
-    __temp.innerHTML = `
-    <h3><b>AMTI</b></h3>
-    <p>Accent Micro Technologies Inc.<br/>
-      <span class="text-muted"><i class="material-icons">location_on</i> Chino Roces Ave. Makati City</span>
-    </p><hr/>
-    <br/>
-    <p class="text-justify">
-      
-      Where does it come from?<br/>
-      Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. <br/>
-      Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, <br/>
-      and going through the cites of the word in classical literature, discovered the undoubtable source. Lorem Ipsum comes from sections 1.10.32 and 1.10.33 of <br/>
-      "de Finibus Bonorum et Malorum" (The Extremes of Good and Evil) by Cicero, written in 45 BC. This book is a treatise on the theory of ethics, very popular <br/>
-      during the Renaissance. The first line of Lorem Ipsum, "Lorem ipsum dolor sit amet..", comes from a line in section 1.10.32.
-      <br/>
-      The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for those interested. Sections 1.10.32 and 1.10.33 from "de Finibus Bonorum et Malorum"<br/> 
-      by Cicero are also reproduced in their exact original form, accompanied by English versions from the 1914 translation by H. Rackham.
+    __temp.innerHTML = ''
 
-      Where does it come from?<br/>
-      Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. <br/>
-      Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, <br/>
-      and going through the cites of the word in classical literature, discovered the undoubtable source. Lorem Ipsum comes from sections 1.10.32 and 1.10.33 of <br/>
-      "de Finibus Bonorum et Malorum" (The Extremes of Good and Evil) by Cicero, written in 45 BC. This book is a treatise on the theory of ethics, very popular <br/>
-      during the Renaissance. The first line of Lorem Ipsum, "Lorem ipsum dolor sit amet..", comes from a line in section 1.10.32.
-      <br/>
-      The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for those interested. Sections 1.10.32 and 1.10.33 from "de Finibus Bonorum et Malorum"<br/> 
-      by Cicero are also reproduced in their exact original form, accompanied by English versions from the 1914 translation by H. Rackham.
-      <br/><br/>
-      Where does it come from?<br/>
-      Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. <br/>
-      Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, <br/>
-      and going through the cites of the word in classical literature, discovered the undoubtable source. Lorem Ipsum comes from sections 1.10.32 and 1.10.33 of <br/>
-      "de Finibus Bonorum et Malorum" (The Extremes of Good and Evil) by Cicero, written in 45 BC. This book is a treatise on the theory of ethics, very popular <br/>
-      during the Renaissance. The first line of Lorem Ipsum, "Lorem ipsum dolor sit amet..", comes from a line in section 1.10.32.
-      <br/>
-      The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for those interested. Sections 1.10.32 and 1.10.33 from "de Finibus Bonorum et Malorum"<br/> 
-      by Cicero are also reproduced in their exact original form, accompanied by English versions from the 1914 translation by H. Rackham.
-    </p>`
-
-    __targ.innerHTML = ''
+    try {
+      __temp.innerHTML = this.__setDetails(__details.data[0])
+    } catch (e) {
+      __temp.innerHTML = this.__setNotFound()
+    }
     __targ.append(__temp)
   }
 
