@@ -62,7 +62,7 @@ class template {
             <td>${val.date_created || 'N/A'}</td>
             <td width="110px">
               <button class="btn btn-light btn-sm"><i class="material-icons text-danger md-18 remove-comp-modal-btn" data-target="#general-modal" data-popup-toggle="open" data-resource="${val.id}">remove_circle</i></button>
-              <button class="btn btn-light btn-sm"  href="#" data-target="#general-modal" data-popup-toggle="open"><i class="material-icons  md-18">edit</i></button>
+              <a class="btn btn-light btn-sm"  href="#/suppliers/${val.id}/update"><i class="material-icons  md-18">edit</i></a>
             </td>`
           
           __target.append(__template)
@@ -125,7 +125,7 @@ class template {
             resolve(__total)
           })
         }).then((total) => {
-            let totalPage = total/10;
+            let totalPage = total/50;
             this.template.querySelector('#total-showing-section').innerHTML = total
             this.__pager(totalPage)
         })

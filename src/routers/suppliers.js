@@ -53,7 +53,7 @@ Navigo.then((Navigo) => {
   const loadSuppliersRegForm = (param = {}) => {
     import('../pages/supplier-reg-form').then(res => {
       new res.default(param).then(html => {
-        const sec = document.querySelector('supplier-section') || document.querySelector('#supplier-section')
+        const sec = document.querySelector('suppliers-section-container') || document.querySelector('supplier-section')
         if(sec) sec.replaceWith(html) 
       })
     })
@@ -113,6 +113,9 @@ Navigo.then((Navigo) => {
     '/suppliers/:id/info' : async (params) => {
       params.active = 'about' 
       loadSuppliersInfoSection(params)
+    },
+    '/suppliers/:id/update' : async (params) => {
+      loadSuppliersRegForm(params)
     },
     '/suppliers/:id/products' : async (params) => {
       params.active = 'products' 
