@@ -21,14 +21,34 @@ export default class {
   }
 
   __setDetails (res) {
+    let __industries = ''
+    let __contacts = ''
+    
+    // get industries
+    res.industry.split(',').forEach((el, index) => {
+      __industries+= `<span class="badge badge-dark">${el}</span>&emsp;`
+    })
+
+    // get contact info
+    res.contact_info.forEach((el, index) => __contacts+=`<span class="badge badge-dark mr-2"><i class="material-icons md-18">${el.type == 'phone' ? 'phone' : (el.type == 'email' ? 'email' : 'smartphone')}</i>${el.value}</span>`)
+    
+
     return `
+      <div class="col-12 text-center">
+        <img src="${res.logo}" onerror="this.remove();" width="100%" style="max-width: 350px;" class="p-2">
+      </div>
       <h3><b>${res.alias}</b></h3>
       <small>${res.name}<br/>
-        <span class="text-muted"><i class="material-icons">location_on</i> ${res.location || 'Location not set'}</span>
-        <br/><span class="text-muted"><i class="material-icons">public</i> ${res.website || 'Website not set'}</span>
-      </small><hr/>
+        <span class="text-muted"><i class="material-icons">location_on</i> ${res.location || 'Location not set'}</span><br/>
+        <span class="text-muted"><i class="material-icons">public</i> ${res.website || 'Website not set'}</span>
+      </small>
+      <hr/>
+      <small><p>Contact Information</p></small>${__contacts.length ? __contacts : '<span class="text-muted">No contact details</span>'}<br/><br/>
+      <small><p>Industries</p></small>${__industries}<br/><br/>
+      
       <br/>
-      <p class="text-justify">${res.about || 'No details available'}</p>`
+      
+      <p class="text-justify pb-5">${res.about || 'No details available'}</p>`
   }
 
   __setNotFound () {
