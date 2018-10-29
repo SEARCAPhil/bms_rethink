@@ -125,6 +125,10 @@ Navigo.then((Navigo) => {
       params.active = 'accounts' 
       loadSuppliersInfoSection(params)
     },
+    '/suppliers/:id/accounts/page/:page' : async (params) => {
+      params.active = 'accounts' 
+      loadSuppliersInfoSection(params)
+    },
     '/suppliers/accounts/*' : async (params) => {
       import('./suppliers/accounts')
     },

@@ -32,7 +32,14 @@ Navigo.then((Navigo) => {
     '/suppliers/accounts/:id/info' : async (params) => {
       params.active = 'info'
       loadSuppliersInfoSection(params)
-      console.log('info')
+    },
+    '/suppliers/accounts/:id/sessions' : async (params) => {
+      params.active = 'sessions'
+      loadSuppliersInfoSection(params)
+    },
+    '/suppliers/accounts/:id/activities' : async (params) => {
+      params.active = 'activities'
+      loadSuppliersInfoSection(params)
     },
 
   }).resolve()

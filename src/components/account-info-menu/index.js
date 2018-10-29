@@ -36,7 +36,7 @@ export default class {
         <!-- info-->
         ${ opt.menus.indexOf('info')!=-1 ?
           `<li class="nav-item ${opt.active === 'info' ? 'active' : ''}">
-            <a class="nav-link nav-link suppliers-records-nav supplier-section-nav" href="#/suppliers/${opt.id}/info">
+            <a class="nav-link nav-link suppliers-records-nav supplier-section-nav" href="#/suppliers/accounts/${opt.id}/info">
               Info
             </a>
           </li>` : ''
@@ -45,7 +45,7 @@ export default class {
         <!-- sessions -->
         ${ opt.menus.indexOf('sessions')!=-1 ?
           `<li class="nav-item ${opt.active === 'sessions' ? 'active' : ''}">
-            <a class="nav-link nav-link suppliers-records-nav supplier-section-nav" href="#/suppliers/${opt.id}/info">
+            <a class="nav-link nav-link suppliers-records-nav supplier-section-nav" href="#/suppliers/accounts/${opt.id}/sessions">
               Sessions
             </a>
           </li>` : ''
@@ -53,8 +53,8 @@ export default class {
 
         <!-- activities -->
         ${ opt.menus.indexOf('activities')!=-1 ?
-          `<li class="nav-item ${opt.active === 'accounts' ? 'active' : ''}">
-            <a class="nav-link nav-link suppliers-records-nav supplier-section-nav" href="#/suppliers/${opt.id}/accounts">
+          `<li class="nav-item ${opt.active === 'activities' ? 'active' : ''}">
+            <a class="nav-link nav-link suppliers-records-nav supplier-section-nav" href="#/suppliers/accounts/${opt.id}/activities">
               Activities
             </a>
           </li>` : ''
@@ -63,7 +63,7 @@ export default class {
         <!-- settings -->
         ${ opt.menus.indexOf('settings')!=-1 ?
           `<li class="nav-item ${opt.active === 'settings' ? 'active' : ''}">
-            <a class="nav-link nav-link suppliers-records-nav supplier-section-nav" href="#/suppliers/${opt.id}/products">
+            <a class="nav-link nav-link suppliers-records-nav supplier-section-nav" href="#/suppliers/accounts/${opt.id}/settings">
             <i class="material-icons md-18">settings</i> Settings
             </a>
           </li>` : ''

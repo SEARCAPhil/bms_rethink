@@ -1,4 +1,3 @@
-import { showError } from '../../../pages/bidding-reg-form/actions';
 
 const BiddingServ = import('../../../services/supplier-service')
 

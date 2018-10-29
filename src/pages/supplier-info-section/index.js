@@ -74,90 +74,23 @@ export default class {
   }
 
 
-  __accounts () {
+  async __loadAccountSection () {
     const __targ = this.template.querySelector('suppliers-section-container')
-    const __temp = document.createElement('section')
-    __temp.classList.add('col', 'col-lg-10', 'offset-lg-1')
-    __temp.innerHTML = `
-        <section>
-          <input type="text" class="form-control" placeholder="Search" data-role="none" id="search-account-input"/>
-        </section><br/><br/>
-
-        <h5>Total Records: 150</h5>
-        <p><a href="#" class="text-danger">Add New <i class="material-icons">add_circle</i></a></p>
-
-        <table class="table suppliers-table">
-          <thead>
-            <th></th>
-            <th>#ID</th>
-            <th>Name</th>
-            <th>Email</th>
-            <th>Department</th>
-            <th>Department Alias</th>
-            <th>Position</th>
-            <th>Status</th>
-          </thead>
-          <tbody>
-            <tr>
-              <td><div class="text-center" style="float: left; width: 35px; height: 35px; border-radius: 50%; margin-right: 10px; overflow: hidden;background:#5d5d5d;color:#fff;">JD</div></td>
-              <td><a href="#/suppliers//info">150</a></td>
-              <td style="max-width:200px"><a href="#/suppliers//info">John Mark Doe</a></td>
-              <td>jmd@remote.org</td>
-              <td>Information Technology Department</td>
-              <td>ITD</td>
-              <td>Programmer</td>
-              <td>Active</td>
-            </tr>
-            <tr>
-              <td><div class="text-center" style="float: left; width: 35px; height: 35px; border-radius: 50%; margin-right: 10px; overflow: hidden;background:#5d5d5d;color:#fff;">JD</div></td>
-              <td><a href="#/suppliers//info">150</a></td>
-              <td style="max-width:200px"><a href="#/suppliers//info">John Mark Doe</a></td>
-              <td>jmd@remote.org</td>
-              <td>Information Technology Department</td>
-              <td>ITD</td>
-              <td>Programmer</td>
-              <td>Active</td>
-            </tr>
-            <tr>
-              <td><div class="text-center" style="float: left; width: 35px; height: 35px; border-radius: 50%; margin-right: 10px; overflow: hidden;background:#5d5d5d;color:#fff;">JD</div></td>
-              <td><a href="#/suppliers//info">150</a></td>
-              <td style="max-width:200px"><a href="#/suppliers//info">John Mark Doe</a></td>
-              <td>jmd@remote.org</td>
-              <td>Information Technology Department</td>
-              <td>ITD</td>
-              <td>Programmer</td>
-              <td>Active</td>
-            </tr>
-            <tr>
-              <td><div class="text-center" style="float: left; width: 35px; height: 35px; border-radius: 50%; margin-right: 10px; overflow: hidden;background:#5d5d5d;color:#fff;">JD</div></td>
-              <td><a href="#/suppliers//info">150</a></td>
-              <td style="max-width:200px"><a href="#/suppliers//info">John Mark Doe</a></td>
-              <td>jmd@remote.org</td>
-              <td>Information Technology Department</td>
-              <td>ITD</td>
-              <td>Programmer</td>
-              <td>Active</td>
-            </tr>
-            <tr>
-              <td><div class="text-center" style="float: left; width: 35px; height: 35px; border-radius: 50%; margin-right: 10px; overflow: hidden;background:#5d5d5d;color:#fff;">JD</div></td>
-              <td><a href="#/suppliers//info">150</a></td>
-              <td style="max-width:200px"><a href="#/suppliers//info">John Mark Doe</a></td>
-              <td>jmd@remote.org</td>
-              <td>Information Technology Department</td>
-              <td>ITD</td>
-              <td>Programmer</td>
-              <td>Active</td>
-            </tr>
-          </tbody>
-        </table>`
+    const __temp = await import('../supplier-account-section')
+    const __payload = {
+      id: this.__opt.id,
+      token: window.localStorage.getItem('token'),
+      page: this.__opt.page || 1,
+    }
     __targ.innerHTML = ''
-    __targ.append(__temp)
+    __targ.append(new __temp.default(__payload))
   }
 
   __bindListeners() {
     this.__opt.active == 'about' ? this.__about() : ''
-    this.__opt.active == 'accounts' ? this.__accounts() : ''
+    this.__opt.active == 'accounts' ? this.__loadAccountSection() : ''
   }
+
 
   /**
    * Return template as HTMLObject to be rendered in DOM

@@ -1,6 +1,5 @@
 import style from './style'
 
-
 const suppServ = import('../../services/supplier-service')
 
 
@@ -71,72 +70,30 @@ class template {
     })
   }
 
+
+
   __bindRemove () {
     import('./actions/remove').then(loader => {
       return new loader.default({
         root: this.template,
         selector: '.remove-comp-modal-btn',
-        id: this.__opt.id,
+        id: this.__opt.id
       })
     })
   }
 
-  __searchSuccess (json) {
-    let __searchSec= this.template.querySelector('#supplier-search-section')
-    __searchSec.innerHTML = this.__generateTableHeader()
-    // append to DOM
-    this.__generateTableListData( json, '#supplier-search-section > .suppliers-table > tbody').then(json => {
-      this.__bindRemove ()
-      this.__loadPopup ()
-    })
-  }
-  
-  __searchEmpty (param) {
-    this.template.querySelector('#supplier-search-section').innerHTML = `<small class="text-muted col-12 text-center mb-5 mt-3">The word you are trying to search "${param}" doesn't match any result. <br/>Please try again using another keyword</small>`
-  }
-
-  __search (page, param) {
-    suppServ.then(res => {
-      const __payload = {
-        param,
-        page: page || 1,
-        token: window.localStorage.getItem('token'),
-      }
-      new res.default().search(__payload).then(res => {
-        if(!res.data.length) return this.__searchEmpty(param)
-        return this.__searchSuccess (res.data)
-      })
-    })
-  }
 
   __bindSearch () {
-    const __searchField = this.template.querySelector('#search-supplier-input')
-    __searchField.addEventListener('keyup', (e) => {
-      clearTimeout(this.__timeout)
-      this.__timeout = setTimeout(() => {
-        if(e.target.value.length < 1) return this.__searchCallPre () 
-        // search
-        return this.__searchCallBack (e.target.value) 
-      }, 600)
+    import('./actions/search').then(loader => {
+      return new loader.default({
+        root: this.template,
+        selector: '#search-supplier-input',
+        id: this.__opt.id,
+        singleton: this
+      })
     })
-
   }
 
-  __searchCallPre () {
-    let __searchField = this.template.querySelector('#supplier-search-section')
-    this.template.querySelector('#list-of-suppliers-stats-section').classList.remove('hide')
-    this.template.querySelector('#list-table-container').classList.remove('hide')
-    __searchField.classList.add('hide')
-  }
-
-  __searchCallBack(param) {
-    let __searchField = this.template.querySelector('#supplier-search-section')
-    this.template.querySelector('#list-of-suppliers-stats-section').classList.add('hide')
-    this.template.querySelector('#list-table-container').classList.add('hide')
-    __searchField.classList.remove('hide')
-    // search
-    this.__search (1, param)
-  }
 
   async __getList () {
     const ApiConfig = await import ('../../config/api').default
