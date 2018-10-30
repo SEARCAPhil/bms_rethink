@@ -28,47 +28,48 @@ export default class {
     })
   }
 
-  __generateSessionsData (sessions) {
-    let __sessions = ''
+  __generate(data) {
+    let __data = ''
     return new Promise((resolve, reject) => {
-      sessions.forEach((val, index) => {
-        __sessions+=`<section class="sections-list-item pb-3 row">
+      data.forEach((val, index) => {
+        __data+=`<section class="sections-list-item pb-3 row">
           <div class="col-3 pt-3">
             <small>
                 <span class="text-muted">${val.date_created}</span><br/>
-              <span class="text-info">${this.parser.setUA(val.user_agent).getBrowser().name}(${this.parser.setUA(val.user_agent).getOS().name})</span>
+              <span class="text-info">Reference #${val.id}</span>
             </small>
           </div>
-          <div class="col-9 pt-3"><small>Token: ${val.token}</small></div>
+          <div class="col-9 pt-3"><small>${val.message}</small></div>
         </section>`
 
         
       })
-      resolve(__sessions)
+      resolve(__data)
     })
   }
 
 
-  loadMoreSessions (e) { 
+  loadMore (e) { 
     e.target.remove()
     this.__opt.page = this.__opt.page ? (this.__opt.page+1) : 2
-    this.showSessions ()
+    this.load ()
   }
 
-  showMoreSessionsBtn () {
+  showMoreBtn () {
 
     const btn = document.createElement('btn')
     const __proto__ = Object.assign({__proto__: this.__proto__}, this)
 
     btn.classList.add('btn', 'btn-light','mt-3')
     btn.innerText = 'Load More'
-    btn.addEventListener('click', this.loadMoreSessions.bind(__proto__))
+    btn.addEventListener('click', this.loadMore.bind(__proto__))
     return btn
   }
 
   load () {
-    const __targ = this.template.querySelector('#sessions-list-section')
-    this.__get().then(ses => { 
+    const __targ = this.template.querySelector('#activity-list-section')
+    this.__get().then(data => { 
+      this.__generate(data).then(html => (__targ.innerHTML += html) | (data.length ? __targ.append(this.showMoreBtn()) : ''))
       //this.__generateSessionsData(ses).then(html => (__targ.innerHTML += html) | (ses.length ? __targ.append(this.showMoreSessionsBtn()) : ''))
     })
   }
@@ -92,7 +93,7 @@ export default class {
         <div class="col-11 pt-3"><span class="text-muted">Activities</span></div>
     </section>
     <hr/>
-    <section id="sessions-list-section"></section>`
+    <section id="activity-list-section"></section>`
 
     this.__bindListeners()
     return this.template

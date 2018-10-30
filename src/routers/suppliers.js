@@ -3,6 +3,7 @@ const DisplayStyler = import('../utils/display-styler')
 const ScriptLoader = import('../utils/script-loader')
 const Menuselector = import('../utils/menu-selector')
 
+
  
 Navigo.then((Navigo) => {
   // Navigo instance

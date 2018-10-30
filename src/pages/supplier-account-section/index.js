@@ -174,7 +174,7 @@ export default class {
         </section>
         
         <section class="row">
-          <div class="col-4" style="background:#f7f7f7;">
+          <div class="col-4" style="background:#f7f7f7;" onclick="window.location.hash='/suppliers/accounts/forms/registration/profile/${this.__opt.id}'">
             <div class="media">
               <div class="status-box text-center m-2">
                 <p class="mt-3" id="total-all-section"><i class="material-icons">add</i></p>
