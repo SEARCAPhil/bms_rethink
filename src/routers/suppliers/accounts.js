@@ -56,6 +56,11 @@ Navigo.then((Navigo) => {
       loadSuppliersInfoSection(params)
     },
     '/suppliers/accounts/forms/registration/profile/:id' : async (params) => {
+      params.action = 'create'
+      loadAccountFormSection(params)
+    },
+    '/suppliers/accounts/forms/registration/profile/:id/update' : async (params) => {
+      params.action = 'update'
       loadAccountFormSection(params)
     },
 

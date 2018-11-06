@@ -46,13 +46,26 @@ export default class{
 	view(opt) {
     return this.__getData(`/suppliers/accounts/?id=${opt.id}&token=${opt.token}`)
 	}
-	
+
+	remove(opt) {
+		return this.__postData(`/suppliers/accounts/?timestamp=${this.timestamp}`, opt)
+	}
+
 	sessions(opt) {
     return this.__getData(`/suppliers/accounts/sessions.php?id=${opt.id}&token=${opt.token}&page=${opt.page}`)
-  }
+	}
+	
 
 	activities(opt) {
     return this.__getData(`/suppliers/accounts/logs/?id=${opt.id}&token=${opt.token}&page=${opt.page}`)
+	}
+
+	createProfile(opt) {
+		return this.__postData(`/suppliers/accounts/profile.php?timestamp=${this.timestamp}`, opt, false)
+	}
+
+	changePassword(opt) {
+		return this.__postData(`/suppliers/accounts/?timestamp=${this.timestamp}`, opt)
 	}
 	
 }

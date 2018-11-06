@@ -14,6 +14,21 @@ export default class {
     alert('Sorry! Please try again another profile')
   }
 
+  __loadPopup () {
+    const popupes = import('../../components/popup-es')
+    const popupesStyle = import('../../components/popup-es/style')
+
+    // enable popup
+    popupesStyle.then(css => {
+      const style = document.createElement('style')
+      style.id = 'popup-es-style'
+      style.innerHTML = css.default.toString()
+      if(!document.querySelector('#popup-es-style')) document.head.append(style)
+    })
+
+    popupes.then(loader => new loader.default())
+  
+  }
 
   __getInfo () {
     return new Promise ((resolve, reject) => {
@@ -77,7 +92,7 @@ export default class {
           ${this.__info.data[0].status == this.ACTIVE ? `<button class="btn btn-sm btn-dark">ACTIVATED</button>` : ''}
 
           ${this.__info.data[0].status == this.DEACTIVATED ?
-            `<button class="btn btn-sm btn-danger">DEACTIVED</button> <a href="#" class="text-success">Activate</a>`
+            `<button class="btn btn-sm btn-danger">BLOCKED</button> <small>Go to settings to unblock this account</small>`
             : '' }
 
         </div>
@@ -93,6 +108,7 @@ export default class {
     this.__opt.active == 'info' ? this.loadInfo() : ''
     this.__opt.active == 'sessions' ? this.loadInfo().then(() => this.loadSessionsSection()) : ''
     this.__opt.active == 'activities' ? this.loadInfo().then(() => this.loadActivitySection()) : ''
+    setTimeout(() => this.__loadPopup() ,1000);
   }
 
   /**

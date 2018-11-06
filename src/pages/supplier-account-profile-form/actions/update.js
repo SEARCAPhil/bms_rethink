@@ -1,4 +1,4 @@
-const Serv = import('../../../services/supplier-service')
+const Serv = import('../../../services/supplier-account-service')
 
 const view = (params) => {
   return new Promise((resolve, reject) => {
