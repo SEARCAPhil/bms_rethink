@@ -67,6 +67,34 @@ export default class {
     })
   } 
 
+  loadInfoSection () {
+    const __target = this.template.querySelector('#account-ajax-section')
+    __target.innerHTML = `
+      <section class="row">
+        <div class="col-12">
+          <h5>Summary</h5><hr/>
+        </div>
+        <div class="card col-lg-3 col-md-3 col-12 mr-3 mb-3">
+          <div class="card-body">
+            <h5 class="card-title">Sessions</h5>
+            <h6 class="card-subtitle mb-2 text-muted">Authentication records</h6>
+            <p class="card-text">Number of times you login your account in the system</p>
+            <a href="#/suppliers/accounts/${this.__info.data[0].account_id}/sessions" class="card-link">View Sessions</a>
+          </div>
+        </div>
+
+        <div class="card col-lg-3 col-md-3 col-12 mr-3 mb-3">
+          <div class="card-body">
+            <h5 class="card-title">Activities</h5>
+            <h6 class="card-subtitle mb-2 text-muted">Track events</h6>
+            <p class="card-text">Total number of actions you have made</p>
+            <a href="#/suppliers/accounts/${this.__info.data[0].account_id}/activities" class="card-link">Go to activities</a>
+          </div>
+        </div>
+      </section>
+    `
+  } 
+
   async loadInfo () {
     const __targ = this.template.querySelector('suppliers-section-container')
     const __temp = document.createElement('section')
@@ -84,10 +112,10 @@ export default class {
           <small class="text-muted p-0">
             ${this.__info.data[0].department || 'Department Unavailable'} (${this.__info.data[0].department_alias || 'N/A'})<br/>
             ${this.__info.data[0].position}<br/>
-            <i class="material-icons md-12">email</i> ${this.__info.data[0].username || 'N/A'}<br/><br/>
+            <i class="material-icons md-12">email</i> ${this.__info.data[0].username || 'N/A'}<br/>
           </small>
-
-          ${this.__info.data[0].uid ? `<img src="assets/img/office-365.jpg" width="200px"/>` : ''}
+          <hr/>
+          ${this.__info.data[0].uid ? `<img src="assets/img/office-365.jpg" width="150px"/>` : 'Standard Account'}
           
           ${this.__info.data[0].status == this.ACTIVE ? `<button class="btn btn-sm btn-dark">ACTIVATED</button>` : ''}
 
@@ -105,7 +133,7 @@ export default class {
   }
 
   __bindListeners() {
-    this.__opt.active == 'info' ? this.loadInfo() : ''
+    this.__opt.active == 'info' ? this.loadInfo().then(() => this.loadInfoSection()) : ''
     this.__opt.active == 'sessions' ? this.loadInfo().then(() => this.loadSessionsSection()) : ''
     this.__opt.active == 'activities' ? this.loadInfo().then(() => this.loadActivitySection()) : ''
     setTimeout(() => this.__loadPopup() ,1000);

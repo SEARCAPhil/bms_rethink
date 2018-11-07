@@ -8,11 +8,13 @@ export default class {
 
   success() {	
     // reload browser
-    window.location.reload()
+    document.querySelector('.remove-modal-section > center').innerHTML = `<h3 class="text-success">Email Sent!</h3> 
+    Password reset confirmation email was sent to the user<br/>
+    <i class ="material-icons md-48 text-success">check_circle</i>`
   }
 
   error (err = '') {
-    alert('Unable to remove this account! Please try again later')
+    alert('Unable to send email to this account! Please try again later')
     // close popup
     document.getElementById('general-modal').close()
     console.log(err)
@@ -27,10 +29,11 @@ export default class {
     }
 
     e.target.setAttribute('disabled', 'disabled')
-    return
+    document.querySelector('.remove-modal-section > center').innerHTML = '<h3>Sending . . .</h3> Please wait . . .'
+  
     // remove from DB
-    return new serve().changePasswordLink(__payload).then(res => { 
-      return res.data == 1 ?  this.success() : this.error()
+    return new serve().changePassword(__payload).then(res => { 
+      return res.data == 1 ?  (this.success() | e.target.setAttribute('disabled', '')) : this.error()
     }).catch(err => this.error(err))
   }
 
