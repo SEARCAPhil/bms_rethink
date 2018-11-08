@@ -60,6 +60,10 @@ export default class{
     return this.__getData(`/suppliers/accounts/logs/?id=${opt.id}&token=${opt.token}&page=${opt.page}`)
 	}
 
+	viewSummary(opt) {
+    return this.__getData(`/suppliers/accounts/status.php?id=${opt.id}&token=${opt.token}`)
+	}
+
 	createProfile(opt) {
 		return this.__postData(`/suppliers/accounts/profile.php?timestamp=${this.timestamp}`, opt, false)
 	}

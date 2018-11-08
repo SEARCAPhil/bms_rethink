@@ -47,6 +47,24 @@ export default class {
   }
 
 
+  __getSummary () {
+    return new Promise ((resolve, reject) => {
+      suppServ.then(res => {
+        const __payload = {
+          id: this.__opt.id,
+          token: window.localStorage.getItem('token'),
+        }
+
+        new res.default().viewSummary(__payload).then(d => {
+          resolve(d)
+        }).catch(e => reject(e))
+
+      })
+    })
+  }
+
+
+
   loadSessionsSection () {
     const __target = this.template.querySelector('#account-ajax-section')
     import ('../account-sessions-section').then(res => {
@@ -67,8 +85,10 @@ export default class {
     })
   } 
 
-  loadInfoSection () {
+  async loadInfoSection () {
     const __target = this.template.querySelector('#account-ajax-section')
+    this.__summary= await this.__getSummary()
+
     __target.innerHTML = `
       <section class="row">
         <div class="col-12">
@@ -76,8 +96,18 @@ export default class {
         </div>
         <div class="card col-lg-3 col-md-3 col-12 mr-3 mb-3">
           <div class="card-body">
-            <h5 class="card-title">Sessions</h5>
-            <h6 class="card-subtitle mb-2 text-muted">Authentication records</h6>
+            <h5 class="card-title mb-2">
+              <div class="row">
+                <div class="col-4 pl-1"><div class="float-left mr-1 text-center p-2 pt-3" style="width: 65px; height: 65px; border-radius: 50%; border: 2px solid #ffbd05;">${this.__summary.data.session_total}</div></div>
+                <div class="col-8 pl-3">
+                  Session
+                  <h6 class="card-subtitle mb-2 text-muted">Auth Records</h6>
+                </div>
+              </div>
+              
+            </h5>
+
+            
             <p class="card-text">Number of times you login your account in the system</p>
             <a href="#/suppliers/accounts/${this.__info.data[0].account_id}/sessions" class="card-link">View Sessions</a>
           </div>
@@ -85,11 +115,26 @@ export default class {
 
         <div class="card col-lg-3 col-md-3 col-12 mr-3 mb-3">
           <div class="card-body">
-            <h5 class="card-title">Activities</h5>
-            <h6 class="card-subtitle mb-2 text-muted">Track events</h6>
+            <h5 class="card-title">
+              <div class="row">
+                <div class="col-4 pl-1"><div class="float-left mr-1 text-center p-2 pt-3" style="width: 65px; height: 65px; border-radius: 50%; border: 2px solid #8BC34A;">${this.__summary.data.bidding_logs_total}</div></div>
+                <div class="col-8 pl-3">
+                  Activities
+                  <h6 class="card-subtitle mb-2 text-muted">Track events</h6>
+                </div>
+              </div>  
+            </h5>
+            
             <p class="card-text">Total number of actions you have made</p>
             <a href="#/suppliers/accounts/${this.__info.data[0].account_id}/activities" class="card-link">Go to activities</a>
           </div>
+        </div>
+
+        <!-- status -->
+        <div class="col-12 mt-4">
+          <h5>Registration Status</h5><hr/>
+          ${this.__info.data[0].uid ? `<span class="text-success">Connected to Microsoft Ofiice365 Account <i class="material-icons">check_circle</i></span>` : 'Standard Account'}
+
         </div>
       </section>
     `
